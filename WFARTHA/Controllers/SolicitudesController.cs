@@ -292,6 +292,7 @@ namespace WFARTHA.Controllers
             int pagina = 202; //ID EN BASE DE DATOS
             FORMATO formato = new FORMATO();
             string spras = "";
+            string user_id = "";//MGC 02-10-2018 Cadena de autorización
             using (WFARTHAEntities db = new WFARTHAEntities())
             {
 
@@ -301,6 +302,7 @@ namespace WFARTHA.Controllers
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
                 ViewBag.usuario = user;
                 spras = user.SPRAS_ID;
+                user_id = user.ID;//MGC 02-10-2018 Cadena de autorización
                 ViewBag.returnUrl = Request.Url.PathAndQuery;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
@@ -402,6 +404,25 @@ namespace WFARTHA.Controllers
             d.FECHACON = theTime;
             d.FECHA_BASE = theTime;
 
+            //MGC 02-10-2018 Cadena de autorización
+            //List<DET_AGENTECC> dta = new List<DET_AGENTECC>();
+            //Falta vigencia
+            var dta = db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).
+                Join(
+                db.USUARIOs,
+                da => da.USUARIOA_ID,
+                us => us.ID,
+                (da, us) => new
+                {
+                    //ID = new List<string>() { da.VERSION, da.USUARIOC_ID, da.ID_RUTA_AGENTE, da.USUARIOA_ID},                    
+                    ID = new { VERSION = da.VERSION.ToString().Replace(" ", ""), USUARIOC_ID = da.USUARIOC_ID.ToString().Replace(" ", ""), ID_RUTA_AGENTE = da.ID_RUTA_AGENTE.ToString().Replace(" ", ""), USUARIOA_ID = da.USUARIOA_ID.ToString().Replace(" ", "") },
+                    TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
+                }).ToList();
+
+            ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
+
+            ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Formatting.Indented);
+
             return View(d);
         }
 
@@ -417,13 +438,16 @@ namespace WFARTHA.Controllers
             "MONTO_BASE_NS_PCT_ML2,PORC_ADICIONAL,IMPUESTO,ESTATUS_EXT,PAYER_ID,MONEDA_ID,MONEDAL_ID,MONEDAL2_ID," +
             "TIPO_CAMBIO,TIPO_CAMBIOL,TIPO_CAMBIOL2,NO_FACTURA,FECHAD_SOPORTE,METODO_PAGO,NO_PROVEEDOR,PASO_ACTUAL," +
             "AGENTE_ACTUAL,FECHA_PASO_ACTUAL,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,FECHACON,FECHA_BASE,REFERENCIA," +
-            "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP")] Models.DOCUMENTO_MOD doc, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc)
+            "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP")] Models.DOCUMENTO_MOD doc,
+            IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc,
+            //MGC 02-10-2018 Cadenas de autorización
+            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID)
         {
             int pagina = 202; //ID EN BASE DE DATOS
             string errorString = "";
             FORMATO formato = new FORMATO();
             string spras = "";
-
+            string user_id = ""; //MGC 02-10-2018 Cadenas de autorización
             if (ModelState.IsValid)
             {
                 try
@@ -811,6 +835,122 @@ namespace WFARTHA.Controllers
 
                     }
                     //Lej26.09.2018------
+
+                    //MGC 02-10-2018 Cadena de autorización work flow --->
+                    //Flujo
+                    ProcesaFlujo pf = new ProcesaFlujo();
+                    //Comienza el wf
+                    //Se obtiene la cabecera
+                    try
+                    {
+                        WORKFV wf = db.WORKFHs.Where(a => a.TSOL_ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
+
+                        DET_AGENTECC deta = new DET_AGENTECC();
+                        try
+                        {
+                            deta.VERSION = Convert.ToInt32(DETTA_VERSION);
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+
+                        try
+                        {
+                            deta.USUARIOC_ID = DETTA_USUARIOC_ID;
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+
+
+                        try
+                        {
+                            deta.ID_RUTA_AGENTE = DETTA_ID_RUTA_AGENTE;
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+
+                        try
+                        {
+                            deta.USUARIOA_ID = DETTA_USUARIOA_ID;
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+
+                        if (wf != null)
+                        {
+                            WORKFP wp = wf.WORKFPs.OrderBy(a => a.POS).FirstOrDefault();
+                            FLUJO f = new FLUJO();
+                            f.WORKF_ID = wf.ID;
+                            f.WF_VERSION = wf.VERSION;
+                            f.WF_POS = wp.POS;
+                            f.NUM_DOC = dOCUMENTO.NUM_DOC;
+                            f.POS = 1;
+                            f.LOOP = 1;
+                            f.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
+                            f.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
+                            f.ESTATUS = "I";
+                            f.FECHAC = DateTime.Now;
+                            f.FECHAM = DateTime.Now;
+                            f.STEP_AUTO = 0;
+
+                            //Ruta tomada
+                            f.ID_RUTA_A = deta.ID_RUTA_AGENTE;
+                            f.RUTA_VERSION = deta.VERSION;
+
+                            string c = pf.procesa(f, "");
+                            //while (c == "1")
+                            //{
+                            //    Email em = new Email();
+                            //    string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                            //    string image = Server.MapPath("~/images/logo_kellogg.png");
+                            //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+
+                            //    FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                            //    if (conta.WORKFP.ACCION.TIPO == "B")
+                            //    {
+                            //        WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
+                            //        //FLUJO f1 = new FLUJO();
+                            //        //f1.WORKF_ID = conta.WORKF_ID;
+                            //        //f1.WF_VERSION = conta.WF_VERSION;
+                            //        //f1.WF_POS = (int)wpos.NEXT_STEP;
+                            //        //f1.NUM_DOC = dOCUMENTO.NUM_DOC;
+                            //        //f1.POS = conta.POS + 1;
+                            //        //f1.LOOP = 1;
+                            //        ////f1.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
+                            //        ////f1.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
+                            //        conta.ESTATUS = "A";
+                            //        //f1.FECHAC = DateTime.Now;
+                            //        conta.FECHAM = DateTime.Now;
+                            //        c = pf.procesa(conta, "");
+                            //    }
+                            //    else
+                            //    {
+                            //        c = "";
+                            //    }
+                            //}
+
+                        }
+
+                    }
+                    catch (Exception ee)
+                    {
+                        if (errorString == "")
+                        {
+                            errorString = ee.Message.ToString();
+                        }
+                        ViewBag.error = errorString;
+                    }
+
+                    //MGC 02-10-2018 Cadena de autorización work flow <---
+
+
                 }
                 catch (Exception e)
                 {
