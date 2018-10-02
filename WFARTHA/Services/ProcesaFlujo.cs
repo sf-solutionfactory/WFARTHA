@@ -216,20 +216,40 @@ namespace WFARTHA.Services
                         dp.NUM_DOC = d.NUM_DOC;
                         dp.POS = 1;
                         dp.MESSAGE = "Generando Preliminar";
-
-                        db.DOCUMENTOPREs.Add(dp);
-                        db.SaveChanges();
+                        try
+                        {
+                            db.DOCUMENTOPREs.Add(dp);
+                            db.SaveChanges();
+                        }catch(Exception e)
+                        {
+                            string r = "";
+                        }
                     }
                     else
                     {
+                        string m;
+                        if(corr.Length > 50)
+                        {
+                            m = corr.Substring(0, 50);
+                        }
+                        else
+                        {
+                            m = corr;
+                        }
                         DOCUMENTOPRE dp = new DOCUMENTOPRE();
 
                         dp.NUM_DOC = d.NUM_DOC;
                         dp.POS = 1;
-                        dp.MESSAGE = corr;
-
-                        db.DOCUMENTOPREs.Add(dp);
-                        db.SaveChanges();
+                        dp.MESSAGE = m;
+                        try
+                        {
+                            db.DOCUMENTOPREs.Add(dp);
+                            db.SaveChanges();
+                        }
+                        catch (Exception E)
+                        {
+                            string r = "";
+                        }
                     }
 
 

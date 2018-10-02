@@ -599,6 +599,10 @@ $(window).on('load', function () {
         $('#FECHAD').val("");
     }
 
+    //MGC 02-10-2018 Cadena de autorización
+    //Obtener los datos de la cadena seleccionada
+    $("#list_detaa").change();
+
 });
 
 
