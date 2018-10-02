@@ -6,6 +6,7 @@ var extraCols = 0;
 var tRet = [];//Agrego a un array los tipos de retenciones
 var tRet2 = [];//Agrego a un array los tipos de retenciones que no tienen ligadas
 
+////
 $(document).ready(function () {
     //LEJ 11.09.2018------------------------------------
     //Iniciar todos los selects
