@@ -687,6 +687,8 @@ namespace WFARTHA.Controllers
                     }
                     //Lej26.09.2018------
                     List<string> listaDirectorios = new List<string>();
+                    List<string> listaNombreArchivos = new List<string>();
+                    List<string> listaDescArchivos = new List<string>();
                     try
                     {
                         //Guardar los documentos cargados en la sección de soporte
@@ -761,16 +763,25 @@ namespace WFARTHA.Controllers
                                 int indexlabel = 0;
                                 foreach (HttpPostedFileBase file in file_sopAnexar)
                                 {
-                                    string errorfiles = "";
                                     var descripcion = "";
                                     try
                                     {
-                                        descripcion = labels_desc[indexlabel];
+                                        listaDescArchivos.Add(labels_desc[indexlabel]);
                                     }
                                     catch (Exception ex)
                                     {
                                         descripcion = "";
+                                        listaDescArchivos.Add(descripcion);
                                     }
+                                    try
+                                    {
+                                        listaNombreArchivos.Add(file.FileName);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        listaDescArchivos.Add("");
+                                    }
+                                    string errorfiles = "";
                                     if (file != null)
                                     {
                                         if (file.ContentLength > 0)
@@ -950,18 +961,298 @@ namespace WFARTHA.Controllers
                         }
                         ViewBag.error = errorString;
                     }
-
                     //MGC 02-10-2018 Cadena de autorización work flow <---
 
                     //Lej-02.10.2018------
                     //DOCUMENTOA
-
-                    for (int i = 0; i < doc.Anexo.Count; i++)
+                    //Misma cantidad de archivos y nombres, osea todo bien
+                    if (listaDirectorios.Count == listaDescArchivos.Count && listaDirectorios.Count == listaNombreArchivos.Count)
                     {
-                        DOCUMENTOA _dA = new DOCUMENTOA();
-                        
+                        for (int i = 0; i < doc.Anexo.Count; i++)
+                        {
+                            var pos = 1;
+                            DOCUMENTOA _dA = new DOCUMENTOA();
+                            if (doc.Anexo[i].a1 != 0)
+                            {
+                                _dA.NUM_DOC = doc.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                _dA.POS = pos;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (doc.Anexo[i].a1 > 0 && doc.Anexo[i].a1 <= listaNombreArchivos.Count)
+                                {
+                                    try
+                                    {
+                                        var de = Path.GetExtension(listaNombreArchivos[doc.Anexo[i].a1]);
+                                        _dA.TIPO = de.Replace(".", "");
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.TIPO = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.DESC = listaDescArchivos[doc.Anexo[i].a1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.DESC = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.PATH = listaDirectorios[doc.Anexo[i].a1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.PATH = "";
+                                    }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    db.SaveChanges();
+                                    pos++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                            _dA = new DOCUMENTOA();
+                            if (doc.Anexo[i].a2 != 0)
+                            {
+                                _dA.NUM_DOC = doc.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                _dA.POS = pos;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (doc.Anexo[i].a2 > 0 && doc.Anexo[i].a2 <= listaNombreArchivos.Count)
+                                {
+                                    try
+                                    {
+                                        var de = Path.GetExtension(listaNombreArchivos[doc.Anexo[i].a2]);
+                                        _dA.TIPO = de.Replace(".", "");
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.TIPO = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.DESC = listaDescArchivos[doc.Anexo[i].a2];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.DESC = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.PATH = listaDirectorios[doc.Anexo[i].a2];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.PATH = "";
+                                    }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    db.SaveChanges();
+                                    pos++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                            _dA = new DOCUMENTOA();
+                            if (doc.Anexo[i].a3 != 0)
+                            {
+                                _dA.NUM_DOC = doc.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                _dA.POS = pos;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (doc.Anexo[i].a3 > 0 && doc.Anexo[i].a3 <= listaNombreArchivos.Count)
+                                {
+                                    try
+                                    {
+                                        var de = Path.GetExtension(listaNombreArchivos[doc.Anexo[i].a3]);
+                                        _dA.TIPO = de.Replace(".", "");
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.TIPO = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.DESC = listaDescArchivos[doc.Anexo[i].a3];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.DESC = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.PATH = listaDirectorios[doc.Anexo[i].a3];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.PATH = "";
+                                    }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    db.SaveChanges();
+                                    pos++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                            _dA = new DOCUMENTOA();
+                            if (doc.Anexo[i].a4 != 0)
+                            {
+                                _dA.NUM_DOC = doc.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                _dA.POS = pos;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (doc.Anexo[i].a4 > 0 && doc.Anexo[i].a4 <= listaNombreArchivos.Count)
+                                {
+                                    try
+                                    {
+                                        var de = Path.GetExtension(listaNombreArchivos[doc.Anexo[i].a4]);
+                                        _dA.TIPO = de.Replace(".", "");
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.TIPO = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.DESC = listaDescArchivos[doc.Anexo[i].a4];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.DESC = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.PATH = listaDirectorios[doc.Anexo[i].a4];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.PATH = "";
+                                    }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    db.SaveChanges();
+                                    pos++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                            _dA = new DOCUMENTOA();
+                            if (doc.Anexo[i].a5 != 0)
+                            {
+                                _dA.NUM_DOC = doc.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                _dA.POS = pos;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (doc.Anexo[i].a5 > 0 && doc.Anexo[i].a5 <= listaNombreArchivos.Count)
+                                {
+                                    try
+                                    {
+                                        var de = Path.GetExtension(listaNombreArchivos[doc.Anexo[i].a5]);
+                                        _dA.TIPO = de.Replace(".", "");
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.TIPO = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.DESC = listaDescArchivos[doc.Anexo[i].a5];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.DESC = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.PATH = listaDirectorios[doc.Anexo[i].a5];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.PATH = "";
+                                    }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    db.SaveChanges();
+                                    pos++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                        }
                     }
-
                     //Lej-02.10.2018------
 
                 }
@@ -1630,24 +1921,24 @@ namespace WFARTHA.Controllers
             // Append the name of the file to upload to the path.
             savePath += fileName;
             //-------------------------------------------------------------------
-            //FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + path + "/" + fileName);
-            //request.Method = WebRequestMethods.Ftp.UploadFile;
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + path + "/" + fileName);
+            request.Method = WebRequestMethods.Ftp.UploadFile;
 
-            //const string Comillas = "\"";
-            //string pwd = "Rumaki,2571" + Comillas + "k41";
-            //request.Credentials = new NetworkCredential("luis.gonzalez", pwd);
-            //var sourceStream = file.InputStream;
-            //Stream requestStream = request.GetRequestStream();
-            //request.ContentLength = sourceStream.Length;
+            const string Comillas = "\"";
+            string pwd = "Rumaki,2571" + Comillas + "k41";
+            request.Credentials = new NetworkCredential("luis.gonzalez", pwd);
+            var sourceStream = file.InputStream;
+            Stream requestStream = request.GetRequestStream();
+            request.ContentLength = sourceStream.Length;
 
-            //StreamReader streamReader = new StreamReader(file.InputStream);
-            //byte[] fileContents = System.Text.Encoding.UTF8.GetBytes(streamReader.ReadToEnd());
-            //sourceStream.Close();
-            //requestStream.Write(fileContents, 0, fileContents.Length);
-            //requestStream.Close();
-            //request.ContentLength = fileContents.Length;
+            StreamReader streamReader = new StreamReader(file.InputStream);
+            byte[] fileContents = System.Text.Encoding.UTF8.GetBytes(streamReader.ReadToEnd());
+            sourceStream.Close();
+            requestStream.Write(fileContents, 0, fileContents.Length);
+            requestStream.Close();
+            request.ContentLength = fileContents.Length;
 
-            //var response = (FtpWebResponse)request.GetResponse();
+            var response = (FtpWebResponse)request.GetResponse();
             //-------------------------------------------------------------------
             //Parte para guardar archivo en el servidor
             try
@@ -1666,7 +1957,7 @@ namespace WFARTHA.Controllers
             {
 
             }
-            return fileName;
+            return savePath;
         }
     }
     public class TXTImp
