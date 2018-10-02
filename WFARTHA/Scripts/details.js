@@ -20,11 +20,37 @@ $(document).ready(function () {
         "paging": false,
         "info": false,
         "searching": false,
+        "scrollX": true,
         "columns": [
             {
                 "name": 'POS',
                 "className": 'POS',
-                "orderable": false,
+                "orderable": false
+            },
+            {
+                "name": 'NumAnexo',
+                "className": 'NumAnexo',
+                "orderable": false
+            },
+            {
+                "name": 'NumAnexo2',
+                "className": 'NumAnexo2',
+                "orderable": false
+            },
+            {
+                "name": 'NumAnexo3',
+                "className": 'NumAnexo3',
+                "orderable": false
+            },
+            {
+                "name": 'NumAnexo4',
+                "className": 'NumAnexo4',
+                "orderable": false
+            },
+            {
+                "name": 'NumAnexo5',
+                "className": 'NumAnexo5',
+                "orderable": false
             },
             {
                 "name": 'CA',
