@@ -541,6 +541,31 @@ $(document).ready(function () {
             }
         }
     });
+
+
+    //Cadena de autorización
+    //MGC 02-10-2018
+    $('#list_detaa').change(function () {
+
+        var val3 = $(this).val();
+        val3 = "[" + val3 + "]";
+        val3 = val3.replace("{", "{ \"");
+        val3 = val3.replace("}", "\" }");
+        val3 = val3.replace(/\,/g, "\" , \"");
+        val3 = val3.replace(/\=/g, "\" : \"");
+        val3 = val3.replace(/\ /g, "");
+        var jsval = $.parseJSON(val3)
+
+        $.each(jsval, function (i, dataj) {
+            $("#DETTA_VERSION").val(dataj.VERSION);
+            $("#DETTA_USUARIOC_ID").val(dataj.USUARIOC_ID);
+            $("#DETTA_ID_RUTA_AGENTE").val(dataj.ID_RUTA_AGENTE);
+            $("#DETTA_USUARIOA_ID").val(dataj.USUARIOA_ID);
+
+        });
+
+    });
+
 });
 
 //Cuando se termina de cargar la página
