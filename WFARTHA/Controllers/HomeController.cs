@@ -73,9 +73,66 @@ namespace WFARTHA.Controllers
                 }
             }
 
+            string us = "";
+            DateTime fecha = DateTime.Now.Date;
+            List<WFARTHA.Entities.DELEGAR> del = db.DELEGARs.Where(a => a.USUARIOD_ID.Equals(User.Identity.Name) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).ToList();
+
+            if (del.Count > 0)
+            {
+                List<USUARIO> users = new List<USUARIO>();
+                foreach (DELEGAR de in del)
+                {
+                    users.Add(de.USUARIO);
+                }
+                users.Add(ViewBag.usuario);
+                ViewBag.delegados = users.ToList();
+
+                if (id != null)
+                    us = id;
+                else
+                    us = User.Identity.Name;
+                ViewBag.usuariod = us;
+            }
+            else
+                us = User.Identity.Name;
+
+            //MGC Cancelar preliminar
+            var dOCUMENTOes = db.DOCUMENTOes.Where(a => a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us)).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();
+            var dOCUMENTOVs = db.DOCUMENTOVs.Where(a => a.USUARIOA_ID.Equals(us)).ToList();
+            var tsol = db.TSOLs.ToList();
+            foreach (DOCUMENTOV v in dOCUMENTOVs)
+            {
+                DOCUMENTO d = new DOCUMENTO();
+                var ppd = d.GetType().GetProperties();
+                var ppv = v.GetType().GetProperties();
+                foreach (var pv in ppv)
+                {
+                    foreach (var pd in ppd)
+                    {
+                        if (pd.Name == pv.Name)
+                        {
+                            pd.SetValue(d, pv.GetValue(v));
+                            break;
+                        }
+                    }
+                }
+                d.TSOL = tsol.Where(a => a.ID.Equals(d.TSOL_ID)).FirstOrDefault();
+                //d.ESTADO = db.STATES.Where(a => a.ID.Equals(v.ESTADO)).FirstOrDefault().NAME;
+                //d.CIUDAD = db.CITIES.Where(a => a.ID.Equals(v.CIUDAD)).FirstOrDefault().NAME;
+                //dOCUMENTOes.Add(d);
+                d.FLUJOes = db.FLUJOes.Where(a => a.NUM_DOC.Equals(d.NUM_DOC)).ToList();
+                dOCUMENTOes.Add(d);
+            }
+            dOCUMENTOes = dOCUMENTOes.Distinct(new DocumentoComparer()).ToList();
+            dOCUMENTOes = dOCUMENTOes.OrderByDescending(a => a.FECHAC).OrderByDescending(a => a.NUM_DOC).ToList();
+            ViewBag.Proveedores = db.PROVEEDORs.ToList();
+            //ViewBag.Cuentas = db.CUENTAs.ToList();//MGC 12092018
+            //ViewBag.DOCF = db.DOCUMENTOFs.ToList();//MGC 12092018
+            //jemo inicio 4/07/2018
+            //ViewBag.imgnoticia = db.NOTICIAs.Where(x => x.FECHAI <= DateTime.Now && x.FECHAF >= DateTime.Now && x.ACTIVO == true).Select(x => x.PATH).FirstOrDefault();//MGC 12092018
 
 
-            return View();
+            return View(dOCUMENTOes);
 
         }
         //Lej 03.09.2018
