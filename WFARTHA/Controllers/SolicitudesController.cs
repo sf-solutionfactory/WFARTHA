@@ -417,7 +417,7 @@ namespace WFARTHA.Controllers
             "MONTO_BASE_NS_PCT_ML2,PORC_ADICIONAL,IMPUESTO,ESTATUS_EXT,PAYER_ID,MONEDA_ID,MONEDAL_ID,MONEDAL2_ID," +
             "TIPO_CAMBIO,TIPO_CAMBIOL,TIPO_CAMBIOL2,NO_FACTURA,FECHAD_SOPORTE,METODO_PAGO,NO_PROVEEDOR,PASO_ACTUAL," +
             "AGENTE_ACTUAL,FECHA_PASO_ACTUAL,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,FECHACON,FECHA_BASE,REFERENCIA," +
-            "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP")] Models.DOCUMENTO_MOD doc, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc)
+            "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo")] Models.DOCUMENTO_MOD doc, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc)
         {
             int pagina = 202; //ID EN BASE DE DATOS
             string errorString = "";
@@ -529,7 +529,7 @@ namespace WFARTHA.Controllers
                                 dp.TOTAL = doc.DOCUMENTOP[i].TOTAL;
                                 dp.TEXTO = doc.DOCUMENTOP[i].TEXTO;
                                 db.DOCUMENTOPs.Add(dp);
-                                // db.SaveChanges();
+                                db.SaveChanges();
                             }
                             catch (Exception e)
                             {
@@ -587,7 +587,7 @@ namespace WFARTHA.Controllers
                                             _dr.BIMPONIBLE = doc.DOCUMENTORP[i].BIMPONIBLE;
                                             _dr.IMPORTE_RET = doc.DOCUMENTORP[i].IMPORTE_RET;
                                             db.DOCUMENTORPs.Add(_dr);
-                                            // db.SaveChanges();
+                                            db.SaveChanges();
                                             f = true;
                                         }
                                     }
@@ -601,7 +601,7 @@ namespace WFARTHA.Controllers
                                         _dr.BIMPONIBLE = doc.DOCUMENTORP[i].BIMPONIBLE;
                                         _dr.IMPORTE_RET = doc.DOCUMENTORP[i].IMPORTE_RET;
                                         db.DOCUMENTORPs.Add(_dr);
-                                        // db.SaveChanges();
+                                        db.SaveChanges();
                                     }
                                 }
                                 else
@@ -614,7 +614,7 @@ namespace WFARTHA.Controllers
                                     dr.BIMPONIBLE = doc.DOCUMENTORP[i].BIMPONIBLE;
                                     dr.IMPORTE_RET = doc.DOCUMENTORP[i].IMPORTE_RET;
                                     db.DOCUMENTORPs.Add(dr);
-                                    //db.SaveChanges();
+                                    db.SaveChanges();
                                 }
                             }
                             catch (Exception e)
@@ -646,7 +646,7 @@ namespace WFARTHA.Controllers
                                     dr.BIMPONIBLE = doc.DOCUMENTOR[i].BIMPONIBLE;
                                     dr.IMPORTE_RET = doc.DOCUMENTOR[i].IMPORTE_RET;
                                     db.DOCUMENTORs.Add(dr);
-                                    // db.SaveChanges();
+                                    db.SaveChanges();
                                 }
                                 catch (Exception e)
                                 {
@@ -661,6 +661,7 @@ namespace WFARTHA.Controllers
 
                     }
                     //Lej26.09.2018------
+                    List<string> listaDirectorios = new List<string>();
                     try
                     {
                         //Guardar los documentos cargados en la sección de soporte
@@ -753,38 +754,39 @@ namespace WFARTHA.Controllers
                                             string filename = file.FileName;
                                             errorfiles = "";
                                             res = SaveFile(file, url);
+                                            listaDirectorios.Add(res);
                                             if (errorfiles == "")
                                             {
-                                                DOCUMENTOA _doc = new DOCUMENTOA();
-                                                var ext = System.IO.Path.GetExtension(filename);
-                                                _doc.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                                _doc.POSD = 1;
-                                                _doc.POS = db.DOCUMENTOAs.ToList().Count + 1;
-                                                _doc.TIPO = ext.Replace(".", "");
-                                                _doc.DESC = descripcion;
+                                                //DOCUMENTOA _doc = new DOCUMENTOA();
+                                                //var ext = System.IO.Path.GetExtension(filename);
+                                                //_doc.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                                //_doc.POSD = 1;
+                                                //_doc.POS = db.DOCUMENTOAs.ToList().Count + 1;
+                                                //_doc.TIPO = ext.Replace(".", "");
+                                                //_doc.DESC = descripcion;
 
-                                                try
-                                                {
-                                                    // var clasefileM = clasefile.ToUpper();
-                                                    _doc.CLASE = "OTR";
-                                                }
-                                                catch (Exception e)
-                                                {
-                                                    _doc.CLASE = "";
-                                                }
-                                                _doc.STEP_WF = 1;
-                                                _doc.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
-                                                _doc.PATH = path;
-                                                _doc.ACTIVO = true;
-                                                try
-                                                {
-                                                    db.DOCUMENTOAs.Add(_doc);
-                                                    db.SaveChanges();
-                                                }
-                                                catch (Exception e)
-                                                {
-                                                    errorfiles = "" + filename;
-                                                }
+                                                //try
+                                                //{
+                                                //    // var clasefileM = clasefile.ToUpper();
+                                                //    _doc.CLASE = "OTR";
+                                                //}
+                                                //catch (Exception e)
+                                                //{
+                                                //    _doc.CLASE = "";
+                                                //}
+                                                //_doc.STEP_WF = 1;
+                                                //_doc.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                                //_doc.PATH = path;
+                                                //_doc.ACTIVO = true;
+                                                //try
+                                                //{
+                                                //    db.DOCUMENTOAs.Add(_doc);
+                                                //    db.SaveChanges();
+                                                //}
+                                                //catch (Exception e)
+                                                //{
+                                                //    errorfiles = "" + filename;
+                                                //}
 
                                             }
                                         }
@@ -811,6 +813,16 @@ namespace WFARTHA.Controllers
 
                     }
                     //Lej26.09.2018------
+                    //Lej-02.10.2018------
+                    //DOCUMENTOA
+
+                    for (int i = 0; i < doc.Anexo.Count; i++)
+                    {
+                        DOCUMENTOA _dA = new DOCUMENTOA();
+                        
+                    }
+
+                    //Lej-02.10.2018------
                 }
                 catch (Exception e)
                 {
@@ -971,8 +983,9 @@ namespace WFARTHA.Controllers
         [HttpPost]
         public ActionResult getPartialCon3(List<Anexo> docs)
         {
-            var lstAnx = docs;
-            return PartialView("~/Views/Solicitudes/_PartialConTr3.cshtml", lstAnx);
+            DOCUMENTO_MOD doc = new DOCUMENTO_MOD();
+            doc.Anexo = docs;
+            return PartialView("~/Views/Solicitudes/_PartialConTr3.cshtml", doc);
         }
 
         [HttpPost]
