@@ -839,7 +839,6 @@ namespace WFARTHA.Controllers
                     }
                     //Lej26.09.2018------
 
-
                     //MGC 02-10-2018 Cadena de autorización work flow --->
                     //Flujo
                     ProcesaFlujo pf = new ProcesaFlujo();
@@ -953,8 +952,6 @@ namespace WFARTHA.Controllers
                     }
 
                     //MGC 02-10-2018 Cadena de autorización work flow <---
-
-
 
                     //Lej-02.10.2018------
                     //DOCUMENTOA
