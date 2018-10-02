@@ -1,0 +1,1149 @@
+﻿@model WFARTHA.Models.DOCUMENTO_MOD
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 201;
+    ViewBag.carpeta_r = 200;
+    WFARTHA.Services.FormatosC formatoc = new WFARTHA.Services.FormatosC();
+    List<WFARTHA.Models.DOCUMENTOR_MOD> drets = ViewBag.ret as List<WFARTHA.Models.DOCUMENTOR_MOD>;
+    WFARTHA.Entities.PROVEEDOR dprov = ViewBag.prov as WFARTHA.Entities.PROVEEDOR;
+    List<WFARTHA.Models.DOCUMENTORP_MOD> lstDrp = ViewBag.DocsRp as List<WFARTHA.Models.DOCUMENTORP_MOD>;
+    List<string> colsret = ViewBag.Retenciones as List<string>;
+}
+
+<link type="text/css" href="~/Content/datatables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+<script src="~/Scripts/details.js"></script>
+<script src="~/Scripts/formatos.js"></script>
+@if (ViewBag.error != "")
+{
+    <script>
+    $(document).ready(function () {
+
+        function errorMessage(msg) {
+            M.toast({ html: msg });
+        }
+        var message = '@ViewBag.error';
+
+        if (message != "") {
+            errorMessage(message);
+        }
+    });
+    </script>
+}
+
+@if (TempData["error"] != null)
+{
+    @*<div class="row red-text">
+            @ViewBag.Error
+        </div>*@
+
+    if (TempData["error"].ToString() != "")
+    {
+        <script>
+                /**/
+                /**/
+                M.toast({ html: '@TempData["error"]', classes: '' });
+                /**/
+                /**/
+        </script>
+    }
+}
+
+<input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
+<input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
+
+@*<div>
+        <h4>DOCUMENTO</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.NUM_PRE)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.NUM_PRE)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.TALL_ID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TALL_ID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CANTIDAD_EV)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CANTIDAD_EV)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.USUARIOD_ID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.USUARIOD_ID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FECHAD)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FECHAD)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FECHAC)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FECHAC)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.HORAC)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.HORAC)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FECHAC_PLAN)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FECHAC_PLAN)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FECHAC_USER)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FECHAC_USER)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.HORAC_USER)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.HORAC_USER)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ESTATUS)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ESTATUS)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ESTATUS_C)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ESTATUS_C)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ESTATUS_SAP)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ESTATUS_SAP)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ESTATUS_WF)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ESTATUS_WF)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.DOCUMENTO_REF)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DOCUMENTO_REF)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CONCEPTO)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CONCEPTO)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.NOTAS)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.NOTAS)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_DOC_MD)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_DOC_MD)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_FIJO_MD)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_FIJO_MD)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_BASE_GS_PCT_MD)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_BASE_GS_PCT_MD)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_BASE_NS_PCT_MD)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_BASE_NS_PCT_MD)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_DOC_ML)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_DOC_ML)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_FIJO_ML)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_FIJO_ML)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_BASE_GS_PCT_ML)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_BASE_GS_PCT_ML)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_BASE_NS_PCT_ML)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_BASE_NS_PCT_ML)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_DOC_ML2)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_DOC_ML2)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_FIJO_ML2)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_FIJO_ML2)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_BASE_GS_PCT_ML2)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_BASE_GS_PCT_ML2)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_BASE_NS_PCT_ML2)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_BASE_NS_PCT_ML2)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PORC_ADICIONAL)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PORC_ADICIONAL)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.IMPUESTO)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IMPUESTO)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ESTATUS_EXT)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ESTATUS_EXT)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PAYER_ID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PAYER_ID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONEDA_ID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONEDA_ID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONEDAL_ID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONEDAL_ID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MONEDAL2_ID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MONEDAL2_ID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.TIPO_CAMBIO)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TIPO_CAMBIO)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.TIPO_CAMBIOL)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TIPO_CAMBIOL)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.TIPO_CAMBIOL2)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TIPO_CAMBIOL2)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.NO_FACTURA)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.NO_FACTURA)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FECHAD_SOPORTE)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FECHAD_SOPORTE)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.METODO_PAGO)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.METODO_PAGO)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.NO_PROVEEDOR)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.NO_PROVEEDOR)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PASO_ACTUAL)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PASO_ACTUAL)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.AGENTE_ACTUAL)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AGENTE_ACTUAL)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FECHA_PASO_ACTUAL)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FECHA_PASO_ACTUAL)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PUESTO_ID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PUESTO_ID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.GALL_ID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.GALL_ID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CONCEPTO_ID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CONCEPTO_ID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.DOCUMENTO_SAP)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DOCUMENTO_SAP)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FECHACON)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FECHACON)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FECHA_BASE)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FECHA_BASE)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.REFERENCIA)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.REFERENCIA)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CONDICIONES)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CONDICIONES)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.TEXTO_POS)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TEXTO_POS)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ASIGNACION_POS)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ASIGNACION_POS)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CLAVE_CTA)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CLAVE_CTA)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.SOCIEDAD.BUTXT)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.SOCIEDAD.BUTXT)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.TSOL.DESCRIPCION)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TSOL.DESCRIPCION)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.USUARIO.PASS)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.USUARIO.PASS)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.NUM_DOC }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>*@
+
+<div class="row" style="margin-bottom:0">
+
+    @{WFARTHA.Entities.USUARIO us = ViewBag.usuario;
+
+        <div class="col s12 m3 l2">
+            <div class="row" style="margin-bottom:0">
+                <div class="input-field col s12">
+                    @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
+                    @Html.LabelFor(model => model.USUARIOC_ID, "Usuario NT", new { @id = "lbl_userid" })
+                </div>
+            </div>
+        </div>
+        @*<div class="col s12 m4 l2">
+                <div class="input-field col s6">
+                    <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
+                    <label for="txt_status" id="lbl_status">Estatus NT</label>
+                </div>
+            </div>*@
+    }
+
+    <style>
+
+        .div_left {
+            float: left;
+        }
+
+        .div_right {
+            float: right;
+        }
+
+        .div_bottom {
+            clear: both;
+        }
+
+        .hr_bw {
+            height: 4px;
+            border: 0;
+            margin-bottom: 0px;
+            padding: 0;
+            background-color: #ccc;
+        }
+
+        .hr_color {
+            height: 6px;
+            border: 0;
+            margin: 0 0;
+            padding: 0;
+            background-color: #B90C46;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tabs_menu {
+            width: auto;
+        }
+
+        td.select_row {
+            background: url('../images/playb.png') no-repeat center center;
+            cursor: pointer;
+        }
+
+        tr.selected td.select_row {
+            background: url('../images/play.png') no-repeat center center;
+        }
+
+        td.detail_row {
+            background: url('../images/expandm.png') no-repeat center center;
+            cursor: pointer;
+        }
+
+        tr.details td.detail_row {
+            background: url('../images/expandl.png') no-repeat center center;
+        }
+
+        .errorMaterial {
+            background-color: red;
+        }
+
+        .errorProveedor {
+            background-color: red;
+        }
+    </style>
+
+    <div class="col s8 right-align">
+
+        <a href="@Url.Action("Index", "Home")" class="btn btn-small">Home NT</a>
+        <a id="btn_cont" class="btn btn-small">Contabilizar NT</a>
+
+    </div>
+    <div class="div_bottom">
+        <hr class="hr_bw" />
+        <hr class="hr_color #4e342e brown darken-3" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <ul class="tabs" id="tabs">
+            <li class="tab col s2 tabs_menu"><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado NT</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Info Contable NT</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Soporte_cont">Soporte NT</a></li>
+        </ul>
+    </div>
+</div>
+
+@*@using (Html.BeginForm("Create", "Solicitudes", FormMethod.Post, new { enctype = "multipart/form-data", id = "formCreate" }))
+    {
+        @Html.AntiForgeryToken()*@
+<div class="form-horizontal">
+    @*Encabezado*@
+    <div id="Encabezado_cont" class="col s12" style="font-size:12px;">
+        <div class="row">
+            <div class="col s12">
+                <div class="card-panel">
+                    <h5 id="head_cabecera">Cabecera NT</h5>
+                    <div class="row" style="margin-bottom:0">
+                        <div class="form-group col s6">
+                            @Html.LabelFor(model => model.TSOL_ID, "Clase de documento NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("TSOL_ID", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model => model.TSOL_ID, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+                        <div class="form-group col s6">
+                            @Html.LabelFor(model => model.SOCIEDAD_ID, "Sociedad NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:0">
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.FECHAD, "Fecha documento NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.FECHAD, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                @*@Html.ValidationMessageFor(model => model.FECHAD, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+                        <script>
+                            fechacon = $('#FECHAD').val();
+
+                            if (fechacon != null && fechacon != "") {
+                                fechacon = fechacon.split(" ");
+                                $('#FECHAD').val(fechacon[0]);
+                            }
+
+                        </script>
+
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.FECHACON, "Fecha Contabilización NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.FECHACON, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                @*@Html.ValidationMessageFor(model => model.FECHACON, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+                        <script>
+                            fechacon = $('#FECHACON').val();
+
+                            if (fechacon != null && fechacon != "") {
+                                fechacon = fechacon.split(" ");
+                                $('#FECHACON').val(fechacon[0]);
+                            }
+
+                        </script>
+
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                @*@Html.ValidationMessageFor(model => model.FECHA_BASE, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+                        <script>
+                            fechacon = $('#FECHA_BASE').val();
+
+                            if (fechacon != null && fechacon != "") {
+                                fechacon = fechacon.split(" ");
+                                $('#FECHA_BASE').val(fechacon[0]);
+                            }
+
+                        </script>
+                    </div>
+                    <div class="row" style="margin-bottom:0">
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.MONEDA_ID, "Moneda NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("MONEDA_ID", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model => model.MONEDA_ID, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.TIPO_CAMBIO, "Cambio NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                @*@Html.ValidationMessageFor(model => model.TIPO_CAMBIO, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+                        <script>
+                            tipo_cam = $('#TIPO_CAMBIO').val();
+
+                            if (tipo_cam != null && tipo_cam != "") {
+
+                                $('#TIPO_CAMBIO').val(toShowNum(tipo_cam));
+                            }
+
+                        </script>
+
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.IMPUESTO, "Impuesto NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model => model.IMPUESTO, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                @*@Html.ValidationMessageFor(model => model.MONTO_DOC_MD, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+                        <script>
+                            monto_doc = $('#MONTO_DOC_MD').val();
+
+                            if (monto_doc != null && monto_doc != "") {
+
+                                $('#MONTO_DOC_MD').val(toShow(monto_doc));
+                            }
+
+                        </script>
+
+                    </div>
+                    <div class="row" style="margin-bottom:0">
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.REFERENCIA, "Referencia NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10col s2">
+                                @Html.EditorFor(model => model.REFERENCIA, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                @*@Html.ValidationMessageFor(model => model.REFERENCIA, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.CONCEPTO, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CONCEPTO, "Concepto NT", new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                @*@Html.ValidationMessageFor(model => model.CONCEPTO, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.CONDICIONES, "Condiciones NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                @*@Html.ValidationMessageFor(model => model.CONDICIONES, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.CLAVE_CTA, "Clave Cuenta NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CLAVE_CTA, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                @*@Html.ValidationMessageFor(model => model.CLAVE_CTA, "", new { @disabled = "disabled", @class = "text-danger" })*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:0">
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.PAYER_ID, "Proveedor NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                @*@Html.ValidationMessageFor(model => model.PAYER_ID, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+                        @{string rfc = ""; string name = ""; }
+                        @if (dprov != null)
+                        {
+                            rfc = dprov.STCD1.ToString();
+                            name = dprov.NAME1.ToString();
+                        }
+                        <div class="form-group col s3">
+                            @*@Html.LabelFor(model => model.PAYER_ID, "RFC Proveedor NT", htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <label class="control-label col-md-2" for="rfc_proveedor">RFC Proveedor NT</label>
+                            <div class="col-md-10">
+                                <input type="text" id="rfc_proveedor" disabled value="@rfc" />
+                                @*@Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @class = "form-control" } })*@
+                                @*@Html.ValidationMessageFor(model => model.PAYER_ID, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+                        <div class="form-group col s6">
+                            @*@Html.LabelFor(model => model.PAYER_ID, "RFC Proveedor NT", htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <label class="control-label col-md-2" for="nom_proveedor">Nombre Proveedor NT</label>
+                            <div class="col-md-10">
+                                <input type="text" id="nom_proveedor" disabled value="@name" />
+                                @*@Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @class = "form-control" } })*@
+                                @*@Html.ValidationMessageFor(model => model.PAYER_ID, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s6">
+                    <div class="card-panel">
+                        <h5 id="head_flinea">Primera Línea del Documento NT</h5>
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s5">
+                                @Html.LabelFor(model => model.TEXTO_POS, "Texto Posición NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.TEXTO_POS, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                    @*@Html.ValidationMessageFor(model => model.TEXTO_POS, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                            <div class="form-group col s4">
+                                @Html.LabelFor(model => model.ASIGNACION_POS, "Asignación Posición NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.ASIGNACION_POS, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                    @*@Html.ValidationMessageFor(model => model.ASIGNACION_POS, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s6">
+                    <div class="card-panel">
+                        <h5 id="head_flinea">Retenciones NT</h5>
+                        <div class="row" style="margin-bottom:0">
+                            <table class="table display mdl-data-table striped" id="table_ret" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th class="lbl_tret">
+                                            Tipo Retención NT
+                                        </th>
+                                        <th class="lbl_descret">
+                                            Descripción Retención NT
+                                        </th>
+                                        <th class="lbl_indret">
+                                            Indicador de retención NT
+                                        </th>
+                                        <th class="lbl_bimponible">
+                                            Base Imponible NT
+                                        </th>
+                                        <th id="lbl_impret">
+                                            Importe de retención NT
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @*Obtener los decimales*@
+                                    @{ string deci = ViewBag.dec; if (deci == null | deci == "") { deci = ""; } }
+                                    @if (drets != null)
+                                    {
+                                        for (var i = 0; i < drets.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+
+                                                    @Html.DisplayFor(m => drets[i].WITHT)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(m => drets[i].DESC)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(m => drets[i].WT_WITHCD)
+                                                </td>
+                                                <td>
+                                                    @{ decimal bi = 0; try { bi = Convert.ToDecimal(drets[i].BIMPONIBLE); } catch (Exception) { }; string bim = formatoc.toShow(bi, deci);}
+                                                    @bim
+                                                </td>
+                                                <td>
+                                                    @{ decimal im = 0; try { im = Convert.ToDecimal(drets[i].IMPORTE_RET); } catch (Exception) { }; string ims = formatoc.toShow(im, deci);}
+                                                    @ims
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    @*Información Contable*@
+    <div id="Contable_cont" class="col s12" style="font-size:12px;">
+        <div class="row">
+            <div class="col s12">
+                <div class="card-panel">
+                    <h5 id="head_cabecera">Detalle NT</h5>
+                    <div class="row" style="margin-bottom:0">
+                        <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th class="lbl_pos">
+                                        Pos NT
+                                    </th>
+                                    <th class="lbl_NmAnexo">
+                                        Numero Anexo
+                                    </th>
+                                    <th class="lbl_cargoAbono">
+                                        D/H NT
+                                    </th>
+                                    <th class="lbl_factura">
+                                        Factura NT
+                                    </th>
+                                    <th id="lbl_grupo">
+                                        Grupo NT
+                                    </th>
+                                    <th id="lbl_cuenta">
+                                        Cuenta NT
+                                    </th>
+                                    <th id="lbl_cuentaNom">
+                                        Nombre de cuenta NT
+                                    </th>
+                                    <th id="lbl_tipoimp">
+                                        Tipo Imp. NT
+                                    </th>
+                                    <th id="lbl_imputacion">
+                                        Imputación NT
+                                    </th>
+                                    <th id="lbl_monto">
+                                        Monto NT
+                                    </th>
+                                    <th id="lbl_iva">
+                                        IVA NT
+                                    </th>
+                                    <th id="lbl_Texto">
+                                        Texto
+                                    </th>
+                                    @for (int i = 0; i < colsret.Count; i++)
+                                    {
+                                        <th id="">
+                                            @colsret[i] B.I.
+                                        </th>
+                                        <th id="">
+                                            @colsret[i] I.R.
+                                        </th>
+                                    }
+                                    <th id="lbl_Total">
+                                        Total NT
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.DOCUMENTOPSTR != null)
+                                {
+                                    for (int i = 0; i < Model.DOCUMENTOPSTR.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Model.DOCUMENTOPSTR[i].POS
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                @Model.DOCUMENTOPSTR[i].ACCION
+                                            </td>
+                                            <td>
+                                                @Model.DOCUMENTOPSTR[i].FACTURA
+                                            </td>
+                                            <td>
+                                                @Model.DOCUMENTOPSTR[i].GRUPO
+                                            </td>
+                                            <td>
+                                                @Model.DOCUMENTOPSTR[i].CUENTA
+                                            </td>
+                                            <td>
+                                                @Model.DOCUMENTOPSTR[i].NOMCUENTA
+                                            </td>
+                                            <td>
+                                                @Model.DOCUMENTOPSTR[i].TIPOIMP
+                                            </td>
+                                            <td>
+                                                @Model.DOCUMENTOPSTR[i].IMPUTACION
+                                            </td>
+                                            <td>
+                                                @Model.DOCUMENTOPSTR[i].MONTO
+                                            </td>
+                                            <td>
+                                                @Model.DOCUMENTOPSTR[i].IVA
+                                            </td>
+                                            <td>
+                                                @Model.DOCUMENTOPSTR[i].TEXTO
+                                            </td>
+                                            @for (int y = 0; y < colsret.Count; y++)
+                                            {
+                                                <td>
+                                                    @{var _v = colsret[y];}
+                                                    @lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().BIMPONIBLE
+                                                </td>
+                                                <td>
+                                                    @lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().IMPORTE_RET
+                                                </td>
+                                            }
+                                            <td>
+                                                @Model.DOCUMENTOPSTR[i].TOTAL
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            @*<tfoot id="tfoot_info" style="">
+                                    <tr>
+                                        <th colspan="10" style="text-align:right">Total:</th>
+                                        <th id="total_info"></th>
+                                    </tr>
+                                </tfoot>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Soporte Contable*@
+    <div id="Soporte_cont" class="col s12" style="font-size:12px;">
+        <div class="row">
+            <div class="col s12">
+                <div class="card-panel">
+                    <h5 id="head_cabecera">Detalle NT</h5>
+                    <div class="row" style="margin-bottom:0">
+
+                        @*<div class="file-field input-field" id="cargar_archivo">
+                                <div class="btn">
+                                    <span id="span_fileload">Examinar</span>
+                                    <input id="file_sop" type="file">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+
+                            <div id="div_btns_row_sop">
+                                <a class="btn"><i class="material-icons left">add</i><span id="addRowSop">Registros Add NT</span></a>
+                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowSop">Registro Del NT</span></a>
+                            </div>*@
+
+                        <table class="table display mdl-data-table striped" id="table_sop" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>
+
+                                    </th>
+                                    <th class="lbl_opc">
+                                        OPC NT
+                                    </th>
+                                    <th class="lbl_pos">
+                                        Pos NT
+                                    </th>
+                                    <th class="lbl_rfc">
+                                        RFC NT
+                                    </th>
+                                    <th class="lbl_factura">
+                                        Factura NT
+                                    </th>
+                                    <th id="lbl_fecha">
+                                        Fecha NT
+                                    </th>
+                                    <th id="lbl_monto">
+                                        Monto NT
+                                    </th>
+                                    <th id="lbl_iva">
+                                        IVA NT
+                                    </th>
+                                    <th id="lbl_total">
+                                        Total NT
+                                    </th>
+                                    <th id="lbl_archivo">
+                                        Archivo NT
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" id="btn_guardar" style="display:none" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input id="num_doc_send" type="text" value="@Model.NUM_DOC" style="display:none" />
+</div>
+
+
+
+@*}*@

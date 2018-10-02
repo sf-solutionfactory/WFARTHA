@@ -1,0 +1,1235 @@
+﻿@model WFARTHA.Models.DOCUMENTO_MOD
+
+@{
+    //ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 202;
+    ViewBag.carpeta_r = 200;
+    //string wf = ViewBag.worflw;
+    // string[] arrwf = wf.Split(',');
+}
+
+@*<link type="text/css" href="~/Content/datatables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>*@
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+<link href="~/Content/dataTable.css" rel="stylesheet" />
+<link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/create.js"></script>
+<script src="~/Scripts/formatos.js"></script>
+<script src="~/Scripts/ValidarCampos.js"></script>
+@*<script src="~/Scripts/validarColsExtras.js"></script>*@
+
+@if (ViewBag.error != "")
+{
+    <script>
+    $(document).ready(function () {
+
+        function errorMessage(msg) {
+            M.toast({ html: msg });
+        }
+        var message = '@ViewBag.error';
+
+        if (message != "") {
+            errorMessage(message);
+        }
+    });
+    </script>
+}
+
+<input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
+<input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
+
+<div class="row" style="margin-bottom:0">
+
+    @{WFARTHA.Entities.USUARIO us = ViewBag.usuario;
+
+        <div class="col s12 m3 l2">
+            <div class="row" style="margin-bottom:0">
+                <div class="input-field col s12">
+                    @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
+                    @Html.LabelFor(model => model.USUARIOC_ID, "Usuario NT", new { @id = "lbl_userid" })
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m4 l2">
+            <div class="input-field col s6">
+                <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
+                <label for="txt_status" id="lbl_status">Estatus NT</label>
+            </div>
+        </div>
+    }
+
+    <style>
+
+        div.dataTables_wrapper {
+            margin: 0 auto;
+        }
+
+        .div_left {
+            float: left;
+        }
+
+        .div_right {
+            float: right;
+        }
+
+        .div_bottom {
+            clear: both;
+        }
+
+        .hr_bw {
+            height: 4px;
+            border: 0;
+            margin-bottom: 0px;
+            padding: 0;
+            background-color: #ccc;
+        }
+
+        .hr_color {
+            height: 6px;
+            border: 0;
+            margin: 0 0;
+            padding: 0;
+            background-color: #B90C46;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tabs_menu {
+            width: auto;
+        }
+
+        td.select_row {
+            background: url('../images/playb.png') no-repeat center center;
+            cursor: pointer;
+        }
+
+        tr.selected td.select_row {
+            background: url('../images/play.png') no-repeat center center;
+        }
+
+        td.detail_row {
+            background: url('../images/expandm.png') no-repeat center center;
+            cursor: pointer;
+        }
+
+        tr.details td.detail_row {
+            background: url('../images/expandl.png') no-repeat center center;
+        }
+
+        .errorMaterial {
+            background-color: red;
+        }
+
+        .clblur {
+            background-color: #c4f0ff;
+        }
+
+        .errorProveedor {
+            background-color: red;
+        }
+
+        .selectImpuesto {
+            font-size: 12px;
+        }
+
+        /*div.dataTables_wrapper {
+            width: 800px;
+            margin: 0 auto;
+        }*/
+        /*table {
+            margin: 0 auto;
+            width: 100%;
+            clear: both;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }*/
+    </style>
+
+    <div class="col s8 right-align">
+        <a id="btn_borradorh" class="btn btn-small">Guardar borrador NT</a>
+
+        @{string b = ViewBag.borradore + "";
+            string display = "none";
+            if (b == "true")
+            {
+                display = "inline-block";
+            }
+            <a id="btn_borradore" class="btn btn-small" style="display :@display">Descartar Borrador NT</a>
+            <input type="text" id="borradore" name="borradore" value="@ViewBag.borradore" hidden />
+        }
+        <a href="@Url.Action("Index", "Home" )" class="btn btn-small">Cancelar NT</a>
+        <a id="btn_guardarh" class="btn btn-small">Enviar NT</a>
+        <script>
+            //function guardah() {
+            //    //alert("uno")
+            //    M.toast({ html: "Guardando" })
+            //    document.getElementById("loader").style.display = "flex";//RSG 26.04.2018
+            //    document.getElementById("btn_guardarh").classList.add("disabled");//RSG 26.04.2018
+            //}
+        </script>
+    </div>
+    <div class="div_bottom">
+        <hr class="hr_bw" />
+        <hr class="hr_color #4e342e brown darken-3" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <ul class="tabs" id="tabs">
+            <li class="tab col s2 tabs_menu"><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado NT</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Detalle NT</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_cont">Información NT</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_sap">Información SAP</a></li>
+        </ul>
+    </div>
+</div>
+
+@using (Html.BeginForm("Create", "Solicitudes", FormMethod.Post, new { enctype = "multipart/form-data", id = "formCreate" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @*Encabezado*@
+        <div id="Encabezado_cont" class="col s12" style="font-size:12px;">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card-panel">
+                        <div class="row">
+                            <h5 id="head_cabecera" style="display:inline-block">Cabecera NT</h5>
+                            <i class='material-icons green-text' style="">warning</i>
+                        </div>
+                        @*<h5 id="head_cabecera">Cabecera NT</h5>*@
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s6">
+                                @Html.LabelFor(model => model.TSOL_ID, "Clase de documento NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("TSOL_ID", null, htmlAttributes: new { @class = "form-control dd1" }) @*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.TSOL_ID, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                            <div class="form-group col s6">
+                                @Html.LabelFor(model => model.SOCIEDAD_ID, "Sociedad NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control ddl ddlsc" })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.FECHAD, "Fecha documento NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.FECHAD, new { htmlAttributes = new { @class = "form-control fechaVal" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.FECHAD, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+
+                            <script>
+                                var elemdp = document.querySelector('#FECHAD');
+                                var optionsdp = {
+                                    format: 'dd/mm/yyyy',
+                                    onClose: function (e) {
+                                    },
+                                    i18n: {
+                                        clear: 'Limpiar',
+                                        today: 'Hoy',
+                                        done: 'Seleccionar',
+                                        previousMonth: '‹',
+                                        nextMonth: '›',
+                                        months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                                        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                                        weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                                        weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+                                    }
+                                };
+                                var instancedp = M.Datepicker.init(elemdp, optionsdp);
+
+                            </script>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.FECHACON, "Fecha Contabilización NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.FECHACON, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.FECHACON, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+
+                            <script>
+                                var elemdp = document.querySelector('#FECHACON');
+                                var optionsdp = {
+                                    format: 'dd/mm/yyyy',
+                                    onClose: function (e) {
+                                    },
+                                    i18n: {
+                                        clear: 'Limpiar',
+                                        today: 'Hoy',
+                                        done: 'Seleccionar',
+                                        previousMonth: '‹',
+                                        nextMonth: '›',
+                                        months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                                        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                                        weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                                        weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+                                    }
+                                };
+                                var instancedp = M.Datepicker.init(elemdp, optionsdp);
+
+                            </script>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.FECHA_BASE, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+
+                            <script>
+                                var elemdp = document.querySelector('#FECHA_BASE');
+                                var optionsdp = {
+                                    format: 'dd/mm/yyyy',
+                                    onClose: function (e) {
+                                    },
+                                    i18n: {
+                                        clear: 'Limpiar',
+                                        today: 'Hoy',
+                                        done: 'Seleccionar',
+                                        previousMonth: '‹',
+                                        nextMonth: '›',
+                                        months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                                        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                                        weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                                        weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+                                    }
+                                };
+                                var instancedp = M.Datepicker.init(elemdp, optionsdp);
+
+                            </script>
+
+                        </div>
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.MONEDA_ID, "Moneda NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("MONEDA_ID", null, new { htmlAttributes = new { @class = "form-control  ddl" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.MONEDA_ID, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.TIPO_CAMBIO, "Cambio NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.TIPO_CAMBIO, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.IMPUESTO, "Impuesto NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @class = "form-control ddl" })@*LEJ 04.09.2018*@
+                                    @*<select id="selectImp" class="form-control ddl"></select>*@
+                                    @*@Html.ValidationMessageFor(model => model.IMPUESTO, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.MONTO_DOC_MD, new { htmlAttributes = new { @class = "form-control valmon", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.MONTO_DOC_MD, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.REFERENCIA, "Referencia NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10col s2">
+                                    @Html.EditorFor(model => model.REFERENCIA, new { htmlAttributes = new { @class = "form-control", @maxlength = "16", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.REFERENCIA, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.CONCEPTO, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CONCEPTO, "Concepto NT", new { htmlAttributes = new { @class = "form-control", @maxlength = "25" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.CONCEPTO, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.CONDICIONES, "Condiciones NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.CONDICIONES, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.CLAVE_CTA, "Clave Cuenta NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CLAVE_CTA, new { htmlAttributes = new { @class = "form-control", @maxlength = "2" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.CLAVE_CTA, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:0">
+                            <div class="input-field col s3">
+
+
+                                @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @class = "form-control" } })@*LEJ 04.09.2018*@
+                                @Html.LabelFor(model => model.PAYER_ID, "Proveedor NT", htmlAttributes: new { @class = "active", @for = "PAYER_ID" })
+
+                            </div>
+                            @*//MGC 05092018 Conceptos*@
+                            <link href="~/Content/autocomplete.css" rel="stylesheet" />
+                            <script src="~/Scripts/autocomplete1.10.2.js"></script>
+                            <script src="~/Scripts/autocomplete1.11.4.js"></script>
+
+                            <script>
+                                var auto = $.noConflict(true);
+                            </script>
+                            <script src="~/Scripts/createa.js"></script>
+                            <div class="form-group col s3">
+                                @*@Html.LabelFor(model => model.PAYER_ID, "RFC Proveedor NT", htmlAttributes: new { @class = "control-label col-md-2" })*@
+                                <label class="control-label col-md-2" for="rfc_proveedor">RFC Proveedor NT</label>
+                                <div class="col-md-10">
+                                    <input type="text" id="rfc_proveedor" disabled />
+                                    @*@Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    @*@Html.ValidationMessageFor(model => model.PAYER_ID, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                            <div class="form-group col s6">
+                                @*@Html.LabelFor(model => model.PAYER_ID, "RFC Proveedor NT", htmlAttributes: new { @class = "control-label col-md-2" })*@
+                                <label class="control-label col-md-2" for="nom_proveedor">Nombre Proveedor NT</label>
+                                <div class="col-md-10">
+                                    <input type="text" id="nom_proveedor" disabled />
+                                    @*@Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    @*@Html.ValidationMessageFor(model => model.PAYER_ID, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                            @*<div class="form-group col s3">
+                                    <a id="btn_retenciones" class="waves-effect waves-light btn">Retenciones NT</a>
+                                </div>*@
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col s6">
+                    <div class="card-panel" style="display:none">
+                        <h5 id="head_flinea">Primera Línea del Documento NT</h5>
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s12">
+                                @Html.LabelFor(model => model.TEXTO_POS, "Texto Posición NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.TEXTO_POS, new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.TEXTO_POS, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s4">
+                                @Html.LabelFor(model => model.ASIGNACION_POS, "Asignación Posición NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.ASIGNACION_POS, new { htmlAttributes = new { @class = "form-control", @maxlength = "18" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.ASIGNACION_POS, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12">
+                    <div class="card-panel">
+                        <div id="file_facturat" class="file-field input-field" style="display:none">
+                            <div class="btn">
+                                <span id="span_filefact">File</span> @*B20180801 MGC Textos*@
+                                <input type="file" class="file_sop" id="file_sopp">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate file_sop" type="text">
+                            </div>
+                        </div>
+                        <h5 id="head_flinea">Retenciones NT</h5>
+                        <div class="row" style="margin-bottom:0">
+                            <table class="table display mdl-data-table striped" id="table_ret" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th class="lbl_socret">
+                                            Sociedad Retención NT
+                                        </th>
+                                        <th class="lbl_provret">
+                                            Proveedor Retención NT
+                                        </th>
+                                        <th class="lbl_tret">
+                                            Tipo Retención NT
+                                        </th>
+                                        <th class="lbl_descret">
+                                            Descripción Retención NT
+                                        </th>
+                                        <th class="lbl_indret">
+                                            Indicador de retención NT
+                                        </th>
+                                        <th class="lbl_bimponible">
+                                            Base Imponible NT
+                                        </th>
+                                        <th id="lbl_impret">
+                                            Importe de retención NT
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+
+                            <table class="table display mdl-data-table striped" id="table_reth" style="width:100%; display:none">
+                                <thead>
+                                    <tr>
+                                        <th class="lbl_socret">
+                                            Sociedad Retención NT
+                                        </th>
+                                        <th class="lbl_provret">
+                                            Proveedor Retención NT
+                                        </th>
+                                        <th class="lbl_tret">
+                                            Tipo Retención NT
+                                        </th>
+                                        <th class="lbl_descret">
+                                            Descripción Retención NT
+                                        </th>
+                                        <th class="lbl_indret">
+                                            Indicador de retención NT
+                                        </th>
+                                        <th class="lbl_bimponible">
+                                            Base Imponible NT
+                                        </th>
+                                        <th id="lbl_impret">
+                                            Importe de retención NT
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Información Contable*@
+        <div id="Contable_cont" class="col s12" style="font-size:12px;">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card-panel">
+                        <h5 id="head_cabecera">Detalle NT</h5>
+                        <div class="row" style="margin-bottom:0">
+
+                            @*//MGC 04092018 Conceptos*@
+                            @{string jval = ViewBag.TSOL_VALUES;
+                                @Html.Hidden("impuestosval", jval)
+                            }
+
+                            <div id="div_btns_row_info">
+                                <a class="btn"><i class="material-icons left">add</i><span id="addRowInfo">Registros Add NT</span></a>
+                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowInfo">Registro Del NT</span></a>
+                            </div>
+                            <div>
+                                <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>
+
+                                            </th>
+                                            <th class="lbl_pos">
+                                                Pos NT
+                                            </th>
+                                            <th class="lbl_NmAnexo">
+                                                Numero Anexo1
+                                            </th>
+                                            <th class="lbl_NmAnexo">
+                                                Numero Anexo2
+                                            </th>
+                                            <th class="lbl_NmAnexo">
+                                                Numero Anexo3
+                                            </th>
+                                            <th class="lbl_NmAnexo">
+                                                Numero Anexo4
+                                            </th>
+                                            <th class="lbl_NmAnexo">
+                                                Numero Anexo5
+                                            </th>
+                                            <th class="lbl_cargoAbono">
+                                                D/H NT
+                                            </th>
+                                            <th class="lbl_factura">
+                                                Factura NT
+                                            </th>
+                                            <th id="lbl_tconcepto">
+                                                TIPO CONCEPTO NT
+                                            </th>
+                                            <th id="lbl_grupo">
+                                                Grupo NT
+                                            </th>
+                                            <th id="lbl_cuenta">
+                                                Cuenta NT
+                                            </th>
+                                            <th id="lbl_cuentaNom">
+                                                Nombre de cuenta NT
+                                            </th>
+                                            <th id="lbl_tipoimp">
+                                                Tipo Imp. NT
+                                            </th>
+                                            <th id="lbl_imputacion">
+                                                Imputación NT
+                                            </th>
+                                            <th id="lbl_ccosto">
+                                                Centro de costo NT
+                                            </th>
+                                            <th id="lbl_monto">
+                                                Monto NT
+                                            </th>
+                                            <th id="lbl_impuesto">
+                                                Impuesto NT
+                                            </th>
+                                            <th id="lbl_iva">
+                                                IVA NT
+                                            </th>
+                                            <th id="lbl_Texto">
+                                                TEXTO
+                                            </th>
+                                            <th id="lbl_total">
+                                                Total
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                    <tfoot id="tfoot_info" style="overflow:auto;">
+                                        <tr>
+                                            <th colspan="16" style="text-align:right">Total:</th>
+                                            <th id="total_info"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <table class="table display mdl-data-table striped" id="table_infoh" style="width:100%; display:none">
+                                <thead>
+                                    <tr>
+                                        <th class="lbl_pos">
+                                            Pos NT
+                                        </th>
+                                        <th class="lbl_NmAnexo">
+                                            Numero Anexo1
+                                        </th>
+                                        <th class="lbl_NmAnexo">
+                                            Numero Anexo2
+                                        </th>
+                                        <th class="lbl_NmAnexo">
+                                            Numero Anexo3
+                                        </th>
+                                        <th class="lbl_NmAnexo">
+                                            Numero Anexo4
+                                        </th>
+                                        <th class="lbl_NmAnexo">
+                                            Numero Anexo5
+                                        </th>
+                                        <th class="lbl_cargoAbono">
+                                            Cargo/Abono NT
+                                        </th>
+                                        <th class="lbl_factura">
+                                            Factura NT
+                                        </th>
+                                        <th id="lbl_tconcepto">
+                                            TIPO CONCEPTO NT
+                                        </th>
+                                        <th id="lbl_grupo">
+                                            Grupo NT
+                                        </th>
+                                        <th id="lbl_cuenta">
+                                            Cuenta NT
+                                        </th>
+                                        <th id="lbl_cuentaNom">
+                                            Nombre de cuenta NT
+                                        </th>
+                                        <th id="lbl_tipoimp">
+                                            Tipo Imp. NT
+                                        </th>
+                                        <th id="lbl_imputacion">
+                                            Imputación NT
+                                        </th>
+                                        <th id="lbl_ccosto">
+                                            Centro de costo NT
+                                        </th>
+                                        <th id="lbl_monto">
+                                            Monto NT
+                                        </th>
+                                        <th id="lbl_impuesto">
+                                            Impuesto NT
+                                        </th>
+                                        <th id="lbl_iva">
+                                            IVA NT
+                                        </th>
+                                        <th id="lbl_texto">
+                                            TEXTO
+                                        </th>
+                                        <th id="lbl_total">
+                                            Total
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            @*Para las retenciones dinamicas*@
+                            <table class="table display mdl-data-table striped" id="table_inforeth" style="width:100%; display:none"></table>
+                            @*Para las columnas de anexos*@
+                            <table class="table display mdl-data-table striped" id="table_infoAnex" style="width:100%; display:none">
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <div class="card-panel">
+                        <h5 id="head_cabecera">ANEXOS</h5>
+                        <div class="row" style="margin-bottom:0">
+                            <div>
+                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowAnex">Registro Del A</span></a>
+                            </div>
+                            <div class="file-field input-field" id="cargar_archivo">
+                                <div class="btn" style="margin-left: 2px;">
+                                    <span id="span_fileloadAnexar">Anexar</span>
+                                    <input name="file_sopAnexar" id="file_sopAnexar" type="file" multiple="multiple" />
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate file_sopAnexar" type="text">
+                                </div>
+                            </div>
+                            <table class="table display mdl-data-table striped" id="table_anexa" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th class="">
+                                        </th>
+                                        <th class="">
+                                            Num
+                                        </th>
+                                        <th class="">
+                                            Status
+                                        </th>
+                                        <th class="">
+                                            Nombres Archivo
+                                        </th>
+                                        <th class="">
+                                            Tipo de Archivo
+                                        </th>
+                                        <th class="">
+                                            Descripcion
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Soporte Contable*@
+        <div id="Informacion_cont" class="col s12" style="font-size:12px;">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card-panel">
+                        <h5 id="head_cabecera">Detalle NT</h5>
+                        <div class="row" style="margin-bottom:0">
+
+                            <div class="file-field input-field" id="cargar_archivo" style="display:none">
+                                <div class="btn">
+                                    <span id="span_fileload">Examinar</span>
+                                    <input id="file_sop" type="file">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+
+                            <div id="div_btns_row_sop">
+                                <a class="btn"><i class="material-icons left">add</i><span id="addRowSop">Registros Add NT</span></a>
+                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowSop">Registro Del NT</span></a>
+                            </div>
+
+                            <table class="table display mdl-data-table striped" id="table_sop" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>
+
+                                        </th>
+                                        <th class="lbl_opc">
+                                            OPC NT
+                                        </th>
+                                        <th class="lbl_pos">
+                                            Pos NT
+                                        </th>
+                                        <th class="lbl_rfc">
+                                            RFC NT
+                                        </th>
+                                        <th class="lbl_factura">
+                                            Factura NT
+                                        </th>
+                                        <th id="lbl_fecha">
+                                            Fecha NT
+                                        </th>
+                                        <th id="lbl_monto">
+                                            Monto NT
+                                        </th>
+                                        <th id="lbl_iva">
+                                            IVA NT
+                                        </th>
+                                        <th id="lbl_total">
+                                            Total NT
+                                        </th>
+                                        <th id="lbl_archivo">
+                                            Archivo NT
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+
+                            @*<div class="form-group">
+                                    @Html.LabelFor(model => model.NUM_DOC, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.NUM_DOC, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.NUM_DOC, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.NUM_PRE, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.NUM_PRE, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.NUM_PRE, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.TALL_ID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.TALL_ID, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.TALL_ID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CANTIDAD_EV, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.CANTIDAD_EV, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.CANTIDAD_EV, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.USUARIOD_ID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.USUARIOD_ID, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.USUARIOD_ID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.FECHAC, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.FECHAC, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.FECHAC, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HORAC, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.HORAC, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.HORAC, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.FECHAC_PLAN, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.FECHAC_PLAN, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.FECHAC_PLAN, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.FECHAC_USER, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.FECHAC_USER, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.FECHAC_USER, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HORAC_USER, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.HORAC_USER, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.HORAC_USER, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ESTATUS, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ESTATUS, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ESTATUS, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ESTATUS_C, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ESTATUS_C, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ESTATUS_C, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ESTATUS_SAP, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ESTATUS_SAP, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ESTATUS_SAP, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ESTATUS_WF, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ESTATUS_WF, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ESTATUS_WF, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.DOCUMENTO_REF, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.DOCUMENTO_REF, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.DOCUMENTO_REF, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.NOTAS, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.NOTAS, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.NOTAS, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONTO_FIJO_MD, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONTO_FIJO_MD, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONTO_FIJO_MD, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONTO_BASE_GS_PCT_MD, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONTO_BASE_GS_PCT_MD, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONTO_BASE_GS_PCT_MD, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONTO_BASE_NS_PCT_MD, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONTO_BASE_NS_PCT_MD, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONTO_BASE_NS_PCT_MD, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONTO_DOC_ML, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONTO_DOC_ML, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONTO_DOC_ML, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONTO_FIJO_ML, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONTO_FIJO_ML, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONTO_FIJO_ML, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONTO_BASE_GS_PCT_ML, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONTO_BASE_GS_PCT_ML, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONTO_BASE_GS_PCT_ML, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONTO_BASE_NS_PCT_ML, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONTO_BASE_NS_PCT_ML, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONTO_BASE_NS_PCT_ML, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONTO_DOC_ML2, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONTO_DOC_ML2, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONTO_DOC_ML2, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONTO_FIJO_ML2, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONTO_FIJO_ML2, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONTO_FIJO_ML2, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONTO_BASE_GS_PCT_ML2, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONTO_BASE_GS_PCT_ML2, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONTO_BASE_GS_PCT_ML2, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONTO_BASE_NS_PCT_ML2, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONTO_BASE_NS_PCT_ML2, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONTO_BASE_NS_PCT_ML2, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.PORC_ADICIONAL, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.PORC_ADICIONAL, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PORC_ADICIONAL, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ESTATUS_EXT, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ESTATUS_EXT, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ESTATUS_EXT, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONEDAL_ID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONEDAL_ID, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONEDAL_ID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MONEDAL2_ID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MONEDAL2_ID, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.MONEDAL2_ID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.TIPO_CAMBIOL, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.TIPO_CAMBIOL, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.TIPO_CAMBIOL, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.TIPO_CAMBIOL2, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.TIPO_CAMBIOL2, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.TIPO_CAMBIOL2, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.NO_FACTURA, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.NO_FACTURA, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.NO_FACTURA, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.FECHAD_SOPORTE, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.FECHAD_SOPORTE, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.FECHAD_SOPORTE, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.METODO_PAGO, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.METODO_PAGO, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.METODO_PAGO, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.NO_PROVEEDOR, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.NO_PROVEEDOR, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.NO_PROVEEDOR, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.PASO_ACTUAL, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.PASO_ACTUAL, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PASO_ACTUAL, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AGENTE_ACTUAL, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.AGENTE_ACTUAL, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.AGENTE_ACTUAL, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.FECHA_PASO_ACTUAL, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.FECHA_PASO_ACTUAL, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.FECHA_PASO_ACTUAL, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.PUESTO_ID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.PUESTO_ID, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.GALL_ID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.GALL_ID, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.GALL_ID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CONCEPTO_ID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.CONCEPTO_ID, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.CONCEPTO_ID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.DOCUMENTO_SAP, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.DOCUMENTO_SAP, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.DOCUMENTO_SAP, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>*@
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Create" id="btn_guardar" style="display:none" class="btn btn-default" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="display:none;">
+                <div class="col s12">
+                    <div class="card-panel">
+                        <h5 id="head_cabecera">WORKFLOW</h5>
+                        <div class="row" style="margin-bottom:0">
+                            <table class="table  mdl-data-table striped" id="table_wf" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th class="lbl_pos">
+                                            Pos NT
+                                        </th>
+                                        <th class="lbl_cargoAbono">
+                                            Cargo/Abono NT
+                                        </th>
+                                        <th class="lbl_factura">
+                                            Factura NT
+                                        </th>
+                                        <th id="lbl_tconcepto">
+                                            TIPO CONCEPTO NT
+                                        </th>
+                                        <th id="lbl_grupo">
+                                            Grupo NT
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @*@arrwf[0]*@
+                                        </td>
+                                        <td>
+                                            @*@arrwf[1]*@
+                                        </td>
+                                        <td>
+                                            @*@arrwf[2]*@
+                                        </td>
+                                        <td>
+                                            @*@arrwf[3]*@
+                                        </td>
+                                        <td>
+                                            @*@arrwf[4]*@
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        @*Soporte SAP*@
+        <div id="Informacion_sap" class="col s12" style="font-size:12px;">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card-panel">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
