@@ -1,10 +1,13 @@
-﻿@using System.Web.Hosting;
+﻿@model IEnumerable<WFARTHA.Entities.DOCUMENTO>
+@using System.Web.Hosting;
 @using System.Linq;
 @{
     //ViewBag.Title = "Páginas";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 101;
     ViewBag.carpeta_r = 100;
+
+    List<WFARTHA.Entities.PROVEEDOR> lst = ViewBag.Proveedores as List<WFARTHA.Entities.PROVEEDOR>;
 
     //ViewBag.BORRADOR = "Mensaje de creación";
 }
@@ -86,10 +89,10 @@
     <div class="col s8 right-align right">
         @Html.ActionLink("Crear Solicitud", "Create", "Solicitudes", null, new { @class = "btn-small", @id = "btn_create" })
         @*@using (Html.BeginForm("Descargar", "Home", FormMethod.Post, new { @style = "display:inline;" }))
-        {
-            <button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel"></button>
-        }
-        @Html.ActionLink("Enviar Negociaciones", "Edit", "Negociaciones", null, new { @class = "btn-small red", @onclick = "document.getElementById('loader').style.display = 'initial';" })*@
+            {
+                <button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel"></button>
+            }
+            @Html.ActionLink("Enviar Negociaciones", "Edit", "Negociaciones", null, new { @class = "btn-small red", @onclick = "document.getElementById('loader').style.display = 'initial';" })*@
     </div>
     <div class="col s12 right-align" style="margin-top:5px;">
 
@@ -248,6 +251,379 @@
         <link href="~/Content/dataTable.css" rel="stylesheet" />
         @*<link href="~/Content/dataTables.material.min.css" rel="stylesheet" />*@
         <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+
+        <table class="table mdl-data-table striped" id="table" style="width:100%;">
+            <thead>
+                <tr>
+                    @*<th></th>*@
+                    <th class="lbl_num">
+                        @Html.DisplayNameFor(model => model.NUM_DOC)
+                    </th>
+                    @*MGC Preliminar Status que hay en preliminar*@
+                    <th class="lbl_num_pre">
+                        @Html.DisplayNameFor(model => model.NUM_PRE)
+                    </th>
+                    <th class="lblSociedad">
+                        @Html.DisplayNameFor(model => model.SOCIEDAD_ID)
+                    </th>
+                    @*<th class="lblPais">
+                            @Html.DisplayNameFor(model => model.PAIS_ID)
+                        </th>*@
+                    <th id="lbl_fechad">
+                        @Html.DisplayNameFor(model => model.FECHAD)
+                    </th>
+                    <th id="lbl_horac">
+                        @Html.DisplayNameFor(model => model.HORAC)
+                    </th>
+                    <th id="lblPC">
+                        @Html.DisplayName("Periodo Contable")
+                    </th>
+                    <th id="lbl_estatus">
+                        @Html.DisplayNameFor(model => model.ESTATUS)
+                    </th>
+                    <th id="lblPayId">
+                        @Html.DisplayNameFor(model => model.PAYER_ID)
+                    </th>
+                    <th id="lblCliente">
+                        @Html.DisplayName("Cliente")
+                    </th>
+                    <th id="lblCanal">
+                        @Html.DisplayName("Canal")
+                    </th>
+                    <th id="lbl_tsol">
+                        @Html.DisplayNameFor(model => model.TSOL)
+                    </th>
+                    @*<th id="lbl_tall">
+                            @Html.DisplayNameFor(model => model.TALL)
+                        </th>
+                        <th id="lblCuentas">
+                            @Html.DisplayName("Cuentas")
+                        </th>*@
+                    <th id="lbl_concepto">
+                        @Html.DisplayNameFor(model => model.CONCEPTO)
+                    </th>
+                    <th id="lblMo">
+                        @Html.DisplayNameFor(model => model.MONTO_DOC_ML)
+                    </th>
+                    @*<th id="lblFac">
+                            @Html.DisplayName("Factura")
+                        </th>
+                        <th id="lblFack">
+                            @Html.DisplayName("FacturaK")
+                        </th>*@
+                    <th id="lblUC">
+                        @Html.DisplayNameFor(model => model.USUARIOC_ID)
+                    </th>
+                    <th id="lblUM">
+                        @Html.DisplayName("Modificado por")
+                    </th>
+                    <th id="lblNC">
+                        @Html.DisplayName("Número Nota Crédito/Orden de Pago")
+                    </th>
+                    <th id="lblRP">
+                        @Html.DisplayName("Núm. Registro Provisión")
+                    </th>
+                    <th id="lblRnc">
+                        @Html.DisplayName("Núm. Registro NC/OP")
+                    </th>
+                    <th id="lblRap">
+                        @Html.DisplayName("Núm Registro AP")
+                    </th>
+                    <th id="lblRR">
+                        @Html.DisplayName("Núm. Registro Reverso")
+                    </th>
+                    <th id="lblTDoc">
+                        @Html.DisplayName("Tipo Documento")
+                    </th>
+                    <th id="lblPayer">
+                        @Html.DisplayName("Payer")
+                    </th>
+                    <th id="lblCl">
+                        @Html.DisplayName("Cliente")
+                    </th>
+                    <th id="lblIL">
+                        @Html.DisplayName("$ Importe Moneda Local")
+                    </th>
+                    <th id="lblCCG">
+                        @Html.DisplayName("Cuenta Contable Gasto")
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @*@if (item.TSOL.PADRE)
+                            {
+                                if (item.DOCUMENTORECs.Count > 0)
+                                {
+                                    <td class=" details-control" style="cursor:pointer">
+                                        <i class="material-icons">expand_more</i>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class=" details-control" style="cursor:pointer">
+                                        <i class="material-icons">add</i>
+                                    </td>
+                                }
+                            }
+                            else
+                            {
+                                if (item.DOCUMENTORECs.Count > 0)
+                                {
+                                    <td class=" details-control" style="cursor:pointer">
+                                        <i class="material-icons">expand_more</i>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            }*@
+
+
+                        @if (item.FLUJOes.Count > 0)
+                        {
+                            if (item.ESTATUS_WF == "R" & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID)
+                            {
+                                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id_d = item.NUM_DOC })'" style="cursor:pointer">
+                                    @item.NUM_DOC
+                                </td>
+                            }
+                            else
+                            {
+                                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                                    @item.NUM_DOC
+                                </td>
+                            }
+                        }
+                        else
+                        {
+                            <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                                @item.NUM_DOC
+                            </td>
+                        }
+
+                        @*<td style="cursor:pointer">
+                                @item.NUM_PRE
+                            </td>*@
+
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
+                        </td>
+                        <td>
+                            @if (item.FECHAD != null)
+                            {
+                                try
+                                {@(item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year);
+                            }
+                            catch (Exception) { };
+                        }
+                        </td>
+                        <td>
+                            @item.HORAC.Value.ToString().Split('.')[0]
+                        </td>
+                        <td>
+                            @item.FECHAC.Value.Month
+                        </td>
+                        @*MGC Preliminar Status que hay en preliminar*@
+                        @if (item.NUM_PRE != 0)
+                        {
+
+                            string estatus = "";
+                            if (item.ESTATUS != null) { estatus += item.ESTATUS; } else { estatus += " "; }
+                            if (item.ESTATUS_C != null) { estatus += item.ESTATUS_C; } else { estatus += " "; }
+                            if (item.ESTATUS_SAP != null) { estatus += item.ESTATUS_SAP; } else { estatus += " "; }
+                            if (item.ESTATUS_WF != null) { estatus += item.ESTATUS_WF; } else { estatus += " "; }
+
+                            if (item.FLUJOes.Count > 0)
+                            {
+                                estatus += item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO;
+                            }
+                            else
+                            {
+                                estatus += " ";
+                            }
+                            if (false) { estatus += "P"; } else { estatus += " "; }
+                            if (item.FLUJOes.Where(x => x.ESTATUS == "R").ToList().Count > 0)
+                            {
+                                estatus += item.FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID;
+                            }
+                            else
+                            {
+                                estatus += " ";
+                            }
+                            // "XCXXXX" ----------->CANCELADA
+                            // "XXXPRX" ----------->PENDIENTE TS
+                            // "XXXPAX" ----------->PENDIENTE APROBADOR
+                            // "CXXAXX" ----------->PENDIENTE APROBADOR
+
+                            @*@if (item.ESTATUS_C == "C")*@
+                            if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]"))
+                            {
+                                <td class="">
+                                    <span class="lbl_cancelled new badge red darken-1 white-text" data-badge-caption=" ">Cancelada</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].."))
+                            {
+                                <td class="">
+                                    <span class="lbl_ts yellow darken-2 white-text new badge" data-badge-caption=" ">Pendiente creación preliminar</span>@*//MGC 02-10-2018 Cadena de autorización*@
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A].."))
+                            {
+                                <td class="">
+                                    <span class="new badge yellow darken-2 white-text" data-badge-caption=" "><span class="lbl_pending">Pendiente aprobador </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID*@</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[A]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Por gen .txt</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Cerrada</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_contab new badge green darken-1 white-text" data-badge-caption=" ">Por contabilizar</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Por contabilizar</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_txt new badge red darken-1 white-text" data-badge-caption=" ">Error en contabiización</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]."))
+                            {
+                                <td class="">
+                                    <span class="new badge green darken-1 white-text" data-badge-caption=" ">@item.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50 <span class="lbl_approved">Abierta</span></span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..."))
+                            {
+                                <td class="">
+                                    <span class="new badge green darken-1 white-text" data-badge-caption=" ">Registrada en SAP</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]"))
+                            {
+                                <td class="">
+                                    <span class="new badge red darken-1 white-text" data-badge-caption=" "><span class="lbl_rejecte">Pendiente corrección usuario TS </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID*@</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..."))
+                            {
+                                <td class="">
+                                    <span class="new badge red darken-1 white-text" data-badge-caption=" "><span class="lbl_rejected">Pendiente corrección usuario </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID*@</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[S]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_soporte new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente firma</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente tax</span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>Espacio</td>
+                            }
+
+                        }
+                        else
+                        {
+                            if (item.DOCUMENTOPREs != null)
+                            {
+                                if (item.DOCUMENTOPREs.Count > 0)
+                                {
+                                    <td class="">
+                                        @foreach (WFARTHA.Entities.DOCUMENTOPRE i in item.DOCUMENTOPREs)
+                                        {
+                                            if (System.Text.RegularExpressions.Regex.IsMatch(@i.MESSAGE, "...[Error]..."))
+                                            {
+                                                <span class="lbl_tax new badge red darken-1 white-text" data-badge-caption=" ">@i.MESSAGE</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">@i.MESSAGE</span>
+                                            }
+                                        }
+                                    </td>
+                                }
+                            }
+                        }
+
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PAYER_ID)
+                        </td>
+                        <td>
+                            @for (int i = 0; i < lst.Count; i++)
+                            {
+                                if (lst[i].LIFNR == item.PAYER_ID)
+                                {
+                                    @Html.Label(lst[i].NAME1)
+                                }
+                            }
+                        </td>
+                        <td>
+                            @for (int i = 0; i < lst.Count; i++)
+                            {
+                                if (lst[i].LIFNR == item.PAYER_ID)
+                                {
+                                    @Html.Label(lst[i].STCD1)
+                                }
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CONCEPTO)
+                        </td>
+                        <td class="precio">
+                            @Html.DisplayFor(modelItem => item.MONTO_DOC_ML)
+                        </td>
+                        <td>
+                            @item.USUARIOC_ID
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
         <iframe id="txtArea1" style="display:none"></iframe>
         <script>
