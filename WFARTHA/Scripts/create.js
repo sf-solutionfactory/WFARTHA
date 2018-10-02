@@ -6,7 +6,6 @@ var extraCols = 0;
 var tRet = [];//Agrego a un array los tipos de retenciones
 var tRet2 = [];//Agrego a un array los tipos de retenciones que no tienen ligadas
 
-////
 $(document).ready(function () {
     //LEJ 11.09.2018------------------------------------
     //Iniciar todos los selects
@@ -1165,10 +1164,9 @@ $('body').on('focusout', '.OPER', function (e) {
         else {
             tr.find("td.TOTAL input").val(total);
         }
-    }
-
+    }    
     updateFooter();
-
+    $(".extrasC").trigger("focusout");
 });
 
 function sumarColumnasExtras(tr) {
@@ -1737,15 +1735,14 @@ function sumarizarTodoRow(_this) {
     var sub = tr.find("td.MONTO input").val().replace('$', '').replace(',', '');
     sub = parseFloat(sub);
 
-    rimpimp = 100 - impimp;
+    //rimpimp = 100 - impimp;
 
-    var total = (sub * 100) / rimpimp;
-    //total = parseFloat(total);
-    total = parseFloat(total);// + parseFloat(colTotal);//Lej 18.09.18
-
-    var impv = (total * impimp) / 100;
+    var impv = (sub * impimp) / 100;
     impv = parseFloat(impv);
-    var sub = total - impv;
+
+    var total = sub + impv;
+    total = parseFloat(total);
+    var sub = total - impv;   
 
     impv = toShow(impv);
     sub = toShow(sub);
@@ -1906,7 +1903,7 @@ function copiarTableInfoControl() {
             var indexopc = t.row(tr).index();
 
             //Obtener el concepto
-            var tconcepto = t.row(indexopc).data()[4];
+            var tconcepto = t.row(indexopc).data()[9];
 
             //Lej 14.08.2018-------------------------------------------------------------I
             var colsAdded = tRet2.length;//Las retenciones que se agregaron a la tabla
@@ -2044,7 +2041,7 @@ function copiarTableInfoControl() {
 
                 if (data !== null || data !== "") {
 
-                    //$("table#table_infoAnex tbody").append(data);
+                    $("table#table_infoAnex tbody").append(data);
                 }
 
             },
