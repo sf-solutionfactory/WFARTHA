@@ -420,6 +420,7 @@
     <Compile Include="Models\ArchivoContable.cs" />
     <Compile Include="Models\ArchivoPreliminar.cs" />
     <Compile Include="Models\Cryptography.cs" />
+    <Compile Include="Models\DOCUMENTOA_MOD.cs" />
     <Compile Include="Models\DocumentoComparer.cs" />
     <Compile Include="Models\DOCUMENTOP_MODSTR.cs" />
     <Compile Include="Models\DOCUMENTORP_MOD.cs" />
