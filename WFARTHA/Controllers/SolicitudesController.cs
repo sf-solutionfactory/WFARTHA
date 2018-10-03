@@ -328,6 +328,9 @@ namespace WFARTHA.Controllers
             //Obtener las sociedadess
             //List<SOCIEDAD> sociedadesl = new List<SOCIEDAD>();
             var sociedades = db.SOCIEDADs.Select(s => new { s.BUKRS, TEXT = s.BUKRS + " - " + s.BUTXT }).ToList();
+
+            //MGC 03-10-2018 solicitud con orden de compra -->
+            //Obtener la solicitud con la configuración
             var tsoll = (from ts in db.TSOLs
                          join tt in db.TSOLTs
                          on ts.ID equals tt.TSOL_ID
@@ -336,9 +339,15 @@ namespace WFARTHA.Controllers
                          where ts.ESTATUS == "X" && tt.SPRAS_ID.Equals(spras)
                          select new
                          {
-                             ts.ID,
-                             TEXT = ts.ID + " - " + tt.TXT50
+                             //ts.ID,
+                             ID = new { ID = ts.ID.ToString().Replace(" ", ""), RANGO = ts.RANGO_ID.ToString().Replace(" ", ""), EDITDET = ts.EDITDET.ToString().Replace(" ", "") },
+                             TEXT = ts.ID + " - " + tt.TXT50,
+                             DEFAULT = ts.DEFAULT
                          }).ToList();
+
+            //Obtener el valor default
+            var tsolldef = tsoll.Where(tsd => tsd.DEFAULT == true).Select(tsds => tsds.ID).FirstOrDefault(); 
+            //MGC 03-10-2018 solicitud con orden de compra <--
 
             var monedal = db.MONEDAs.Where(m => m.ACTIVO == true).Select(m => new { m.WAERS, TEXT = m.WAERS + " - " + m.LTEXT }).ToList();
 
@@ -357,7 +366,11 @@ namespace WFARTHA.Controllers
                              }).ToList();
 
             ViewBag.SOCIEDAD_ID = new SelectList(sociedades, "BUKRS", "TEXT");
-            ViewBag.TSOL_ID = new SelectList(tsoll, "ID", "TEXT");
+            //MGC 03-10-2018 solicitud con orden de compra -->
+            //Obtener la solicitud con la configuración
+            ViewBag.TSOL_IDL = new SelectList(tsoll, "ID", "TEXT",selectedValue: tsolldef);
+            //MGC 03-10-2018 solicitud con orden de compra <--
+
             ViewBag.IMPUESTO = new SelectList(impuestol, "MWSKZ", "TEXT", "V3");
             ViewBag.MONEDA_ID = new SelectList(monedal, "WAERS", "TEXT");
             //lej 30.08.2018------------------

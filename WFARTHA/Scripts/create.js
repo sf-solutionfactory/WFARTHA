@@ -164,6 +164,12 @@ $(document).ready(function () {
                 "name": 'TOTAL',
                 "className": 'TOTAL',
                 "orderable": false
+            },
+            //MGC ADD 03-10-2018 solicitud con orden de compra
+            {
+                "name": 'CHECK',
+                "className": 'CHECK',
+                "orderable": false
             }
         ]
     });
@@ -335,7 +341,7 @@ $(document).ready(function () {
 
         var t = $('#table_info').DataTable();
 
-        var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018
+        var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018 //MGC 03-10-2018 solicitud con orden de compra
         posinfo++;
 
         //Obtener el select de impuestos en la cabecera
@@ -603,8 +609,79 @@ $(window).on('load', function () {
     //Obtener los datos de la cadena seleccionada
     $("#list_detaa").change();
 
+    //Ocultar los campos o no dependiendo de la configuración de la solicitud
+    //MGC 03-10-2018 solicitud con orden de compra
+    //Si load = "load" solo se ocultan o muestran campos
+    $("#tsol").trigger("change", ["load"]);
 });
 
+//MGC 03-10-2018 solicitud con orden de compra
+$('body').on('change', '#tsol', function (event, param1) {
+
+    var val3 = $(this).val();
+    val3 = "[" + val3 + "]";
+    val3 = val3.replace("{", "{ \"");
+    val3 = val3.replace("}", "\" }");
+    val3 = val3.replace(/\,/g, "\" , \"");
+    val3 = val3.replace(/\=/g, "\" : \"");
+    val3 = val3.replace(/\ /g, "");
+    var jsval = $.parseJSON(val3)
+
+    $.each(jsval, function (i, dataj) {
+        $("#tsol_id2").val(dataj.ID);
+
+        ocultarCampos(dataj.EDITDET, param1)
+    });
+
+});
+//MGC 03-10-2018 solicitud con orden de compra
+function ocultarCampos(opc, load) {
+    //respuesta en minúscula
+    opc = opc.toLowerCase();
+
+    //Si load = "load" solo se ocultan o muestran campos
+
+    if (opc == "true") {
+
+        //Solicitud sin orden de compra
+        $("#div_norden_compra").css("display", "none");
+
+        if (load == "load") {
+
+        } else {
+            $("#norden_compra").val("");
+        }
+
+        
+    } else {
+        //Solicitud con orden de compra
+        $("#div_norden_compra").css("display", "inherit");
+
+        if (load == "load") {
+
+        } else {
+            $("#norden_compra").val("");
+        }
+    }
+
+    //Deshabilitar campos de la tabla
+    ocultarColumnas(opc);
+}
+
+//MGC 03-10-2018 solicitud con orden de compra
+function ocultarColumnas(opc) {
+
+    //Tabla
+    var t = $('#table_info').DataTable();
+
+    if (opc == "true") {
+        //Ocultar
+        t.column("CHECK").visible(true);
+    } else {
+        t.column("CHECK").visible(false);
+    }
+
+}
 
 function loadExcelSop(file) {
 
@@ -902,6 +979,7 @@ function obtenerRetenciones(flag) {
             colspan++;
         }
         $("#table_info>thead>tr").append("<th class=\"lbl_total\">Total</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_check\">Check</th>");
         //Tfoot       
         var tfoot = $("#table_info tfoot");
         tfoot.append($("<tr />"));
@@ -924,6 +1002,14 @@ function obtenerRetenciones(flag) {
             "className": 'TOTAL',
             "orderable": false
         });
+
+        //MGC ADD 03-10-2018 solicitud con orden de compra
+        arrCols.push({
+            "name": 'CHECK',
+            "className": 'CHECK',
+            "orderable": false
+        });
+        
         //Lej 17.09.18
         extraCols = tRet2.length;
         $('#table_info').DataTable({
@@ -1448,7 +1534,7 @@ function impuestoVal(ti) {
     return res;
 }
 
-function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5, CA, FACTURA, TIPO_CONCEPTO, GRUPO, CUENTA, CUENTANOM, TIPOIMP, IMPUTACION, CCOSTO, MONTO, IMPUESTO, IVA, TEXTO, TOTAL, disabled) {
+function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5, CA, FACTURA, TIPO_CONCEPTO, GRUPO, CUENTA, CUENTANOM, TIPOIMP, IMPUTACION, CCOSTO, MONTO, IMPUESTO, IVA, TEXTO, TOTAL, disabled, check) { //MGC 03 - 10 - 2018 solicitud con orden de compra
 
     var r = addRowl(
         t,
@@ -1473,13 +1559,15 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
         "",
         "<input disabled class=\"IVA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + IVA + "\">",
         "<input " + disabled + " class=\"\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + TEXTO + "\">",//Lej 13.09.2018
-        TOTAL//"<input " + disabled + " class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + TOTAL + "\">"
+        TOTAL,//"<input " + disabled + " class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + TOTAL + "\">"
+        check //MGC 03-10-2018 solicitud con orden de compra
     );
 
     return r;
 }
 
-function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, grupo, cuenta, cuentanom, tipoimp, imputacion, ccentro, monto, impuesto, iva, texto, total) {
+function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, grupo, cuenta, cuentanom, tipoimp, imputacion, ccentro, monto, impuesto,
+    iva, texto, total, check) {//MGC 03-10-2018 solicitud con orden de compra
     //alert(extraCols);
     //Lej 13.09.2018---
     var colstoAdd = "";
@@ -1492,7 +1580,9 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
         //{
         //}
     }
-    colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>";
+    colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"
+        //+ "<td><input class=\"CHECK\" style=\"font-size:12px;\" type=\"checkbox\" id=\"\" name=\"\" value=\"" + check + "\"></td>" //MGC 03 - 10 - 2018 solicitud con orden de compra
+        + "<td><p><label><input type=\"checkbox\" checked=\""+check+"\" /><span></span></label></p></td>";//MGC 03 - 10 - 2018 solicitud con orden de compra
     var table_rows = '<tr><td></td><td>' + pos + '</td><td><input class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td>' +
         ca + '</td><td>' + factura + '</td><td>' + tipo_concepto
         + '</td><td>' + grupo + '</td><td>' + cuenta + '</td><td>' + cuentanom + '</td><td>' + tipoimp + '</td><td>' + imputacion
@@ -1520,7 +1610,8 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
             impuesto,
             iva,
             texto,
-            "<input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\">"
+            "<input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\">",
+            "<input class=\"CHECK\" style=\"font-size:12px;\" type=\"checkbox\" id=\"\" name=\"\" value=\"" + check + "\">" //MGC 03 - 10 - 2018 solicitud con orden de compra
         ]).draw(false).node();
     } else {
         var r = t.row.add(
