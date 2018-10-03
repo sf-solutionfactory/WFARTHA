@@ -129,7 +129,72 @@ namespace WFARTHA.Controllers
 
                 doc.DOCUMENTOPSTR = dml;
             }
-
+            var anexos = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
+            ViewBag.files = anexos;
+            List<Anexo> lstAn = new List<Anexo>();
+            var result = anexos.Select(m => m.POSD).Distinct().ToList();
+            bool ban = false;
+            if (anexos.Count > 0)
+            {
+                Anexo _ax = new Anexo();
+                for (int i = 0; i < result.Count; i++)
+                {
+                    var posd = result[i];
+                    var anexos2 = anexos.Where(x => x.POSD == posd).ToList();
+                    int[] arrN = new int[5];
+                    for (int j = 0; j < anexos2.Count; j++)
+                    {
+                        arrN[j] = anexos2[j].POS;
+                        ban = true;
+                    }
+                    if (ban)
+                    {
+                        try
+                        {
+                            _ax.a1 = arrN[0];
+                        }
+                        catch (Exception e)
+                        {
+                            _ax.a1 = 0;
+                        }
+                        try
+                        {
+                            _ax.a2 = arrN[1];
+                        }
+                        catch (Exception e)
+                        {
+                            _ax.a3 = 0;
+                        }
+                        try
+                        {
+                            _ax.a3 = arrN[2];
+                        }
+                        catch (Exception e)
+                        {
+                            _ax.a3 = 0;
+                        }
+                        try
+                        {
+                            _ax.a4 = arrN[3];
+                        }
+                        catch (Exception e)
+                        {
+                            _ax.a4 = 0;
+                        }
+                        try
+                        {
+                            _ax.a5 = arrN[4];
+                        }
+                        catch (Exception e)
+                        {
+                            _ax.a5 = 0;
+                        }
+                        lstAn.Add(_ax);
+                    }
+                    ban = false;
+                }
+                doc.Anexo = lstAn;
+            }
             //Obtener las sociedadess
             //List<SOCIEDAD> sociedadesl = new List<SOCIEDAD>();
             var sociedades = db.SOCIEDADs.Select(s => new { s.BUKRS, TEXT = s.BUKRS + " - " + s.BUTXT }).ToList();
