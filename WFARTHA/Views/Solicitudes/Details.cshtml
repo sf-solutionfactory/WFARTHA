@@ -9,6 +9,7 @@
     WFARTHA.Entities.PROVEEDOR dprov = ViewBag.prov as WFARTHA.Entities.PROVEEDOR;
     List<WFARTHA.Models.DOCUMENTORP_MOD> lstDrp = ViewBag.DocsRp as List<WFARTHA.Models.DOCUMENTORP_MOD>;
     List<string> colsret = ViewBag.Retenciones as List<string>;
+
 }
 
 <link type="text/css" href="~/Content/datatables.min.css" rel="stylesheet" />
@@ -648,6 +649,7 @@
             <li class="tab col s2 tabs_menu"><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado NT</a></li>
             <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Info Contable NT</a></li>
             <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Soporte_cont">Soporte NT</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_sap">Información SAP</a></li>
         </ul>
     </div>
 </div>
@@ -1020,11 +1022,11 @@
                                             <td>
                                                 @Model.DOCUMENTOPSTR[i].POS
                                             </td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td> @Model.Anexo[i].a1</td>
+                                            <td> @Model.Anexo[i].a2</td>
+                                            <td> @Model.Anexo[i].a3</td>
+                                            <td> @Model.Anexo[i].a4</td>
+                                            <td> @Model.Anexo[i].a5</td>
                                             <td>
                                                 @Model.DOCUMENTOPSTR[i].ACCION
                                             </td>
@@ -1078,6 +1080,61 @@
                                         <th id="total_info"></th>
                                     </tr>
                                 </tfoot>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="card-panel">
+                    <h5 id="head_cabecera">Anexos</h5>
+                    <div class="row" style="margin-bottom:0">
+                        <table class="table display mdl-data-table striped" id="table_anexa" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th class="">
+                                        Num
+                                    </th>
+                                    <th class="">
+                                        Status
+                                    </th>
+                                    <th class="">
+                                        Tipo de Archivo
+                                    </th>
+                                    <th class="">
+                                        Descripcion
+                                    </th>
+                                    <th>Ruta</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
+                                {
+                                    if (Model.DOCUMENTOAL != null)
+                                    {
+                                        for (int i = 0; i < Model.DOCUMENTOAL.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(i + 1)
+                                                </td>
+                                                <td>OK</td>
+                                                <td> @Model.DOCUMENTOAL[i].TIPO</td>
+                                                <td> @Model.DOCUMENTOAL[i].DESC</td>
+                                                <td> @Model.DOCUMENTOAL[i].PATH</td>
+                                                <td>
+                                                    @*<a data-form-method="post" href="#">
+                                                            <i class='material-icons grey-text'>arrow_downward</i>
+                                                        </a>*@
+                                                    <button name="archivo" class="btn" type="submit" value="@Model.DOCUMENTOAL[i].PATH">DESCARGAR</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -1157,6 +1214,15 @@
         </div>
     </div>
 
+    @*Soporte SAP*@
+    <div id="Informacion_sap" class="col s12" style="font-size:12px;">
+        <div class="row">
+            <div class="col s12">
+                <div class="card-panel">
+                </div>
+            </div>
+        </div>
+    </div>
     <input id="num_doc_send" type="text" value="@Model.NUM_DOC" style="display:none" />
 </div>
 
