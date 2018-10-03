@@ -1930,6 +1930,7 @@ function copiarTableInfoControl() {
             var tconcepto = "";
             //Obtener el concepto
             var inpt = t.row(indexopc).data()[9];
+            //LEJ 03-10-2018
             if (inpt !== "") {
                 var parser = $($.parseHTML(inpt));
                 tconcepto = parser.val();
@@ -1937,6 +1938,7 @@ function copiarTableInfoControl() {
             else {
                 tconcepto = "";
             }
+            //LEJ 03-10-2018
             //Lej 14.08.2018-------------------------------------------------------------I
             var colsAdded = tRet2.length;//Las retenciones que se agregaron a la tabla
             var retTot = tRet.length;//Todas las retenciones
