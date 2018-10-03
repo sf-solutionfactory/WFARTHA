@@ -13,7 +13,7 @@ namespace WFARTHA.Models
         public string TIPO { get; set; }
         public string DESC { get; set; }
         public string CLASE { get; set; }
-        public Nullable<int> STEP_WF { get; set; }
+        public int STEP_WF { get; set; }
         public string USUARIO_ID { get; set; }
         public string PATH { get; set; }
         public bool ACTIVO { get; set; }

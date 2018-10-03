@@ -130,7 +130,8 @@ namespace WFARTHA.Controllers
                 doc.DOCUMENTOPSTR = dml;
             }
             var anexos = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
-            ViewBag.files = anexos;
+            //ViewBag.files = anexos;
+            doc.DOCUMENTOAL = anexos;
             List<Anexo> lstAn = new List<Anexo>();
             var result = anexos.Select(m => m.POSD).Distinct().ToList();
             bool ban = false;
@@ -1970,6 +1971,15 @@ namespace WFARTHA.Controllers
             }
         }
 
+        [HttpPost]
+        public FileResult Descargar(string archivo)
+        {
+            //LEJ 03.10.2018
+            string nombre = "", contentyp = "";
+            contDescarga(archivo, ref contentyp, ref nombre);            
+            return File(descargarArchivo(archivo, contentyp, nombre), contentyp, nombre);
+        }
+
         public string SaveFile(HttpPostedFileBase file, string path)
         {
             string ex = "";
@@ -2023,6 +2033,160 @@ namespace WFARTHA.Controllers
 
             }
             return savePath;
+        }
+
+        public string descargarArchivo(string dir, string tipoDoc, string nombre)
+        {
+            int resp = 0;
+            //string RemoteFtpPath = "ftp://ftp.csidata.com:21/Futures.20150305.gz";
+            /*string _tipo = "";
+            switch (tipoDoc)
+            {               
+                case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    _tipo = "xlsx";
+                    break;
+                case "application/vnd.ms-excel.sheet.macroEnabled.12":
+                    _tipo = "xlsm";
+                    break;              
+                case "application/vnd.ms-excel":
+                    _tipo = "xls";
+                    break;              
+                case "application/msword":
+                    _tipo = "doc";
+                    break;
+                case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                    _tipo = "docx";
+                    break;
+                case "application/vnd.openxmlformats-officedocument.wordprocessingml.template":
+                    _tipo = "dotx";
+                    break;              
+                case "pdf":
+                    _tipo = "application/pdf";
+                    break;
+                case "application/zip":
+                    _tipo = "zip";
+                    break;
+                case "image/jpeg":
+                    _tipo = "jpg";
+                    break;
+                case "image/png":
+                    _tipo = "png";
+                    break;
+            }*/
+            string LocalDestinationPath = @"C:\Users\EQUIPO\Documents\GitHub\WFARTHA\WFARTHA\Descargas\" + nombre;
+            string Username = "luis.gonzalez";
+            const string Comillas = "\"";
+            string pwd = "Rumaki,2571" + Comillas + "k41";
+            bool UseBinary = true; // use true for .zip file or false for a text file
+            bool UsePassive = false;
+
+            FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + dir));
+            // FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://"+dir);
+            request.Method = WebRequestMethods.Ftp.DownloadFile;
+            request.KeepAlive = true;
+            request.UsePassive = UsePassive;
+            request.UseBinary = UseBinary;
+
+            request.Credentials = new NetworkCredential(Username, pwd);
+
+            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+            Stream responseStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(responseStream);
+
+            using (FileStream writer = new FileStream(LocalDestinationPath, FileMode.Create))
+            {
+                long length = response.ContentLength;
+                int bufferSize = 2048;
+                int readCount;
+                byte[] buffer = new byte[2048];
+
+                readCount = responseStream.Read(buffer, 0, bufferSize);
+                while (readCount > 0)
+                {
+                    writer.Write(buffer, 0, readCount);
+                    readCount = responseStream.Read(buffer, 0, bufferSize);
+                }
+                resp++;
+            }
+
+            reader.Close();
+            response.Close();
+            if (resp > 0)
+            {
+                return LocalDestinationPath;
+            }
+            return "";
+        }
+
+        public void contDescarga(string ruta, ref string contentType, ref string nombre)
+        {
+            string[] archivo = ruta.Split('/');
+            nombre = archivo[archivo.Length - 1];
+            string[] extencion = archivo[archivo.Length - 1].Split('.');
+            switch (extencion[extencion.Length - 1].ToLower())
+            {
+                case "xltx":
+                    contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.template";
+                    break;
+                case "xlsx":
+                    contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    break;
+                case "xlsm":
+                    contentType = "application/vnd.ms-excel.sheet.macroEnabled.12";
+                    break;
+                case "xltm":
+                    contentType = "application/vnd.ms-excel.template.macroEnabled.12";
+                    break;
+                case "xlam":
+                    contentType = "application/vnd.ms-excel.addin.macroEnabled.12";
+                    break;
+                case "xlsb":
+                    contentType = "application/vnd.ms-excel.sheet.binary.macroEnabled.12";
+                    break;
+                case "xls":
+                    contentType = "application/vnd.ms-excel";
+                    break;
+                case "xlt":
+                    contentType = "application/vnd.ms-excel";
+                    break;
+                case "xla":
+                    contentType = "application/vnd.ms-excel";
+                    break;
+                case "doc":
+                    contentType = "application/msword";
+                    break;
+                case "dot":
+                    contentType = "application/msword";
+                    break;
+                case "docx":
+                    contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                    break;
+                case "dotx":
+                    contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.template";
+                    break;
+                case "docm":
+                    contentType = "application/vnd.ms-word.document.macroEnabled.12";
+                    break;
+                case "dotm":
+                    contentType = "application/vnd.ms-word.template.macroEnabled.12";
+                    break;
+                case "pdf":
+                    contentType = "application/pdf";
+                    break;
+                case "zip":
+                    contentType = "application/zip";
+                    break;
+                case "jpg":
+                    contentType = "image/jpeg";
+                    break;
+                case "png":
+                    contentType = "image/png";
+                    break;
+                case "msg":
+                    contentType = "application/vnd.ms-outlook";
+                    break;
+            }
         }
     }
     public class TXTImp
