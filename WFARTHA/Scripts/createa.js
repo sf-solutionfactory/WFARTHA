@@ -153,7 +153,7 @@ function selectConcepto(val, tr, tipo) {
             var indexopc = t.row(tr).index();
             //var cell = t.row(indexopc).data()[4];
             //t.cell(indexopc, 9).data(tipo).draw();
-            t.cell(indexopc, 9).data("<input class=\"\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + tipo + "\">").draw();//LEJ 01.10.2018
+            t.cell(indexopc, 9).data("<input class=\"\" disabled style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + tipo + "\">").draw();//LEJ 01.10.2018
 
             //ocultar o mostrar el centro de costo
             if (con.TIPO_IMPUTACION == "P") {

@@ -335,7 +335,7 @@ $(document).ready(function () {
 
         var t = $('#table_info').DataTable();
 
-        var addedRowInfo = addRowInfo(t, "1", "","","","","", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018
+        var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018
         posinfo++;
 
         //Obtener el select de impuestos en la cabecera
@@ -1162,7 +1162,7 @@ $('body').on('focusout', '.OPER', function (e) {
         //Ejecutamos el metodo para sumarizar las columnas
         var colTotal = sumarColumnasExtras(tr);
 
-       // rimpimp = 100 - impimp;
+        // rimpimp = 100 - impimp;
 
         var impv = (sub * impimp) / 100;
         impv = parseFloat(impv);
@@ -1193,7 +1193,7 @@ $('body').on('focusout', '.OPER', function (e) {
         else {
             tr.find("td.TOTAL input").val(total);
         }
-    }    
+    }
     updateFooter();
     $(".extrasC").trigger("focusout");
 });
@@ -1414,7 +1414,7 @@ function addRowInfoH() {
         //Obtener la tabla
         var t = $('#table_info').DataTable();
 
-        var addedRowInfo = addRowInfo(t, "0", "","","","","", "H", factura, "", "", prov, nprov, "", "", "", sub, tipo_doc, impv, texto, monto, "disabled");//Lej 13.09.2018
+        var addedRowInfo = addRowInfo(t, "0", "", "", "", "", "", "H", factura, "", "", prov, nprov, "", "", "", sub, tipo_doc, impv, texto, monto, "disabled");//Lej 13.09.2018
         posinfo++;
 
         //Obtener el select de impuestos en la cabecera
@@ -1771,7 +1771,7 @@ function sumarizarTodoRow(_this) {
 
     var total = sub + impv;
     total = parseFloat(total);
-    var sub = total - impv;   
+    var sub = total - impv;
 
     impv = toShow(impv);
     sub = toShow(sub);
@@ -1931,9 +1931,18 @@ function copiarTableInfoControl() {
             var tr = $(this);
             var indexopc = t.row(tr).index();
 
+            var tconcepto = "";
             //Obtener el concepto
-            var tconcepto = t.row(indexopc).data()[9];
-
+            var inpt = t.row(indexopc).data()[9];
+            //LEJ 03-10-2018
+            if (inpt !== "") {
+                var parser = $($.parseHTML(inpt));
+                tconcepto = parser.val();
+            }
+            else {
+                tconcepto = "";
+            }
+            //LEJ 03-10-2018
             //Lej 14.08.2018-------------------------------------------------------------I
             var colsAdded = tRet2.length;//Las retenciones que se agregaron a la tabla
             var retTot = tRet.length;//Todas las retenciones
