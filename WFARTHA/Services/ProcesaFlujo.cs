@@ -560,6 +560,37 @@ namespace WFARTHA.Services
                                     db.SaveChanges();
 
                                     ban = false;
+
+                                    //MGC 04 - 10 - 2018 Botones para acciones WF
+                                    //Eliminar los mensajes de la tabla
+                                    try
+                                    {
+                                        db.DOCUMENTOPREs.RemoveRange(db.DOCUMENTOPREs.Where(dpre => dpre.NUM_DOC == d.NUM_DOC));
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception e)
+                                    {
+
+                                    }
+
+                                    //MGC 04 - 10 - 2018 Botones para acciones WF
+                                    //Mensaje para contabilizando
+                                    DOCUMENTOPRE dp = new DOCUMENTOPRE();
+
+                                    dp.NUM_DOC = d.NUM_DOC;
+                                    dp.POS = 1;
+                                    dp.MESSAGE = "Contabilizando SAP";
+
+                                    try
+                                    {
+                                        db.DOCUMENTOPREs.Add(dp);
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        string r = "";
+                                    }
+
                                 }
                                 else
                                 {
@@ -605,9 +636,6 @@ namespace WFARTHA.Services
                                     nuevo.USUARIOA_ID = del.USUARIOD_ID;
                                 else
                                     nuevo.USUARIOA_ID = nuevo.USUARIOD_ID;
-
-
-
 
 
                                 nuevo.DETPOS = detA.DETPOS;

@@ -121,7 +121,9 @@ namespace WFARTHA.Controllers
                 //d.CIUDAD = db.CITIES.Where(a => a.ID.Equals(v.CIUDAD)).FirstOrDefault().NAME;
                 //dOCUMENTOes.Add(d);
                 d.FLUJOes = db.FLUJOes.Where(a => a.NUM_DOC.Equals(d.NUM_DOC)).ToList();
+                d.DOCUMENTOPREs = db.DOCUMENTOPREs.Where(docpr => docpr.NUM_DOC.Equals(d.NUM_DOC)).ToList();
                 dOCUMENTOes.Add(d);
+                
             }
             dOCUMENTOes = dOCUMENTOes.Distinct(new DocumentoComparer()).ToList();
             dOCUMENTOes = dOCUMENTOes.OrderByDescending(a => a.FECHAC).OrderByDescending(a => a.NUM_DOC).ToList();

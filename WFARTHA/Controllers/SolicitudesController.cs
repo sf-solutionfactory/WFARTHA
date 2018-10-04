@@ -94,7 +94,7 @@ namespace WFARTHA.Controllers
             }
 
             //Obtener miles y dec
-            formato = db.FORMATOes.Where(f => f.ACTIVO == true).FirstOrDefault();
+            formato = db.FORMATOes.Where(fo => fo.ACTIVO == true).FirstOrDefault();
             ViewBag.miles = formato.MILES;
             ViewBag.dec = formato.DECIMALES;
 
@@ -232,6 +232,11 @@ namespace WFARTHA.Controllers
             doc.TEXTO_POS = dOCUMENTO.TEXTO_POS;
             doc.ASIGNACION_POS = dOCUMENTO.ASIGNACION_POS;
             doc.CLAVE_CTA = dOCUMENTO.CLAVE_CTA;
+            doc.ESTATUS = dOCUMENTO.ESTATUS;
+            doc.ESTATUS_C = dOCUMENTO.ESTATUS_C;
+            doc.ESTATUS_EXT = doc.ESTATUS_EXT;
+            doc.ESTATUS_SAP = doc.ESTATUS_SAP;
+            doc.ESTATUS_WF = dOCUMENTO.ESTATUS_WF;
 
             ViewBag.SOCIEDAD_ID = new SelectList(sociedades, "BUKRS", "TEXT", doc.SOCIEDAD_ID);
             ViewBag.TSOL_ID = new SelectList(tsoll, "ID", "TEXT", doc.TSOL_ID);
@@ -349,7 +354,48 @@ namespace WFARTHA.Controllers
             ViewBag.DocsRp = _xdocsrp2;
             ViewBag.Retenciones = rets2;
             //LEj 24.09.2018---
-            return View(doc);
+            
+            //MGC 04 - 10 - 2018 Botones para acciones y flujo -- >
+            //Obtener datos del flujo
+            var vbFl = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderBy(a => a.POS).ToList();
+            ViewBag.workflow = vbFl;
+
+            string usuariodel = "";
+            DateTime fecha = DateTime.Now.Date;
+            List<WFARTHA.Entities.DELEGAR> del = db.DELEGARs.Where(a => a.USUARIOD_ID.Equals(User.Identity.Name) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).ToList();
+
+            FLUJO f = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id) & a.ESTATUS.Equals("P")).FirstOrDefault();
+            ViewBag.acciones = f;
+
+            if (f != null)
+                if (f.USUARIOA_ID != null)
+                {
+                    if (del.Count > 0)
+                    {
+                        DELEGAR dell = del.Where(a => a.USUARIO_ID.Equals(f.USUARIOA_ID)).FirstOrDefault();
+                        if (dell != null)
+                            usuariodel = dell.USUARIO_ID;
+                        else
+                            usuariodel = User.Identity.Name;
+                    }
+                    else
+                        usuariodel = User.Identity.Name;
+
+                    if (f.USUARIOA_ID.Equals(usuariodel))
+                        ViewBag.accion = db.WORKFPs.Where(a => a.ID.Equals(f.WORKF_ID) & a.POS.Equals(f.WF_POS) & a.VERSION.Equals(f.WF_VERSION)).FirstOrDefault().ACCION.TIPO;
+                }
+                else
+                {
+                    ViewBag.accion = db.WORKFPs.Where(a => a.ID.Equals(f.WORKF_ID) & a.POS.Equals(f.WF_POS) & a.VERSION.Equals(f.WF_VERSION)).FirstOrDefault().ACCION.TIPO;
+                }
+
+            DocumentoFlujo DF = new DocumentoFlujo();
+            DF.D = doc;
+            DF.F = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderByDescending(a => a.POS).FirstOrDefault();
+
+            //MGC 04 - 10 - 2018 Botones para acciones y flujo <--
+
+            return View(DF);
         }
 
         // GET: Solicitudes/Create
