@@ -1022,11 +1022,22 @@
                                             <td>
                                                 @Model.DOCUMENTOPSTR[i].POS
                                             </td>
-                                            <td> @Model.Anexo[i].a1</td>
-                                            <td> @Model.Anexo[i].a2</td>
-                                            <td> @Model.Anexo[i].a3</td>
-                                            <td> @Model.Anexo[i].a4</td>
-                                            <td> @Model.Anexo[i].a5</td>
+                                            @if (Model.Anexo != null)
+                                            {
+                                                <td> @Model.Anexo[i].a1</td>
+                                                <td> @Model.Anexo[i].a2</td>
+                                                <td> @Model.Anexo[i].a3</td>
+                                                <td> @Model.Anexo[i].a4</td>
+                                                <td> @Model.Anexo[i].a5</td>
+                                            }
+                                            else
+                                            {
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            }
                                             <td>
                                                 @Model.DOCUMENTOPSTR[i].ACCION
                                             </td>
