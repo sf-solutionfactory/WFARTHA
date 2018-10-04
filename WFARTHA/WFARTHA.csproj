@@ -584,6 +584,7 @@
     <None Include="Properties\PublishProfiles\SERVER.pubxml" />
     <None Include="Scripts\jquery-3.0.0-vsdoc.js" />
     <Content Include="Scripts\descargar.js" />
+    <Content Include="Scripts\editArtha.js" />
     <Content Include="Scripts\jquery-3.0.0.js" />
     <Content Include="Scripts\jquery-3.0.0.min.js" />
     <Content Include="Scripts\jquery-3.0.0.slim.js" />
