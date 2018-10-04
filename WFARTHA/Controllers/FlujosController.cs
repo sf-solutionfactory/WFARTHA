@@ -11,7 +11,7 @@ using WFARTHA.Entities;
 using WFARTHA.Models;
 using WFARTHA.Services;
 
-namespace TAT001.Controllers
+namespace WFARTHA.Controllers
 {
     [Authorize]
     public class FlujosController : Controller
@@ -19,12 +19,13 @@ namespace TAT001.Controllers
         private WFARTHAEntities db = new WFARTHAEntities();
        
         [HttpPost]
-        public string Procesa(decimal id)
+        public string Procesa2(decimal id)
         {
             String res = "Archivo generado";
             ProcesaFlujo pf = new ProcesaFlujo();
             if (ModelState.IsValid)
             {
+
                 res = pf.procesa(id);
                 if (res.Equals("0"))//Aprobado
                 {
@@ -46,6 +47,118 @@ namespace TAT001.Controllers
             }
 
             return res;
+        }
+
+        [HttpPost]
+        public ActionResult Procesa(FLUJO f)
+        {
+            FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
+
+            DOCUMENTO d = db.DOCUMENTOes.Find(f.NUM_DOC);
+            //MGC 12092018
+            //List<TS_FORM> tts = db.TS_FORM.Where(a => a.BUKRS_ID.Equals(d.SOCIEDAD_ID) & a.LAND_ID.Equals(d.PAIS_ID)).ToList();
+
+            //bool c = false;
+            //if (actual.WORKFP.ACCION.TIPO == "R")
+            //{
+            //    List<DOCUMENTOT> ddt = new List<DOCUMENTOT>();
+            //    foreach (TS_FORM ts in tts)
+            //    {
+            //        DOCUMENTOT dts = new DOCUMENTOT();
+            //        dts.NUM_DOC = f.NUM_DOC;
+            //        dts.TSFORM_ID = ts.POS;
+            //        try
+            //        {
+            //            string temp = Request.Form["chk-" + ts.POS].ToString();
+            //            if (temp == "on")
+            //                dts.CHECKS = true;
+            //            c = true;
+            //        }
+            //        catch
+            //        {
+            //            dts.CHECKS = false;
+            //        }
+            //        int tt = db.DOCUMENTOTS.Where(a => a.NUM_DOC.Equals(f.NUM_DOC) & a.TSFORM_ID == ts.POS).Count();
+            //        if (tt == 0)
+            //            ddt.Add(dts);
+            //        else
+            //            db.Entry(dts).State = EntityState.Modified;
+            //    }
+            //    if (ddt.Count > 0)
+            //        db.DOCUMENTOTS.AddRange(ddt);
+            //    db.SaveChanges();
+
+            //    db.Dispose();
+            //}
+
+            FLUJO flujo = actual;
+            flujo.ESTATUS = f.ESTATUS;
+            flujo.FECHAM = DateTime.Now;
+            flujo.COMENTARIO = f.COMENTARIO;
+            flujo.USUARIOA_ID = User.Identity.Name;
+
+            flujo.ID_RUTA_A = f.ID_RUTA_A;
+            flujo.RUTA_VERSION = f.RUTA_VERSION;
+            flujo.STEP_AUTO = f.STEP_AUTO;
+
+            ProcesaFlujo pf = new ProcesaFlujo();
+            if (ModelState.IsValid)
+            {
+                string res = pf.procesa(flujo, "");
+                if (res.Equals("0"))//Aprobado
+                {
+                    return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                }
+                else if (res.Equals("1") | res.Equals("2") | res.Equals("3"))//CORREO
+                {
+                    //return RedirectToAction("Enviar", "Mails", new { id = flujo.NUM_DOC, index = false, tipo = "A" });
+                    //MGC 12092018
+                    //Email em = new Email();
+                    //string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                    //string image = Server.MapPath("~/images/logo_kellogg.png");
+                    //if (res.Equals("1") | res.Equals("2"))//CORREO
+                    //{
+                    //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                    //}
+                    //else
+                    //{
+                    //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Details", image);
+                    //}
+                    return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                }
+                else
+                {
+                    TempData["error"] = res;
+                    return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                }
+            }
+
+            int pagina = 103; //ID EN BASE DE DATOS
+            using (WFARTHAEntities db = new WFARTHAEntities())
+            {
+                string u = User.Identity.Name;
+                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
+                try
+                {
+                    string p = Session["pais"].ToString();
+                    ViewBag.pais = p + ".png";
+                }
+                catch
+                {
+                    //ViewBag.pais = "mx.png";
+                    //return RedirectToAction("Pais", "Home");
+                }
+                Session["spras"] = user.SPRAS_ID;
+            }
+            return View(f);
         }
 
         //public ActionResult Carga()

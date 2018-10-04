@@ -352,51 +352,44 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        @*@if (item.TSOL.PADRE)
-                            {
-                                if (item.DOCUMENTORECs.Count > 0)
-                                {
-                                    <td class=" details-control" style="cursor:pointer">
-                                        <i class="material-icons">expand_more</i>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td class=" details-control" style="cursor:pointer">
-                                        <i class="material-icons">add</i>
-                                    </td>
-                                }
-                            }
-                            else
-                            {
-                                if (item.DOCUMENTORECs.Count > 0)
-                                {
-                                    <td class=" details-control" style="cursor:pointer">
-                                        <i class="material-icons">expand_more</i>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td></td>
-                                }
-                            }*@
+                <tr>
+                    @*@if (item.TSOL.PADRE)
+        {
+            if (item.DOCUMENTORECs.Count > 0)
+            {
+                <td class=" details-control" style="cursor:pointer">
+                    <i class="material-icons">expand_more</i>
+                </td>
+            }
+            else
+            {
+                <td class=" details-control" style="cursor:pointer">
+                    <i class="material-icons">add</i>
+                </td>
+            }
+        }
+        else
+        {
+            if (item.DOCUMENTORECs.Count > 0)
+            {
+                <td class=" details-control" style="cursor:pointer">
+                    <i class="material-icons">expand_more</i>
+                </td>
+            }
+            else
+            {
+                <td></td>
+            }
+        }*@
 
 
-                        @if (item.FLUJOes.Count > 0)
+                    @if (item.FLUJOes.Count > 0)
+                    {
+                        if (item.ESTATUS_WF == "R" & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID)
                         {
-                            if (item.ESTATUS_WF == "R" & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID)
-                            {
-                                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id_d = item.NUM_DOC })'" style="cursor:pointer">
-                                    @item.NUM_DOC
-                                </td>
-                            }
-                            else
-                            {
-                                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-                                    @item.NUM_DOC
-                                </td>
-                            }
+                            <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id_d = item.NUM_DOC })'" style="cursor:pointer">
+                                @item.NUM_DOC
+                            </td>
                         }
                         else
                         {
@@ -404,152 +397,152 @@
                                 @item.NUM_DOC
                             </td>
                         }
+                    }
+                    else
+                    {
+                        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                            @item.NUM_DOC
+                        </td>
+                    }
 
-                        @*<td style="cursor:pointer">
-                                @item.NUM_PRE
-                            </td>*@
+                    <td style="">
+                        @item.NUM_PRE
+                    </td>
 
-
-                        <td>
-                            @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
-                        </td>
-                        <td>
-                            @if (item.FECHAD != null)
-                            {
-                                try
-                                {@(item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year);
-                            }
-                            catch (Exception) { };
-                        }
-                        </td>
-                        <td>
-                            @item.HORAC.Value.ToString().Split('.')[0]
-                        </td>
-                        <td>
-                            @item.FECHAC.Value.Month
-                        </td>
-                        @*MGC Preliminar Status que hay en preliminar*@
-                        @if (item.NUM_PRE != 0)
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
+                    </td>
+                    <td>
+                        @if (item.FECHAD != null)
                         {
+                            try
+                            {@(item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year);
+                        }
+                        catch (Exception) { };
+                    }
+                    </td>
+                    <td>
+                        @item.HORAC.Value.ToString().Split('.')[0]
+                    </td>
+                    <td>
+                        @item.FECHAC.Value.Month
+                    </td>
+                    @*MGC Preliminar Status que hay en preliminar*@
+                    @if (item.NUM_PRE != 0)
+                    {
 
-                            string estatus = "";
-                            if (item.ESTATUS != null) { estatus += item.ESTATUS; } else { estatus += " "; }
-                            if (item.ESTATUS_C != null) { estatus += item.ESTATUS_C; } else { estatus += " "; }
-                            if (item.ESTATUS_SAP != null) { estatus += item.ESTATUS_SAP; } else { estatus += " "; }
-                            if (item.ESTATUS_WF != null) { estatus += item.ESTATUS_WF; } else { estatus += " "; }
+                        string estatus = "";
+                        if (item.ESTATUS != null) { estatus += item.ESTATUS; } else { estatus += " "; }
+                        if (item.ESTATUS_C != null) { estatus += item.ESTATUS_C; } else { estatus += " "; }
+                        if (item.ESTATUS_SAP != null) { estatus += item.ESTATUS_SAP; } else { estatus += " "; }
+                        if (item.ESTATUS_WF != null) { estatus += item.ESTATUS_WF; } else { estatus += " "; }
 
-                            if (item.FLUJOes.Count > 0)
-                            {
-                                estatus += item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO;
-                            }
-                            else
-                            {
-                                estatus += " ";
-                            }
-                            if (false) { estatus += "P"; } else { estatus += " "; }
-                            if (item.FLUJOes.Where(x => x.ESTATUS == "R").ToList().Count > 0)
-                            {
-                                estatus += item.FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID;
-                            }
-                            else
-                            {
-                                estatus += " ";
-                            }
-                            // "XCXXXX" ----------->CANCELADA
-                            // "XXXPRX" ----------->PENDIENTE TS
-                            // "XXXPAX" ----------->PENDIENTE APROBADOR
-                            // "CXXAXX" ----------->PENDIENTE APROBADOR
+                        if (item.FLUJOes.Count > 0)
+                        {
+                            estatus += item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO;
+                        }
+                        else
+                        {
+                            estatus += " ";
+                        }
+                        if (false) { estatus += "P"; } else { estatus += " "; }
+                        if (item.FLUJOes.Where(x => x.ESTATUS == "R").ToList().Count > 0)
+                        {
+                            estatus += item.FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID;
+                        }
+                        else
+                        {
+                            estatus += " ";
+                        }
+                        // "XCXXXX" ----------->CANCELADA
+                        // "XXXPRX" ----------->PENDIENTE TS
+                        // "XXXPAX" ----------->PENDIENTE APROBADOR
+                        // "CXXAXX" ----------->PENDIENTE APROBADOR
 
-                            @*@if (item.ESTATUS_C == "C")*@
-                            if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]"))
-                            {
-                                <td class="">
-                                    <span class="lbl_cancelled new badge red darken-1 white-text" data-badge-caption=" ">Cancelada</span>
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].."))
-                            {
-                                <td class="">
-                                    <span class="lbl_ts yellow darken-2 white-text new badge" data-badge-caption=" ">Pendiente creación preliminar</span>@*//MGC 02-10-2018 Cadena de autorización*@
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A].."))
-                            {
-                                <td class="">
-                                    <span class="new badge yellow darken-2 white-text" data-badge-caption=" "><span class="lbl_pending">Pendiente aprobador </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID*@</span>
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[A]..."))
-                            {
-                                <td class="">
-                                    <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Por gen .txt</span>
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]..."))
-                            {
-                                <td class="">
-                                    <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Cerrada</span>
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..."))
-                            {
-                                <td class="">
-                                    <span class="lbl_contab new badge green darken-1 white-text" data-badge-caption=" ">Por contabilizar</span>
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..."))
-                            {
-                                <td class="">
-                                    <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Por contabilizar</span>
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]..."))
-                            {
-                                <td class="">
-                                    <span class="lbl_txt new badge red darken-1 white-text" data-badge-caption=" ">Error en contabiización</span>
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]."))
-                            {
-                                <td class="">
-                                    <span class="new badge green darken-1 white-text" data-badge-caption=" ">@item.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50 <span class="lbl_approved">Abierta</span></span>
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..."))
-                            {
-                                <td class="">
-                                    <span class="new badge green darken-1 white-text" data-badge-caption=" ">Registrada en SAP</span>
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]"))
-                            {
-                                <td class="">
-                                    <span class="new badge red darken-1 white-text" data-badge-caption=" "><span class="lbl_rejecte">Pendiente corrección usuario TS </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID*@</span>
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..."))
-                            {
-                                <td class="">
-                                    <span class="new badge red darken-1 white-text" data-badge-caption=" "><span class="lbl_rejected">Pendiente corrección usuario </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID*@</span>
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[S]..."))
-                            {
-                                <td class="">
-                                    <span class="lbl_soporte new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente firma</span>
-                                </td>
-                            }
-                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..."))
-                            {
-                                <td class="">
-                                    <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente tax</span>
-                                </td>
-                            }
-                            else
-                            {
-                                <td>Espacio</td>
-                            }
-
+                        @*@if (item.ESTATUS_C == "C")*@
+                        if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]"))
+                        {
+                            <td class="">
+                                <span class="lbl_cancelled new badge red darken-1 white-text" data-badge-caption=" ">Cancelada</span>
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].."))
+                        {
+                            <td class="">
+                                <span class="lbl_ts yellow darken-2 white-text new badge" data-badge-caption=" ">Pendiente creación preliminar</span>@*//MGC 02-10-2018 Cadena de autorización*@
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A].."))
+                        {
+                            <td class="">
+                                <span class="new badge yellow darken-2 white-text" data-badge-caption=" "><span class="lbl_pending">Pendiente aprobador </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID*@</span>
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[A]..."))
+                        {
+                            <td class="">
+                                <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Por gen .txt</span>
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]..."))
+                        {
+                            <td class="">
+                                <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Cerrada</span>
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..."))
+                        {
+                            <td class="">
+                                <span class="lbl_contab new badge green darken-1 white-text" data-badge-caption=" ">Por contabilizar</span>
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..."))
+                        {
+                            <td class="">
+                                <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Por contabilizar</span>
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]..."))
+                        {
+                            <td class="">
+                                <span class="lbl_txt new badge red darken-1 white-text" data-badge-caption=" ">Error en contabiización</span>
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]."))
+                        {
+                            <td class="">
+                                <span class="new badge green darken-1 white-text" data-badge-caption=" ">@item.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50 <span class="lbl_approved">Abierta</span></span>
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..."))
+                        {
+                            <td class="">
+                                <span class="new badge green darken-1 white-text" data-badge-caption=" ">Registrada en SAP</span>
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]"))
+                        {
+                            <td class="">
+                                <span class="new badge red darken-1 white-text" data-badge-caption=" "><span class="lbl_rejecte">Pendiente corrección usuario TS </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID*@</span>
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..."))
+                        {
+                            <td class="">
+                                <span class="new badge red darken-1 white-text" data-badge-caption=" "><span class="lbl_rejected">Pendiente corrección usuario </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID*@</span>
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[S]..."))
+                        {
+                            <td class="">
+                                <span class="lbl_soporte new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente firma</span>
+                            </td>
+                        }
+                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..."))
+                        {
+                            <td class="">
+                                <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente tax</span>
+                            </td>
                         }
                         else
                         {
@@ -572,55 +565,84 @@
                                     </td>
                                 }
                             }
+                            else
+                            {
+                                        <td>Espacio</td>
+                            }
+                            
                         }
 
-
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PAYER_ID)
-                        </td>
-                        <td>
-                            @for (int i = 0; i < lst.Count; i++)
+                    }
+                    else
+                    {
+                        if (item.DOCUMENTOPREs != null)
+                        {
+                            if (item.DOCUMENTOPREs.Count > 0)
                             {
-                                if (lst[i].LIFNR == item.PAYER_ID)
-                                {
-                                    @Html.Label(lst[i].NAME1)
-                                }
+                                <td class="">
+                                    @foreach (WFARTHA.Entities.DOCUMENTOPRE i in item.DOCUMENTOPREs)
+                                    {
+                                        if (System.Text.RegularExpressions.Regex.IsMatch(@i.MESSAGE, "...[Error]..."))
+                                        {
+                                            <span class="lbl_tax new badge red darken-1 white-text" data-badge-caption=" ">@i.MESSAGE</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">@i.MESSAGE</span>
+                                        }
+                                    }
+                                </td>
                             }
-                        </td>
-                        <td>
-                            @for (int i = 0; i < lst.Count; i++)
-                            {
-                                if (lst[i].LIFNR == item.PAYER_ID)
-                                {
-                                    @Html.Label(lst[i].STCD1)
-                                }
-                            }
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
-                        </td>
+                        }
+                    }
 
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CONCEPTO)
-                        </td>
-                        <td class="precio">
-                            @Html.DisplayFor(modelItem => item.MONTO_DOC_ML)
-                        </td>
-                        <td>
-                            @item.USUARIOC_ID
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PAYER_ID)
+                    </td>
+                    <td>
+                        @for (int i = 0; i < lst.Count; i++)
+                        {
+                            if (lst[i].LIFNR == item.PAYER_ID)
+                            {
+                                @Html.Label(lst[i].NAME1)
+                            }
+                        }
+                    </td>
+                    <td>
+                        @for (int i = 0; i < lst.Count; i++)
+                        {
+                            if (lst[i].LIFNR == item.PAYER_ID)
+                            {
+                                @Html.Label(lst[i].STCD1)
+                            }
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CONCEPTO)
+                    </td>
+                    <td class="precio">
+                        @Html.DisplayFor(modelItem => item.MONTO_DOC_ML)
+                    </td>
+                    <td>
+                        @item.USUARIOC_ID
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
                 }
             </tbody>
         </table>

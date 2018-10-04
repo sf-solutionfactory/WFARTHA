@@ -671,14 +671,19 @@ function ocultarCampos(opc, load) {
 //MGC 03-10-2018 solicitud con orden de compra
 function ocultarColumnas(opc) {
 
+    //MGC 04-10-2018 solicitud con orden de compra
     //Tabla
     var t = $('#table_info').DataTable();
 
+    var column = t.column('CHECK:name');
+    var columnindex = column.index();
+    columnindex = parseInt(columnindex);
+
     if (opc == "true") {
         //Ocultar
-        t.column("CHECK").visible(true);
+        t.column(columnindex).visible(false);
     } else {
-        t.column("CHECK").visible(false);
+        t.column(columnindex).visible(true);
     }
 
 }
