@@ -412,7 +412,7 @@ namespace WFARTHA.Controllers
                          }).ToList();
 
             //Obtener el valor default
-            var tsolldef = tsoll.Where(tsd => tsd.DEFAULT == true).Select(tsds => tsds.ID).FirstOrDefault(); 
+            var tsolldef = tsoll.Where(tsd => tsd.DEFAULT == true).Select(tsds => tsds.ID).FirstOrDefault();
             //MGC 03-10-2018 solicitud con orden de compra <--
 
             var monedal = db.MONEDAs.Where(m => m.ACTIVO == true).Select(m => new { m.WAERS, TEXT = m.WAERS + " - " + m.LTEXT }).ToList();
@@ -434,7 +434,7 @@ namespace WFARTHA.Controllers
             ViewBag.SOCIEDAD_ID = new SelectList(sociedades, "BUKRS", "TEXT");
             //MGC 03-10-2018 solicitud con orden de compra -->
             //Obtener la solicitud con la configuración
-            ViewBag.TSOL_IDL = new SelectList(tsoll, "ID", "TEXT",selectedValue: tsolldef);
+            ViewBag.TSOL_IDL = new SelectList(tsoll, "ID", "TEXT", selectedValue: tsolldef);
             //MGC 03-10-2018 solicitud con orden de compra <--
 
             ViewBag.IMPUESTO = new SelectList(impuestol, "MWSKZ", "TEXT", "V3");
@@ -1405,19 +1405,236 @@ namespace WFARTHA.Controllers
         // GET: Solicitudes/Edit/5
         public ActionResult Edit(decimal id)
         {
-            if (id == null)
+            int pagina = 202; //ID EN BASE DE DATOS
+            FORMATO formato = new FORMATO();
+            string spras = "";
+            string user_id = "";//MGC 02-10-2018 Cadena de autorización
+            using (WFARTHAEntities db = new WFARTHAEntities())
+            {
+
+                string u = User.Identity.Name;
+                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+                ViewBag.usuario = user;
+                spras = user.SPRAS_ID;
+                user_id = user.ID;//MGC 02-10-2018 Cadena de autorización
+                ViewBag.returnUrl = Request.Url.PathAndQuery;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
+                //Obtener miles y dec
+                formato = db.FORMATOes.Where(f => f.ACTIVO == true).FirstOrDefault();
+                ViewBag.miles = formato.MILES;
+                ViewBag.dec = formato.DECIMALES;
+
+            }
+            if (id == null || id == 0)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             DOCUMENTO dOCUMENTO = db.DOCUMENTOes.Find(id);
+            //Documento a documento mod //Copiar valores del post al nuevo objeto
+            DOCUMENTO_MOD doc = new DOCUMENTO_MOD();
             if (dOCUMENTO == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", dOCUMENTO.SOCIEDAD_ID);
-            ViewBag.TSOL_ID = new SelectList(db.TSOLs, "ID", "DESCRIPCION", dOCUMENTO.TSOL_ID);
-            ViewBag.USUARIOC_ID = new SelectList(db.USUARIOs, "ID", "PASS", dOCUMENTO.USUARIOC_ID);
-            return View(dOCUMENTO);
+            //Obtener las sociedadess
+            var sociedades = db.SOCIEDADs.Select(s => new { s.BUKRS, TEXT = s.BUKRS + " - " + s.BUTXT }).ToList();
+
+            //solicitud con orden de compra ------>
+            //Obtener la solicitud con la configuración
+            var tsoll = (from ts in db.TSOLs
+                         join tt in db.TSOLTs
+                         on ts.ID equals tt.TSOL_ID
+                         into jj
+                         from tt in jj.DefaultIfEmpty()
+                         where ts.ESTATUS == "X" && tt.SPRAS_ID.Equals(spras)
+                         select new
+                         {
+                             //ts.ID,
+                             ID = new { ID = ts.ID.ToString().Replace(" ", ""), RANGO = ts.RANGO_ID.ToString().Replace(" ", ""), EDITDET = ts.EDITDET.ToString().Replace(" ", "") },
+                             TEXT = ts.ID + " - " + tt.TXT50,
+                             DEFAULT = ts.DEFAULT
+                         }).ToList();
+            //Obtener el valor default
+            var tsolldef = tsoll.Where(tsd => tsd.DEFAULT == true).Select(tsds => tsds.ID).FirstOrDefault();
+            //solicitud con orden de compra <------
+
+            var monedal = db.MONEDAs.Where(m => m.ACTIVO == true).Select(m => new { m.WAERS, TEXT = m.WAERS + " - " + m.LTEXT }).ToList();
+
+            var impuestol = (from im in db.IMPUESTOes
+                             join imt in db.IMPUESTOTs.Where(imtt => imtt.SPRAS_ID == spras)
+                             on im.MWSKZ equals imt.MWSKZ
+                             into jj
+                             from tt in jj.DefaultIfEmpty()
+                             where im.ACTIVO == true
+                             select new
+                             {
+                                 im.MWSKZ,
+                                 TEXT = im.MWSKZ + " - " + tt.TXT50
+                             }).ToList();
+
+            ViewBag.SOCIEDAD_ID = new SelectList(sociedades, "BUKRS", "TEXT");
+            ViewBag.TSOL_IDL = new SelectList(tsoll, "ID", "TEXT", selectedValue: tsolldef);
+            ViewBag.IMPUESTO = new SelectList(impuestol, "MWSKZ", "TEXT", "V3");
+            ViewBag.MONEDA_ID = new SelectList(monedal, "WAERS", "TEXT");
+            //LEJ 04 10 2018------------------------------
+            doc.NUM_DOC = dOCUMENTO.NUM_DOC;
+            doc.TSOL_ID = dOCUMENTO.TSOL_ID;
+            doc.SOCIEDAD_ID = dOCUMENTO.SOCIEDAD_ID;
+            doc.FECHAD = dOCUMENTO.FECHAD;
+            doc.FECHACON = dOCUMENTO.FECHACON;
+            doc.FECHA_BASE = dOCUMENTO.FECHA_BASE;
+            doc.MONEDA_ID = dOCUMENTO.MONEDA_ID;
+            doc.TIPO_CAMBIO = dOCUMENTO.TIPO_CAMBIO;
+            doc.IMPUESTO = dOCUMENTO.IMPUESTO;
+            doc.MONTO_DOC_MD = dOCUMENTO.MONTO_DOC_MD;
+            doc.REFERENCIA = dOCUMENTO.REFERENCIA;
+            doc.CONCEPTO = dOCUMENTO.CONCEPTO;
+            doc.PAYER_ID = dOCUMENTO.PAYER_ID;
+            doc.CONDICIONES = dOCUMENTO.CONDICIONES;
+            doc.TEXTO_POS = dOCUMENTO.TEXTO_POS;
+            doc.ASIGNACION_POS = dOCUMENTO.ASIGNACION_POS;
+            doc.CLAVE_CTA = dOCUMENTO.CLAVE_CTA;
+            
+          
+            List<DOCUMENTOR> retl = new List<DOCUMENTOR>();
+            List<DOCUMENTOR_MOD> retlt = new List<DOCUMENTOR_MOD>();
+
+            retl = db.DOCUMENTORs.Where(x => x.NUM_DOC == id).ToList();
+
+            retlt = (from r in retl
+                     join rt in db.RETENCIONTs
+                     on r.WITHT equals rt.WITHT
+                     into jj
+                     from rt in jj.DefaultIfEmpty()
+                     where rt.SPRAS_ID.Equals("ES")
+                     select new DOCUMENTOR_MOD
+                     {
+                         WITHT = r.WITHT,
+                         DESC = rt.TXT50 == null ? String.Empty : "",
+                         WT_WITHCD = r.WT_WITHCD,
+                         BIMPONIBLE = r.BIMPONIBLE,
+                         IMPORTE_RET = r.IMPORTE_RET
+
+                     }).ToList();
+
+            List<DOCUMENTOR_MOD> _relt = new List<DOCUMENTOR_MOD>();
+            var _retl = db.RETENCIONs.Where(rt => rt.ESTATUS == true)
+                .Join(
+                db.RETENCION_PROV.Where(rtp => rtp.LIFNR == dOCUMENTO.PAYER_ID && rtp.BUKRS == dOCUMENTO.SOCIEDAD_ID),
+                ret => ret.WITHT,
+                retp => retp.WITHT,
+                (ret, retp) => new
+                {
+                    LIFNR = retp.LIFNR,
+                    BUKRS = retp.BUKRS,
+                    WITHT = retp.WITHT,
+                    DESC = ret.DESCRIPCION,
+                    WT_WITHCD = retp.WT_WITHCD
+
+                }).ToList();
+            if (_retl != null && _retl.Count > 0)
+            {
+                //Obtener los textos de las retenciones
+                _relt = (from r in _retl
+                         join rt in db.RETENCIONTs
+                         on r.WITHT equals rt.WITHT
+                         into jj
+                         from rt in jj.DefaultIfEmpty()
+                         where rt.SPRAS_ID.Equals("ES")
+                         select new DOCUMENTOR_MOD
+                         {
+                             LIFNR = r.LIFNR,
+                             BUKRS = r.BUKRS,
+                             WITHT = r.WITHT,
+                             WT_WITHCD = r.WT_WITHCD,
+                             DESC = rt.TXT50 == null ? String.Empty : r.DESC,
+
+                         }).ToList();
+            }
+            for (int i = 0; i < _relt.Count; i++)
+            {
+                var wtht = _relt[i].WITHT;
+                var _res = db.DOCUMENTORPs.Where(nd => nd.NUM_DOC == dOCUMENTO.NUM_DOC && nd.WITHT == wtht).FirstOrDefault();
+                _relt[i].BIMPONIBLE = _res.BIMPONIBLE;
+                _relt[i].IMPORTE_RET = _res.IMPORTE_RET;
+            }
+            //ViewBag.ret = retlt;
+            ViewBag.ret = _relt;
+            //Obtener datos del proveedor
+            PROVEEDOR prov = db.PROVEEDORs.Where(pr => pr.LIFNR == doc.PAYER_ID).FirstOrDefault();
+            ViewBag.prov = prov;
+            //LEJ 04 10 2018-----------------------------
+            //lej 30.08.2018------------------
+            var xsc = db.SOCIEDADs.ToList();
+            var p1 = "";
+            if (xsc.Count > 0)
+            {
+                //saco el primer registro, que sera el que ponga el combobox por default
+                p1 = xsc[0].BUKRS;
+            }
+            var sc = db.SOCIEDADs.Where(x => x.BUKRS == p1).First();
+            ViewBag.PROVE = new SelectList(sc.PROVEEDORs, "LIFNR", "LIFNR");
+
+            //MGC 04092018 Conceptos
+            //Obtener los valores de los impuestos
+            var impl = (from i in db.IMPUESTOes
+                        join ii in db.IIMPUESTOes
+                        on i.MWSKZ equals ii.MWSKZ
+                        where i.ACTIVO == true && ii.ACTIVO == true
+                        select new
+                        {
+                            MWSKZ = ii.MWSKZ,
+                            //KSCHL = ii.KSCHL,
+                            KBETR = ii.KBETR,
+                            ACTIVO = ii.ACTIVO
+                        }).ToList();
+
+            var impuestosv = JsonConvert.SerializeObject(impl, Formatting.Indented);
+            ViewBag.impuestosval = impuestosv;
+            //Workflow
+            //ViewBag.worflw = "'aaa','bbb','ccc','ddd','eee'";//lej 10.09.2018
+            //Insertar las fechas predefinidas de hoy
+            string dates = DateTime.Now.ToString("dd/MM/yyyy");
+            DateTime theTime = DateTime.ParseExact(dates, //"06/04/2018 12:00:00 a.m."
+                                        "dd/MM/yyyy",
+                                        System.Globalization.CultureInfo.InvariantCulture,
+                                        System.Globalization.DateTimeStyles.None);
+
+            ViewBag.fechah = theTime.ToString();
+
+           
+            //lejgg 04.10.2018------>
+            doc.FECHAD = theTime;
+            doc.FECHACON = theTime;
+            doc.FECHA_BASE = theTime;
+            //lejgg 04.10.2018<------
+
+
+            // Cadena de autorización
+            //List<DET_AGENTECC> dta = new List<DET_AGENTECC>();
+            //Falta vigencia
+            var dta = db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).
+                Join(
+                db.USUARIOs,
+                da => da.USUARIOA_ID,
+                us => us.ID,
+                (da, us) => new
+                {
+                    //ID = new List<string>() { da.VERSION, da.USUARIOC_ID, da.ID_RUTA_AGENTE, da.USUARIOA_ID},                    
+                    ID = new { VERSION = da.VERSION.ToString().Replace(" ", ""), USUARIOC_ID = da.USUARIOC_ID.ToString().Replace(" ", ""), ID_RUTA_AGENTE = da.ID_RUTA_AGENTE.ToString().Replace(" ", ""), USUARIOA_ID = da.USUARIOA_ID.ToString().Replace(" ", "") },
+                    TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
+                }).ToList();
+
+            ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
+
+            ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Formatting.Indented);
+            return View(doc);
         }
 
         // POST: Solicitudes/Edit/5
@@ -1989,7 +2206,7 @@ namespace WFARTHA.Controllers
         {
             //LEJ 03.10.2018
             string nombre = "", contentyp = "";
-            contDescarga(archivo, ref contentyp, ref nombre);            
+            contDescarga(archivo, ref contentyp, ref nombre);
             return File(descargarArchivo(archivo, contentyp, nombre), contentyp, nombre);
         }
 
