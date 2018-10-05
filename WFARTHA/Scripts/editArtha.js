@@ -139,6 +139,15 @@
         ]
     });
     solicitarDatos();
+    $('#btn_guardarh').on("click", function (e) {
+
+
+
+        //Termina provisional
+        $('#btn_guardar').click();
+
+
+    });
 });
 
 function solicitarDatos() {
@@ -285,16 +294,3 @@ function armarTablaInfo(datos) {
     }
 
 }
-
-
-    $('#btn_guardarh').on("click", function (e) {
-
-
-
-        //Termina provisional
-        $('#btn_guardar').click();
-   
-
-    });
-   
-});
