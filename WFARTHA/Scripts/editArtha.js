@@ -5,5 +5,15 @@
     //Inicializar las tabs
     $('#tabs').tabs();
 
+
+    $('#btn_guardarh').on("click", function (e) {
+
+
+
+        //Termina provisional
+        $('#btn_guardar').click();
+   
+
+    });
    
 });

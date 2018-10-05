@@ -59,7 +59,7 @@ namespace WFARTHA.Services
             return correcto;
         }
 
-        public string procesa(FLUJO f,string recurrente)
+        public string procesa(FLUJO f,string recurrente, bool edit)
         {
             string correcto = String.Empty;
             WFARTHAEntities db = new WFARTHAEntities();
@@ -100,7 +100,7 @@ namespace WFARTHA.Services
                 DET_AGENTECA dah = new DET_AGENTECA();
                 dah = detAgenteLimite(dap, Convert.ToDecimal(d.MONTO_DOC_MD));
 
-                actual.DETPOS = 1;
+
                 //actual.DETVER = dah.VERSION; //MGC COMM
                 actual.DETVER = f.RUTA_VERSION; //MGC COMM
                 actual.USUARIOA_ID = f.USUARIOA_ID;
@@ -110,7 +110,22 @@ namespace WFARTHA.Services
                 actual.WORKF_ID = f.WORKF_ID;
                 f.ESTATUS = "A";
                 actual.ESTATUS = f.ESTATUS;
-                db.FLUJOes.Add(actual);
+
+                //Si es edición, solamente actualizar el status en el flujo
+                if (edit)
+                {
+                    FLUJO fedit = db.FLUJOes.Where(a => a.NUM_DOC.Equals(d.NUM_DOC) & a.ESTATUS.Equals("P")).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                    actual.DETPOS = f.DETPOS;
+                    fedit.ESTATUS = f.ESTATUS;
+                    db.Entry(fedit).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                else
+                {
+                    //Si es creación, se guarda el flujo
+                    actual.DETPOS = 1;
+                    db.FLUJOes.Add(actual);
+                }
 
                 WORKFP paso_a = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS.Equals(actual.WF_POS)).FirstOrDefault();
                 int next_step_a = 0;
