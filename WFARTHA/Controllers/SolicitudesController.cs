@@ -1043,7 +1043,8 @@ namespace WFARTHA.Controllers
                             f.ID_RUTA_A = deta.ID_RUTA_AGENTE;
                             f.RUTA_VERSION = deta.VERSION;
 
-                            string c = pf.procesa(f, "");
+                            //MGC 05-10-2018 Modificación para work flow al ser editada
+                            string c = pf.procesa(f, "", false);
                             //while (c == "1")
                             //{
                             //    Email em = new Email();
@@ -1468,6 +1469,7 @@ namespace WFARTHA.Controllers
                 ViewBag.returnUrl = Request.Url.PathAndQuery;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title += " "; //MGC 05-10-2018 Modificación para work flow al ser editada
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
                 ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
@@ -1490,6 +1492,8 @@ namespace WFARTHA.Controllers
             }
             //Obtener las sociedadess
             var sociedades = db.SOCIEDADs.Select(s => new { s.BUKRS, TEXT = s.BUKRS + " - " + s.BUTXT }).ToList();
+
+            ViewBag.Title += id; //MGC 05-10-2018 Modificación para work flow al ser editada
 
             //solicitud con orden de compra ------>
             //Obtener la solicitud con la configuración
@@ -1680,6 +1684,14 @@ namespace WFARTHA.Controllers
             ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
 
             ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Formatting.Indented);
+
+            //MGC 05 - 10 - 2018 flujo -- >
+            //Obtener datos del flujo
+            var vbFl = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderBy(a => a.POS).ToList();
+            ViewBag.workflow = vbFl;
+
+            //MGC 04 - 10 - 2018 flujo <-- 
+
             return View(doc);
         }
 
@@ -1688,12 +1700,79 @@ namespace WFARTHA.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "NUM_DOC,NUM_PRE,TSOL_ID,TALL_ID,SOCIEDAD_ID,PAIS_ID,ESTADO,CIUDAD,PERIODO,EJERCICIO,TIPO_TECNICO,TIPO_RECURRENTE,CANTIDAD_EV,USUARIOC_ID,USUARIOD_ID,FECHAD,FECHAC,HORAC,FECHAC_PLAN,FECHAC_USER,HORAC_USER,ESTATUS,ESTATUS_C,ESTATUS_SAP,ESTATUS_WF,DOCUMENTO_REF,CONCEPTO,NOTAS,MONTO_DOC_MD,MONTO_FIJO_MD,MONTO_BASE_GS_PCT_MD,MONTO_BASE_NS_PCT_MD,MONTO_DOC_ML,MONTO_FIJO_ML,MONTO_BASE_GS_PCT_ML,MONTO_BASE_NS_PCT_ML,MONTO_DOC_ML2,MONTO_FIJO_ML2,MONTO_BASE_GS_PCT_ML2,MONTO_BASE_NS_PCT_ML2,PORC_ADICIONAL,IMPUESTO,FECHAI_VIG,FECHAF_VIG,ESTATUS_EXT,SOLD_TO_ID,PAYER_ID,PAYER_NOMBRE,PAYER_EMAIL,GRUPO_CTE_ID,CANAL_ID,MONEDA_ID,MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIO,TIPO_CAMBIOL,TIPO_CAMBIOL2,NO_FACTURA,FECHAD_SOPORTE,METODO_PAGO,NO_PROVEEDOR,PASO_ACTUAL,AGENTE_ACTUAL,FECHA_PASO_ACTUAL,VKORG,VTWEG,SPART,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,PORC_APOYO,LIGADA,OBJETIVOQ,FRECUENCIA_LIQ,OBJQ_PORC,FECHACON,FECHA_BASE,REFERENCIA,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA,MONTO_DOC_IMP")] DOCUMENTO dOCUMENTO)
+        public ActionResult Edit([Bind(Include = "NUM_DOC,NUM_PRE,TSOL_ID,TALL_ID,SOCIEDAD_ID,PAIS_ID,ESTADO,CIUDAD,PERIODO,EJERCICIO,TIPO_TECNICO,TIPO_RECURRENTE,CANTIDAD_EV," +
+            "USUARIOC_ID,USUARIOD_ID,FECHAD,FECHAC,HORAC,FECHAC_PLAN,FECHAC_USER,HORAC_USER,ESTATUS,ESTATUS_C,ESTATUS_SAP,ESTATUS_WF,DOCUMENTO_REF,CONCEPTO,NOTAS,MONTO_DOC_MD," +
+            "MONTO_FIJO_MD,MONTO_BASE_GS_PCT_MD,MONTO_BASE_NS_PCT_MD,MONTO_DOC_ML,MONTO_FIJO_ML,MONTO_BASE_GS_PCT_ML,MONTO_BASE_NS_PCT_ML,MONTO_DOC_ML2,MONTO_FIJO_ML2," +
+            "MONTO_BASE_GS_PCT_ML2,MONTO_BASE_NS_PCT_ML2,PORC_ADICIONAL,IMPUESTO,FECHAI_VIG,FECHAF_VIG,ESTATUS_EXT,SOLD_TO_ID,PAYER_ID,PAYER_NOMBRE,PAYER_EMAIL,GRUPO_CTE_ID," +
+            "CANAL_ID,MONEDA_ID,MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIO,TIPO_CAMBIOL,TIPO_CAMBIOL2,NO_FACTURA,FECHAD_SOPORTE,METODO_PAGO,NO_PROVEEDOR,PASO_ACTUAL,AGENTE_ACTUAL," +
+            "FECHA_PASO_ACTUAL,VKORG,VTWEG,SPART,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,PORC_APOYO,LIGADA,OBJETIVOQ,FRECUENCIA_LIQ,OBJQ_PORC,FECHACON,FECHA_BASE,REFERENCIA," +
+            "TEXTO_POS,ASIGNACION_POS,CLAVE_CTA,MONTO_DOC_IMP")] DOCUMENTO dOCUMENTO)
         {
+            string errorString = "";
             if (ModelState.IsValid)
             {
-                db.Entry(dOCUMENTO).State = EntityState.Modified;
-                db.SaveChanges();
+                try
+                {
+                    ////MGC 05-10-2018 Modificación para work flow al ser editada
+                    //Descomentar para proceso normal
+                    //db.Entry(dOCUMENTO).State = EntityState.Modified;
+                    //db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+
+                }
+                //MGC 05-10-2018 Modificación para work flow al ser editada -->
+                //Flujo
+                ProcesaFlujo pf = new ProcesaFlujo();
+                //Comienza el wf
+                //Se obtiene la cabecera
+                try
+                {
+                    //Obtener el último flujo
+                    FLUJO f = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC) & a.ESTATUS.Equals("P")).FirstOrDefault();
+
+                    DET_AGENTECC deta = new DET_AGENTECC();
+
+                    //f.ID_RUTA_A = f.ID_RUTA_A.Replace(" ", string.Empty);
+
+                    //Obtener la ruta seleccionada desde la creación (inicio)
+                    deta = db.DET_AGENTECC.Where(dcc => dcc.VERSION == f.RUTA_VERSION && dcc.USUARIOC_ID == f.USUARIOA_ID && dcc.ID_RUTA_AGENTE == f.ID_RUTA_A).FirstOrDefault();
+
+                    //Si la ruta existe
+                    if(deta != null)
+                    {
+                        
+                        FLUJO fe = new FLUJO();
+                        fe.WORKF_ID = f.WORKF_ID;
+                        fe.WF_VERSION = f.WF_VERSION;
+                        fe.WF_POS = f.WF_POS;
+                        fe.NUM_DOC = dOCUMENTO.NUM_DOC;
+                        fe.POS = f.POS;
+                        fe.LOOP = 1;
+                        fe.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
+                        fe.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
+                        fe.ESTATUS = "I";
+                        fe.FECHAC = DateTime.Now;
+                        fe.FECHAM = DateTime.Now;
+                        fe.STEP_AUTO = f.STEP_AUTO;
+
+                        //Ruta tomada
+                        fe.ID_RUTA_A = deta.ID_RUTA_AGENTE;
+                        fe.RUTA_VERSION = deta.VERSION;
+
+                        string c = pf.procesa(fe, "", true);
+                    }
+                }
+                catch (Exception ee)
+                {
+                    if (errorString == "")
+                    {
+                        errorString = ee.Message.ToString();
+                    }
+                    ViewBag.error = errorString;
+                }
+
                 return RedirectToAction("Index");
             }
             ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", dOCUMENTO.SOCIEDAD_ID);
