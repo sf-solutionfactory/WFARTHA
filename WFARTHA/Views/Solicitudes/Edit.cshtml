@@ -9,8 +9,17 @@
     WFARTHA.Services.FormatosC formatoc = new WFARTHA.Services.FormatosC();
     List<WFARTHA.Models.DOCUMENTOR_MOD> drets = ViewBag.ret as List<WFARTHA.Models.DOCUMENTOR_MOD>;
     WFARTHA.Entities.PROVEEDOR dprov = ViewBag.prov as WFARTHA.Entities.PROVEEDOR;
-}
+    WFARTHA.Models.DocumentoFlujo DF = ViewBag.docFl as WFARTHA.Models.DocumentoFlujo;
+    List<WFARTHA.Models.DOCUMENTORP_MOD> lstDrp = ViewBag.DocsRp as List<WFARTHA.Models.DOCUMENTORP_MOD>;
+    List<string> colsret = ViewBag.Retenciones as List<string>;
 
+}
+<script>
+        var cret = [];
+        for (var x = 0; x < @colsret.Count; x++) {
+            @*cret.push('@colsret[x]');*@
+        }
+</script>
 <script src="~/Scripts/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
@@ -34,9 +43,92 @@
     });
     </script>
 }
+<style>
 
+    div.dataTables_wrapper {
+        margin: 0 auto;
+    }
+
+    .div_left {
+        float: left;
+    }
+
+    .div_right {
+        float: right;
+    }
+
+    .div_bottom {
+        clear: both;
+    }
+
+    .hr_bw {
+        height: 4px;
+        border: 0;
+        margin-bottom: 0px;
+        padding: 0;
+        background-color: #ccc;
+    }
+
+    .hr_color {
+        height: 6px;
+        border: 0;
+        margin: 0 0;
+        padding: 0;
+        background-color: #B90C46;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .tabs_menu {
+        width: auto;
+    }
+
+    td.select_row {
+        background: url('../images/playb.png') no-repeat center center;
+        cursor: pointer;
+    }
+
+    tr.selected td.select_row {
+        background: url('../images/play.png') no-repeat center center;
+    }
+
+    td.detail_row {
+        background: url('../images/expandm.png') no-repeat center center;
+        cursor: pointer;
+    }
+
+    tr.details td.detail_row {
+        background: url('../images/expandl.png') no-repeat center center;
+    }
+
+    .errorMaterial {
+        background-color: red;
+    }
+
+    .clblur {
+        background-color: #c4f0ff;
+    }
+
+    .errorProveedor {
+        background-color: red;
+    }
+
+    .selectImpuesto {
+        font-size: 12px;
+    }
+
+    .table_pro {
+        /*margin: 0 auto;
+        clear: both;
+        border-collapse: collapse;*/
+        table-layout: fixed;
+    }
+</style>
 <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
 <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
+<input id="_hd" name="_hd" type="hidden" value="@ViewBag.Retenciones" />
 
 <div class="row" style="margin-bottom:0">
 
@@ -158,6 +250,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+
 <div class="form-horizontal">
     @*Encabezado*@
     <div id="Encabezado_cont" class="col s12" style="font-size:12px;">
@@ -177,246 +270,285 @@
                                 @Html.DropDownList("TSOL_IDL", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control dd1", @id = "tsol" }) @*LEJ 04.09.2018*@ @*MGC 03-10-2018 solicitud con orden de compra*@
                                 @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "form-control fechaVal", @hidden = "hidden", @id = "tsol_id2" } })@*MGC 03-10-2018 solicitud con orden de compra*@
                             </div>
+
                         </div>
-                        <div class="form-group col s6">
-                            @Html.LabelFor(model => model.SOCIEDAD_ID, "Sociedad NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control ddl ddlsc" })@*LEJ 04.09.2018*@
+                        @*<h5 id="head_cabecera">Cabecera NT</h5>*@
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s6">
+                                @Html.LabelFor(model => model.TSOL_ID, "Clase de documento NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("TSOL_IDL", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control dd1", @id = "tsol" }) @*LEJ 04.09.2018*@ @*MGC 03-10-2018 solicitud con orden de compra*@
+                                    @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "form-control fechaVal", @hidden = "hidden", @id = "tsol_id2" } })@*MGC 03-10-2018 solicitud con orden de compra*@
+                                </div>
+                            </div>
+                            <div class="form-group col s6">
+                                @Html.LabelFor(model => model.SOCIEDAD_ID, "Sociedad NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control ddl ddlsc" })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.FECHAD, "Fecha documento NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.FECHAD, new { htmlAttributes = new { @class = "form-control fechaVal" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+
+                            <script>
+                                var elemdp = document.querySelector('#FECHAD');
+                                var optionsdp = {
+                                    format: 'dd/mm/yyyy',
+                                    onClose: function (e) {
+                                    },
+                                    i18n: {
+                                        clear: 'Limpiar',
+                                        today: 'Hoy',
+                                        done: 'Seleccionar',
+                                        previousMonth: '‹',
+                                        nextMonth: '›',
+                                        months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                                        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                                        weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                                        weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+                                    }
+                                };
+                                var instancedp = M.Datepicker.init(elemdp, optionsdp);
+
+                            </script>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.FECHACON, "Fecha Contabilización NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.FECHACON, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+
+                            <script>
+                                var elemdp = document.querySelector('#FECHACON');
+                                var optionsdp = {
+                                    format: 'dd/mm/yyyy',
+                                    onClose: function (e) {
+                                    },
+                                    i18n: {
+                                        clear: 'Limpiar',
+                                        today: 'Hoy',
+                                        done: 'Seleccionar',
+                                        previousMonth: '‹',
+                                        nextMonth: '›',
+                                        months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                                        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                                        weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                                        weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+                                    }
+                                };
+                                var instancedp = M.Datepicker.init(elemdp, optionsdp);
+
+                            </script>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+
+                            <script>
+                                var elemdp = document.querySelector('#FECHA_BASE');
+                                var optionsdp = {
+                                    format: 'dd/mm/yyyy',
+                                    onClose: function (e) {
+                                    },
+                                    i18n: {
+                                        clear: 'Limpiar',
+                                        today: 'Hoy',
+                                        done: 'Seleccionar',
+                                        previousMonth: '‹',
+                                        nextMonth: '›',
+                                        months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                                        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                                        weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                                        weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+                                    }
+                                };
+                                var instancedp = M.Datepicker.init(elemdp, optionsdp);
+
+                            </script>
+                            @*MGC 03-10-2018 solicitud con orden de compra -->*@
+                            @*<div class="form-group col s3">*@
+                            <div id="div_norden_compra" class="input-field col s3" style="display:none">
+                                <input type="text" id="norden_compra" value="" />
+                                <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
+                            </div>
+                            @*MGC 03-10-2018 solicitud con orden de compra <--*@
+                        </div>
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.MONEDA_ID, "Moneda NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("MONEDA_ID", null, new { htmlAttributes = new { @class = "form-control  ddl" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.TIPO_CAMBIO, "Cambio NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.IMPUESTO, "Impuesto NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @class = "form-control ddl" })@*LEJ 04.09.2018*@
+                                    @*<select id="selectImp" class="form-control ddl"></select>*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.MONTO_DOC_MD, new { htmlAttributes = new { @class = "form-control valmon", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.REFERENCIA, "Referencia NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10col s2">
+                                    @Html.EditorFor(model => model.REFERENCIA, new { htmlAttributes = new { @class = "form-control", @maxlength = "16", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.CONCEPTO, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CONCEPTO, "Concepto NT", new { htmlAttributes = new { @class = "form-control", @maxlength = "25" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.CONDICIONES, "Condiciones NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.CLAVE_CTA, "Clave Cuenta NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CLAVE_CTA, new { htmlAttributes = new { @class = "form-control", @maxlength = "2" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:0">
+                            <div class="input-field col s3">
+
+
+                                @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @class = "form-control" } })@*LEJ 04.09.2018*@
+                                @Html.LabelFor(model => model.PAYER_ID, "Proveedor NT", htmlAttributes: new { @class = "active", @for = "PAYER_ID" })
+
+                            </div>
+                            @*//LEJGG 04.10.2018 Conceptos*@
+                            <link href="~/Content/autocomplete.css" rel="stylesheet" />
+                            <script src="~/Scripts/autocomplete1.10.2.js"></script>
+                            <script src="~/Scripts/autocomplete1.11.4.js"></script>
+
+                            <script>
+                                var auto = $.noConflict(true);
+                            </script>
+                            @*<script src="~/Scripts/createa.js"></script>*@
+                            @{string rfc = ""; string name = ""; }
+                            @if (dprov != null)
+                            {
+                                rfc = dprov.STCD1.ToString();
+                                name = dprov.NAME1.ToString();
+                            }
+                            <div class="form-group col s3">
+                                <label class="control-label col-md-2" for="rfc_proveedor">RFC Proveedor NT</label>
+                                <div class="col-md-10">
+                                    <input type="text" id="rfc_proveedor" disabled value="@rfc" />
+                                </div>
+                            </div>
+                            <div class="form-group col s6">
+                                <label class="control-label col-md-2" for="nom_proveedor">Nombre Proveedor NT</label>
+                                <div class="col-md-10">
+                                    <input type="text" id="nom_proveedor" disabled value="@name" />
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row" style="margin-bottom:0">
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.FECHAD, "Fecha documento NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.FECHAD, new { htmlAttributes = new { @class = "form-control fechaVal" } })@*LEJ 04.09.2018*@
+
+
+                </div>
+                <div class="col s6">
+                    <div class="card-panel" style="display:none">
+                        <h5 id="head_flinea">Primera Línea del Documento NT</h5>
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s12">
+                                @Html.LabelFor(model => model.TEXTO_POS, "Texto Posición NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.TEXTO_POS, new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.TEXTO_POS, "", new { @class = "text-danger" })*@
+                                </div>
                             </div>
-                        </div>
-
-                        <script>
-                            var elemdp = document.querySelector('#FECHAD');
-                            var optionsdp = {
-                                format: 'dd/mm/yyyy',
-                                onClose: function (e) {
-                                },
-                                i18n: {
-                                    clear: 'Limpiar',
-                                    today: 'Hoy',
-                                    done: 'Seleccionar',
-                                    previousMonth: '‹',
-                                    nextMonth: '›',
-                                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-                                    monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-                                    weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-                                    weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-                                    weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
-                                }
-                            };
-                            var instancedp = M.Datepicker.init(elemdp, optionsdp);
-
-                        </script>
-
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.FECHACON, "Fecha Contabilización NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.FECHACON, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })@*LEJ 04.09.2018*@
-                            </div>
-                        </div>
-
-                        <script>
-                            var elemdp = document.querySelector('#FECHACON');
-                            var optionsdp = {
-                                format: 'dd/mm/yyyy',
-                                onClose: function (e) {
-                                },
-                                i18n: {
-                                    clear: 'Limpiar',
-                                    today: 'Hoy',
-                                    done: 'Seleccionar',
-                                    previousMonth: '‹',
-                                    nextMonth: '›',
-                                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-                                    monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-                                    weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-                                    weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-                                    weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
-                                }
-                            };
-                            var instancedp = M.Datepicker.init(elemdp, optionsdp);
-
-                        </script>
-
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })@*LEJ 04.09.2018*@
-                            </div>
-                        </div>
-
-                        <script>
-                            var elemdp = document.querySelector('#FECHA_BASE');
-                            var optionsdp = {
-                                format: 'dd/mm/yyyy',
-                                onClose: function (e) {
-                                },
-                                i18n: {
-                                    clear: 'Limpiar',
-                                    today: 'Hoy',
-                                    done: 'Seleccionar',
-                                    previousMonth: '‹',
-                                    nextMonth: '›',
-                                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-                                    monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-                                    weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-                                    weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-                                    weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
-                                }
-                            };
-                            var instancedp = M.Datepicker.init(elemdp, optionsdp);
-
-                        </script>
-                        @*MGC 03-10-2018 solicitud con orden de compra -->*@
-                        @*<div class="form-group col s3">*@
-                        <div id="div_norden_compra" class="input-field col s3" style="display:none">
-                            <input type="text" id="norden_compra" value="" />
-                            <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
-                        </div>
-                        @*MGC 03-10-2018 solicitud con orden de compra <--*@
-                    </div>
-                    <div class="row" style="margin-bottom:0">
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.MONEDA_ID, "Moneda NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.DropDownList("MONEDA_ID", null, new { htmlAttributes = new { @class = "form-control  ddl" } })@*LEJ 04.09.2018*@
-                            </div>
-                        </div>
-
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.TIPO_CAMBIO, "Cambio NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon" } })@*LEJ 04.09.2018*@
-                            </div>
-                        </div>
-
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.IMPUESTO, "Impuesto NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @class = "form-control ddl" })@*LEJ 04.09.2018*@
-                                @*<select id="selectImp" class="form-control ddl"></select>*@
-                            </div>
-                        </div>
-
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.MONTO_DOC_MD, new { htmlAttributes = new { @class = "form-control valmon", @disabled = "disabled" } })@*LEJ 04.09.2018*@
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:0">
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.REFERENCIA, "Referencia NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10col s2">
-                                @Html.EditorFor(model => model.REFERENCIA, new { htmlAttributes = new { @class = "form-control", @maxlength = "16", @disabled = "disabled" } })@*LEJ 04.09.2018*@
-                            </div>
-                        </div>
-
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.CONCEPTO, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.CONCEPTO, "Concepto NT", new { htmlAttributes = new { @class = "form-control", @maxlength = "25" } })@*LEJ 04.09.2018*@
-                            </div>
-                        </div>
-
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.CONDICIONES, "Condiciones NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4" } })@*LEJ 04.09.2018*@
-                            </div>
-                        </div>
-
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.CLAVE_CTA, "Clave Cuenta NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.CLAVE_CTA, new { htmlAttributes = new { @class = "form-control", @maxlength = "2" } })@*LEJ 04.09.2018*@
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-bottom:0">
-                        <div class="input-field col s3">
-
-
-                            @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @class = "form-control" } })@*LEJ 04.09.2018*@
-                            @Html.LabelFor(model => model.PAYER_ID, "Proveedor NT", htmlAttributes: new { @class = "active", @for = "PAYER_ID" })
 
                         </div>
-                        @*//LEJGG 04.10.2018 Conceptos*@
-                        <link href="~/Content/autocomplete.css" rel="stylesheet" />
-                        <script src="~/Scripts/autocomplete1.10.2.js"></script>
-                        <script src="~/Scripts/autocomplete1.11.4.js"></script>
-
-                        <script>
-                            var auto = $.noConflict(true);
-                        </script>
-                        @*<script src="~/Scripts/createa.js"></script>*@
-                        @{string rfc = ""; string name = ""; }
-                        @if (dprov != null)
-                        {
-                            rfc = dprov.STCD1.ToString();
-                            name = dprov.NAME1.ToString();
-                        }
-                        <div class="form-group col s3">
-                            <label class="control-label col-md-2" for="rfc_proveedor">RFC Proveedor NT</label>
-                            <div class="col-md-10">
-                                <input type="text" id="rfc_proveedor" disabled value="@rfc" />
-                            </div>
-                        </div>
-                        <div class="form-group col s6">
-                            <label class="control-label col-md-2" for="nom_proveedor">Nombre Proveedor NT</label>
-                            <div class="col-md-10">
-                                <input type="text" id="nom_proveedor" disabled value="@name" />
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s4">
+                                @Html.LabelFor(model => model.ASIGNACION_POS, "Asignación Posición NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.ASIGNACION_POS, new { htmlAttributes = new { @class = "form-control", @maxlength = "18" } })@*LEJ 04.09.2018*@
+                                    @*@Html.ValidationMessageFor(model => model.ASIGNACION_POS, "", new { @class = "text-danger" })*@
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-            </div>
-            <div class="col s6">
-                <div class="card-panel" style="display:none">
-                    <h5 id="head_flinea">Primera Línea del Documento NT</h5>
-                    <div class="row" style="margin-bottom:0">
-                        <div class="form-group col s12">
-                            @Html.LabelFor(model => model.TEXTO_POS, "Texto Posición NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.TEXTO_POS, new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })@*LEJ 04.09.2018*@
-                                @*@Html.ValidationMessageFor(model => model.TEXTO_POS, "", new { @class = "text-danger" })*@
+                <div class="col s12">
+                    <div class="card-panel">
+                        <div id="file_facturat" class="file-field input-field" style="display:none">
+                            <div class="btn">
+                                <span id="span_filefact">File</span> @*B20180801 MGC Textos*@
+                                <input type="file" class="file_sop" id="file_sopp">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate file_sop" type="text">
                             </div>
                         </div>
 
-                    </div>
-                    <div class="row" style="margin-bottom:0">
-                        <div class="form-group col s4">
-                            @Html.LabelFor(model => model.ASIGNACION_POS, "Asignación Posición NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.ASIGNACION_POS, new { htmlAttributes = new { @class = "form-control", @maxlength = "18" } })@*LEJ 04.09.2018*@
-                                @*@Html.ValidationMessageFor(model => model.ASIGNACION_POS, "", new { @class = "text-danger" })*@
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12">
-                <div class="card-panel">
-                    <div id="file_facturat" class="file-field input-field" style="display:none">
-                        <div class="btn">
-                            <span id="span_filefact">File</span> @*B20180801 MGC Textos*@
-                            <input type="file" class="file_sop" id="file_sopp">
-                        </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate file_sop" type="text">
-                        </div>
+                        <h5 id="head_flinea">Retenciones NT</h5>
+                        <div class="row" style="margin-bottom:0">
+                            <table class="table display mdl-data-table striped" id="table_ret" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th class="lbl_tret">
+                                            Tipo Retención NT
+                                        </th>
+                                        <th class="lbl_descret">
+                                            Descripción Retención NT
+                                        </th>
+                                        <th class="lbl_indret">
+                                            Indicador de retención NT
+                                        </th>
+                                        <th class="lbl_bimponible">
+                                            Base Imponible NT
+                                        </th>
+                                        <th id="lbl_impret">
+                                            Importe de retención NT
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @*Obtener los decimales*@
+                                    @{ string deci = ViewBag.dec; if (deci == null | deci == "") { deci = ""; } }
+                                    @if (drets != null)
+
                     </div>
                     <h5 id="head_flinea">Retenciones NT</h5>
                     <div class="row" style="margin-bottom:0">
@@ -446,89 +578,170 @@
                                 @if (drets != null)
                                 {
                                     for (var i = 0; i < drets.Count; i++)
-                                    {
-                                        <tr>
-                                            <td>
-                                                @Html.DisplayFor(m => drets[i].WITHT)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(m => drets[i].DESC)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(m => drets[i].WT_WITHCD)
-                                            </td>
-                                            <td>
-                                                @{ decimal bi = 0; try { bi = Convert.ToDecimal(drets[i].BIMPONIBLE); } catch (Exception) { }; string bim = formatoc.toShow(bi, deci);}
-                                                @bim
-                                            </td>
-                                            <td>
-                                                @{ decimal im = 0; try { im = Convert.ToDecimal(drets[i].IMPORTE_RET); } catch (Exception) { }; string ims = formatoc.toShow(im, deci);}
-                                                @ims
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
 
-                        <table class="table display mdl-data-table striped" id="table_reth" style="width:100%; display:none">
-                            <thead>
-                                <tr>
-                                    <th class="lbl_socret">
-                                        Sociedad Retención NT
-                                    </th>
-                                    <th class="lbl_provret">
-                                        Proveedor Retención NT
-                                    </th>
-                                    <th class="lbl_tret">
-                                        Tipo Retención NT
-                                    </th>
-                                    <th class="lbl_descret">
-                                        Descripción Retención NT
-                                    </th>
-                                    <th class="lbl_indret">
-                                        Indicador de retención NT
-                                    </th>
-                                    <th class="lbl_bimponible">
-                                        Base Imponible NT
-                                    </th>
-                                    <th id="lbl_impret">
-                                        Importe de retención NT
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                                    {
+                                        for (var i = 0; i < drets.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(m => drets[i].WITHT)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(m => drets[i].DESC)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(m => drets[i].WT_WITHCD)
+                                                </td>
+                                                <td>
+                                                    @{ decimal bi = 0; try { bi = Convert.ToDecimal(drets[i].BIMPONIBLE); } catch (Exception) { }; string bim = formatoc.toShow(bi, deci);}
+                                                    @bim
+                                                </td>
+                                                <td>
+                                                    @{ decimal im = 0; try { im = Convert.ToDecimal(drets[i].IMPORTE_RET); } catch (Exception) { }; string ims = formatoc.toShow(im, deci);}
+                                                    @ims
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                            <table class="table display mdl-data-table striped" id="table_reth" style="width:100%; display:none">
+                                <thead>
+                                    <tr>
+                                        <th class="lbl_socret">
+                                            Sociedad Retención NT
+                                        </th>
+                                        <th class="lbl_provret">
+                                            Proveedor Retención NT
+                                        </th>
+                                        <th class="lbl_tret">
+                                            Tipo Retención NT
+                                        </th>
+                                        <th class="lbl_descret">
+                                            Descripción Retención NT
+                                        </th>
+                                        <th class="lbl_indret">
+                                            Indicador de retención NT
+                                        </th>
+                                        <th class="lbl_bimponible">
+                                            Base Imponible NT
+                                        </th>
+                                        <th id="lbl_impret">
+                                            Importe de retención NT
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    @*Información Contable*@
-    <div id="Contable_cont" class="col s12" style="font-size:12px;">
-        <div class="row">
-            <div class="col s12">
-                <div class="card-panel">
-                    <h5 id="head_cabecera">Detalle NT</h5>
-                    <div class="row" style="margin-bottom:0">
+        @*Información Contable*@
+        <div id="Contable_cont" class="col s12" style="font-size:12px;">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card-panel">
+                        <h5 id="head_cabecera">Detalle NT</h5>
+                        <div class="row" style="margin-bottom:0">
 
-                        @*//MGC 04092018 Conceptos*@
-                        @{string jval = ViewBag.TSOL_VALUES;
-                            @Html.Hidden("impuestosval", jval)
-                        }
+                            @*//MGC 04092018 Conceptos*@
+                            @{string jval = ViewBag.TSOL_VALUES;
+                                @Html.Hidden("impuestosval", jval)
+                            }
 
-                        <div id="div_btns_row_info">
-                            <a class="btn"><i class="material-icons left">add</i><span id="addRowInfo">Registros Add NT</span></a>
-                            <a class="btn"><i class="material-icons left">clear</i><span id="delRowInfo">Registro Del NT</span></a>
-                        </div>
-                        <div>
-                            <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
+                            <div id="div_btns_row_info">
+                                <a class="btn"><i class="material-icons left">add</i><span id="addRowInfo">Registros Add NT</span></a>
+                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowInfo">Registro Del NT</span></a>
+                            </div>
+                            <div>
+                                <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>
+
+                                            </th>
+                                            <th class="lbl_pos">
+                                                Pos NT
+                                            </th>
+                                            <th class="lbl_NmAnexo">
+                                                Numero Anexo1
+                                            </th>
+                                            <th class="lbl_NmAnexo">
+                                                Numero Anexo2
+                                            </th>
+                                            <th class="lbl_NmAnexo">
+                                                Numero Anexo3
+                                            </th>
+                                            <th class="lbl_NmAnexo">
+                                                Numero Anexo4
+                                            </th>
+                                            <th class="lbl_NmAnexo">
+                                                Numero Anexo5
+                                            </th>
+                                            <th class="lbl_cargoAbono">
+                                                D/H NT
+                                            </th>
+                                            <th class="lbl_factura">
+                                                Factura NT
+                                            </th>
+                                            <th id="lbl_tconcepto">
+                                                TIPO CONCEPTO NT
+                                            </th>
+                                            <th id="lbl_grupo">
+                                                Grupo NT
+                                            </th>
+                                            <th id="lbl_cuenta">
+                                                Cuenta NT
+                                            </th>
+                                            <th id="lbl_cuentaNom">
+                                                Nombre de cuenta NT
+                                            </th>
+                                            <th id="lbl_tipoimp">
+                                                Tipo Imp. NT
+                                            </th>
+                                            <th id="lbl_imputacion">
+                                                Imputación NT
+                                            </th>
+                                            <th id="lbl_ccosto">
+                                                Centro de costo NT
+                                            </th>
+                                            <th id="lbl_monto">
+                                                Monto NT
+                                            </th>
+                                            <th id="lbl_impuesto">
+                                                Impuesto NT
+                                            </th>
+                                            <th id="lbl_iva">
+                                                IVA NT
+                                            </th>
+                                            <th id="lbl_Texto">
+                                                TEXTO
+                                            </th>
+                                            <th id="lbl_total">
+                                                Total
+                                            </th>
+                                            @*MGC 03-10-2018 solicitud con orden de compra*@
+                                            <th id="lbl_check">
+                                                Check
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                    <tfoot id="tfoot_info" style="overflow:auto;">
+                                        <tr>
+                                            <th colspan="17" style="text-align:right">Total:</th>
+                                            <th id="total_info"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <table class="table display mdl-data-table striped" id="table_infoh" style="width:100%; display:none">
                                 <thead>
                                     <tr>
-                                        <th>
-
-                                        </th>
                                         <th class="lbl_pos">
                                             Pos NT
                                         </th>
@@ -548,7 +761,7 @@
                                             Numero Anexo5
                                         </th>
                                         <th class="lbl_cargoAbono">
-                                            D/H NT
+                                            Cargo/Abono NT
                                         </th>
                                         <th class="lbl_factura">
                                             Factura NT
@@ -583,151 +796,75 @@
                                         <th id="lbl_iva">
                                             IVA NT
                                         </th>
-                                        <th id="lbl_Texto">
+                                        <th id="lbl_texto">
                                             TEXTO
                                         </th>
                                         <th id="lbl_total">
                                             Total
                                         </th>
-                                        @*MGC 03-10-2018 solicitud con orden de compra*@
-                                        <th id="lbl_check">
-                                            Check
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            @*Para las retenciones dinamicas*@
+                            <table class="table display mdl-data-table striped" id="table_inforeth" style="width:100%; display:none"></table>
+                            @*Para las columnas de anexos*@
+                            <table class="table display mdl-data-table striped" id="table_infoAnex" style="width:100%; display:none">
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <div class="card-panel">
+                        <h5 id="head_cabecera">ANEXOS</h5>
+                        <div class="row" style="margin-bottom:0">
+                            <div>
+                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowAnex">Registro Del A</span></a>
+                            </div>
+                            <div class="file-field input-field" id="cargar_archivo">
+                                <div class="btn" style="margin-left: 2px;">
+                                    <span id="span_fileloadAnexar">Anexar</span>
+                                    <input name="file_sopAnexar" id="file_sopAnexar" type="file" multiple="multiple" />
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate file_sopAnexar" type="text">
+                                </div>
+                            </div>
+                            <table class="table display mdl-data-table striped" id="table_anexa" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th class="">
+                                        </th>
+                                        <th class="">
+                                            Num
+                                        </th>
+                                        <th class="">
+                                            Status
+                                        </th>
+                                        <th class="">
+                                            Nombres Archivo
+                                        </th>
+                                        <th class="">
+                                            Tipo de Archivo
+                                        </th>
+                                        <th class="">
+                                            Descripcion
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
-                                <tfoot id="tfoot_info" style="overflow:auto;">
-                                    <tr>
-                                        <th colspan="17" style="text-align:right">Total:</th>
-                                        <th id="total_info"></th>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
-                        <table class="table display mdl-data-table striped" id="table_infoh" style="width:100%; display:none">
-                            <thead>
-                                <tr>
-                                    <th class="lbl_pos">
-                                        Pos NT
-                                    </th>
-                                    <th class="lbl_NmAnexo">
-                                        Numero Anexo1
-                                    </th>
-                                    <th class="lbl_NmAnexo">
-                                        Numero Anexo2
-                                    </th>
-                                    <th class="lbl_NmAnexo">
-                                        Numero Anexo3
-                                    </th>
-                                    <th class="lbl_NmAnexo">
-                                        Numero Anexo4
-                                    </th>
-                                    <th class="lbl_NmAnexo">
-                                        Numero Anexo5
-                                    </th>
-                                    <th class="lbl_cargoAbono">
-                                        Cargo/Abono NT
-                                    </th>
-                                    <th class="lbl_factura">
-                                        Factura NT
-                                    </th>
-                                    <th id="lbl_tconcepto">
-                                        TIPO CONCEPTO NT
-                                    </th>
-                                    <th id="lbl_grupo">
-                                        Grupo NT
-                                    </th>
-                                    <th id="lbl_cuenta">
-                                        Cuenta NT
-                                    </th>
-                                    <th id="lbl_cuentaNom">
-                                        Nombre de cuenta NT
-                                    </th>
-                                    <th id="lbl_tipoimp">
-                                        Tipo Imp. NT
-                                    </th>
-                                    <th id="lbl_imputacion">
-                                        Imputación NT
-                                    </th>
-                                    <th id="lbl_ccosto">
-                                        Centro de costo NT
-                                    </th>
-                                    <th id="lbl_monto">
-                                        Monto NT
-                                    </th>
-                                    <th id="lbl_impuesto">
-                                        Impuesto NT
-                                    </th>
-                                    <th id="lbl_iva">
-                                        IVA NT
-                                    </th>
-                                    <th id="lbl_texto">
-                                        TEXTO
-                                    </th>
-                                    <th id="lbl_total">
-                                        Total
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        @*Para las retenciones dinamicas*@
-                        <table class="table display mdl-data-table striped" id="table_inforeth" style="width:100%; display:none"></table>
-                        @*Para las columnas de anexos*@
-                        <table class="table display mdl-data-table striped" id="table_infoAnex" style="width:100%; display:none">
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col s12">
-                <div class="card-panel">
-                    <h5 id="head_cabecera">ANEXOS</h5>
-                    <div class="row" style="margin-bottom:0">
-                        <div>
-                            <a class="btn"><i class="material-icons left">clear</i><span id="delRowAnex">Registro Del A</span></a>
-                        </div>
-                        <div class="file-field input-field" id="cargar_archivo">
-                            <div class="btn" style="margin-left: 2px;">
-                                <span id="span_fileloadAnexar">Anexar</span>
-                                <input name="file_sopAnexar" id="file_sopAnexar" type="file" multiple="multiple" />
-                            </div>
-                            <div class="file-path-wrapper">
-                                <input class="file-path validate file_sopAnexar" type="text">
-                            </div>
-                        </div>
-                        <table class="table display mdl-data-table striped" id="table_anexa" style="width:100%;">
-                            <thead>
-                                <tr>
-                                    <th class="">
-                                    </th>
-                                    <th class="">
-                                        Num
-                                    </th>
-                                    <th class="">
-                                        Status
-                                    </th>
-                                    <th class="">
-                                        Nombres Archivo
-                                    </th>
-                                    <th class="">
-                                        Tipo de Archivo
-                                    </th>
-                                    <th class="">
-                                        Descripcion
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     @*MGC 04-10-2018 Botones para acciones WF-->*@
     @if (ViewBag.workflow.Count != 0)
@@ -796,6 +933,7 @@
     }
     @*MGC 04-10-2018 WF<--*@
 </div>
+
 }
 
 <div>

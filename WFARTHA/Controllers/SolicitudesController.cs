@@ -354,7 +354,7 @@ namespace WFARTHA.Controllers
             ViewBag.DocsRp = _xdocsrp2;
             ViewBag.Retenciones = rets2;
             //LEj 24.09.2018---
-            
+
             //MGC 04 - 10 - 2018 Botones para acciones y flujo -- >
             //Obtener datos del flujo
             var vbFl = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderBy(a => a.POS).ToList();
@@ -1490,6 +1490,36 @@ namespace WFARTHA.Controllers
             {
                 return HttpNotFound();
             }
+            //lejgg 05 10 2018
+            if (dOCUMENTO.DOCUMENTOPs != null)
+            {
+                List<DOCUMENTOP_MODSTR> dml = new List<DOCUMENTOP_MODSTR>();
+                FormatosC fc = new FormatosC();
+                //Agregar a documento p_mod para agregar valores faltantes
+                for (int i = 0; i < dOCUMENTO.DOCUMENTOPs.Count; i++)
+                {
+                    DOCUMENTOP_MODSTR dm = new DOCUMENTOP_MODSTR();
+
+                    dm.NUM_DOC = dOCUMENTO.DOCUMENTOPs.ElementAt(i).NUM_DOC;
+                    dm.POS = dOCUMENTO.DOCUMENTOPs.ElementAt(i).POS;
+                    dm.ACCION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).ACCION;
+                    dm.FACTURA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).FACTURA;
+                    dm.GRUPO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
+                    dm.CUENTA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).CUENTA;
+                    dm.NOMCUENTA = "Transporte";
+                    dm.TIPOIMP = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TIPOIMP;
+                    dm.IMPUTACION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).IMPUTACION;
+                    dm.MONTO = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).MONTO, formato.DECIMALES);
+                    dm.IVA = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).IVA, formato.DECIMALES);
+                    dm.TEXTO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TEXTO;
+                    dm.TOTAL = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).TOTAL, formato.DECIMALES);
+
+                    dml.Add(dm);
+                }
+
+                doc.DOCUMENTOPSTR = dml;
+            }
+            //lejgg 05 10 2018
             //Obtener las sociedadess
             var sociedades = db.SOCIEDADs.Select(s => new { s.BUKRS, TEXT = s.BUKRS + " - " + s.BUTXT }).ToList();
 
@@ -1550,8 +1580,8 @@ namespace WFARTHA.Controllers
             doc.TEXTO_POS = dOCUMENTO.TEXTO_POS;
             doc.ASIGNACION_POS = dOCUMENTO.ASIGNACION_POS;
             doc.CLAVE_CTA = dOCUMENTO.CLAVE_CTA;
-            
-          
+
+
             List<DOCUMENTOR> retl = new List<DOCUMENTOR>();
             List<DOCUMENTOR_MOD> retlt = new List<DOCUMENTOR_MOD>();
 
@@ -1620,6 +1650,45 @@ namespace WFARTHA.Controllers
             PROVEEDOR prov = db.PROVEEDORs.Where(pr => pr.LIFNR == doc.PAYER_ID).FirstOrDefault();
             ViewBag.prov = prov;
             //LEJ 04 10 2018-----------------------------
+            //LEJ 05 10 2018-----------------------------
+            var _Se = db.DOCUMENTORPs.Where(x => x.NUM_DOC == id).ToList();
+            var rets = _Se.Select(w => w.WITHT).Distinct().ToList();
+            var rets2 = rets;
+            for (int i = 0; i < rets.Count; i++)
+            {
+                var _rt = rets2[i];
+                var ret = db.RETENCIONs.Where(x => x.WITHT == _rt).FirstOrDefault().WITHT_SUB;
+                for (int j = 0; j < rets.Count; j++)
+                {
+                    if (rets2[j] == ret)
+                    {
+                        rets2.RemoveAt(j);
+                    }
+                }
+            }
+            var _xdocsrp = db.DOCUMENTORPs.Where(x => x.NUM_DOC == id).ToList();
+            List<DOCUMENTORP_MOD> _xdocsrp2 = new List<DOCUMENTORP_MOD>();
+            DOCUMENTORP_MOD _Data = new DOCUMENTORP_MOD();
+            for (int x = 0; x < rets2.Count; x++)
+            {
+                for (int j = 0; j < _xdocsrp.Count; j++)
+                {
+                    if (rets2[x] == _xdocsrp[j].WITHT)
+                    {
+                        _Data = new DOCUMENTORP_MOD();
+                        _Data.NUM_DOC = _xdocsrp[j].NUM_DOC;
+                        _Data.POS = _xdocsrp[j].POS;
+                        _Data.WITHT = _xdocsrp[j].WITHT;
+                        _Data.WT_WITHCD = _xdocsrp[j].WT_WITHCD;
+                        _Data.BIMPONIBLE = _xdocsrp[j].BIMPONIBLE;
+                        _Data.IMPORTE_RET = _xdocsrp[j].IMPORTE_RET;
+                        _xdocsrp2.Add(_Data);
+                    }
+                }
+            }
+            ViewBag.DocsRp = _xdocsrp2;
+            ViewBag.Retenciones = rets2;
+            //LEJ 05 10 2018-----------------------------
             //lej 30.08.2018------------------
             var xsc = db.SOCIEDADs.ToList();
             var p1 = "";
@@ -1658,7 +1727,7 @@ namespace WFARTHA.Controllers
 
             ViewBag.fechah = theTime.ToString();
 
-           
+
             //lejgg 04.10.2018------>
             doc.FECHAD = theTime;
             doc.FECHACON = theTime;
@@ -1682,8 +1751,14 @@ namespace WFARTHA.Controllers
                 }).ToList();
 
             ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
-
             ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Formatting.Indented);
+
+            //lejgg 05.10.2018------>
+            DocumentoFlujo DF = new DocumentoFlujo();
+            DF.D = doc;
+            DF.F = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderByDescending(a => a.POS).FirstOrDefault();
+            //lejgg 05.10.2018<------
+            ViewBag.docFl = DF;
 
             //MGC 05 - 10 - 2018 flujo -- >
             //Obtener datos del flujo
@@ -1691,6 +1766,7 @@ namespace WFARTHA.Controllers
             ViewBag.workflow = vbFl;
 
             //MGC 04 - 10 - 2018 flujo <-- 
+
 
             return View(doc);
         }
@@ -2209,6 +2285,49 @@ namespace WFARTHA.Controllers
                 ret = "Null";
             }
             JsonResult jc = Json(ret, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
+        [HttpPost]
+        public JsonResult getDocsPSTR(string id)
+        {
+            var _id = decimal.Parse(id);
+            DOCUMENTO dOCUMENTO = db.DOCUMENTOes.Find(_id);
+
+            //Obtener miles y dec
+            var formato = db.FORMATOes.Where(fo => fo.ACTIVO == true).FirstOrDefault();
+            //Documento a documento mod //Copiar valores del post al nuevo objeto
+            DOCUMENTO_MOD doc = new DOCUMENTO_MOD();
+
+            if (dOCUMENTO.DOCUMENTOPs != null)
+            {
+                List<DOCUMENTOP_MODSTR> dml = new List<DOCUMENTOP_MODSTR>();
+                FormatosC fc = new FormatosC();
+                //Agregar a documento p_mod para agregar valores faltantes
+                for (int i = 0; i < dOCUMENTO.DOCUMENTOPs.Count; i++)
+                {
+                    DOCUMENTOP_MODSTR dm = new DOCUMENTOP_MODSTR();
+
+                    dm.NUM_DOC = dOCUMENTO.DOCUMENTOPs.ElementAt(i).NUM_DOC;
+                    dm.POS = dOCUMENTO.DOCUMENTOPs.ElementAt(i).POS;
+                    dm.ACCION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).ACCION;
+                    dm.FACTURA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).FACTURA;
+                    dm.GRUPO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
+                    dm.CUENTA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).CUENTA;
+                    dm.NOMCUENTA = "Transporte";
+                    dm.TIPOIMP = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TIPOIMP;
+                    dm.IMPUTACION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).IMPUTACION;
+                    dm.MONTO = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).MONTO, formato.DECIMALES);
+                    dm.IVA = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).IVA, formato.DECIMALES);
+                    dm.TEXTO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TEXTO;
+                    dm.TOTAL = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).TOTAL, formato.DECIMALES);
+
+                    dml.Add(dm);
+                }
+
+                doc.DOCUMENTOPSTR = dml;
+            }
+            JsonResult jc = Json(doc, JsonRequestBehavior.AllowGet);
             return jc;
         }
 

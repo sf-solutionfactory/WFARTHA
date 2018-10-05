@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="WFARTHAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="WFARTHAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ACCION">
           <Key>
             <PropertyRef Name="ID" />
@@ -120,8 +120,8 @@
           <Property Name="AGENTE_SIG" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="OVERRIDE" Type="bit" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.DET_AGENTECC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_AGENTECC' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DET_AGENTECC">
           <Key>
             <PropertyRef Name="VERSION" />
@@ -148,8 +148,8 @@ warning 6002: The table/view 'PAGOS.dbo.DET_AGENTECC' does not have a primary ke
           <Property Name="ID_USUARIO" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="STEP_FASE" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.DET_PEP' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_PEP' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DET_PEP">
           <Key>
             <PropertyRef Name="PSPNR" />
@@ -399,8 +399,8 @@ warning 6002: The table/view 'PAGOS.dbo.DET_PEP' does not have a primary key def
           <Property Name="DECIMALES" Type="nchar" MaxLength="1" Nullable="false" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.IIMPUESTO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="IIMPUESTO">
           <Key>
             <PropertyRef Name="MWSKZ" />
@@ -765,8 +765,8 @@ warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key d
           <Property Name="USUARIO_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="FECHAC" Type="datetime" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.CARPETAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.CARPETAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CARPETAV">
           <Key>
             <PropertyRef Name="USUARIO_ID" />
@@ -778,8 +778,8 @@ warning 6002: The table/view 'PAGOS.dbo.CARPETAV' does not have a primary key de
           <Property Name="TXT50" Type="nvarchar" MaxLength="50" />
           <Property Name="ICON" Type="nvarchar" MaxLength="20" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.DOCUMENTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.DOCUMENTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DOCUMENTOV">
           <Key>
             <PropertyRef Name="POS" />
@@ -839,8 +839,8 @@ warning 6002: The table/view 'PAGOS.dbo.DOCUMENTOV' does not have a primary key 
           <Property Name="USUARIOA_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="EXPR2" Type="nchar" MaxLength="1" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.PAGINAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.PAGINAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="PAGINAV">
           <Key>
             <PropertyRef Name="ID" />
@@ -860,8 +860,8 @@ warning 6002: The table/view 'PAGOS.dbo.PAGINAV' does not have a primary key def
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="USUARIO_SPRAS" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="WARNINGV">
           <Key>
             <PropertyRef Name="PAGINA_ID" />
@@ -2223,7 +2223,8 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             <End Role="WORKFV" EntitySet="WORKFV" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="WFARTHAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -2907,13 +2908,13 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <Property Name="DESCRIPCION" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
           <Property Name="RANGO_ID" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="ESTATUS" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="EDITDET" Type="Boolean" />
+          <Property Name="DEFAULT" Type="Boolean" />
           <NavigationProperty Name="DET_TIPODOC" Relationship="Self.FK_DET_TIPODOC_TSOL" FromRole="TSOL" ToRole="DET_TIPODOC" />
           <NavigationProperty Name="DOCUMENTOes" Relationship="Self.FK_DOCUMENTO_TSOL" FromRole="TSOL" ToRole="DOCUMENTO" />
           <NavigationProperty Name="RANGO" Relationship="Self.FK_TSOL_RANGO" FromRole="TSOL" ToRole="RANGO" />
           <NavigationProperty Name="TSOLTs" Relationship="Self.FK_TSOLT_TSOL" FromRole="TSOL" ToRole="TSOLT" />
           <NavigationProperty Name="WORKFHs" Relationship="Self.FK_WORKFP_TSOL" FromRole="TSOL" ToRole="WORKFH" />
-          <Property Name="EDITDET" Type="Boolean" />
-          <Property Name="DEFAULT" Type="Boolean" />
         </EntityType>
         <EntityType Name="TSOLT">
           <Key>
@@ -3124,6 +3125,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           </Key>
           <Property Name="POS" Type="Int32" Nullable="false" />
           <Property Name="NUM_DOC" Type="Decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="NUM_PRE" Type="Decimal" Precision="10" Scale="0" Nullable="false" />
           <Property Name="TSOL_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="TALL_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="SOCIEDAD_ID" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
@@ -3173,7 +3175,6 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <Property Name="FECHA_PASO_ACTUAL" Type="DateTime" Precision="3" />
           <Property Name="USUARIOA_ID" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Name="EXPR2" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
-          <Property Name="NUM_PRE" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
         </EntityType>
         <EntityType Name="PAGINAV">
           <Key>
@@ -4978,12 +4979,12 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <EntitySetMapping Name="TSOLs">
             <EntityTypeMapping TypeName="WFARTHAModel.TSOL">
               <MappingFragment StoreEntitySet="TSOL">
-                <ScalarProperty Name="DEFAULT" ColumnName="DEFAULT" />
-                <ScalarProperty Name="EDITDET" ColumnName="EDITDET" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
                 <ScalarProperty Name="RANGO_ID" ColumnName="RANGO_ID" />
                 <ScalarProperty Name="ESTATUS" ColumnName="ESTATUS" />
+                <ScalarProperty Name="EDITDET" ColumnName="EDITDET" />
+                <ScalarProperty Name="DEFAULT" ColumnName="DEFAULT" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5152,9 +5153,9 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <EntitySetMapping Name="DOCUMENTOVs">
             <EntityTypeMapping TypeName="WFARTHAModel.DOCUMENTOV">
               <MappingFragment StoreEntitySet="DOCUMENTOV">
-                <ScalarProperty Name="NUM_PRE" ColumnName="NUM_PRE" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
+                <ScalarProperty Name="NUM_PRE" ColumnName="NUM_PRE" />
                 <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
                 <ScalarProperty Name="TALL_ID" ColumnName="TALL_ID" />
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
