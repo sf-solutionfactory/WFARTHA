@@ -12,8 +12,14 @@
     WFARTHA.Models.DocumentoFlujo DF = ViewBag.docFl as WFARTHA.Models.DocumentoFlujo;
     List<WFARTHA.Models.DOCUMENTORP_MOD> lstDrp = ViewBag.DocsRp as List<WFARTHA.Models.DOCUMENTORP_MOD>;
     List<string> colsret = ViewBag.Retenciones as List<string>;
-}
 
+}
+<script>
+        var cret = [];
+        for (var x = 0; x < @colsret.Count; x++) {
+            @*cret.push('@colsret[x]');*@
+        }
+</script>
 <script src="~/Scripts/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
@@ -122,6 +128,7 @@
 </style>
 <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
 <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
+<input id="_hd" name="_hd" type="hidden" value="@ViewBag.Retenciones" />
 
 <div class="row" style="margin-bottom:0">
 
