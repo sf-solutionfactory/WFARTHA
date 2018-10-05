@@ -5,6 +5,7 @@
     //Inicializar las tabs
     $('#tabs').tabs();
 
+
     //Tabla de Información
     $('#table_info').DataTable({
 
@@ -284,3 +285,16 @@ function armarTablaInfo(datos) {
     }
 
 }
+
+
+    $('#btn_guardarh').on("click", function (e) {
+
+
+
+        //Termina provisional
+        $('#btn_guardar').click();
+   
+
+    });
+   
+});

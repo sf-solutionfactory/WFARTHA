@@ -1124,127 +1124,127 @@ $(document).ready(function () {
     }
 
     $('#btn_guardarh').on("click", function (e) {
-        var _miles = $("#miles").val(); //LEJ 09.07.18
-        var _decimales = $("#dec").val(); //LEJ 09.07.18
-        //M.toast({ html: "Guardando" })
-        //document.getElementById("loader").style.display = "flex";//RSG 26.04.2018
-        //sleep(5000);
-        var msg = 'Verificar valores en los campos de ';
-        var res = true;
-        //Evaluar TabInfo values
-        var InfoTab = evalInfoTab(true, e);
-        if (!InfoTab) {
-            msg += 'Información';
-            res = InfoTab;
-        }
-        //Evaluar TempTab values
-        var TempTab = evalTempTab(true, e);
-        if (!TempTab) {
-            msg += ' ,Temporalidad';
-            res = TempTab;
-        }
-        //Evaluar SoporteTab values
-        var SoporteTab = evalSoporteTab(true, e);
-        if (!SoporteTab) {
-            msg += ' ,Soporte';
-            res = SoporteTab;
-        }
+        //var _miles = $("#miles").val(); //LEJ 09.07.18
+        //var _decimales = $("#dec").val(); //LEJ 09.07.18
+        ////M.toast({ html: "Guardando" })
+        ////document.getElementById("loader").style.display = "flex";//RSG 26.04.2018
+        ////sleep(5000);
+        //var msg = 'Verificar valores en los campos de ';
+        //var res = true;
+        ////Evaluar TabInfo values
+        //var InfoTab = evalInfoTab(true, e);
+        //if (!InfoTab) {
+        //    msg += 'Información';
+        //    res = InfoTab;
+        //}
+        ////Evaluar TempTab values
+        //var TempTab = evalTempTab(true, e);
+        //if (!TempTab) {
+        //    msg += ' ,Temporalidad';
+        //    res = TempTab;
+        //}
+        ////Evaluar SoporteTab values
+        //var SoporteTab = evalSoporteTab(true, e);
+        //if (!SoporteTab) {
+        //    msg += ' ,Soporte';
+        //    res = SoporteTab;
+        //}
 
-        //Evaluar SoporteTab values
-        var FinancieraTab = evalFinancieraTab(true, e);
-        if (!FinancieraTab) {
-            msg += ' ,Financiera';
-            res = FinancieraTab;
-        }
+        ////Evaluar SoporteTab values
+        //var FinancieraTab = evalFinancieraTab(true, e);
+        //if (!FinancieraTab) {
+        //    msg += ' ,Financiera';
+        //    res = FinancieraTab;
+        //}
 
-        msg += '!';
-        if (res) {
-            //loadFilesf();
-            //LEJ 10.07.18--------------------------------------------------
-            //Provisional
-            var tipo_cambio = $('#tipo_cambio').val().replace('$', '');
-            if (_decimales === '.') {
-                tipo_cambio = tipo_cambio.replace(',', '');
-            }
-            else if (_decimales === ',') {
-                var tc = tipo_cambio.replace('.', '');
-                tc = tc.replace(',', '.');
-                tipo_cambio = tc;
-            }
-            //LEJ 10.07.18--------------------------------------------------
-            //Para que el controlador no tenga problema
-            $('#tipo_cambio').val(tipo_cambio);
-            ////var tipo_cambio = $('#tipo_cambio').val();
-            //var iNum = parseFloat(tipo_cambio.replace(',', '.')).toFixed(2);
-            var iNum = parseFloat(tipo_cambio.replace(',', ''));
+        //msg += '!';
+        //if (res) {
+        //    //loadFilesf();
+        //    //LEJ 10.07.18--------------------------------------------------
+        //    //Provisional
+        //    var tipo_cambio = $('#tipo_cambio').val().replace('$', '');
+        //    if (_decimales === '.') {
+        //        tipo_cambio = tipo_cambio.replace(',', '');
+        //    }
+        //    else if (_decimales === ',') {
+        //        var tc = tipo_cambio.replace('.', '');
+        //        tc = tc.replace(',', '.');
+        //        tipo_cambio = tc;
+        //    }
+        //    //LEJ 10.07.18--------------------------------------------------
+        //    //Para que el controlador no tenga problema
+        //    $('#tipo_cambio').val(tipo_cambio);
+        //    ////var tipo_cambio = $('#tipo_cambio').val();
+        //    //var iNum = parseFloat(tipo_cambio.replace(',', '.')).toFixed(2);
+        //    var iNum = parseFloat(tipo_cambio.replace(',', ''));
 
-            if (iNum > 0) {
-                //var num = "" + iNum;
-                //num = num.replace('.', ',');
-                //var numexp = num;//* 60000000000;
-                //$('#tipo_cambio').val(numexp);
-            } else {
-                $('#tipo_cambio').val(0);
-            }
-            //var tipo_cambio = $('#monto_doc_ml2').val();
-            //LEJ 10.07.18---------------------------------------------------
-            var tipo_cambiod = $('#monto_doc_ml2').val().replace('$', '');
-            if (_decimales === '.') {
-                tipo_cambiod = tipo_cambiod.replace(',', '');
-            }
-            else if (_decimales === ',') {
-                var tc = tipo_cambiod.replace('.', '');
-                tc = tc.replace(',', '.');
-                tipo_cambiod = tc;
-            }
-            //LEJ 10.07.18--------------------------------------------------
-            //Para que el controlador no tenga problema
-            $('#monto_doc_ml2').val(tipo_cambiod);
+        //    if (iNum > 0) {
+        //        //var num = "" + iNum;
+        //        //num = num.replace('.', ',');
+        //        //var numexp = num;//* 60000000000;
+        //        //$('#tipo_cambio').val(numexp);
+        //    } else {
+        //        $('#tipo_cambio').val(0);
+        //    }
+        //    //var tipo_cambio = $('#monto_doc_ml2').val();
+        //    //LEJ 10.07.18---------------------------------------------------
+        //    var tipo_cambiod = $('#monto_doc_ml2').val().replace('$', '');
+        //    if (_decimales === '.') {
+        //        tipo_cambiod = tipo_cambiod.replace(',', '');
+        //    }
+        //    else if (_decimales === ',') {
+        //        var tc = tipo_cambiod.replace('.', '');
+        //        tc = tc.replace(',', '.');
+        //        tipo_cambiod = tc;
+        //    }
+        //    //LEJ 10.07.18--------------------------------------------------
+        //    //Para que el controlador no tenga problema
+        //    $('#monto_doc_ml2').val(tipo_cambiod);
 
-            //var iNum2 = parseFloat(tipo_cambio.replace(',', '.')).toFixed(2);
-            var iNum2 = parseFloat(tipo_cambio.replace(',', ''));
-            //var iNum2 = parseFloat(tipo_cambio.replace('.', ','));
-            if (iNum2 > 0) {
-                //var nums = "" + iNum2;
-                //nums = nums.replace('.', ',');
-                //var numexp2 = nums;// * 60000000000;
-                //$('#monto_doc_ml2').val(numexp2);
-            } else {
-                $('#monto_doc_ml2').val(0);
-            }
+        //    //var iNum2 = parseFloat(tipo_cambio.replace(',', '.')).toFixed(2);
+        //    var iNum2 = parseFloat(tipo_cambio.replace(',', ''));
+        //    //var iNum2 = parseFloat(tipo_cambio.replace('.', ','));
+        //    if (iNum2 > 0) {
+        //        //var nums = "" + iNum2;
+        //        //nums = nums.replace('.', ',');
+        //        //var numexp2 = nums;// * 60000000000;
+        //        //$('#monto_doc_ml2').val(numexp2);
+        //    } else {
+        //        $('#monto_doc_ml2').val(0);
+        //    }
 
-            //Monto
-            var monto = $('#monto_doc_md').val();
-            //var numm = parseFloat(monto.replace(',', '.')).toFixed(2);   
-            //var numm = parseFloat(monto.replace(',', ''));
-            var numm = parseFloat(toNum(monto));
-            if (numm > 0) {
-                $('#MONTO_DOC_MD').val(numm);
-            } else {
-                $('#MONTO_DOC_MD').val(0);
-                $('#monto_doc_md').val(0);
-            }
+        //    //Monto
+        //    var monto = $('#monto_doc_md').val();
+        //    //var numm = parseFloat(monto.replace(',', '.')).toFixed(2);   
+        //    //var numm = parseFloat(monto.replace(',', ''));
+        //    var numm = parseFloat(toNum(monto));
+        //    if (numm > 0) {
+        //        $('#MONTO_DOC_MD').val(numm);
+        //    } else {
+        //        $('#MONTO_DOC_MD').val(0);
+        //        $('#monto_doc_md').val(0);
+        //    }
 
-            $("#bmonto_apoyo").val(toNum($("#bmonto_apoyo").val())); //RSG 09.07.2018
+        //    $("#bmonto_apoyo").val(toNum($("#bmonto_apoyo").val())); //RSG 09.07.2018
 
-            $('#select_negi').prop('disabled', false); //B20180618 v1 MGC 2018.06.18
-            $('#select_disi').prop('disabled', false); //B20180618 v1 MGC 2018.06.18
+        //    $('#select_negi').prop('disabled', false); //B20180618 v1 MGC 2018.06.18
+        //    $('#select_disi').prop('disabled', false); //B20180618 v1 MGC 2018.06.18
 
-            //Guardar los valores de la tabla en el modelo para enviarlos al controlador
-            copiarTableControl("");//Distribución //B20180625 MGC 2018.07.03
-            copiarSopTableControl(""); //Soporte ahora en información //B20180625 MGC 2018.07.03
-            enviaRec("");//RSG 28.05.2018 //B20180625 MGC 2018.07.03
+        //    //Guardar los valores de la tabla en el modelo para enviarlos al controlador
+        //    copiarTableControl("");//Distribución //B20180625 MGC 2018.07.03
+        //    copiarSopTableControl(""); //Soporte ahora en información //B20180625 MGC 2018.07.03
+        //    enviaRec("");//RSG 28.05.2018 //B20180625 MGC 2018.07.03
 
-            //B20180625 MGC2 2018.07.04
-            //enviar borrador
-            var borrador = "false";
-            if ($("#borradore").length) {
-                borrador = $('#borradore').val();
-            }
-            $('#borrador_param').val(borrador);//B20180625 MGC2 2018.07.04
+        //    //B20180625 MGC2 2018.07.04
+        //    //enviar borrador
+        //    var borrador = "false";
+        //    if ($("#borradore").length) {
+        //        borrador = $('#borradore').val();
+        //    }
+        //    $('#borrador_param').val(borrador);//B20180625 MGC2 2018.07.04
 
-            ////$('#fechai_vig').val($('#fechai_vig').val() +" 12:00:00 p.m.");//RSG 01.08.2018
-            ////$('#fechaf_vig').val($('#fechaf_vig').val() +" 12:00:00 p.m.");//RSG 01.08.2018
+        //    ////$('#fechai_vig').val($('#fechai_vig').val() +" 12:00:00 p.m.");//RSG 01.08.2018
+        //    ////$('#fechaf_vig').val($('#fechaf_vig').val() +" 12:00:00 p.m.");//RSG 01.08.2018
 
             //Termina provisional
             $('#btn_guardar').click();
