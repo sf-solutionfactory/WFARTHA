@@ -485,8 +485,90 @@ $(document).ready(function () {
         tcambio = parseFloat(tcambio);
         $("#TIPO_CAMBIO").val(tcambio);
 
-        $('#btn_guardar').trigger("click");
+        var _b = false;
+        var _vs = [];
+        var msgerror = "";
+        var _rni = 0;
+        //Validar que los anexos existan
+        $("#table_anexa > tbody  > tr[role='row']").each(function () {
+            var pos = $(this).find("td.POS").text();
+            _vs.push(pos);
+        });
 
+        $("#table_info > tbody  > tr[role='row']").each(function () {
+            _rni++;
+            //Obtener valores visibles en la tabla
+            var na1 = $(this).find("td.NumAnexo input").val();
+            var na2 = $(this).find("td.NumAnexo2 input").val();
+            var na3 = $(this).find("td.NumAnexo3 input").val();
+            var na4 = $(this).find("td.NumAnexo4 input").val();
+            var na5 = $(this).find("td.NumAnexo5 input").val();
+            for (var i = 0; i < _vs.length; i++) {
+                if (na1 === _vs[i] || na1 === "") {
+                    _b = true;
+                    break;
+                } else {
+                    _b = false;
+                    msgerror = "Error en el renglon " + _rni + " valor: " + na1 + " Columna 2";
+                }
+            }
+            if (_b === false) {
+                return false;
+            }
+            for (var i2 = 0; i2 < _vs.length; i2++) {
+                if (na2 === _vs[i2] || na2 === "") {
+                    _b = true;
+                    break;
+                } else {
+                    _b = false;
+                    msgerror = "Error en el renglon " + _rni + " valor: " + na2 + " Columna 3";
+                }
+            }
+            if (_b === false) {
+                return false;
+            }
+            for (var i3 = 0; i3 < _vs.length; i3++) {
+                if (na3 === _vs[i3] || na3 === "") {
+                    _b = true;
+                    break;
+                } else {
+                    _b = false;
+                    msgerror = "Error en el renglon " + _rni + " valor: " + na3 + " Columna 4";
+                }
+            }
+            if (_b === false) {
+                return false;
+            }
+            for (var i4 = 0; i4 < _vs.length; i4++) {
+                if (na4 === _vs[i4] || na4 === "") {
+                    _b = true;
+                    break;
+                } else {
+                    _b = false;
+                    msgerror = "Error en el renglon " + _rni + " valor: " + na4 + " Columna 5";
+                }
+            }
+            if (_b === false) {
+                return false;
+            }
+            for (var i5 = 0; i5 < _vs.length; i5++) {
+                if (na5 === _vs[i5] || na5 === "") {
+                    break;
+                    _b = true;
+                } else {
+                    _b = false;
+                    msgerror = "Error en el renglon " + _rni + " valor: " + na5 + " Columna 6";
+                }
+            }
+            if (_b === false) {
+                return false;
+            }
+        });
+        if (_b) {
+            $('#btn_guardar').trigger("click");
+        } else {
+            M.toast({ html: msgerror });
+        }
     });
 
     //Archivo para facturas en soporte ahora información
@@ -652,7 +734,7 @@ function ocultarCampos(opc, load) {
             $("#norden_compra").val("");
         }
 
-        
+
     } else {
         //Solicitud con orden de compra
         $("#div_norden_compra").css("display", "inherit");
@@ -1014,7 +1096,7 @@ function obtenerRetenciones(flag) {
             "className": 'CHECK',
             "orderable": false
         });
-        
+
         //Lej 17.09.18
         extraCols = tRet2.length;
         $('#table_info').DataTable({
@@ -1587,7 +1669,7 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
     }
     colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"
         //+ "<td><input class=\"CHECK\" style=\"font-size:12px;\" type=\"checkbox\" id=\"\" name=\"\" value=\"" + check + "\"></td>" //MGC 03 - 10 - 2018 solicitud con orden de compra
-        + "<td><p><label><input type=\"checkbox\" checked=\""+check+"\" /><span></span></label></p></td>";//MGC 03 - 10 - 2018 solicitud con orden de compra
+        + "<td><p><label><input type=\"checkbox\" checked=\"" + check + "\" /><span></span></label></p></td>";//MGC 03 - 10 - 2018 solicitud con orden de compra
     var table_rows = '<tr><td></td><td>' + pos + '</td><td><input class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td>' +
         ca + '</td><td>' + factura + '</td><td>' + tipo_concepto
         + '</td><td>' + grupo + '</td><td>' + cuenta + '</td><td>' + cuentanom + '</td><td>' + tipoimp + '</td><td>' + imputacion
@@ -1780,7 +1862,7 @@ $('body').on('focusout', '.extrasC', function (e) {
     $("#table_info > tbody > tr[role = 'row']").each(function (index) {
         for (x = 0; x < tRet2.length; x++) {
             var _var = "BaseImp" + x;
-            _v2 = "BaseImpF" + (x + 1);
+            _v2 = "BaseImp" + (tRet2[x]);
             if (_this.hasClass(_var)) {
                 centi = x;
                 break;
