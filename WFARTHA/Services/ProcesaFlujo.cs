@@ -356,10 +356,15 @@ namespace WFARTHA.Services
                                 nuevo.RUTA_VERSION = actual.RUTA_VERSION;
                                 nuevo.ID_RUTA_A = actual.ID_RUTA_A;
 
+                                //MGC 08-10-2018 Modificación para mensaje por contabilizar
+                                bool contabilizar = false;
+
+
                                 //Para la contabilización se obtiene otra ruta
                                 if (next.ACCION.TIPO == "P")
                                 {
                                     detA = determinaAgenteContabilidad(d, actual.USUARIOA_ID, actual.USUARIOD_ID, actual.DETPOS, next.LOOPS, sop, Convert.ToInt32(actual.STEP_AUTO));
+                                    contabilizar = true;//MGC 08-10-2018 Modificación para mensaje por contabilizar
                                 }
                                 else
                                 {
@@ -376,10 +381,6 @@ namespace WFARTHA.Services
                                     nuevo.USUARIOA_ID = del.USUARIOD_ID;
                                 else
                                     nuevo.USUARIOA_ID = nuevo.USUARIOD_ID;
-
-
-
-
 
                                 nuevo.DETPOS = detA.DETPOS;
                                 nuevo.DETVER = actual.DETVER;
@@ -523,6 +524,43 @@ namespace WFARTHA.Services
                                 db.Entry(d).State = EntityState.Modified;
                                 correcto = "1";
 
+
+                                //MGC 08-10-2018 Modificación para mensaje por contabilizar
+                                if (contabilizar)
+                                {
+                                    //MGC 08-10-2018 Modificación para mensaje por contabilizar
+                                    //Eliminar los mensajes de la tabla
+                                    try
+                                    {
+                                        db.DOCUMENTOPREs.RemoveRange(db.DOCUMENTOPREs.Where(dpre => dpre.NUM_DOC == d.NUM_DOC));
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception e)
+                                    {
+
+                                    }
+
+                                    //MGC 08-10-2018 Modificación para mensaje por contabilizar
+                                    //Guardar Mensaje en tabla
+                                    DOCUMENTOPRE dp = new DOCUMENTOPRE();
+
+                                    dp.NUM_DOC = d.NUM_DOC;
+                                    dp.POS = 1;
+                                    dp.MESSAGE = "Por contabilizar";
+
+                                    try
+                                    {
+                                        db.DOCUMENTOPREs.Add(dp);
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        string r = "";
+                                    }
+
+                                }
+
+
                                 db.SaveChanges();
                                 ban = false;
                             }
@@ -589,7 +627,7 @@ namespace WFARTHA.Services
                                     }
 
                                     //MGC 04 - 10 - 2018 Botones para acciones WF
-                                    //Mensaje para contabilizando
+                                    //Mensaje para contabilizando SAP
                                     DOCUMENTOPRE dp = new DOCUMENTOPRE();
 
                                     dp.NUM_DOC = d.NUM_DOC;
