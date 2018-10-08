@@ -11,6 +11,8 @@
     WFARTHA.Entities.PROVEEDOR dprov = ViewBag.prov as WFARTHA.Entities.PROVEEDOR;
     List<WFARTHA.Models.DOCUMENTORP_MOD> lstDrp = ViewBag.DocsRp as List<WFARTHA.Models.DOCUMENTORP_MOD>;
     List<string> colsret = ViewBag.Retenciones as List<string>;
+    var total = ViewBag.total;
+    var montomd = formatoc.toShow(total, ViewBag.dec);
 
 }
 
@@ -57,6 +59,8 @@
 
 <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
 <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
+<input id="auxS" name="auxS" type="hidden" value="">
+
 
 <div class="row" style="margin-bottom:0">
 
@@ -73,7 +77,9 @@
     }
 
     <style>
-
+        .anexosWidth {
+        width:8px;
+        }
         .div_left {
             float: left;
         }
@@ -134,6 +140,13 @@
 
         .errorProveedor {
             background-color: red;
+        }
+        .estiloT {
+            margin: 0 auto;
+            width: 100%;
+            clear: both;
+            border-collapse: collapse;
+            table-layout: fixed;
         }
     </style>
     @*MGC 04-10-2018 Botones para acciones -->*@
@@ -441,6 +454,11 @@
                             }
 
                         </script>
+                        <div class="form-group col s3">
+                            <script>
+                                //LEJ08102018 terminar jhacer ligue para mostrar u ocultar campo dependiendo del tipo de solicitud
+                            </script>
+                        </div>
                     </div>
                     <div class="row" style="margin-bottom:0">
                         <div class="form-group col s3">
@@ -480,17 +498,17 @@
                         <div class="form-group col s3">
                             @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto NT", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
-                                @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
-
+                                @*@Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })*@
+                                <input type="text" disabled class="form-control" value="@montomd"/>
                             </div>
                         </div>
                         <script>
-                            monto_doc = $('#MONTO_DOC_MD').val();
+                            //monto_doc = $('#MONTO_DOC_MD').val();
+                            //var v = $('#montoD').val();
+                            //if (v != null && v != "") {
 
-                            if (monto_doc != null && monto_doc != "") {
-
-                                $('#MONTO_DOC_MD').val(toShow(monto_doc));
-                            }
+                            //    $('#MONTO_DOC_MD').val(v);
+                            //}
 
                         </script>
 
@@ -586,7 +604,8 @@
                 @*MGC 04-10-2018 Botones para acciones <--*@
 
                 @*<div class="col s6">*@ @*MGC 04-10-2018 Botones para acciones*@
-                <div class="col s12" style="padding:0px"> @*MGC 04-10-2018 Botones para acciones*@
+                <div class="col s12" style="padding:0px">
+                    @*MGC 04-10-2018 Botones para acciones*@
                     <div class="card-panel">
                         <h5 id="head_flinea">Retenciones NT</h5>
                         <div class="row" style="margin-bottom:0">
@@ -657,7 +676,7 @@
                 <div class="card-panel">
                     <h5 id="head_cabecera">Detalle NT</h5>
                     <div class="row" style="margin-bottom:0">
-                        <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
+                        <table class="table display mdl-data-table striped estiloT" id="table_info" style="width:100%;">
                             <thead>
                                 <tr>
                                     <th class="lbl_pos">
@@ -723,29 +742,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if(@Model.D.DOCUMENTOPSTR != null)
+                                @if (@Model.D.DOCUMENTOPSTR != null)
                                 {
 
-                                    for (int i = 0; i <@Model.D.DOCUMENTOPSTR.Count; i++)
+                                    for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
                                     {
                                         <tr>
                                             <td>
                                                 @Model.D.DOCUMENTOPSTR[i].POS
                                             </td>
                                             @if (@Model.D.Anexo != null)
-                                            { 
-                                                    <td>@Model.D.Anexo[i].a1</td>
-                                                    <td>@Model.D.Anexo[i].a2</td>
-                                                    <td>@Model.D.Anexo[i].a3</td>
-                                                    <td>@Model.D.Anexo[i].a4</td>
-                                                    <td>@Model.D.Anexo[i].a5</td>
-                                            }else
                                             {
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                <td>@Model.D.Anexo[i].a1</td>
+                                                <td>@Model.D.Anexo[i].a2</td>
+                                                <td>@Model.D.Anexo[i].a3</td>
+                                                <td>@Model.D.Anexo[i].a4</td>
+                                                <td>@Model.D.Anexo[i].a5</td>
+                                            }
+                                            else
+                                            {
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                             }
                                             <td>
                                                 @Model.D.DOCUMENTOPSTR[i].ACCION
@@ -780,11 +800,13 @@
                                             @for (int y = 0; y < colsret.Count; y++)
                                             {
                                                 <td>
-                                                    @{var _v = colsret[y];}
-                                                    @lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().BIMPONIBLE
+                                                    @{var _v = colsret[y]; }
+                                                    @{decimal imp = 0; try { imp = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().BIMPONIBLE.ToString()); } catch (Exception e) { }; string bim = formatoc.toShow(imp, deci);}
+                                                    @bim
                                                 </td>
                                                 <td>
-                                                    @lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().IMPORTE_RET
+                                                    @{decimal imp2 = 0; try { imp2 = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().IMPORTE_RET.ToString()); } catch (Exception e) { }; string bim2 = formatoc.toShow(imp2, deci);}
+                                                    @bim2
                                                 </td>
                                             }
                                             <td>

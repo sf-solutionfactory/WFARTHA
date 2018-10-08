@@ -116,7 +116,9 @@ namespace WFARTHA.Controllers
                     dm.FACTURA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).FACTURA;
                     dm.GRUPO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
                     dm.CUENTA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).CUENTA;
-                    dm.NOMCUENTA = "Transporte";
+                    string ct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
+                    var tct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TCONCEPTO;
+                    dm.NOMCUENTA = db.CONCEPTOes.Where(x => x.ID_CONCEPTO == ct && x.TIPO_CONCEPTO == tct).FirstOrDefault().DESC_CONCEPTO.Trim();
                     dm.TIPOIMP = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TIPOIMP;
                     dm.IMPUTACION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).IMPUTACION;
                     dm.MONTO = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).MONTO, formato.DECIMALES);
@@ -126,7 +128,7 @@ namespace WFARTHA.Controllers
 
                     dml.Add(dm);
                 }
-
+                ViewBag.total = db.DOCUMENTOPs.Where(x => x.NUM_DOC == id).FirstOrDefault().TOTAL;
                 doc.DOCUMENTOPSTR = dml;
             }
             var anexos = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
@@ -870,17 +872,6 @@ namespace WFARTHA.Controllers
                                     bandera = false;
                                 }
                             }
-                            //WebRequest request = WebRequest.Create("ftp://192.168.32.207/NuevaCarpeta");
-                            //request.Method = WebRequestMethods.Ftp.MakeDirectory;
-                            //const string Comillas = "\"";
-                            //string pwd = "Rumaki,2571" + Comillas + "k41";
-                            //request.Credentials = new NetworkCredential("luis.gonzalez", pwd);
-
-                            //using (var resp = (FtpWebResponse)request.GetResponse())
-                            //{
-                            //    var xpr = resp.StatusCode;
-                            // }
-
 
                             //Evaluar que se creo el directorio
                             if (bandera)
@@ -916,40 +907,6 @@ namespace WFARTHA.Controllers
                                             errorfiles = "";
                                             res = SaveFile(file, url);
                                             listaDirectorios.Add(res);
-                                            if (errorfiles == "")
-                                            {
-                                                //DOCUMENTOA _doc = new DOCUMENTOA();
-                                                //var ext = System.IO.Path.GetExtension(filename);
-                                                //_doc.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                                //_doc.POSD = 1;
-                                                //_doc.POS = db.DOCUMENTOAs.ToList().Count + 1;
-                                                //_doc.TIPO = ext.Replace(".", "");
-                                                //_doc.DESC = descripcion;
-
-                                                //try
-                                                //{
-                                                //    // var clasefileM = clasefile.ToUpper();
-                                                //    _doc.CLASE = "OTR";
-                                                //}
-                                                //catch (Exception e)
-                                                //{
-                                                //    _doc.CLASE = "";
-                                                //}
-                                                //_doc.STEP_WF = 1;
-                                                //_doc.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
-                                                //_doc.PATH = path;
-                                                //_doc.ACTIVO = true;
-                                                //try
-                                                //{
-                                                //    db.DOCUMENTOAs.Add(_doc);
-                                                //    db.SaveChanges();
-                                                //}
-                                                //catch (Exception e)
-                                                //{
-                                                //    errorfiles = "" + filename;
-                                                //}
-
-                                            }
                                         }
                                     }
                                     indexlabel++;
@@ -1106,9 +1063,10 @@ namespace WFARTHA.Controllers
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a1 > 0 && doc.Anexo[i].a1 <= listaNombreArchivos.Count)
                                 {
+                                    var a1 = doc.Anexo[i].a1;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[doc.Anexo[i].a1]);
+                                        var de = Path.GetExtension(listaNombreArchivos[a1 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1117,7 +1075,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.DESC = listaDescArchivos[doc.Anexo[i].a1];
+                                        _dA.DESC = listaDescArchivos[a1 - 1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1125,7 +1083,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.PATH = listaDirectorios[doc.Anexo[i].a1];
+                                        _dA.PATH = listaDirectorios[a1 - 1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1162,9 +1120,10 @@ namespace WFARTHA.Controllers
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a2 > 0 && doc.Anexo[i].a2 <= listaNombreArchivos.Count)
                                 {
+                                    var a2 = doc.Anexo[i].a2;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[doc.Anexo[i].a2]);
+                                        var de = Path.GetExtension(listaNombreArchivos[a2 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1173,7 +1132,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.DESC = listaDescArchivos[doc.Anexo[i].a2];
+                                        _dA.DESC = listaDescArchivos[a2 - 1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1181,7 +1140,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.PATH = listaDirectorios[doc.Anexo[i].a2];
+                                        _dA.PATH = listaDirectorios[a2 - 1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1218,9 +1177,10 @@ namespace WFARTHA.Controllers
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a3 > 0 && doc.Anexo[i].a3 <= listaNombreArchivos.Count)
                                 {
+                                    var a3 = doc.Anexo[i].a3;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[doc.Anexo[i].a3]);
+                                        var de = Path.GetExtension(listaNombreArchivos[a3 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1229,7 +1189,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.DESC = listaDescArchivos[doc.Anexo[i].a3];
+                                        _dA.DESC = listaDescArchivos[a3 - 1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1237,7 +1197,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.PATH = listaDirectorios[doc.Anexo[i].a3];
+                                        _dA.PATH = listaDirectorios[a3 - 1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1274,9 +1234,10 @@ namespace WFARTHA.Controllers
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a4 > 0 && doc.Anexo[i].a4 <= listaNombreArchivos.Count)
                                 {
+                                    var a4 = doc.Anexo[i].a4;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[doc.Anexo[i].a4]);
+                                        var de = Path.GetExtension(listaNombreArchivos[a4 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1285,7 +1246,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.DESC = listaDescArchivos[doc.Anexo[i].a4];
+                                        _dA.DESC = listaDescArchivos[a4 - 1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1293,7 +1254,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.PATH = listaDirectorios[doc.Anexo[i].a4];
+                                        _dA.PATH = listaDirectorios[a4 - 1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1330,9 +1291,10 @@ namespace WFARTHA.Controllers
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a5 > 0 && doc.Anexo[i].a5 <= listaNombreArchivos.Count)
                                 {
+                                    var a5 = doc.Anexo[i].a5;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[doc.Anexo[i].a5]);
+                                        var de = Path.GetExtension(listaNombreArchivos[a5 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1341,7 +1303,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.DESC = listaDescArchivos[doc.Anexo[i].a5];
+                                        _dA.DESC = listaDescArchivos[a5 - 1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1349,7 +1311,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.PATH = listaDirectorios[doc.Anexo[i].a5];
+                                        _dA.PATH = listaDirectorios[a5 - 1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1816,9 +1778,9 @@ namespace WFARTHA.Controllers
                     deta = db.DET_AGENTECC.Where(dcc => dcc.VERSION == f.RUTA_VERSION && dcc.USUARIOC_ID == f.USUARIOA_ID && dcc.ID_RUTA_AGENTE == f.ID_RUTA_A).FirstOrDefault();
 
                     //Si la ruta existe
-                    if(deta != null)
+                    if (deta != null)
                     {
-                        
+
                         FLUJO fe = new FLUJO();
                         fe.WORKF_ID = f.WORKF_ID;
                         fe.WF_VERSION = f.WF_VERSION;
