@@ -1,7 +1,6 @@
 ﻿
 $(document).ready(function () {
 
-    
 
     //Inicializar las tabs
     $('#tabs').tabs();
@@ -187,7 +186,7 @@ $(document).ready(function () {
             success: function (data) {
 
                 if (data != null || data != "") {
-                    M.toast({ html: data});
+                    M.toast({ html: data });
                 }
             },
             error: function (xhr, httpStatusMessage, customErrorMessage) {
@@ -268,7 +267,7 @@ function resetTabs() {
 
     var ell = document.getElementById("tabs");
     var instances = M.Tabs.getInstance(ell);
-    
+
     var active = $('.tabs').find('.active').attr('href');
     active = active.replace("#", "");
     instances.select(active);

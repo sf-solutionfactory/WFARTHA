@@ -116,7 +116,9 @@ namespace WFARTHA.Controllers
                     dm.FACTURA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).FACTURA;
                     dm.GRUPO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
                     dm.CUENTA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).CUENTA;
-                    dm.NOMCUENTA = "Transporte";
+                    string ct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
+                    var tct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TCONCEPTO;
+                    dm.NOMCUENTA = db.CONCEPTOes.Where(x => x.ID_CONCEPTO == ct && x.TIPO_CONCEPTO == tct).FirstOrDefault().DESC_CONCEPTO.Trim();
                     dm.TIPOIMP = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TIPOIMP;
                     dm.IMPUTACION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).IMPUTACION;
                     dm.MONTO = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).MONTO, formato.DECIMALES);
@@ -126,7 +128,7 @@ namespace WFARTHA.Controllers
 
                     dml.Add(dm);
                 }
-
+                ViewBag.total = db.DOCUMENTOPs.Where(x => x.NUM_DOC == id).FirstOrDefault().TOTAL;
                 doc.DOCUMENTOPSTR = dml;
             }
             var anexos = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
@@ -870,7 +872,7 @@ namespace WFARTHA.Controllers
                                     bandera = false;
                                 }
                             }
-                           
+
                             //Evaluar que se creo el directorio
                             if (bandera)
                             {
@@ -904,7 +906,7 @@ namespace WFARTHA.Controllers
                                             string filename = file.FileName;
                                             errorfiles = "";
                                             res = SaveFile(file, url);
-                                            listaDirectorios.Add(res);                                           
+                                            listaDirectorios.Add(res);
                                         }
                                     }
                                     indexlabel++;
