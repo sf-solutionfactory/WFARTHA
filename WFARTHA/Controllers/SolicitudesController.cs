@@ -982,6 +982,10 @@ namespace WFARTHA.Controllers
                         if (wf != null)
                         {
                             WORKFP wp = wf.WORKFPs.OrderBy(a => a.POS).FirstOrDefault();
+                            string email = ""; //MGC 08-10-2018 Obtener el nombre del cliente
+                            email = wp.EMAIL; //MGC 08-10-2018 Obtener el nombre del cliente
+
+
                             FLUJO f = new FLUJO();
                             f.WORKF_ID = wf.ID;
                             f.WF_VERSION = wf.VERSION;
@@ -1001,7 +1005,7 @@ namespace WFARTHA.Controllers
                             f.RUTA_VERSION = deta.VERSION;
 
                             //MGC 05-10-2018 Modificación para work flow al ser editada
-                            string c = pf.procesa(f, "", false);
+                            string c = pf.procesa(f, "", false, email);
                             //while (c == "1")
                             //{
                             //    Email em = new Email();
@@ -1799,7 +1803,7 @@ namespace WFARTHA.Controllers
                         fe.ID_RUTA_A = deta.ID_RUTA_AGENTE;
                         fe.RUTA_VERSION = deta.VERSION;
 
-                        string c = pf.procesa(fe, "", true);
+                        string c = pf.procesa(fe, "", true, "");
                     }
                 }
                 catch (Exception ee)

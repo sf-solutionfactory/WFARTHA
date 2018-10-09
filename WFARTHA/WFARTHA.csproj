@@ -205,6 +205,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CorreosController.cs" />
     <Compile Include="Controllers\FlujosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MensajesController.cs" />
@@ -431,6 +432,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Email.cs" />
     <Compile Include="Services\Files.cs" />
     <Compile Include="Services\FormatosC.cs" />
     <Compile Include="Services\ProcesaFlujo.cs" />
@@ -479,6 +481,7 @@
     <Content Include="fonts\roboto\Roboto-Thin.woff" />
     <Content Include="fonts\roboto\Roboto-Thin.woff2" />
     <Content Include="images\6792532.jpg" />
+    <Content Include="images\artha_logo.jpg" />
     <Content Include="images\expandl.png" />
     <Content Include="images\expandm.png" />
     <Content Include="images\flags\1x1\ad.png" />
@@ -658,6 +661,10 @@
     <Content Include="Views\Home\Proyectos.cshtml" />
     <Content Include="Views\Solicitudes\_PartialConTr2.cshtml" />
     <Content Include="Views\Solicitudes\_PartialConTr3.cshtml" />
+    <Content Include="Views\Correos\Backorder.cshtml" />
+    <Content Include="Views\Correos\Details.cshtml" />
+    <Content Include="Views\Correos\Index.cshtml" />
+    <Content Include="Views\Correos\Recurrente.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

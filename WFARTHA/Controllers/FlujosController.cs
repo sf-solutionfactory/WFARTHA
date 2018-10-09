@@ -104,7 +104,7 @@ namespace WFARTHA.Controllers
             ProcesaFlujo pf = new ProcesaFlujo();
             if (ModelState.IsValid)
             {
-                string res = pf.procesa(flujo, "", false);
+                string res = pf.procesa(flujo, "", false,"");
                 if (res.Equals("0"))//Aprobado
                 {
                     return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });

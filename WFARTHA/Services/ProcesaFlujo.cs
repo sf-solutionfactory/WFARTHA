@@ -1,8 +1,17 @@
-﻿using System;
+﻿using EntityFramework.BulkInsert.Extensions;
+using ExcelDataReader;
+using Newtonsoft.Json;
+using SimpleImpersonation;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web;
+using System.Web.Mvc;
 using WFARTHA.Entities;
 using WFARTHA.Models;
 
@@ -59,8 +68,10 @@ namespace WFARTHA.Services
             return correcto;
         }
 
-        public string procesa(FLUJO f,string recurrente, bool edit)
+        public string procesa(FLUJO f,string recurrente, bool edit, string email)
         {
+
+            bool emails = false; //MGC 08-10-2018 Obtener los datos para el correo
             string correcto = String.Empty;
             WFARTHAEntities db = new WFARTHAEntities();
             FLUJO actual = new FLUJO();
@@ -75,6 +86,11 @@ namespace WFARTHA.Services
                 actual.LOOP = f.LOOP;
                 actual.NUM_DOC = f.NUM_DOC;
                 actual.POS = f.POS;
+
+                if(email == "X")
+                {
+                    emails = true;
+                }
 
                 actual.ID_RUTA_A = f.ID_RUTA_A;
                 actual.RUTA_VERSION = f.RUTA_VERSION;
@@ -894,6 +910,7 @@ namespace WFARTHA.Services
                     //corr = procesa(conta, recurrente);
                 }
             }
+
             //else if (correcto.Equals("1"))
             //{
             //    FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
@@ -904,6 +921,17 @@ namespace WFARTHA.Services
             //        em.enviaMailC(f.NUM_DOC, false, null, )
             //    }
             //}
+
+            //MGC 08-10-2018 Obtener los datos para el correo
+            if (emails && correcto == "") {
+
+                //MGC 08-10-2018 Obtener los datos para el correo comentar provisional
+                //Email em = new Email();
+                //string UrlDirectory = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path);
+                //string image = System.Web.HttpContext.Current.Server.MapPath("~/images/artha_logo.jpg");
+                //em.enviaMailC(f.NUM_DOC, true, System.Web.HttpContext.Current.Session["spras"].ToString(), UrlDirectory, "Index", image);
+
+            }
 
             return correcto;
         }

@@ -25,8 +25,18 @@ namespace WFARTHA.Services
             return Convert.ToDecimal(num);
         }
 
-        public string toShow(decimal num, string decimales)
+        public string toShow(decimal? num2, string decimales)
         {
+            decimal num = 0;
+            if(num2 == null)
+            {
+                num = 0;
+            }
+            else
+            {
+                num = Convert.ToDecimal(num2);
+            }
+
             string regresa = num.ToString("N2");
             string[] separa = regresa.Split('.');
 
