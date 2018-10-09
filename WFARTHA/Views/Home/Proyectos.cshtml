@@ -21,7 +21,8 @@
         <label for="global_filter" id="lbl_search">Buscar</label>
     </div>
 </div>
-<script>var elem = document.querySelector('select');
+<script>
+    var elem = document.querySelector('select');
     var options = [];
     var instance = M.Select.init(elem, options);</script>
 <script src="//code.jquery.com/jquery-1.12.4.js"></script>
@@ -44,19 +45,19 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ID_PSPNR)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NONBRE)
-            </td>
-            <td>
-                <a data-form-method="post" href="@Url.Action("SelProv", "Home", new {prov=item.NONBRE, returnUrl = ViewBag.returnUrl})">
-                    <i class='material-icons green-text'>edit</i>
-                </a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID_PSPNR)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NONBRE)
+                </td>
+                <td>
+                    <a data-form-method="post" href="@Url.Action("SelProv", "Home", new {prov=item.NONBRE, id=item.ID_PSPNR,returnUrl = ViewBag.returnUrl})">
+                        <i class='material-icons green-text'>edit</i>
+                    </a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

@@ -2015,7 +2015,7 @@ namespace WFARTHA.Controllers
             //Tiene un tipo de presupuesto
             if (tp != null && tp.TIPOPRE != "" && tp.TIPOPRE != null)
             {
-
+                var _s = Session["id_pr"].ToString();
                 if (tp.TIPOPRE != "*")
                 {
                     ////Obtener todos los elementos k-------------------------------------------------------------------------------------
@@ -2048,7 +2048,7 @@ namespace WFARTHA.Controllers
 
                     //Obtener los elementos asignados al proyecto RE-00900
                     List<DET_PEP> detpep = new List<DET_PEP>();
-                    detpep = db.DET_PEP.Where(dp => dp.PSPNR == "RE-00900").ToList();
+                    detpep = db.DET_PEP.Where(dp => dp.PSPNR == _s).ToList();
 
                     var lcon = (from co in db.CONCEPTOes.ToList()
                                 join dp in detpep
@@ -2112,7 +2112,7 @@ namespace WFARTHA.Controllers
 
                     //Obtener los elementos asignados al proyecto RE-00900
                     List<DET_PEP> detpep = new List<DET_PEP>();
-                    detpep = db.DET_PEP.Where(dp => dp.PSPNR == "RE-00900").ToList();
+                    detpep = db.DET_PEP.Where(dp => dp.PSPNR == _s).ToList();
 
                     var lcon = (from co in db.CONCEPTOes.ToList()
                                 join dp in detpep

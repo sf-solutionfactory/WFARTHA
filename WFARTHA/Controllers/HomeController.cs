@@ -175,8 +175,9 @@ namespace WFARTHA.Controllers
 
         //Lej 03.09.2018
         [HttpGet]
-        public ActionResult SelProv(string prov, string returnUrl)
+        public ActionResult SelProv(string prov, string id,string returnUrl)
         {
+            Session["id_pr"] = id.ToUpper();
             Session["pr"] = prov.ToUpper();
             ViewBag.flag = false;
             return Redirect(returnUrl);
