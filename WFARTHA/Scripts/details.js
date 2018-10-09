@@ -201,6 +201,8 @@ $(document).ready(function () {
 
     formatoMon();
 
+    var val3 = $('#tsol').val();
+    showHide(val3);
 });
 
 //Cuando se termina de cargar la página
@@ -209,6 +211,21 @@ $(window).on('load', function () {
 
 });
 
+function showHide(tsol) {
+    var val3 = tsol;
+    val3 = "[" + val3 + "]";
+    val3 = val3.replace("{", "{ \"");
+    val3 = val3.replace("}", "\" }");
+    val3 = val3.replace(/\,/g, "\" , \"");
+    val3 = val3.replace(/\=/g, "\" : \"");
+    val3 = val3.replace(/\ /g, "");
+    var jsval = $.parseJSON(val3)
+
+    $.each(jsval, function (i, dataj) {
+        ocultarCampos(dataj.EDITDET, param1)
+    });
+
+}
 
 function formatoMon() {
     var table = $('#table_info').DataTable();
@@ -272,6 +289,39 @@ function resetTabs() {
     active = active.replace("#", "");
     instances.select(active);
     //instances.updateTabIndicator
+}
+
+function ocultarCampos(opc, load) {
+    //respuesta en minúscula
+    opc = opc.toLowerCase();
+
+    //Si load = "load" solo se ocultan o muestran campos
+
+    if (opc === "true") {
+
+        //Solicitud sin orden de compra
+        $("#div_norden_compra").css("display", "none");
+
+        if (load === "load") {
+            //
+        } else {
+            $("#norden_compra").val("");
+        }
+
+
+    } else {
+        //Solicitud con orden de compra
+        $("#div_norden_compra").css("display", "inherit");
+
+        if (load === "load") {
+            //
+        } else {
+            $("#norden_compra").val("");
+        }
+    }
+
+    //Deshabilitar campos de la tabla
+    //ocultarColumnas(opc);
 }
 
 
