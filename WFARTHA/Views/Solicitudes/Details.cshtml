@@ -78,8 +78,9 @@
 
     <style>
         .anexosWidth {
-        width:8px;
+            width: 8px;
         }
+
         .div_left {
             float: left;
         }
@@ -141,6 +142,7 @@
         .errorProveedor {
             background-color: red;
         }
+
         .estiloT {
             margin: 0 auto;
             width: 100%;
@@ -454,10 +456,9 @@
                             }
 
                         </script>
-                        <div class="form-group col s3">
-                            <script>
-                                //LEJ08102018 terminar jhacer ligue para mostrar u ocultar campo dependiendo del tipo de solicitud
-                            </script>
+                        <div id="div_norden_compra" class="input-field col s3" style="display:none">
+                            <input type="text" id="norden_compra" value="" />@*Lejgg-09-10-2018*@
+                            <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
                         </div>
                     </div>
                     <div class="row" style="margin-bottom:0">
@@ -473,7 +474,6 @@
                             @Html.LabelFor(model => model.D.TIPO_CAMBIO, "Cambio NT", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.EditorFor(model => model.D.TIPO_CAMBIO, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
-
                             </div>
                         </div>
 
@@ -499,7 +499,7 @@
                             @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto NT", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @*@Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })*@
-                                <input type="text" disabled class="form-control" value="@montomd"/>
+                                <input type="text" disabled class="form-control" value="@montomd" />
                             </div>
                         </div>
                         <script>
