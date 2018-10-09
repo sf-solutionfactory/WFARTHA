@@ -75,6 +75,7 @@ namespace WFARTHA.Services
             string correcto = String.Empty;
             WFARTHAEntities db = new WFARTHAEntities();
             FLUJO actual = new FLUJO();
+            string emailsto = ""; //MGC 09-10-2018 Envío de correos
             if (f.ESTATUS.Equals("I"))//--------------------------------------------------------------------------------------NUEVO REGISTRO
             {
                 actual.NUM_DOC = f.NUM_DOC;
@@ -90,6 +91,13 @@ namespace WFARTHA.Services
                 if(email == "X")
                 {
                     emails = true;
+
+                    //MGC 09-10-2018 Envío de correos
+                    //Obtener el email del creador
+                    string emailc = "";
+                    emailc = db.USUARIOs.Where(us => us.ID == d.USUARIOC_ID).FirstOrDefault().EMAIL;
+                    emailsto = emailc;
+
                 }
 
                 actual.ID_RUTA_A = f.ID_RUTA_A;
@@ -289,6 +297,9 @@ namespace WFARTHA.Services
             }
             else if (f.ESTATUS.Equals("A"))   //---------------------EN PROCESO DE APROBACIÓN
             {
+
+                DOCUMENTO d = db.DOCUMENTOes.Find(f.NUM_DOC);//MGC 09-10-2018 Envío de correos
+
                 actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC) & a.POS == f.POS).OrderByDescending(a => a.POS).FirstOrDefault();
 
                 if (!actual.ESTATUS.Equals("P"))
@@ -303,6 +314,28 @@ namespace WFARTHA.Services
                     actual.COMENTARIO = f.COMENTARIO;
                     actual.USUARIOA_ID = f.USUARIOA_ID;
                     db.Entry(actual).State = EntityState.Modified;
+
+                    //MGC 09-10-2018 Envío de correos
+                    if (actual.WORKFP.EMAIL == "X")
+                    {
+                        emails = true;
+
+                        //MGC 09-10-2018 Envío de correos
+                        //Obtener el email del creador
+                        string emailc = "";
+                        emailc = db.USUARIOs.Where(us => us.ID == d.USUARIOC_ID).FirstOrDefault().EMAIL;
+                        emailsto = emailc;
+                        emailc = "";
+
+                        //Obtener el usuario aprobador
+                        emailc = db.USUARIOs.Where(us => us.ID == f.USUARIOA_ID).FirstOrDefault().EMAIL;
+                        emailsto += "," + emailc;
+
+                        //Obtener el usuario del siguiente aprobador 
+                        
+
+                    }
+
 
                     WORKFP paso_a = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS.Equals(actual.WF_POS)).FirstOrDefault();
                     bool ban = true;
@@ -322,7 +355,7 @@ namespace WFARTHA.Services
                         {
                             if (f.ESTATUS.Equals("A") | f.ESTATUS.Equals("N") | f.ESTATUS.Equals("M"))//APROBAR SOLICITUD
                             {
-                                DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
+                                //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC); //MGC 09-10-2018 Envío de correos
 
                                 //Verificar si hay un siguiente aprovador
                                 int stepnew = 0;
@@ -388,6 +421,19 @@ namespace WFARTHA.Services
                                     detA = determinaAgente(d, actual.USUARIOA_ID, actual.USUARIOD_ID, actual.DETPOS, next.LOOPS, sop, stepnew);
                                 }
                                 //nuevo.USUARIOA_ID = detA.USUARIOA_ID;
+
+                                //MGC 09-10-2018 Envío de correos
+                                if (emails)
+                                {
+                                    
+                                    //MGC 09-10-2018 Envío de correos
+                                    string emailc = "";
+                                                                      
+                                    //Obtener el usuario del siguiente aprobador 
+                                    emailc = db.USUARIOs.Where(us => us.ID == detA.USUARIOA_ID).FirstOrDefault().EMAIL;
+                                    emailsto += "," + emailc;
+                                }
+
 
                                 nuevo.USUARIOD_ID = detA.USUARIOA_ID;
 
@@ -587,7 +633,7 @@ namespace WFARTHA.Services
                         {
                             if (f.ESTATUS.Equals("A") | f.ESTATUS.Equals("N"))//APROBAR SOLICITUD
                             {
-                                DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
+                                //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);//MGC 09-10-2018 Envío de correos
 
                                 ArchivoContable sa = new ArchivoContable();
                                 string file = sa.generarArchivo(d.NUM_DOC, 0);
@@ -672,7 +718,9 @@ namespace WFARTHA.Services
                         {
                             if (f.ESTATUS.Equals("A") | f.ESTATUS.Equals("N"))//APROBAR SOLICITUD
                             {
-                                DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
+                                //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);//MGC 09-10-2018 Envío de correos
+
+                                
                                 next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
 
                                 FLUJO nuevo = new FLUJO();
@@ -797,9 +845,29 @@ namespace WFARTHA.Services
             else if (f.ESTATUS.Equals("R"))//Rechazada
             {
 
+                DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
 
                 actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
                 WORKFP paso_a = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS.Equals(actual.WF_POS)).FirstOrDefault();
+
+
+                //MGC 09-10-2018 Envío de correos
+                if (actual.WORKFP.EMAIL == "X")
+                {
+                    emails = true;
+
+                    //MGC 09-10-2018 Envío de correos
+                    //Obtener el email del creador
+                    string emailc = "";
+                    emailc = db.USUARIOs.Where(us => us.ID == d.USUARIOC_ID).FirstOrDefault().EMAIL;
+                    emailsto = emailc;
+                    emailc = "";
+
+                    //Obtener el usuario aprobador
+                    emailc = db.USUARIOs.Where(us => us.ID == f.USUARIOA_ID).FirstOrDefault().EMAIL;
+                    emailsto += "," + emailc;
+
+                }
 
                 int next_step_a = 0;
                 int next_step_r = 0;
@@ -830,7 +898,7 @@ namespace WFARTHA.Services
                 nuevo.DETPOS = 1;
                 nuevo.DETVER = actual.DETVER;
                 nuevo.LOOP = 1;//-----------------------------------
-                DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
+                //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC); //MGC 09-10-2018 Envío de correos
 
                 //MGC 
                 //nuevo.USUARIOD_ID = d.USUARIOD_ID;
@@ -923,13 +991,22 @@ namespace WFARTHA.Services
             //}
 
             //MGC 08-10-2018 Obtener los datos para el correo
-            if (emails && correcto == "") {
+            if (emails && correcto == "1") {
 
                 //MGC 08-10-2018 Obtener los datos para el correo comentar provisional
-                //Email em = new Email();
-                //string UrlDirectory = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path);
-                //string image = System.Web.HttpContext.Current.Server.MapPath("~/images/artha_logo.jpg");
-                //em.enviaMailC(f.NUM_DOC, true, System.Web.HttpContext.Current.Session["spras"].ToString(), UrlDirectory, "Index", image);
+                Email em = new Email();
+                string UrlDirectory = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path);
+                string image = System.Web.HttpContext.Current.Server.MapPath("~/images/artha_logo.jpg");
+                string page = "";
+
+                if(f.ESTATUS.Equals("R"))
+                {
+                    page = "Details";
+                }else if(f.ESTATUS.Equals("I") | f.ESTATUS.Equals("A"))
+                {
+                    page = "Index";
+                }
+                em.enviaMailC(f.NUM_DOC, true, System.Web.HttpContext.Current.Session["spras"].ToString(), UrlDirectory, page, image, emailsto);
 
             }
 

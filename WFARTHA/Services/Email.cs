@@ -14,7 +14,7 @@ namespace WFARTHA.Services
     public class Email
     {
         private WFARTHAEntities db = new WFARTHAEntities();
-        public void enviaMailC(decimal id, bool ban, string spras, string UrlDirectory, string page, string image)
+        public void enviaMailC(decimal id, bool ban, string spras, string UrlDirectory, string page, string image, string emailsto) //MGC 09-10-2018 Envío de correos
         {
             //int pagina = 203; //ID EN BASE DE DATOS
             //ViewBag.Title = "Solicitud";
@@ -33,9 +33,6 @@ namespace WFARTHA.Services
                     //MGC 08-10-2018.2 Obtener los datos para el correo
                     //Obtener el mail del creador
                     
-
-
-
                     var workflow = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderByDescending(a => a.POS).FirstOrDefault();
                     //ViewBag.acciones = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id) & a.ESTATUS.Equals("P") & a.USUARIOA_ID.Equals(User.Identity.Name)).FirstOrDefault();
 
@@ -45,7 +42,8 @@ namespace WFARTHA.Services
                     if (mtest == "X")
                         mailTo = "matias.gallegos@sf-solutionfactory.com";// mailt; //B20180803 MGC Correos  //MGC 08-10-2018.2 Obtener los datos para el correo
                     else
-                        mailTo = workflow.USUARIO.EMAIL;
+                        //mailTo = workflow.USUARIO.EMAIL;//MGC 09-10-2018 Envío de correos
+                        mailTo = emailsto;//MGC 09-10-2018 Envío de correos
                     CONMAIL conmail = db.CONMAILs.Find(mailt);
                     if (conmail != null)
                     {
@@ -88,6 +86,10 @@ namespace WFARTHA.Services
                         myResponse.Close();
 
                         //mail.Body = result;//B20180803 MGC Correos
+                        if (image == "")
+                        {
+                            image = System.Web.HttpContext.Current.Server.MapPath("~/images/artha_logo.jpg");
+                        }
 
                         mail.AlternateViews.Add(Mail_Body(result, image));//B20180803 MGC Correos
                         mail.IsBodyHtml = true;//B20180803 MGC Correos
