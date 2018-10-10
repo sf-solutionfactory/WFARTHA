@@ -597,7 +597,8 @@ namespace WFARTHA.Controllers
                     {
                         dOCUMENTO.MONTO_DOC_MD = doc.DOCUMENTOP[0].TOTAL;
                     }
-                    catch (Exception e) {
+                    catch (Exception e)
+                    {
                         dOCUMENTO.MONTO_DOC_MD = 0;
                     }
                     //LEJGG 10-10-2018------------------------<
@@ -665,6 +666,10 @@ namespace WFARTHA.Controllers
                     //Guardar las posiciones de la solicitud
                     try
                     {
+                        decimal _monto = 0;
+                        decimal _iva = 0;
+                        decimal _total = 0;
+                        var _mwskz = "";
                         int j = 1;
                         for (int i = 0; i < doc.DOCUMENTOP.Count; i++)
                         {
@@ -683,23 +688,39 @@ namespace WFARTHA.Controllers
                                 dp.IMPUTACION = doc.DOCUMENTOP[i].IMPUTACION;
                                 dp.CCOSTO = doc.DOCUMENTOP[i].CCOSTO;
                                 dp.MONTO = doc.DOCUMENTOP[i].MONTO;
+                                _monto = _monto + doc.DOCUMENTOP[i].MONTO;//lejgg 10-10-2018
                                 var sp = doc.DOCUMENTOP[i].MWSKZ.Split('-');
+                                _mwskz = sp[0];//lejgg 10-10-2018
                                 dp.MWSKZ = sp[0];
                                 dp.IVA = doc.DOCUMENTOP[i].IVA;
+                                _iva = _iva + doc.DOCUMENTOP[i].IVA;//lejgg 10-10-2018
                                 dp.TOTAL = doc.DOCUMENTOP[i].TOTAL;
+                                _total= doc.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
                                 dp.TEXTO = doc.DOCUMENTOP[i].TEXTO;
                                 db.DOCUMENTOPs.Add(dp);
                                 db.SaveChanges();
                             }
                             catch (Exception e)
                             {
-
+                                //
                             }
-
                             j++;
                         }
-                    }
+                        //lejgg 10-10-2018-------------------->
+                        DOCUMENTOP _dp = new DOCUMENTOP();
 
+                        _dp.NUM_DOC = doc.NUM_DOC;
+                        _dp.POS = j;
+                        _dp.ACCION = "H";
+                        _dp.CUENTA = doc.PAYER_ID;
+                        _dp.MONTO = _monto;
+                        _dp.MWSKZ = _mwskz;
+                        _dp.IVA = _iva;
+                        _dp.TOTAL = _total;
+                        db.DOCUMENTOPs.Add(_dp);
+                        db.SaveChanges();
+                        //lejgg 10-10-2018-------------------------<
+                    }
                     //Guardar las retenciones de la solicitud
 
                     catch (Exception e)
@@ -2070,7 +2091,8 @@ namespace WFARTHA.Controllers
                     {
                         lcont.AddRange(lconk);
                     }
-                    catch (Exception c) {//
+                    catch (Exception c)
+                    {//
                     }
 
                     //Obtener todos los elementos k-------------------------------------------------------------------------------------
