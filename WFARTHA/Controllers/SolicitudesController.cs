@@ -591,7 +591,16 @@ namespace WFARTHA.Controllers
                     dOCUMENTO.MONEDA_ID = doc.MONEDA_ID;
                     dOCUMENTO.TIPO_CAMBIO = doc.TIPO_CAMBIO;
                     dOCUMENTO.IMPUESTO = doc.IMPUESTO;
-                    dOCUMENTO.MONTO_DOC_MD = doc.MONTO_DOC_MD;
+                    //dOCUMENTO.MONTO_DOC_MD = doc.MONTO_DOC_MD;
+                    //LEJGG 10-10-2018------------------------>
+                    try
+                    {
+                        dOCUMENTO.MONTO_DOC_MD = doc.DOCUMENTOP[0].TOTAL;
+                    }
+                    catch (Exception e) {
+                        dOCUMENTO.MONTO_DOC_MD = 0;
+                    }
+                    //LEJGG 10-10-2018------------------------<
                     //dOCUMENTO.REFERENCIA = doc.REFERENCIA;
                     dOCUMENTO.CONCEPTO = doc.CONCEPTO;
                     dOCUMENTO.PAYER_ID = doc.PAYER_ID;
@@ -665,8 +674,7 @@ namespace WFARTHA.Controllers
 
                                 dp.NUM_DOC = doc.NUM_DOC;
                                 dp.POS = j;
-                                //dp.ACCION = doc.DOCUMENTOP[i].ACCION;
-                                dp.ACCION = "D";
+                                dp.ACCION = doc.DOCUMENTOP[i].ACCION;
                                 dp.FACTURA = doc.DOCUMENTOP[i].FACTURA;
                                 dp.TCONCEPTO = doc.DOCUMENTOP[i].TCONCEPTO;
                                 dp.GRUPO = doc.DOCUMENTOP[i].GRUPO;
@@ -2058,8 +2066,12 @@ namespace WFARTHA.Controllers
 
                         lconk.AddRange(lconk2);
                     }
-
-                    lcont.AddRange(lconk);
+                    try
+                    {
+                        lcont.AddRange(lconk);
+                    }
+                    catch (Exception c) {//
+                    }
 
                     //Obtener todos los elementos k-------------------------------------------------------------------------------------
 

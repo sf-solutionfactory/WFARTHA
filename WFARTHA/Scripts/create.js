@@ -473,8 +473,8 @@ $(document).ready(function () {
         //dar formato al monto
         var enca_monto = $("#MONTO_DOC_MD").val();
         enca_monto = enca_monto.replace(/\s/g, '');
-        enca_monto = toNum(enca_monto);
-        enca_monto = parseFloat(enca_monto);
+        //enca_monto = toNum(enca_monto);
+        //enca_monto = parseFloat(enca_monto);
         $("#MONTO_DOC_MD").val(enca_monto);
 
         //LEJ 11.09.2018
@@ -503,65 +503,69 @@ $(document).ready(function () {
             var na3 = $(this).find("td.NumAnexo3 input").val();
             var na4 = $(this).find("td.NumAnexo4 input").val();
             var na5 = $(this).find("td.NumAnexo5 input").val();
-            for (var i = 0; i < _vs.length; i++) {
-                if (na1 === _vs[i] || na1 === "") {
-                    _b = true;
-                    break;
-                } else {
-                    _b = false;
-                    msgerror = "Error en el renglon " + _rni + " valor: " + na1 + " Columna 2";
+            if (_vs.length > 0) {
+                for (var i = 0; i < _vs.length; i++) {
+                    if (na1 === _vs[i] || na1 === "") {
+                        _b = true;
+                        break;
+                    } else {
+                        _b = false;
+                        msgerror = "Error en el renglon " + _rni + " valor: " + na1 + " Columna 2";
+                    }
                 }
-            }
-            if (_b === false) {
-                return false;
-            }
-            for (var i2 = 0; i2 < _vs.length; i2++) {
-                if (na2 === _vs[i2] || na2 === "") {
-                    _b = true;
-                    break;
-                } else {
-                    _b = false;
-                    msgerror = "Error en el renglon " + _rni + " valor: " + na2 + " Columna 3";
+                if (_b === false) {
+                    return false;
                 }
-            }
-            if (_b === false) {
-                return false;
-            }
-            for (var i3 = 0; i3 < _vs.length; i3++) {
-                if (na3 === _vs[i3] || na3 === "") {
-                    _b = true;
-                    break;
-                } else {
-                    _b = false;
-                    msgerror = "Error en el renglon " + _rni + " valor: " + na3 + " Columna 4";
+                for (var i2 = 0; i2 < _vs.length; i2++) {
+                    if (na2 === _vs[i2] || na2 === "") {
+                        _b = true;
+                        break;
+                    } else {
+                        _b = false;
+                        msgerror = "Error en el renglon " + _rni + " valor: " + na2 + " Columna 3";
+                    }
                 }
-            }
-            if (_b === false) {
-                return false;
-            }
-            for (var i4 = 0; i4 < _vs.length; i4++) {
-                if (na4 === _vs[i4] || na4 === "") {
-                    _b = true;
-                    break;
-                } else {
-                    _b = false;
-                    msgerror = "Error en el renglon " + _rni + " valor: " + na4 + " Columna 5";
+                if (_b === false) {
+                    return false;
                 }
-            }
-            if (_b === false) {
-                return false;
-            }
-            for (var i5 = 0; i5 < _vs.length; i5++) {
-                if (na5 === _vs[i5] || na5 === "") {
-                    break;
-                    _b = true;
-                } else {
-                    _b = false;
-                    msgerror = "Error en el renglon " + _rni + " valor: " + na5 + " Columna 6";
+                for (var i3 = 0; i3 < _vs.length; i3++) {
+                    if (na3 === _vs[i3] || na3 === "") {
+                        _b = true;
+                        break;
+                    } else {
+                        _b = false;
+                        msgerror = "Error en el renglon " + _rni + " valor: " + na3 + " Columna 4";
+                    }
                 }
-            }
-            if (_b === false) {
-                return false;
+                if (_b === false) {
+                    return false;
+                }
+                for (var i4 = 0; i4 < _vs.length; i4++) {
+                    if (na4 === _vs[i4] || na4 === "") {
+                        _b = true;
+                        break;
+                    } else {
+                        _b = false;
+                        msgerror = "Error en el renglon " + _rni + " valor: " + na4 + " Columna 5";
+                    }
+                }
+                if (_b === false) {
+                    return false;
+                }
+                for (var i5 = 0; i5 < _vs.length; i5++) {
+                    if (na5 === _vs[i5] || na5 === "") {
+                        break;
+                        _b = true;
+                    } else {
+                        _b = false;
+                        msgerror = "Error en el renglon " + _rni + " valor: " + na5 + " Columna 6";
+                    }
+                }
+                if (_b === false) {
+                    return false;
+                }
+            } else {
+                _b = true;
             }
         });
         if (_b) {
