@@ -2015,40 +2015,57 @@ namespace WFARTHA.Controllers
             //Tiene un tipo de presupuesto
             if (tp != null && tp.TIPOPRE != "" && tp.TIPOPRE != null)
             {
-
+                var _s = Session["id_pr"].ToString();
                 if (tp.TIPOPRE != "*")
                 {
+                    //LEJ 09102018------------------------------------------------->
+                    int _n;
+                    bool is_Numeric = int.TryParse(Prefix, out _n);
+                    //LEJ 09102018-------------------------------------------------<
                     ////Obtener todos los elementos k-------------------------------------------------------------------------------------
-                    //var lconk = (from co in db.CONCEPTOes
-                    //             where co.ID_CONCEPTO.Contains(Prefix) && co.TIPO_PRESUPUESTO == tp.TIPOPRE && co.TIPO_IMPUTACION == "K"
-                    //             select new
-                    //             {
-                    //                 ID_CONCEPTO = co.ID_CONCEPTO.ToString(),
-                    //                 TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
-                    //                 DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
-                    //             }).ToList();
 
-                    //if (lconk.Count == 0)
-                    //{
-                    //    var lconk2 = (from co in db.CONCEPTOes.ToList()
-                    //                  where co.DESC_CONCEPTO.Contains(Prefix) && co.TIPO_PRESUPUESTO == tp.TIPOPRE && co.TIPO_IMPUTACION == "K"
-                    //                 select new
-                    //                 {
-                    //                     ID_CONCEPTO = co.ID_CONCEPTO.ToString(),
-                    //                     TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
-                    //                     DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
-                    //                 }).ToList();
+                    var lconk = (from co in db.CONCEPTOes
+                                 where co.TIPO_CONCEPTO.Contains(Prefix.ToUpper()) && co.TIPO_PRESUPUESTO == tp.TIPOPRE && co.TIPO_IMPUTACION == "K"
+                                 select new
+                                 {
+                                     ID_CONCEPTO = co.ID_CONCEPTO.ToString(),
+                                     TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
+                                     DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
+                                 }).ToList();
 
-                    //    lconk.AddRange(lconk2);
-                    //}
 
-                    //lcont.AddRange(lconk);
+                    if (lconk.Count == 0)
+                    {
+                        lconk = (from co in db.CONCEPTOes
+                                 where co.ID_CONCEPTO.Contains(Prefix) && co.TIPO_PRESUPUESTO == tp.TIPOPRE && co.TIPO_IMPUTACION == "K"
+                                 select new
+                                 {
+                                     ID_CONCEPTO = co.ID_CONCEPTO.ToString(),
+                                     TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
+                                     DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
+                                 }).ToList();
+                    }
+                    if (lconk.Count == 0)
+                    {
+                        var lconk2 = (from co in db.CONCEPTOes.ToList()
+                                      where co.DESC_CONCEPTO.Contains(Prefix) && co.TIPO_PRESUPUESTO == tp.TIPOPRE && co.TIPO_IMPUTACION == "K"
+                                      select new
+                                      {
+                                          ID_CONCEPTO = co.ID_CONCEPTO.ToString(),
+                                          TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
+                                          DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
+                                      }).ToList();
+
+                        lconk.AddRange(lconk2);
+                    }
+
+                    lcont.AddRange(lconk);
 
                     //Obtener todos los elementos k-------------------------------------------------------------------------------------
 
-                    //Obtener los elementos asignados al proyecto RE-00900
+                    //Obtener los elementos asignados al proyecto (_s)
                     List<DET_PEP> detpep = new List<DET_PEP>();
-                    detpep = db.DET_PEP.Where(dp => dp.PSPNR == "RE-00900").ToList();
+                    detpep = db.DET_PEP.Where(dp => dp.PSPNR == _s).ToList();
 
                     var lcon = (from co in db.CONCEPTOes.ToList()
                                 join dp in detpep
@@ -2060,7 +2077,26 @@ namespace WFARTHA.Controllers
                                     TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
                                     DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
                                 }).ToList();
-
+                    //LEJ 09102018------------------------------------------------->
+                    if (!is_Numeric)
+                    {
+                        // BUSQUEDA POR TIPO_CONCEPTO
+                        if (lcon.Count == 0)
+                        {
+                            lcon = (from co in db.CONCEPTOes.ToList()
+                                    join dp in detpep
+                                         on new { A = co.ID_CONCEPTO, B = co.TIPO_CONCEPTO } equals new { A = dp.CONCEPTO, B = dp.TIPO_CONCEPTO } //
+                                    where co.TIPO_CONCEPTO.Contains(Prefix.ToUpper()) && co.TIPO_PRESUPUESTO == tp.TIPOPRE
+                                    select new
+                                    {
+                                        ID_CONCEPTO = co.ID_CONCEPTO.ToString(),
+                                        TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
+                                        DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
+                                    }).ToList();
+                            // lcon = _lcon.Where(x=>x.TIPO_CONCEPTO==Prefix.ToUpper()).ToList();
+                        }
+                    }
+                    //LEJ 09102018-------------------------------------------------<
                     if (lcon.Count == 0)
                     {
                         var lcon2 = (from co in db.CONCEPTOes.ToList()
@@ -2081,39 +2117,57 @@ namespace WFARTHA.Controllers
                 }
                 else
                 {
+                    //LEJ 09102018------------------------------------------------->
+                    int _n;
+                    bool is_Numeric = int.TryParse(Prefix, out _n);
+                    //LEJ 09102018-------------------------------------------------<
                     var lcont2 = (dynamic)null;
                     //Obtener todos los elementos k-------------------------------------------------------------------------------------
-                    //var lconk = (from co in db.CONCEPTOes
-                    //             where co.ID_CONCEPTO.Contains(Prefix) && co.TIPO_IMPUTACION == "K"
-                    //             select new
-                    //             {
-                    //                 ID_CONCEPTO = co.ID_CONCEPTO.ToString(),
-                    //                 TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
-                    //                 DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
-                    //             }).ToList();
+                    var lconk = (from co in db.CONCEPTOes
+                                 where co.TIPO_CONCEPTO.Contains(Prefix.ToUpper()) && co.TIPO_IMPUTACION == "K"
+                                 select new
+                                 {
+                                     ID_CONCEPTO = co.ID_CONCEPTO.ToString(),
+                                     TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
+                                     DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
+                                 }).ToList();
 
-                    //if(lconk.Count == 0)
-                    //{
-                    //    var lconk2 = (from co in db.CONCEPTOes
-                    //                 where co.DESC_CONCEPTO.Contains(Prefix) && co.TIPO_IMPUTACION == "K"
-                    //                 select new
-                    //                 {
-                    //                     ID_CONCEPTO = co.ID_CONCEPTO.ToString(),
-                    //                     TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
-                    //                     DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
-                    //                 }).ToList();
+                    //LEJ 09102018------------------------------------------------->
+                    // BUSQUEDA POR id_CONCEPTO
+                    if (lconk.Count == 0)
+                    {
+                        lconk = (from co in db.CONCEPTOes
+                                 where co.ID_CONCEPTO.Contains(Prefix) && co.TIPO_IMPUTACION == "K"
+                                 select new
+                                 {
+                                     ID_CONCEPTO = co.ID_CONCEPTO.ToString(),
+                                     TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
+                                     DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
+                                 }).ToList();
+                    }
+                    //LEJ 09102018-------------------------------------------------<
+                    if (lconk.Count == 0)
+                    {
+                        var lconk2 = (from co in db.CONCEPTOes
+                                      where co.DESC_CONCEPTO.Contains(Prefix) && co.TIPO_IMPUTACION == "K"
+                                      select new
+                                      {
+                                          ID_CONCEPTO = co.ID_CONCEPTO.ToString(),
+                                          TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
+                                          DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
+                                      }).ToList();
 
-                    //    lconk.AddRange(lconk2);
-                    //}
+                        lconk.AddRange(lconk2);
+                    }
 
-
-                    //lcont2.
                     //Obtener todos los elementos k-------------------------------------------------------------------------------------
 
-                    //Obtener los elementos asignados al proyecto RE-00900
+                    //Obtener los elementos asignados al proyecto (_s)
                     List<DET_PEP> detpep = new List<DET_PEP>();
-                    detpep = db.DET_PEP.Where(dp => dp.PSPNR == "RE-00900").ToList();
+                    detpep = db.DET_PEP.Where(dp => dp.PSPNR == _s).ToList();
 
+
+                    // BUSQUEDA POR ID_CONCEPTO
                     var lcon = (from co in db.CONCEPTOes.ToList()
                                 join dp in detpep
                                      on new { A = co.ID_CONCEPTO, B = co.TIPO_CONCEPTO } equals new { A = dp.CONCEPTO, B = dp.TIPO_CONCEPTO } //
@@ -2124,7 +2178,27 @@ namespace WFARTHA.Controllers
                                     TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
                                     DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
                                 }).ToList();
-
+                    //LEJ 09102018------------------------------------------------->
+                    if (!is_Numeric)
+                    {
+                        // BUSQUEDA POR TIPO_CONCEPTO
+                        if (lcon.Count == 0)
+                        {
+                            lcon = (from co in db.CONCEPTOes.ToList()
+                                    join dp in detpep
+                                         on new { A = co.ID_CONCEPTO, B = co.TIPO_CONCEPTO } equals new { A = dp.CONCEPTO, B = dp.TIPO_CONCEPTO } //
+                                    where co.TIPO_CONCEPTO.Contains(Prefix.ToUpper())
+                                    select new
+                                    {
+                                        ID_CONCEPTO = co.ID_CONCEPTO.ToString(),
+                                        TIPO_CONCEPTO = co.TIPO_CONCEPTO.ToString(),
+                                        DESC_CONCEPTO = co.DESC_CONCEPTO.ToString()
+                                    }).ToList();
+                            // lcon = _lcon.Where(x=>x.TIPO_CONCEPTO==Prefix.ToUpper()).ToList();
+                        }
+                    }
+                    //LEJ 09102018-------------------------------------------------<
+                    //sI EN LA BUSQUEDA POR ID_CONCEPTO Y POR TIPO_CONCEPTO ESTA VACIO BUSCARA POR DESC_CONCEPTO
                     if (lcon.Count == 0)
                     {
                         var lcon2 = (from co in db.CONCEPTOes.ToList()
@@ -2140,7 +2214,7 @@ namespace WFARTHA.Controllers
 
                         lcon.AddRange(lcon2);
                     }
-
+                    lcon.AddRange(lconk);
                     lcont = lcon;
                 }
 
