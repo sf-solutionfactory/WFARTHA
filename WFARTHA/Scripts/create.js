@@ -2126,7 +2126,8 @@ function copiarTableInfoControl() {
             var retTot = tRet.length;//Todas las retenciones
             //Lej 14.08.2018-------------------------------------------------------------T
             var pos = toNum($(this).find("td.POS").text());
-            var ca = $(this).find("td.CA").text(); //MGC 04092018 Conceptos
+           // var ca = $(this).find("td.CA").text(); //MGC 04092018 Conceptos
+            var ca = t.row(indexopc).data()[7];//lejgg 09-10-2018 Conceptos
             var factura = $(this).find("td.FACTURA input").val();
             //var tconcepto = $(this).find("td.TCONCEPTO").text();
             var grupo = $(this).find("td.GRUPO input").val();
