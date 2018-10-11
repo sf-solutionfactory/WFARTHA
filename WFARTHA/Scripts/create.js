@@ -553,9 +553,9 @@ $(document).ready(function () {
                     return false;
                 }
                 for (var i5 = 0; i5 < _vs.length; i5++) {
-                    if (na5 === _vs[i5] || na5 === "") {
-                        break;
+                    if (na5 === _vs[i5] || na5 === "") {                     
                         _b = true;
+                        break;
                     } else {
                         _b = false;
                         msgerror = "Error en el renglon " + _rni + " valor: " + na5 + " Columna 6";
@@ -573,6 +573,12 @@ $(document).ready(function () {
         } else {
             M.toast({ html: msgerror });
         }
+    });
+
+    $('#btn_borradorh').on("click", function (e) {
+        document.getElementById("loader").style.display = "initial";
+        guardarBorrador(false);
+        document.getElementById("loader").style.display = "none";
     });
 
     //Archivo para facturas en soporte ahora información
@@ -2382,5 +2388,148 @@ function resetTabs() {
     //instances.updateTabIndicator
 }
 
+//Lejgg 10/10/2018
+function guardarBorrador(asyncv) {
+    var _miles = $("#miles").val();
+    var _decimales = $("#dec").val();
 
+    //Guardar los valores de la tabla en el modelo para enviarlos al controlador
+    copiarTableInfoControl();
+    //copiarTableSopControl();
+    copiarTableRet();
+
+    //dar formato al monto
+    var enca_monto = $("#MONTO_DOC_MD").val();
+    enca_monto = enca_monto.replace(/\s/g, '');
+    //enca_monto = toNum(enca_monto);
+    //enca_monto = parseFloat(enca_monto);
+    $("#MONTO_DOC_MD").val(enca_monto);
+
+    //LEJ 11.09.2018
+    //dar formato al T CAMBIO
+    var tcambio = $("#TIPO_CAMBIO").val();
+    tcambio = tcambio.replace(/\s/g, '');
+    tcambio = toNum(tcambio);
+    tcambio = parseFloat(tcambio);
+    $("#TIPO_CAMBIO").val(tcambio);
+
+    var _b = false;
+    var _vs = [];
+    var msgerror = "";
+    var _rni = 0;
+    //Validar que los anexos existan
+    $("#table_anexa > tbody  > tr[role='row']").each(function () {
+        var pos = $(this).find("td.POS").text();
+        _vs.push(pos);
+    });
+
+    $("#table_info > tbody  > tr[role='row']").each(function () {
+        _rni++;
+        //Obtener valores visibles en la tabla
+        var na1 = $(this).find("td.NumAnexo input").val();
+        var na2 = $(this).find("td.NumAnexo2 input").val();
+        var na3 = $(this).find("td.NumAnexo3 input").val();
+        var na4 = $(this).find("td.NumAnexo4 input").val();
+        var na5 = $(this).find("td.NumAnexo5 input").val();
+        if (_vs.length > 0) {
+            for (var i = 0; i < _vs.length; i++) {
+                if (na1 === _vs[i] || na1 === "") {
+                    _b = true;
+                    break;
+                } else {
+                    _b = false;
+                    msgerror = "Error en el renglon " + _rni + " valor: " + na1 + " Columna 2";
+                }
+            }
+            if (_b === false) {
+                return false;
+            }
+            for (var i2 = 0; i2 < _vs.length; i2++) {
+                if (na2 === _vs[i2] || na2 === "") {
+                    _b = true;
+                    break;
+                } else {
+                    _b = false;
+                    msgerror = "Error en el renglon " + _rni + " valor: " + na2 + " Columna 3";
+                }
+            }
+            if (_b === false) {
+                return false;
+            }
+            for (var i3 = 0; i3 < _vs.length; i3++) {
+                if (na3 === _vs[i3] || na3 === "") {
+                    _b = true;
+                    break;
+                } else {
+                    _b = false;
+                    msgerror = "Error en el renglon " + _rni + " valor: " + na3 + " Columna 4";
+                }
+            }
+            if (_b === false) {
+                return false;
+            }
+            for (var i4 = 0; i4 < _vs.length; i4++) {
+                if (na4 === _vs[i4] || na4 === "") {
+                    _b = true;
+                    break;
+                } else {
+                    _b = false;
+                    msgerror = "Error en el renglon " + _rni + " valor: " + na4 + " Columna 5";
+                }
+            }
+            if (_b === false) {
+                return false;
+            }
+            for (var i5 = 0; i5 < _vs.length; i5++) {
+                if (na5 === _vs[i5] || na5 === "") {
+                    _b = true;
+                    break;
+                } else {
+                    _b = false;
+                    msgerror = "Error en el renglon " + _rni + " valor: " + na5 + " Columna 6";
+                }
+            }
+            if (_b === false) {
+                return false;
+            }
+        } else {
+            _b = true;
+        }
+    });
+    if (_b) {
+        //Complemento mensaje
+        var comp = "";
+
+        if (asyncv === true) {
+            comp = "(Autoguardado)";
+        }
+        //Obtener los parametros para enviar
+        var form = $("#formCreate");
+        $.ajax({
+            type: "POST",
+            url: 'Borrador',
+            dataType: "json",
+            data: form.serialize(),
+            success: function (data) {
+
+                if (data !== null || data !== "") {
+                    if (data === true) {
+                        M.toast({ html: "Borrador Guardado " + comp });
+                        $('#btn_borradore').css("display", "inline-block"); 
+                    } else {
+                        M.toast({ html: "No se guardo el borrador" + comp });
+                    }
+                }
+
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                M.toast({ html: "No se guardo el borrador" + comp });
+            },
+            async: asyncv
+        });
+    } else {
+        M.toast({ html: msgerror });
+    }
+    
+}
 
