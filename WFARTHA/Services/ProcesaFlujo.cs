@@ -845,6 +845,8 @@ namespace WFARTHA.Services
             else if (f.ESTATUS.Equals("R"))//Rechazada
             {
 
+                actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC) & a.POS == f.POS).OrderByDescending(a => a.POS).FirstOrDefault();
+
                 DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
 
                 actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
@@ -991,7 +993,7 @@ namespace WFARTHA.Services
             //}
 
             //MGC 08-10-2018 Obtener los datos para el correo
-            if (emails && correcto == "1") {
+            if (emails && (correcto == "1" | correcto == "3")) {
 
                 //MGC 08-10-2018 Obtener los datos para el correo comentar provisional
                 Email em = new Email();
