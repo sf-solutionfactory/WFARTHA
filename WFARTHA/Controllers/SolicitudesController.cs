@@ -694,7 +694,7 @@ namespace WFARTHA.Controllers
                                 dp.IVA = doc.DOCUMENTOP[i].IVA;
                                 _iva = _iva + doc.DOCUMENTOP[i].IVA;//lejgg 10-10-2018
                                 dp.TOTAL = doc.DOCUMENTOP[i].TOTAL;
-                                _total= doc.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
+                                _total = doc.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
                                 dp.TEXTO = doc.DOCUMENTOP[i].TEXTO;
                                 db.DOCUMENTOPs.Add(dp);
                                 db.SaveChanges();
@@ -1850,6 +1850,8 @@ namespace WFARTHA.Controllers
             ViewBag.USUARIOC_ID = new SelectList(db.USUARIOs, "ID", "PASS", dOCUMENTO.USUARIOC_ID);
             return View(dOCUMENTO);
         }
+
+        //Lejgg 11-10-2018
         [HttpPost]
         public string Borrador([Bind(Include = "NUM_DOC,NUM_PRE,TSOL_ID,TALL_ID,SOCIEDAD_ID,CANTIDAD_EV,USUARIOC_ID," +
             "USUARIOD_ID,FECHAD,FECHAC,HORAC,FECHAC_PLAN,FECHAC_USER,HORAC_USER,ESTATUS,ESTATUS_C,ESTATUS_SAP,ESTATUS_WF," +
@@ -1858,8 +1860,16 @@ namespace WFARTHA.Controllers
             "MONTO_BASE_NS_PCT_ML2,PORC_ADICIONAL,IMPUESTO,ESTATUS_EXT,PAYER_ID,MONEDA_ID,MONEDAL_ID,MONEDAL2_ID," +
             "TIPO_CAMBIO,TIPO_CAMBIOL,TIPO_CAMBIOL2,NO_FACTURA,FECHAD_SOPORTE,METODO_PAGO,NO_PROVEEDOR,PASO_ACTUAL," +
             "AGENTE_ACTUAL,FECHA_PASO_ACTUAL,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,FECHACON,FECHA_BASE,REFERENCIA," +
-            "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo")]Models.DOCUMENTO_MOD doc) {
+            "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo")]Models.DOCUMENTO_MOD doc)
+        {
+            int pagina = 202; //ID EN BASE DE DATOS
+            string errorString = "";
             string res = "false";
+            FORMATO formato = new FORMATO();
+            string spras = "";
+            string user_id = ""; //Cadenas de autorización
+            if (ModelState.IsValid)
+            { }
             return res;
         }
         // GET: Solicitudes/Delete/5
