@@ -1008,7 +1008,8 @@ namespace WFARTHA.Services
                 {
                     page = "Index";
                 }
-                em.enviaMailC(f.NUM_DOC, true, System.Web.HttpContext.Current.Session["spras"].ToString(), UrlDirectory, page, image, emailsto);
+                //MGC 11-10-2018 No enviar correos
+                //em.enviaMailC(f.NUM_DOC, true, System.Web.HttpContext.Current.Session["spras"].ToString(), UrlDirectory, page, image, emailsto);
 
             }
 
