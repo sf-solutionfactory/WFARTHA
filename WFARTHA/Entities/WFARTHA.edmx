@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="WFARTHAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="WFARTHAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ACCION">
           <Key>
             <PropertyRef Name="ID" />
@@ -511,7 +511,7 @@ warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key d
             <PropertyRef Name="ID_PSPNR" />
           </Key>
           <Property Name="ID_PSPNR" Type="nvarchar" MaxLength="8" Nullable="false" />
-          <Property Name="NONBRE" Type="nchar" MaxLength="30" Nullable="false" />
+          <Property Name="NOMBRE" Type="nchar" MaxLength="30" Nullable="false" />
         </EntityType>
         <EntityType Name="PUESTO">
           <Key>
@@ -2226,7 +2226,8 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             <End Role="WORKFV" EntitySet="WORKFV" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="WFARTHAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -2465,6 +2466,8 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <Property Name="TEXTO_POS" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
           <Property Name="ASIGNACION_POS" Type="String" MaxLength="18" FixedLength="true" Unicode="true" />
           <Property Name="CLAVE_CTA" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="SOCIEDAD_PRE" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="EJERCICIO_PRE" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="SOCIEDAD" Relationship="Self.FK_DOCUMENTO_SOCIEDAD" FromRole="DOCUMENTO" ToRole="SOCIEDAD" />
           <NavigationProperty Name="TSOL" Relationship="Self.FK_DOCUMENTO_TSOL" FromRole="DOCUMENTO" ToRole="TSOL" />
           <NavigationProperty Name="USUARIO" Relationship="Self.FK_DOCUMENTO_USUARIO" FromRole="DOCUMENTO" ToRole="USUARIO" />
@@ -2473,8 +2476,6 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <NavigationProperty Name="DOCUMENTORs" Relationship="Self.FK_DOCUMENTOR_DOCUMENTO" FromRole="DOCUMENTO" ToRole="DOCUMENTOR" />
           <NavigationProperty Name="DOCUMENTOSAP" Relationship="Self.FK_DOCUMENTOSAP_DOCUMENTO" FromRole="DOCUMENTO" ToRole="DOCUMENTOSAP" />
           <NavigationProperty Name="FLUJOes" Relationship="Self.FK_FLUJO_DOCUMENTO" FromRole="DOCUMENTO" ToRole="FLUJO" />
-          <Property Name="SOCIEDAD_PRE" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
-          <Property Name="EJERCICIO_PRE" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="DOCUMENTOA">
           <Key>
@@ -2735,7 +2736,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             <PropertyRef Name="ID_PSPNR" />
           </Key>
           <Property Name="ID_PSPNR" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="NONBRE" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="NOMBRE" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
           <NavigationProperty Name="SOCIEDADs" Relationship="Self.DET_PROYECTO" FromRole="PROYECTO" ToRole="SOCIEDAD" />
         </EntityType>
         <EntityType Name="PUESTO">
@@ -2914,12 +2915,12 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <Property Name="ESTATUS" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="EDITDET" Type="Boolean" />
           <Property Name="DEFAULT" Type="Boolean" />
+          <Property Name="TIPO_DOCFILE" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
           <NavigationProperty Name="DET_TIPODOC" Relationship="Self.FK_DET_TIPODOC_TSOL" FromRole="TSOL" ToRole="DET_TIPODOC" />
           <NavigationProperty Name="DOCUMENTOes" Relationship="Self.FK_DOCUMENTO_TSOL" FromRole="TSOL" ToRole="DOCUMENTO" />
           <NavigationProperty Name="RANGO" Relationship="Self.FK_TSOL_RANGO" FromRole="TSOL" ToRole="RANGO" />
           <NavigationProperty Name="TSOLTs" Relationship="Self.FK_TSOLT_TSOL" FromRole="TSOL" ToRole="TSOLT" />
           <NavigationProperty Name="WORKFHs" Relationship="Self.FK_WORKFP_TSOL" FromRole="TSOL" ToRole="WORKFH" />
-          <Property Name="TIPO_DOCFILE" Type="String" Nullable="false" MaxLength="20" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="TSOLT">
           <Key>
@@ -4558,8 +4559,6 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <EntitySetMapping Name="DOCUMENTOes">
             <EntityTypeMapping TypeName="WFARTHAModel.DOCUMENTO">
               <MappingFragment StoreEntitySet="DOCUMENTO">
-                <ScalarProperty Name="EJERCICIO_PRE" ColumnName="EJERCICIO_PRE" />
-                <ScalarProperty Name="SOCIEDAD_PRE" ColumnName="SOCIEDAD_PRE" />
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="NUM_PRE" ColumnName="NUM_PRE" />
                 <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
@@ -4621,6 +4620,8 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
                 <ScalarProperty Name="TEXTO_POS" ColumnName="TEXTO_POS" />
                 <ScalarProperty Name="ASIGNACION_POS" ColumnName="ASIGNACION_POS" />
                 <ScalarProperty Name="CLAVE_CTA" ColumnName="CLAVE_CTA" />
+                <ScalarProperty Name="SOCIEDAD_PRE" ColumnName="SOCIEDAD_PRE" />
+                <ScalarProperty Name="EJERCICIO_PRE" ColumnName="EJERCICIO_PRE" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -4849,7 +4850,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             <EntityTypeMapping TypeName="WFARTHAModel.PROYECTO">
               <MappingFragment StoreEntitySet="PROYECTO">
                 <ScalarProperty Name="ID_PSPNR" ColumnName="ID_PSPNR" />
-                <ScalarProperty Name="NONBRE" ColumnName="NONBRE" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -4986,13 +4987,13 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <EntitySetMapping Name="TSOLs">
             <EntityTypeMapping TypeName="WFARTHAModel.TSOL">
               <MappingFragment StoreEntitySet="TSOL">
-                <ScalarProperty Name="TIPO_DOCFILE" ColumnName="TIPO_DOCFILE" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
                 <ScalarProperty Name="RANGO_ID" ColumnName="RANGO_ID" />
                 <ScalarProperty Name="ESTATUS" ColumnName="ESTATUS" />
                 <ScalarProperty Name="EDITDET" ColumnName="EDITDET" />
                 <ScalarProperty Name="DEFAULT" ColumnName="DEFAULT" />
+                <ScalarProperty Name="TIPO_DOCFILE" ColumnName="TIPO_DOCFILE" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5279,7 +5280,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
         <DesignerProperty Name="EnablePluralization" Value="true" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
