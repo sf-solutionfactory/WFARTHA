@@ -37,7 +37,7 @@
                 @Html.DisplayNameFor(model => model.ID_PSPNR)
             </th>
             <th id="thdes">
-                @Html.DisplayNameFor(model => model.NONBRE)
+                @Html.DisplayNameFor(model => model.NOMBRE)
             </th>
             <th></th>
         </tr>
@@ -50,10 +50,10 @@
                     @Html.DisplayFor(modelItem => item.ID_PSPNR)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.NONBRE)
+                    @Html.DisplayFor(modelItem => item.NOMBRE)
                 </td>
                 <td>
-                    <a data-form-method="post" href="@Url.Action("SelProv", "Home", new {prov=item.NONBRE, id=item.ID_PSPNR,returnUrl = ViewBag.returnUrl})">
+                    <a data-form-method="post" href="@Url.Action("SelProv", "Home", new {prov=item.NOMBRE, id=item.ID_PSPNR,returnUrl = ViewBag.returnUrl})">
                         <i class='material-icons green-text'>edit</i>
                     </a>
                 </td>

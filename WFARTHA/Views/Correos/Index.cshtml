@@ -64,63 +64,71 @@
         {
             <div class="divs">
                 <p style="margin-top:30px;">
-                    <h4 style="margin-bottom:0px;">Favor de revisar y aprobar la siguiente solicitud.</h4>
-                    En caso de no autorizar la solicitud:<br />
-                    1-Dar click en el boton de rechazar.<br />
-                    2-En el mail alterno que se genera, debera indicar sus comentarios.<br />
-                    3-Debera dar click en enviar el mensaje.<br />
+                    <h4 style="margin-bottom:0px;">Favor de revisar la siguiente solicitud.</h4>
+
+                    @*En caso de no autorizar la solicitud:<br />
+                        1-Dar click en el boton de rechazar.<br />
+                2-En el mail alterno que se genera, debera indicar sus comentarios.<br />
+                3-Debera dar click en enviar el mensaje.<br />
+            </p>
+        </div>*@
+                    
                 </p>
             </div>
-            <div class="child_div_1">
-                <a type="button" class="btn-small" id="btn_cancel"
-                   style="height: 32.4px;line-height: 32.4px;
-                        font-size: 13px;
-                        text-decoration: none;
-                        color: #fff;
-                        background-color: #26a69a;
-                        text-align: center;
-                        letter-spacing: .5px;
-                        -webkit-transition: background-color .2s ease-out;
-                        transition: background-color .2s ease-out;
-                        cursor: pointer;
-                        border: none;
-                        border-radius: 2px;
-                        display: inline-block;
-                        height: 36px;
-                        line-height: 36px;
-                        padding: 0 2rem;
-                        text-transform: uppercase;
-                        vertical-align: middle;
-                        -webkit-tap-highlight-color: transparent;"
-                   href="mailto:LA_TAT@kellogg.com?Subject=TAT:Approved-@Model.NUM_DOC-@ViewBag.Pos" target="_top">
-                    Aprobar
-                </a>
-            </div>
-            <div class="child_div_1">
-                <a type="button" class="btn-small" id="btn_cancel"
-                   style="height: 32.4px;line-height: 32.4px;
-                        font-size: 13px;
-                        text-decoration: none;
-                        color: #fff;
-                        background-color: #f29414;
-                        text-align: center;
-                        letter-spacing: .5px;
-                        -webkit-transition: background-color .2s ease-out;
-                        transition: background-color .2s ease-out;
-                        cursor: pointer;
-                        border: none;
-                        border-radius: 2px;
-                        display: inline-block;
-                        height: 36px;
-                        line-height: 36px;
-                        padding: 0 2rem;
-                        text-transform: uppercase;
-                        vertical-align: middle;
-                        -webkit-tap-highlight-color: transparent;"
-                   href="mailto:LA_TAT@kellogg.com?Subject=TAT:Rejected-@Model.NUM_DOC-@ViewBag.Pos" onclick="f1();" target="_top">
-                    Rechazar
-                </a>
-            </div>
+            @*<div class="child_div_1">
+            <a type="button" class="btn-small" id="btn_cancel"
+               style="height: 32.4px;line-height: 32.4px;
+                    font-size: 13px;
+                    text-decoration: none;
+                    color: #fff;
+                    background-color: #26a69a;
+                    text-align: center;
+                    letter-spacing: .5px;
+                    -webkit-transition: background-color .2s ease-out;
+                    transition: background-color .2s ease-out;
+                    cursor: pointer;
+                    border: none;
+                    border-radius: 2px;
+                    display: inline-block;
+                    height: 36px;
+                    line-height: 36px;
+                    padding: 0 2rem;
+                    text-transform: uppercase;
+                    vertical-align: middle;
+                    -webkit-tap-highlight-color: transparent;"
+               href="mailto:LA_TAT@kellogg.com?Subject=TAT:Approved-@Model.NUM_DOC-@ViewBag.Pos" target="_top"
+            href = "" target = "_top" >
+               Aprobar
+           </ a >
+
+       </ div >
+
+       < div class="child_div_1">
+            <a type = "button" class="btn-small" id="btn_cancel"
+               style="height: 32.4px;line-height: 32.4px;
+                    font-size: 13px;
+                    text-decoration: none;
+                    color: #fff;
+                    background-color: #f29414;
+                    text-align: center;
+                    letter-spacing: .5px;
+                    -webkit-transition: background-color .2s ease-out;
+    transition: background-color .2s ease-out;
+    cursor: pointer;
+                    border: none;
+                    border-radius: 2px;
+                    display: inline-block;
+                    height: 36px;
+                    line-height: 36px;
+                    padding: 0 2rem;
+                    text-transform: uppercase;
+                    vertical-align: middle;
+                    -webkit-tap-highlight-color: transparent;"
+    href="mailto:LA_TAT@kellogg.com?Subject=TAT:Rejected-@Model.NUM_DOC-@ViewBag.Pos" onclick="f1();" target="_top"
+                       href="" onclick="f1();" target="_top">
+                        Rechazar
+                    </a>
+                </div>*@
         }
         @*<div class="child_div_1">
             <a type="button" class="btn-small" id="btn_comm" name="btn_comm"

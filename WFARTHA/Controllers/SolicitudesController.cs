@@ -644,7 +644,8 @@ namespace WFARTHA.Controllers
 
                     //Obtener el tipo de documento
                     var doct = db.DET_TIPODOC.Where(dt => dt.TIPO_SOL == doc.TSOL_ID).FirstOrDefault();
-                    doc.DOCUMENTO_SAP = doct.BLART;
+                    doc.DOCUMENTO_SAP = doct.BLART.ToString();
+                    dOCUMENTO.DOCUMENTO_SAP = doct.BLART.ToString();
 
                     //Fechac
                     dOCUMENTO.FECHAC = DateTime.Now;

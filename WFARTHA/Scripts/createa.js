@@ -125,6 +125,11 @@ function selectConcepto(val, tr, tipo) {
     ////Add MGC Validar que los conceptos no existan duplicados en la tabla
     var conExist = valConcepto(val, tipo);
 
+
+    //Obtener el row para el plugin //MGC 11-10-2018 No enviar correos 
+    var trp = $(tr);
+    var indexopc = t.row(trp).index();
+
     //Add MGC Validar que los conceptos no existan duplicados en la tabla
     if (conExist) {
         M.toast({ html: 'Ya hay un concepto con ese mismo identificador' });
@@ -140,11 +145,14 @@ function selectConcepto(val, tr, tipo) {
 
         //Asignar los valores en la tabla
         if (con != "" & con != null) {
+
             //Cuenta
-            tr.find("td.CUENTA").text(con.CUENTA);
+            t.cell(indexopc, 11).data(con.CUENTA).draw();//MGC 11-10-2018 No enviar correos 
+            //tr.find("td.CUENTA").text(con.CUENTA);//MGC 11-10-2018 No enviar correos 
 
             //Nombre de la cuenta
-            tr.find("td.CUENTANOM").text(con.DESC_CONCEPTO);
+            t.cell(indexopc, 12).data(con.DESC_CONCEPTO).draw();
+            //tr.find("td.CUENTANOM").text(con.DESC_CONCEPTO);//MGC 11-10-2018 No enviar correos 
 
             //Tipo de imputación
             tr.find("td.TIPOIMP").text(con.TIPO_IMPUTACION);
@@ -162,8 +170,10 @@ function selectConcepto(val, tr, tipo) {
                 var p0 = val.substring(0, 3);
                 var p1 = val.substring(3, 6);
                 //var PEP = "RE-00900-I" + soc + "" + tipo + "-" + val;
-                var PEP = "RE-00900-I" + soc + "" + tipo + "-" + p0 +"-"+p1;
-                tr.find("td.IMPUTACION").text(PEP);
+                var PEP = "RE-00900-I" + soc + "" + tipo + "-" + p0 + "-" + p1;
+
+                t.cell(indexopc, 14).data(PEP).draw();//MGC 11-10-2018 No enviar correos 
+                //tr.find("td.IMPUTACION").text(PEP);//MGC 11-10-2018 No enviar correos 
 
                 tr.find("td.CCOSTO input").prop('disabled', true);
             } else if (con.TIPO_IMPUTACION == "K") {
