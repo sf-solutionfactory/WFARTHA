@@ -2131,6 +2131,14 @@ function copiarTableInfoControl() {
                 tconcepto = "";
             }
             //LEJ 03-10-2018
+            //MGC 11-10-2018 Obtener valor de columnas ocultas --------------------------->
+            //Obtener la cuenta
+            var cuenta = t.row(indexopc).data()[11];
+
+            //Obtener la imputación
+            var imputacion = t.row(indexopc).data()[14];
+
+            //MGC 11-10-2018 Obtener valor de columnas ocultas <---------------------------
             //Lej 14.08.2018-------------------------------------------------------------I
             var colsAdded = tRet2.length;//Las retenciones que se agregaron a la tabla
             var retTot = tRet.length;//Todas las retenciones
@@ -2141,11 +2149,11 @@ function copiarTableInfoControl() {
             var factura = $(this).find("td.FACTURA input").val();
             //var tconcepto = $(this).find("td.TCONCEPTO").text();
             var grupo = $(this).find("td.GRUPO input").val();
-            var cuenta = $(this).find("td.CUENTA").text();//MGC 04092018 Conceptos
+            //var cuenta = $(this).find("td.CUENTA").text();//MGC 04092018 Conceptos //MGC 11-10-2018 Obtener valor de columnas oculta
             var cuentanom = $(this).find("td.CUENTANOM").text();
             var tipoimp = $(this).find("td.TIPOIMP").text();
-            var imputacion = $(this).find("td.IMPUTACION").text();
-            var ccosto = $(this).find("td.CCOSTO").text();
+            //var imputacion = $(this).find("td.IMPUTACION").text(); //MGC 11-10-2018 Obtener valor de columnas oculta
+            var ccosto = $(this).find("td.CCOSTO input").val(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var impuesto = $(this).find("td.IMPUESTO input").val();
             var monto1 = $(this).find("td.MONTO input").val();
             monto1 = monto1.replace(/\s/g, '');

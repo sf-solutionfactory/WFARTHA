@@ -12,7 +12,7 @@ namespace WFARTHA.Models
     public class ArchivoPreliminar
     {
         WFARTHAEntities db = new WFARTHAEntities();
-        public string generarArchivo(decimal docum)
+        public string generarArchivo(decimal docum, string accion)
         {
 
             string errorMessage = "";
@@ -32,6 +32,32 @@ namespace WFARTHA.Models
                 dirFile = ConfigurationManager.AppSettings["URL_PREL"].ToString() + @"POSTING";
                 string docname = dirFile + @"\INBOUND_PREL" + ts.ID.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-1.txt";
 
+                //MGC 11-10-2018 Acciones para el encabezado -->
+
+                string variable = "";
+                string accionhead = "";
+                //Preliminar
+                if(accion == "P")
+                {
+                    variable = "ACCION_CREAR";
+                }else if(accion == "R")
+                {
+                    variable = "ACCION_BC";
+                }
+
+                //Obtener el nombre de la acción desde la bd en APPSETTING
+                try
+                {
+                    accionhead = db.APPSETTINGs.Where(aps => aps.NOMBRE.Equals(variable) && aps.ACTIVO == true).FirstOrDefault().VALUE.ToString();
+                        
+                }catch(Exception e)
+                {
+
+                }
+
+                //MGC 11-10-2018 Acciones para el encabezado <--
+
+
                 doc.FECHAC = Fecha("D", Convert.ToDateTime(doc.FECHAC));
 
                 List<DetalleContab> det = new List<DetalleContab>();
@@ -43,18 +69,40 @@ namespace WFARTHA.Models
                 {
                     using (StreamWriter sw = new StreamWriter(docname))
                     {
+                        string belnr = "";
+                        string bjahr = "";
+                        string bukrs = "";
+
+                        if(accion == "R")
+                        {
+                            belnr = doc.NUM_PRE+"";
+                            bjahr = doc.EJERCICIO_PRE + "";
+                            bukrs = doc.SOCIEDAD_PRE + "";
+                        }
+
+                        //DETDOC	|TIPODOC|ACCION|BELNR|GJAHR|BUKRS DETDOC EJE	FACSINOC|CONTABILIZAR|10000000|2018|1010| //MGC 11-10-2018 Acciones para el encabezado -->
+                        sw.WriteLine(
+                            ts.TIPO_DOCFILE.Trim() + "|" +
+                            accionhead.Trim() + "|"+
+                            belnr + "|"+
+                            bjahr + "|"+
+                            bukrs + "|"
+                            );
+                        sw.WriteLine("");
+
+                        //DETDOC	|TIPODOC|ACCION|BELNR|GJAHR|BUKRS DETDOC EJE	FACSINOC|CONTABILIZAR|10000000|2018|1010| //MGC 11-10-2018 Acciones para el encabezado <--
 
                         //Formato a fecha mes, día, año
                         sw.WriteLine(
                             doc.DOCUMENTO_SAP + "|" +
-                            doc.SOCIEDAD_ID.Trim() + "|"
-                            + String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|"
-                            + doc.MONEDA_ID.Trim() + "|"
-
-                            + "|" +
-                            doc.REFERENCIA + "|"
-                            + "X" + "|"
-                            + "|"
+                            doc.SOCIEDAD_ID.Trim() + "|" +
+                            String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|"+
+                            doc.MONEDA_ID.Trim() + "|" +
+                            //+ "|" + //MGC 11-10-2018 Acciones para el encabezado
+                            doc.REFERENCIA + "|"+
+                            doc.CONCEPTO + "|" + //MGC 11-10-2018 Acciones para el encabezado
+                            "X" + "|"+
+                            doc.TIPO_CAMBIO + "|" //MGC 11-10-2018 Acciones para el encabezado
                             + ""
                             );
                         sw.WriteLine("");
@@ -87,7 +135,7 @@ namespace WFARTHA.Models
                                 doc.DOCUMENTOPs.ElementAt(i).CCOSTO + "|" +//det[i].COST_CENTER + "|" +
                                 doc.DOCUMENTOPs.ElementAt(i).IMPUTACION + "|" +
                                 doc.DOCUMENTOPs.ElementAt(i).MONTO + "|" +//det[i].BALANCE + "|" +
-                                "TEXTO PRUEBA " + i + "|" + //det[i].TEXT + "|" +
+                                doc.DOCUMENTOPs.ElementAt(i).TEXTO + "|" + //det[i].TEXT + "|" +
                                                             //det[i].SALES_ORG + "|" +
                                                             //det[i].DIST_CHANEL + "|" +
                                 "|" +
@@ -129,6 +177,20 @@ namespace WFARTHA.Models
                                 "|"
                                 );
                         }
+                        //MGC 11-10-2018 Acciones para el encabezado RETENCIONES -->
+                        for (int i = 0; i < doc.DOCUMENTORs.Count; i++)
+                        {
+                            sw.WriteLine(
+                            "W" + "|" +
+                            doc.DOCUMENTORs.ElementAt(i).WITHT + "|" +
+                            doc.DOCUMENTORs.ElementAt(i).WT_WITHCD + "|" +
+                            doc.DOCUMENTORs.ElementAt(i).BIMPONIBLE + "|" +
+                            doc.DOCUMENTORs.ElementAt(i).IMPORTE_RET + "|" +
+                            ""
+                            );
+                        }
+                        //MGC 11-10-2018 Acciones para el encabezado RETENCIONES <--
+
                         sw.Close();
                     }
 

@@ -108,25 +108,32 @@ namespace WFARTHA.Controllers
                 //Agregar a documento p_mod para agregar valores faltantes
                 for (int i = 0; i < dOCUMENTO.DOCUMENTOPs.Count; i++)
                 {
-                    DOCUMENTOP_MODSTR dm = new DOCUMENTOP_MODSTR();
+                    //MGC 11-10-2018 Archivo provisional, se puede eliminar el catch 
+                    try
+                    {
+                        DOCUMENTOP_MODSTR dm = new DOCUMENTOP_MODSTR();
 
-                    dm.NUM_DOC = dOCUMENTO.DOCUMENTOPs.ElementAt(i).NUM_DOC;
-                    dm.POS = dOCUMENTO.DOCUMENTOPs.ElementAt(i).POS;
-                    dm.ACCION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).ACCION;
-                    dm.FACTURA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).FACTURA;
-                    dm.GRUPO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
-                    dm.CUENTA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).CUENTA;
-                    string ct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
-                    var tct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TCONCEPTO;
-                    dm.NOMCUENTA = db.CONCEPTOes.Where(x => x.ID_CONCEPTO == ct && x.TIPO_CONCEPTO == tct).FirstOrDefault().DESC_CONCEPTO.Trim();
-                    dm.TIPOIMP = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TIPOIMP;
-                    dm.IMPUTACION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).IMPUTACION;
-                    dm.MONTO = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).MONTO, formato.DECIMALES);
-                    dm.IVA = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).IVA, formato.DECIMALES);
-                    dm.TEXTO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TEXTO;
-                    dm.TOTAL = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).TOTAL, formato.DECIMALES);
+                        dm.NUM_DOC = dOCUMENTO.DOCUMENTOPs.ElementAt(i).NUM_DOC;
+                        dm.POS = dOCUMENTO.DOCUMENTOPs.ElementAt(i).POS;
+                        dm.ACCION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).ACCION;
+                        dm.FACTURA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).FACTURA;
+                        dm.GRUPO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
+                        dm.CUENTA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).CUENTA;
+                        string ct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
+                        var tct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TCONCEPTO;
+                        dm.NOMCUENTA = db.CONCEPTOes.Where(x => x.ID_CONCEPTO == ct && x.TIPO_CONCEPTO == tct).FirstOrDefault().DESC_CONCEPTO.Trim();
+                        dm.TIPOIMP = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TIPOIMP;
+                        dm.IMPUTACION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).IMPUTACION;
+                        dm.MONTO = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).MONTO, formato.DECIMALES);
+                        dm.IVA = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).IVA, formato.DECIMALES);
+                        dm.TEXTO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TEXTO;
+                        dm.TOTAL = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).TOTAL, formato.DECIMALES);
 
-                    dml.Add(dm);
+                        dml.Add(dm);
+                    }catch(Exception e)
+                    {
+
+                    }
                 }
                 ViewBag.total = db.DOCUMENTOPs.Where(x => x.NUM_DOC == id).FirstOrDefault().TOTAL;
                 doc.DOCUMENTOPSTR = dml;
@@ -629,7 +636,8 @@ namespace WFARTHA.Controllers
 
                     //Obtener el tipo de documento
                     var doct = db.DET_TIPODOC.Where(dt => dt.TIPO_SOL == doc.TSOL_ID).FirstOrDefault();
-                    doc.DOCUMENTO_SAP = doct.BLART;
+                    doc.DOCUMENTO_SAP = doct.BLART.ToString();
+                    dOCUMENTO.DOCUMENTO_SAP = doct.BLART.ToString();
 
                     //Fechac
                     dOCUMENTO.FECHAC = DateTime.Now;
