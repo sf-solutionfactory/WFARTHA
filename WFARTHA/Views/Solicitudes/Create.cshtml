@@ -42,6 +42,7 @@
 <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
 <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
 
+
 <div class="row" style="margin-bottom:0">
 
     @{WFARTHA.Entities.USUARIO us = ViewBag.usuario;
@@ -194,7 +195,7 @@
 @using (Html.BeginForm("Create", "Solicitudes", FormMethod.Post, new { enctype = "multipart/form-data", id = "formCreate" }))
 {
     @Html.AntiForgeryToken()
-
+    <input id="borr" name="borr" type="hidden" value="">
     <div class="form-horizontal">
         @*Encabezado*@
         <div id="Encabezado_cont" class="col s12" style="font-size:12px;">
@@ -315,11 +316,11 @@
                             @*<div class="form-group col s3">*@
                             <div id="div_norden_compra" class="input-field col s3" style="display:none">
                                 @*@Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })
-                                </div>*@
-                                
-                                <input type="text" id="norden_compra" value=""/>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })
+                                    </div>*@
+
+                                <input type="text" id="norden_compra" value="" />
                                 <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
                             </div>
                             @*MGC 03-10-2018 solicitud con orden de compra <--*@
@@ -328,14 +329,14 @@
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.MONEDA_ID, "Moneda NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.DropDownList("MONEDA_ID", null, new { htmlAttributes = new { @class = "form-control  ddl" } })@*LEJ 04.09.2018*@                                    
+                                    @Html.DropDownList("MONEDA_ID", null, new { htmlAttributes = new { @class = "form-control  ddl" } })@*LEJ 04.09.2018*@
                                 </div>
                             </div>
 
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.TIPO_CAMBIO, "Cambio NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon" } })@*LEJ 04.09.2018*@                                    
+                                    @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon" } })@*LEJ 04.09.2018*@
                                 </div>
                             </div>
 
@@ -343,14 +344,14 @@
                                 @Html.LabelFor(model => model.IMPUESTO, "Impuesto NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
                                     @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @class = "form-control ddl" })@*LEJ 04.09.2018*@
-                                    @*<select id="selectImp" class="form-control ddl"></select>*@                                    
+                                    @*<select id="selectImp" class="form-control ddl"></select>*@
                                 </div>
                             </div>
 
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.MONTO_DOC_MD, new { htmlAttributes = new { @class = "form-control valmon", @disabled = "disabled" } })@*LEJ 04.09.2018*@    
+                                    @Html.EditorFor(model => model.MONTO_DOC_MD, new { htmlAttributes = new { @class = "form-control valmon", @disabled = "disabled" } })@*LEJ 04.09.2018*@
                                 </div>
                             </div>
                         </div>
@@ -358,28 +359,28 @@
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.REFERENCIA, "Referencia NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10col s2">
-                                    @Html.EditorFor(model => model.REFERENCIA, new { htmlAttributes = new { @class = "form-control", @maxlength = "16", @disabled = "disabled" } })@*LEJ 04.09.2018*@                                    
+                                    @Html.EditorFor(model => model.REFERENCIA, new { htmlAttributes = new { @class = "form-control", @maxlength = "16", @disabled = "disabled" } })@*LEJ 04.09.2018*@
                                 </div>
                             </div>
 
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.CONCEPTO, htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.CONCEPTO, "Concepto NT", new { htmlAttributes = new { @class = "form-control", @maxlength = "25" } })@*LEJ 04.09.2018*@                                    
+                                    @Html.EditorFor(model => model.CONCEPTO, "Concepto NT", new { htmlAttributes = new { @class = "form-control", @maxlength = "25" } })@*LEJ 04.09.2018*@
                                 </div>
                             </div>
 
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.CONDICIONES, "Condiciones NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4" } })@*LEJ 04.09.2018*@                                    
+                                    @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4" } })@*LEJ 04.09.2018*@
                                 </div>
                             </div>
 
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.CLAVE_CTA, "Clave Cuenta NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.CLAVE_CTA, new { htmlAttributes = new { @class = "form-control", @maxlength = "2" } })@*LEJ 04.09.2018*@                                   
+                                    @Html.EditorFor(model => model.CLAVE_CTA, new { htmlAttributes = new { @class = "form-control", @maxlength = "2" } })@*LEJ 04.09.2018*@
                                 </div>
                             </div>
                         </div>
@@ -625,7 +626,7 @@
                                         </tr>
                                     </tfoot>
                                 </table>
-                            </div>                           
+                            </div>
                             <table class="table display mdl-data-table striped" id="table_infoh" style="width:100%; display:none">
                                 <thead>
                                     <tr>
