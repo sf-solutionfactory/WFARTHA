@@ -640,7 +640,6 @@ $(document).ready(function () {
         }
     });
 
-
     //Cadena de autorización
     //MGC 02-10-2018
     $('#list_detaa').change(function () {
@@ -662,6 +661,13 @@ $(document).ready(function () {
 
         });
 
+    });
+
+    //lejgg 15-10-2018
+    $('#FECHAD').change(function () {
+        var fechad = $('#FECHAD').val();
+        $('#FECHACON').val(fechad);
+        $('#FECHA_BASE').val(fechad);
     });
 
 });

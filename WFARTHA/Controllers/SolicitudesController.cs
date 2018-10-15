@@ -618,8 +618,8 @@ namespace WFARTHA.Controllers
                     dOCUMENTO.TSOL_ID = doc.TSOL_ID;
                     dOCUMENTO.SOCIEDAD_ID = doc.SOCIEDAD_ID;
                     dOCUMENTO.FECHAD = doc.FECHAD;
-                    dOCUMENTO.FECHACON = doc.FECHACON;
-                    dOCUMENTO.FECHA_BASE = doc.FECHA_BASE;
+                    dOCUMENTO.FECHACON = doc.FECHAD;
+                    dOCUMENTO.FECHA_BASE = doc.FECHAD;
                     dOCUMENTO.MONEDA_ID = doc.MONEDA_ID;
                     dOCUMENTO.TIPO_CAMBIO = doc.TIPO_CAMBIO;
                     dOCUMENTO.IMPUESTO = doc.IMPUESTO;
@@ -1558,7 +1558,13 @@ namespace WFARTHA.Controllers
 
                     dml.Add(dm);
                 }
-
+                var _t = db.DOCUMENTOPs.Where(x => x.NUM_DOC == id && x.ACCION != "H").ToList();
+                decimal _total = 0;
+                for (int i = 0; i < _t.Count; i++)
+                {
+                    _total = _total + _t[i].TOTAL;
+                }
+                ViewBag.total = _total;
                 doc.DOCUMENTOPSTR = dml;
             }
             //lejgg 05 10 2018
@@ -1600,7 +1606,7 @@ namespace WFARTHA.Controllers
                                  TEXT = im.MWSKZ + " - " + tt.TXT50
                              }).ToList();
 
-            ViewBag.SOCIEDAD_ID = new SelectList(sociedades, "BUKRS", "TEXT");
+            ViewBag.SOCIEDAD_ID = new SelectList(sociedades, "BUKRS", "TEXT", dOCUMENTO.SOCIEDAD_ID);
             ViewBag.TSOL_IDL = new SelectList(tsoll, "ID", "TEXT", selectedValue: tsolldef);
             ViewBag.IMPUESTO = new SelectList(impuestol, "MWSKZ", "TEXT", "V3");
             ViewBag.MONEDA_ID = new SelectList(monedal, "WAERS", "TEXT");
@@ -1767,13 +1773,11 @@ namespace WFARTHA.Controllers
                                         System.Globalization.CultureInfo.InvariantCulture,
                                         System.Globalization.DateTimeStyles.None);
 
-            ViewBag.fechah = theTime.ToString();
-
-
+            //ViewBag.fechah = theTime.ToString();
             //lejgg 04.10.2018------>
-            doc.FECHAD = theTime;
-            doc.FECHACON = theTime;
-            doc.FECHA_BASE = theTime;
+            //doc.FECHAD = theTime;
+            //doc.FECHACON = theTime;
+            //doc.FECHA_BASE = theTime;
             //lejgg 04.10.2018<------
 
 
@@ -3117,6 +3121,80 @@ namespace WFARTHA.Controllers
             return jc;
         }
 
+        // GET: Solicitudes/Edit/5
+        public JsonResult traerColsExtras(decimal id)
+        {
+            DOCUMENTO dOCUMENTO = db.DOCUMENTOes.Find(id);
+            //Documento a documento mod //Copiar valores del post al nuevo objeto
+            DOCUMENTO_MOD doc = new DOCUMENTO_MOD();
+
+            List<DOCUMENTOR> retl = new List<DOCUMENTOR>();
+            List<DOCUMENTOR_MOD> retlt = new List<DOCUMENTOR_MOD>();
+
+            retl = db.DOCUMENTORs.Where(x => x.NUM_DOC == id).ToList();
+
+            retlt = (from r in retl
+                     join rt in db.RETENCIONTs
+                     on r.WITHT equals rt.WITHT
+                     into jj
+                     from rt in jj.DefaultIfEmpty()
+                     where rt.SPRAS_ID.Equals("ES")
+                     select new DOCUMENTOR_MOD
+                     {
+                         WITHT = r.WITHT,
+                         DESC = rt.TXT50 == null ? String.Empty : "",
+                         WT_WITHCD = r.WT_WITHCD,
+                         BIMPONIBLE = r.BIMPONIBLE,
+                         IMPORTE_RET = r.IMPORTE_RET
+
+                     }).ToList();
+
+            List<DOCUMENTOR_MOD> _relt = new List<DOCUMENTOR_MOD>();
+            var _retl = db.RETENCIONs.Where(rt => rt.ESTATUS == true)
+                .Join(
+                db.RETENCION_PROV.Where(rtp => rtp.LIFNR == dOCUMENTO.PAYER_ID && rtp.BUKRS == dOCUMENTO.SOCIEDAD_ID),
+                ret => ret.WITHT,
+                retp => retp.WITHT,
+                (ret, retp) => new
+                {
+                    LIFNR = retp.LIFNR,
+                    BUKRS = retp.BUKRS,
+                    WITHT = retp.WITHT,
+                    DESC = ret.DESCRIPCION,
+                    WT_WITHCD = retp.WT_WITHCD
+
+                }).ToList();
+            if (_retl != null && _retl.Count > 0)
+            {
+                //Obtener los textos de las retenciones
+                _relt = (from r in _retl
+                         join rt in db.RETENCIONTs
+                         on r.WITHT equals rt.WITHT
+                         into jj
+                         from rt in jj.DefaultIfEmpty()
+                         where rt.SPRAS_ID.Equals("ES")
+                         select new DOCUMENTOR_MOD
+                         {
+                             LIFNR = r.LIFNR,
+                             BUKRS = r.BUKRS,
+                             WITHT = r.WITHT,
+                             WT_WITHCD = r.WT_WITHCD,
+                             DESC = rt.TXT50 == null ? String.Empty : r.DESC,
+
+                         }).ToList();
+            }
+            for (int i = 0; i < _relt.Count; i++)
+            {
+                var wtht = _relt[i].WITHT;
+                var _res = db.DOCUMENTORPs.Where(nd => nd.NUM_DOC == dOCUMENTO.NUM_DOC && nd.WITHT == wtht).FirstOrDefault();
+                _relt[i].BIMPONIBLE = _res.BIMPONIBLE;
+                _relt[i].IMPORTE_RET = _res.IMPORTE_RET;
+            }
+            ViewBag.ret = _relt;
+            JsonResult jc = Json(_relt, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
         [HttpPost]
         public JsonResult getDocsPSTR(string id)
         {
@@ -3132,28 +3210,45 @@ namespace WFARTHA.Controllers
             {
                 List<DOCUMENTOP_MODSTR> dml = new List<DOCUMENTOP_MODSTR>();
                 FormatosC fc = new FormatosC();
+                var dps = dOCUMENTO.DOCUMENTOPs.Where(x => x.ACCION != "H").ToList();
                 //Agregar a documento p_mod para agregar valores faltantes
-                for (int i = 0; i < dOCUMENTO.DOCUMENTOPs.Count; i++)
+                for (int i = 0; i < dps.Count; i++)
                 {
                     DOCUMENTOP_MODSTR dm = new DOCUMENTOP_MODSTR();
 
-                    dm.NUM_DOC = dOCUMENTO.DOCUMENTOPs.ElementAt(i).NUM_DOC;
-                    dm.POS = dOCUMENTO.DOCUMENTOPs.ElementAt(i).POS;
-                    dm.ACCION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).ACCION;
-                    dm.FACTURA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).FACTURA;
-                    dm.GRUPO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
-                    dm.CUENTA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).CUENTA;
-                    dm.NOMCUENTA = "Transporte";
-                    dm.TIPOIMP = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TIPOIMP;
-                    dm.IMPUTACION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).IMPUTACION;
-                    dm.MONTO = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).MONTO, formato.DECIMALES);
-                    dm.IVA = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).IVA, formato.DECIMALES);
-                    dm.TEXTO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TEXTO;
-                    dm.TOTAL = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).TOTAL, formato.DECIMALES);
+                    dm.NUM_DOC = dps.ElementAt(i).NUM_DOC;
+                    dm.POS = dps.ElementAt(i).POS;
+                    dm.ACCION = dps.ElementAt(i).ACCION;
+                    dm.FACTURA = dps.ElementAt(i).FACTURA;
+                    dm.GRUPO = dps.ElementAt(i).GRUPO;
+                    dm.CUENTA = dps.ElementAt(i).CUENTA;
+                    string ct = dps.ElementAt(i).GRUPO;
+                    var tct = dps.ElementAt(i).TCONCEPTO;
+                    try
+                    {
+                        dm.NOMCUENTA = db.CONCEPTOes.Where(x => x.ID_CONCEPTO == ct && x.TIPO_CONCEPTO == tct).FirstOrDefault().DESC_CONCEPTO.Trim();
+                    }
+                    catch (Exception e)
+                    {
+                        dm.NOMCUENTA = "Transporte";
+                    }
+                    dm.TIPOIMP = dps.ElementAt(i).TIPOIMP;
+                    dm.IMPUTACION = dps.ElementAt(i).IMPUTACION;
+                    dm.MONTO = fc.toShow(dps.ElementAt(i).MONTO, formato.DECIMALES);
+                    dm.IVA = fc.toShow(dps.ElementAt(i).IVA, formato.DECIMALES);
+                    dm.TEXTO = dps.ElementAt(i).TEXTO;
+                    dm.TOTAL = fc.toShow(dps.ElementAt(i).TOTAL, formato.DECIMALES);
 
                     dml.Add(dm);
                 }
-
+                var _id2 = decimal.Parse(id);
+                var _t = db.DOCUMENTOPs.Where(x => x.NUM_DOC == _id2 && x.ACCION != "H").ToList();
+                decimal _total = 0;
+                for (int i = 0; i < _t.Count; i++)
+                {
+                    _total = _total + _t[i].TOTAL;
+                }
+                ViewBag.total = _total;
                 doc.DOCUMENTOPSTR = dml;
             }
             JsonResult jc = Json(doc, JsonRequestBehavior.AllowGet);

@@ -12,21 +12,16 @@
     WFARTHA.Models.DocumentoFlujo DF = ViewBag.docFl as WFARTHA.Models.DocumentoFlujo;
     List<WFARTHA.Models.DOCUMENTORP_MOD> lstDrp = ViewBag.DocsRp as List<WFARTHA.Models.DOCUMENTORP_MOD>;
     List<string> colsret = ViewBag.Retenciones as List<string>;
+    var total = ViewBag.total;
+    var montomd = formatoc.toShow(total, ViewBag.dec);
 
 }
-<script>
-        var cret = [];
-        for (var x = 0; x < @colsret.Count; x++) {
-            @*cret.push('@colsret[x]');*@
-        }
-</script>
+
+<link type="text/css" href="~/Content/datatables.min.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.dataTables.min.js"></script>
-<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
-<link href="~/Content/dataTable.css" rel="stylesheet" />
-<link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
 
 <script src="~/Scripts/editArtha.js"></script>@*LEJGG-04-10-2018*@
+
 @if (ViewBag.error != "")
 {
     <script>
@@ -119,17 +114,17 @@
         font-size: 12px;
     }
 
-    .table_pro {
-        /*margin: 0 auto;
-        clear: both;
-        border-collapse: collapse;*/
-        table-layout: fixed;
+    .estiloT {
+        margin: 0 auto;
+        width: 100%;
+        /*clear: both;*/
+        /*border-collapse: collapse;
+        table-layout: fixed;*/
     }
 </style>
 <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
 <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
 <input id="_hd" name="_hd" type="hidden" value="@ViewBag.Retenciones" />
-
 <div class="row" style="margin-bottom:0">
 
     @{WFARTHA.Entities.USUARIO us = ViewBag.usuario;
@@ -262,16 +257,7 @@
                             <i class='material-icons green-text' style="">warning</i>
                         </div>
                         @Html.HiddenFor(model => model.NUM_DOC) @*//MGC 05-10-2018 Modificación para work flow al ser editada*@
-                        @*<h5 id="head_cabecera">Cabecera NT</h5>*@
                         <div class="row" style="margin-bottom:0">
-                            <div class="form-group col s6">
-                                @Html.LabelFor(model => model.TSOL_ID, "Clase de documento NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    @Html.DropDownList("TSOL_IDL", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control dd1", @id = "tsol" }) @*LEJ 04.09.2018*@ @*MGC 03-10-2018 solicitud con orden de compra*@
-                                    @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "form-control fechaVal", @hidden = "hidden", @id = "tsol_id2" } })@*MGC 03-10-2018 solicitud con orden de compra*@
-                                </div>
-
-                            </div>
                             @*<h5 id="head_cabecera">Cabecera NT</h5>*@
                             <div class="row" style="margin-bottom:0">
                                 <div class="form-group col s6">
@@ -412,7 +398,9 @@
                                 <div class="form-group col s3">
                                     @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.EditorFor(model => model.MONTO_DOC_MD, new { htmlAttributes = new { @class = "form-control valmon", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                        @*@Html.EditorFor(model => model.MONTO_DOC_MD, new { htmlAttributes = new { @class = "form-control valmon", @disabled = "disabled" } })*@
+                                        <input type="text" disabled class="form-control" value="@montomd" />
+                                        <input type="hidden" id="MONTO_DOC_MD" name="MONTO_DOC_MD" class="form-control" value="@montomd" />@* Para guardar montodocmd y enviarlo al server *@
                                     </div>
                                 </div>
                             </div>
@@ -625,84 +613,7 @@
                             </div>
                             <div>
                                 <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>
-
-                                            </th>
-                                            <th class="lbl_pos">
-                                                Pos NT
-                                            </th>
-                                            <th class="lbl_NmAnexo">
-                                                Numero Anexo1
-                                            </th>
-                                            <th class="lbl_NmAnexo">
-                                                Numero Anexo2
-                                            </th>
-                                            <th class="lbl_NmAnexo">
-                                                Numero Anexo3
-                                            </th>
-                                            <th class="lbl_NmAnexo">
-                                                Numero Anexo4
-                                            </th>
-                                            <th class="lbl_NmAnexo">
-                                                Numero Anexo5
-                                            </th>
-                                            <th class="lbl_cargoAbono">
-                                                D/H NT
-                                            </th>
-                                            <th class="lbl_factura">
-                                                Factura NT
-                                            </th>
-                                            <th id="lbl_tconcepto">
-                                                TIPO CONCEPTO NT
-                                            </th>
-                                            <th id="lbl_grupo">
-                                                Grupo NT
-                                            </th>
-                                            <th id="lbl_cuenta">
-                                                Cuenta NT
-                                            </th>
-                                            <th id="lbl_cuentaNom">
-                                                Nombre de cuenta NT
-                                            </th>
-                                            <th id="lbl_tipoimp">
-                                                Tipo Imp. NT
-                                            </th>
-                                            <th id="lbl_imputacion">
-                                                Imputación NT
-                                            </th>
-                                            <th id="lbl_ccosto">
-                                                Centro de costo NT
-                                            </th>
-                                            <th id="lbl_monto">
-                                                Monto NT
-                                            </th>
-                                            <th id="lbl_impuesto">
-                                                Impuesto NT
-                                            </th>
-                                            <th id="lbl_iva">
-                                                IVA NT
-                                            </th>
-                                            <th id="lbl_Texto">
-                                                TEXTO
-                                            </th>
-                                            <th id="lbl_total">
-                                                Total
-                                            </th>
-                                            @*MGC 03-10-2018 solicitud con orden de compra*@
-                                            <th id="lbl_check">
-                                                Check
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                    <tfoot id="tfoot_info" style="overflow:auto;">
-                                        <tr>
-                                            <th colspan="17" style="text-align:right">Total:</th>
-                                            <th id="total_info"></th>
-                                        </tr>
-                                    </tfoot>
+                                   
                                 </table>
                             </div>
                             <table class="table display mdl-data-table striped" id="table_infoh" style="width:100%; display:none">
