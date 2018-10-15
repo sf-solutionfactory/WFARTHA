@@ -126,24 +126,34 @@ namespace WFARTHA.Controllers
                     //dm.IVA = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).IVA, formato.DECIMALES);
                     //dm.TEXTO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TEXTO;
                     //dm.TOTAL = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).TOTAL, formato.DECIMALES);
-                    dm.NUM_DOC = dps.ElementAt(i).NUM_DOC;
-                    dm.POS = dps.ElementAt(i).POS;
-                    dm.ACCION = dps.ElementAt(i).ACCION;
-                    dm.FACTURA = dps.ElementAt(i).FACTURA;
-                    dm.GRUPO = dps.ElementAt(i).GRUPO;
-                    dm.CUENTA = dps.ElementAt(i).CUENTA;
-                    string ct = dps.ElementAt(i).GRUPO;
-                    var tct = dps.ElementAt(i).TCONCEPTO;
-                    dm.NOMCUENTA = db.CONCEPTOes.Where(x => x.ID_CONCEPTO == ct && x.TIPO_CONCEPTO == tct).FirstOrDefault().DESC_CONCEPTO.Trim();
-                    dm.TIPOIMP = dps.ElementAt(i).TIPOIMP;
-                    dm.IMPUTACION = dps.ElementAt(i).IMPUTACION;
-                    dm.MONTO = fc.toShow(dps.ElementAt(i).MONTO, formato.DECIMALES);
-                    dm.IVA = fc.toShow(dps.ElementAt(i).IVA, formato.DECIMALES);
-                    dm.TEXTO = dps.ElementAt(i).TEXTO;
-                    dm.TOTAL = fc.toShow(dps.ElementAt(i).TOTAL, formato.DECIMALES);
-                    dml.Add(dm);
+                    try
+                    {
+                        dm.NUM_DOC = dps.ElementAt(i).NUM_DOC;
+                        dm.POS = dps.ElementAt(i).POS;
+                        dm.ACCION = dps.ElementAt(i).ACCION;
+                        dm.FACTURA = dps.ElementAt(i).FACTURA;
+                        dm.GRUPO = dps.ElementAt(i).GRUPO;
+                        dm.CUENTA = dps.ElementAt(i).CUENTA;
+                        string ct = dps.ElementAt(i).GRUPO;
+                        var tct = dps.ElementAt(i).TCONCEPTO;
+                        dm.NOMCUENTA = db.CONCEPTOes.Where(x => x.ID_CONCEPTO == ct && x.TIPO_CONCEPTO == tct).FirstOrDefault().DESC_CONCEPTO.Trim();
+                        dm.TIPOIMP = dps.ElementAt(i).TIPOIMP;
+                        dm.IMPUTACION = dps.ElementAt(i).IMPUTACION;
+                        dm.MONTO = fc.toShow(dps.ElementAt(i).MONTO, formato.DECIMALES);
+                        dm.IVA = fc.toShow(dps.ElementAt(i).IVA, formato.DECIMALES);
+                        dm.TEXTO = dps.ElementAt(i).TEXTO;
+                        dm.TOTAL = fc.toShow(dps.ElementAt(i).TOTAL, formato.DECIMALES);
+                        dml.Add(dm);
+                    }
+                    catch (Exception e) { }
                 }
-                ViewBag.total = db.DOCUMENTOPs.Where(x => x.NUM_DOC == id).FirstOrDefault().TOTAL;
+                var _t = db.DOCUMENTOPs.Where(x => x.NUM_DOC == id && x.ACCION != "H").ToList();
+                decimal _total = 0;
+                for (int i = 0; i < _t.Count; i++)
+                {
+                    _total = _total + _t[i].TOTAL;
+                }
+                ViewBag.total = _total;
                 doc.DOCUMENTOPSTR = dml;
             }
             var anexos = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
@@ -320,9 +330,17 @@ namespace WFARTHA.Controllers
             for (int i = 0; i < _relt.Count; i++)
             {
                 var wtht = _relt[i].WITHT;
-                var _res = db.DOCUMENTORPs.Where(nd => nd.NUM_DOC == dOCUMENTO.NUM_DOC && nd.WITHT == wtht).FirstOrDefault();
-                _relt[i].BIMPONIBLE = _res.BIMPONIBLE;
-                _relt[i].IMPORTE_RET = _res.IMPORTE_RET;
+                decimal _bi = 0;
+                decimal _iret = 0;
+                //aqui hacemos la sumatoria
+                var _res = db.DOCUMENTORPs.Where(nd => nd.NUM_DOC == dOCUMENTO.NUM_DOC && nd.WITHT == wtht).ToList();
+                for (int y = 0; y < _res.Count; y++)
+                {
+                    _bi = _bi + decimal.Parse(_res[y].BIMPONIBLE.ToString());
+                    _iret = _iret + decimal.Parse(_res[y].IMPORTE_RET.ToString());
+                }
+                _relt[i].BIMPONIBLE = _bi;
+                _relt[i].IMPORTE_RET = _iret;
             }
             //ViewBag.ret = retlt;
             ViewBag.ret = _relt;
@@ -605,11 +623,16 @@ namespace WFARTHA.Controllers
                     dOCUMENTO.MONEDA_ID = doc.MONEDA_ID;
                     dOCUMENTO.TIPO_CAMBIO = doc.TIPO_CAMBIO;
                     dOCUMENTO.IMPUESTO = doc.IMPUESTO;
-                    //dOCUMENTO.MONTO_DOC_MD = doc.MONTO_DOC_MD;
+                    // dOCUMENTO.MONTO_DOC_MD = doc.MONTO_DOC_MD;
                     //LEJGG 10-10-2018------------------------>
                     try
                     {
-                        dOCUMENTO.MONTO_DOC_MD = doc.DOCUMENTOP[0].TOTAL;
+                        decimal _m = 0;
+                        for (int _i = 0; _i < doc.DOCUMENTOP.Count; _i++)
+                        {
+                            _m = doc.DOCUMENTOP[_i].TOTAL;
+                        }
+                        dOCUMENTO.MONTO_DOC_MD = _m;
                     }
                     catch (Exception e)
                     {
