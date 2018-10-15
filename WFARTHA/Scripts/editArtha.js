@@ -176,7 +176,7 @@ function solicitarDatos() {
 }
 
 function armarTablaInfo(datos) {
-    var valor = JSON.parse($('#_hd').val());
+    //var valor = JSON.parse($('#_hd').val());
     $('#table_info').DataTable().destroy();
     $('#table_info').empty();
     var arrCols = [
