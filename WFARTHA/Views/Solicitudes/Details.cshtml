@@ -473,7 +473,9 @@
                         <div class="form-group col s3">
                             @Html.LabelFor(model => model.D.TIPO_CAMBIO, "Cambio NT", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
-                                @Html.EditorFor(model => model.D.TIPO_CAMBIO, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                @{ decimal tc = decimal.Parse(Model.D.TIPO_CAMBIO.ToString()); var _tc = formatoc.toShow(tc, ViewBag.dec);} @*LEJGG 16102018*@
+                                @*@Html.EditorFor(model => model.D.TIPO_CAMBIO, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })*@
+                                <input type="text" disabled class="form-control" id="TIPO_CAMBIO" name="TIPO_CAMBIO" value="@_tc" />@*LEJGG 16102018*@
                             </div>
                         </div>
 

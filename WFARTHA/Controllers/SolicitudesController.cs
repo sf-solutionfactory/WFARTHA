@@ -1714,27 +1714,27 @@ namespace WFARTHA.Controllers
                     }
                 }
             }
-            var _xdocsrp = db.DOCUMENTORPs.Where(x => x.NUM_DOC == id).ToList();
-            List<DOCUMENTORP_MOD> _xdocsrp2 = new List<DOCUMENTORP_MOD>();
-            DOCUMENTORP_MOD _Data = new DOCUMENTORP_MOD();
-            for (int x = 0; x < rets2.Count; x++)
-            {
-                for (int j = 0; j < _xdocsrp.Count; j++)
-                {
-                    if (rets2[x] == _xdocsrp[j].WITHT)
-                    {
-                        _Data = new DOCUMENTORP_MOD();
-                        _Data.NUM_DOC = _xdocsrp[j].NUM_DOC;
-                        _Data.POS = _xdocsrp[j].POS;
-                        _Data.WITHT = _xdocsrp[j].WITHT;
-                        _Data.WT_WITHCD = _xdocsrp[j].WT_WITHCD;
-                        _Data.BIMPONIBLE = _xdocsrp[j].BIMPONIBLE;
-                        _Data.IMPORTE_RET = _xdocsrp[j].IMPORTE_RET;
-                        _xdocsrp2.Add(_Data);
-                    }
-                }
-            }
-            ViewBag.DocsRp = _xdocsrp2;
+            //var _xdocsrp = db.DOCUMENTORPs.Where(x => x.NUM_DOC == id).ToList();
+            //List<DOCUMENTORP_MOD> _xdocsrp2 = new List<DOCUMENTORP_MOD>();
+            //DOCUMENTORP_MOD _Data = new DOCUMENTORP_MOD();
+            //for (int x = 0; x < rets2.Count; x++)
+            //{
+            //    for (int j = 0; j < _xdocsrp.Count; j++)
+            //    {
+            //        if (rets2[x] == _xdocsrp[j].WITHT)
+            //        {
+            //            _Data = new DOCUMENTORP_MOD();
+            //            _Data.NUM_DOC = _xdocsrp[j].NUM_DOC;
+            //            _Data.POS = _xdocsrp[j].POS;
+            //            _Data.WITHT = _xdocsrp[j].WITHT;
+            //            _Data.WT_WITHCD = _xdocsrp[j].WT_WITHCD;
+            //            _Data.BIMPONIBLE = _xdocsrp[j].BIMPONIBLE;
+            //            _Data.IMPORTE_RET = _xdocsrp[j].IMPORTE_RET;
+            //            _xdocsrp2.Add(_Data);
+            //        }
+            //    }
+            //}
+            //ViewBag.DocsRp = _xdocsrp2;
             ViewBag.Retenciones = rets2;
             //LEJ 05 10 2018-----------------------------
             //lej 30.08.2018------------------
@@ -3118,6 +3118,48 @@ namespace WFARTHA.Controllers
                 ret = "Null";
             }
             JsonResult jc = Json(ret, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
+        [HttpPost]//lej 16.10.2018   
+        public JsonResult getDocsPr(decimal id)
+        {
+            var _Se = db.DOCUMENTORPs.Where(x => x.NUM_DOC == id).ToList();
+            var rets = _Se.Select(w => w.WITHT).Distinct().ToList();
+            var rets2 = rets;
+            for (int i = 0; i < rets.Count; i++)
+            {
+                var _rt = rets2[i];
+                var ret = db.RETENCIONs.Where(x => x.WITHT == _rt).FirstOrDefault().WITHT_SUB;
+                for (int j = 0; j < rets.Count; j++)
+                {
+                    if (rets2[j] == ret)
+                    {
+                        rets2.RemoveAt(j);
+                    }
+                }
+            }
+            var _xdocsrp = db.DOCUMENTORPs.Where(x => x.NUM_DOC == id).ToList();
+            List<DOCUMENTORP_MOD> _xdocsrp2 = new List<DOCUMENTORP_MOD>();
+            DOCUMENTORP_MOD _Data = new DOCUMENTORP_MOD();
+            for (int x = 0; x < rets2.Count; x++)
+            {
+                for (int j = 0; j < _xdocsrp.Count; j++)
+                {
+                    if (rets2[x] == _xdocsrp[j].WITHT)
+                    {
+                        _Data = new DOCUMENTORP_MOD();
+                        _Data.NUM_DOC = _xdocsrp[j].NUM_DOC;
+                        _Data.POS = _xdocsrp[j].POS;
+                        _Data.WITHT = _xdocsrp[j].WITHT;
+                        _Data.WT_WITHCD = _xdocsrp[j].WT_WITHCD;
+                        _Data.BIMPONIBLE = _xdocsrp[j].BIMPONIBLE;
+                        _Data.IMPORTE_RET = _xdocsrp[j].IMPORTE_RET;
+                        _xdocsrp2.Add(_Data);
+                    }
+                }
+            }
+            JsonResult jc = Json(_xdocsrp2, JsonRequestBehavior.AllowGet);
             return jc;
         }
 
