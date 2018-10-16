@@ -156,9 +156,38 @@ namespace WFARTHA.Controllers
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
                 ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
-                var p = db.PROYECTOes.ToList();
+                //MGC 16-10-2018 Conociendo mi usuario, obtener las sociedades a las que tengo acceso
+                List<DET_TIPOPRESUPUESTO> detsoc = new List<DET_TIPOPRESUPUESTO>();
+                detsoc = db.DET_TIPOPRESUPUESTO.Where(tp => tp.ID_USER == user.ID).ToList();
+
+                //MGC 16-10-2018 Obtener los proyectos de las sociedades -->
+                List<ASIGN_PROY_SOC> ps = new List<ASIGN_PROY_SOC>();
+                ps = (from det in detsoc
+                      join aps in db.ASIGN_PROY_SOC
+                      on det.BUKRS equals aps.ID_BUKRS
+                      select new ASIGN_PROY_SOC
+                      {
+                          ID_PSPNR = aps.ID_PSPNR,
+                          ID_BUKRS = aps.ID_BUKRS
+                      }
+                      ).ToList();
+
+
+                var p = (from asig in ps
+                         join pr in db.PROYECTOes
+                         on asig.ID_PSPNR equals pr.ID_PSPNR
+                         select new PROYECTO
+                         {
+
+                             ID_PSPNR = pr.ID_PSPNR,
+                             NOMBRE = pr.NOMBRE
+                         }).ToList();
+
+                //var p = db.PROYECTOes.ToList();//MGC 16-10-2018 Obtener los proyectos de las sociedades
                 ViewBag.returnUrl = returnUrl;
-                return View(p.ToList());
+                return View(p);
+
+                //MGC 16-10-2018 Obtener los proyectos de las sociedades <--
             }
             //return View();
 

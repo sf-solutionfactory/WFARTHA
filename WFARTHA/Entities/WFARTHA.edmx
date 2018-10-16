@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="WFARTHAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="WFARTHAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ACCION">
           <Key>
             <PropertyRef Name="ID" />
@@ -511,7 +511,7 @@ warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key d
             <PropertyRef Name="ID_PSPNR" />
           </Key>
           <Property Name="ID_PSPNR" Type="nvarchar" MaxLength="8" Nullable="false" />
-          <Property Name="NOMBRE" Type="nchar" MaxLength="30" Nullable="false" />
+          <Property Name="NOMBRE" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="PUESTO">
           <Key>
@@ -542,31 +542,36 @@ warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key d
         <EntityType Name="RETENCION">
           <Key>
             <PropertyRef Name="WITHT" />
+            <PropertyRef Name="WT_WITHCD" />
           </Key>
           <Property Name="WITHT" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="WT_WITHCD" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="60" />
           <Property Name="ESTATUS" Type="bit" Nullable="false" />
           <Property Name="WITHT_SUB" Type="nchar" MaxLength="2" />
-          <Property Name="PORC" Type="decimal" Precision="13" Scale="2" Nullable="false" />
+          <Property Name="PORC" Type="decimal" Precision="13" Scale="8" />
         </EntityType>
         <EntityType Name="RETENCION_PROV">
           <Key>
             <PropertyRef Name="LIFNR" />
             <PropertyRef Name="BUKRS" />
             <PropertyRef Name="WITHT" />
+            <PropertyRef Name="WT_WITHCD" />
           </Key>
           <Property Name="LIFNR" Type="nchar" MaxLength="10" Nullable="false" />
           <Property Name="BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
           <Property Name="WITHT" Type="nchar" MaxLength="2" Nullable="false" />
-          <Property Name="WT_WITHCD" Type="nchar" MaxLength="2" />
+          <Property Name="WT_WITHCD" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
         <EntityType Name="RETENCIONT">
           <Key>
             <PropertyRef Name="SPRAS_ID" />
             <PropertyRef Name="WITHT" />
+            <PropertyRef Name="WT_WITHCD" />
           </Key>
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="WITHT" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="WT_WITHCD" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="TXT50" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="ROL">
@@ -592,7 +597,7 @@ warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key d
             <PropertyRef Name="BUKRS" />
           </Key>
           <Property Name="BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
-          <Property Name="BUTXT" Type="nvarchar" MaxLength="50" />
+          <Property Name="BUTXT" Type="nvarchar" MaxLength="100" />
           <Property Name="ORT01" Type="nvarchar" MaxLength="50" />
           <Property Name="SUBREGIO" Type="nchar" MaxLength="6" />
           <Property Name="WAERS" Type="nchar" MaxLength="3" />
@@ -693,6 +698,7 @@ warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key d
           <Property Name="MANAGER" Type="nvarchar" MaxLength="16" />
           <Property Name="BACKUP_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="BUNIT" Type="nchar" MaxLength="4" Nullable="false" />
+          <Property Name="FIRMA" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="WARNING">
           <Key>
@@ -767,6 +773,16 @@ warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key d
           <Property Name="FECHAF" Type="date" />
           <Property Name="USUARIO_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="FECHAC" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.ASIGN_PROY_SOC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ASIGN_PROY_SOC">
+          <Key>
+            <PropertyRef Name="ID_PSPNR" />
+            <PropertyRef Name="ID_BUKRS" />
+          </Key>
+          <Property Name="ID_PSPNR" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PAGOS.dbo.CARPETAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1226,9 +1242,11 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <ReferentialConstraint>
             <Principal Role="RETENCION">
               <PropertyRef Name="WITHT" />
+              <PropertyRef Name="WT_WITHCD" />
             </Principal>
             <Dependent Role="DOCUMENTORP">
               <PropertyRef Name="WITHT" />
+              <PropertyRef Name="WT_WITHCD" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1434,9 +1452,11 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <ReferentialConstraint>
             <Principal Role="RETENCION">
               <PropertyRef Name="WITHT" />
+              <PropertyRef Name="WT_WITHCD" />
             </Principal>
             <Dependent Role="RETENCION_PROV">
               <PropertyRef Name="WITHT" />
+              <PropertyRef Name="WT_WITHCD" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1458,9 +1478,11 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <ReferentialConstraint>
             <Principal Role="RETENCION">
               <PropertyRef Name="WITHT" />
+              <PropertyRef Name="WT_WITHCD" />
             </Principal>
             <Dependent Role="RETENCIONT">
               <PropertyRef Name="WITHT" />
+              <PropertyRef Name="WT_WITHCD" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1846,6 +1868,12 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
     [IIMPUESTO].[ACTIVO] AS [ACTIVO]
     FROM [dbo].[IIMPUESTO] AS [IIMPUESTO]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="ASIGN_PROY_SOC" EntityType="Self.ASIGN_PROY_SOC" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ASIGN_PROY_SOC].[ID_PSPNR] AS [ID_PSPNR], 
+    [ASIGN_PROY_SOC].[ID_BUKRS] AS [ID_BUKRS]
+    FROM [dbo].[ASIGN_PROY_SOC] AS [ASIGN_PROY_SOC]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="CARPETAV" EntityType="Self.CARPETAV" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [CARPETAV].[USUARIO_ID] AS [USUARIO_ID], 
@@ -2226,8 +2254,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             <End Role="WORKFV" EntitySet="WORKFV" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="WFARTHAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -2736,7 +2763,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             <PropertyRef Name="ID_PSPNR" />
           </Key>
           <Property Name="ID_PSPNR" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="NOMBRE" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="NOMBRE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="SOCIEDADs" Relationship="Self.DET_PROYECTO" FromRole="PROYECTO" ToRole="SOCIEDAD" />
         </EntityType>
         <EntityType Name="PUESTO">
@@ -2773,12 +2800,14 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
         <EntityType Name="RETENCION">
           <Key>
             <PropertyRef Name="WITHT" />
+            <PropertyRef Name="WT_WITHCD" />
           </Key>
           <Property Name="WITHT" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="WT_WITHCD" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="DESCRIPCION" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
           <Property Name="ESTATUS" Type="Boolean" Nullable="false" />
           <Property Name="WITHT_SUB" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
-          <Property Name="PORC" Type="Decimal" Precision="13" Scale="2" Nullable="false" />
+          <Property Name="PORC" Type="Decimal" Precision="13" Scale="8" />
           <NavigationProperty Name="DOCUMENTORPs" Relationship="Self.FK_DOCUMENTORP_RETENCION" FromRole="RETENCION" ToRole="DOCUMENTORP" />
           <NavigationProperty Name="RETENCION_PROV" Relationship="Self.FK_RETENCION_PROV_RETENCION" FromRole="RETENCION" ToRole="RETENCION_PROV" />
           <NavigationProperty Name="RETENCIONTs" Relationship="Self.FK_RETENCIONT_RETENCION" FromRole="RETENCION" ToRole="RETENCIONT" />
@@ -2788,11 +2817,12 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             <PropertyRef Name="LIFNR" />
             <PropertyRef Name="BUKRS" />
             <PropertyRef Name="WITHT" />
+            <PropertyRef Name="WT_WITHCD" />
           </Key>
           <Property Name="LIFNR" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="BUKRS" Type="String" MaxLength="4" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="WITHT" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="WT_WITHCD" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="WT_WITHCD" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <NavigationProperty Name="PROVEEDOR" Relationship="Self.FK_RETENCION_PROV_PROVEEDOR" FromRole="RETENCION_PROV" ToRole="PROVEEDOR" />
           <NavigationProperty Name="RETENCION" Relationship="Self.FK_RETENCION_PROV_RETENCION" FromRole="RETENCION_PROV" ToRole="RETENCION" />
           <NavigationProperty Name="SOCIEDAD" Relationship="Self.FK_RETENCION_PROV_SOCIEDAD" FromRole="RETENCION_PROV" ToRole="SOCIEDAD" />
@@ -2801,9 +2831,11 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <Key>
             <PropertyRef Name="SPRAS_ID" />
             <PropertyRef Name="WITHT" />
+            <PropertyRef Name="WT_WITHCD" />
           </Key>
           <Property Name="SPRAS_ID" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="WITHT" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="WT_WITHCD" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="TXT50" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="RETENCION" Relationship="Self.FK_RETENCIONT_RETENCION" FromRole="RETENCIONT" ToRole="RETENCION" />
           <NavigationProperty Name="SPRA" Relationship="Self.FK_RETENCIONT_SPRAS" FromRole="RETENCIONT" ToRole="SPRAS" />
@@ -2834,7 +2866,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             <PropertyRef Name="BUKRS" />
           </Key>
           <Property Name="BUKRS" Type="String" MaxLength="4" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="BUTXT" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BUTXT" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="ORT01" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SUBREGIO" Type="String" MaxLength="6" FixedLength="true" Unicode="true" />
           <Property Name="WAERS" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
@@ -2970,6 +3002,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <Property Name="MANAGER" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Name="BACKUP_ID" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Name="BUNIT" Type="String" MaxLength="4" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="FIRMA" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="DELEGARs" Relationship="Self.FK_DELEGAR_USUARIO" FromRole="USUARIO" ToRole="DELEGAR" />
           <NavigationProperty Name="DELEGARs1" Relationship="Self.FK_DELEGAR_USUARIO1" FromRole="USUARIO" ToRole="DELEGAR" />
           <NavigationProperty Name="DET_AGENTEC" Relationship="Self.FK_DET_AGENTEC_USUARIO" FromRole="USUARIO" ToRole="DET_AGENTEC" />
@@ -3590,9 +3623,11 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <ReferentialConstraint>
             <Principal Role="RETENCION">
               <PropertyRef Name="WITHT" />
+              <PropertyRef Name="WT_WITHCD" />
             </Principal>
             <Dependent Role="DOCUMENTORP">
               <PropertyRef Name="WITHT" />
+              <PropertyRef Name="WT_WITHCD" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3810,9 +3845,11 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <ReferentialConstraint>
             <Principal Role="RETENCION">
               <PropertyRef Name="WITHT" />
+              <PropertyRef Name="WT_WITHCD" />
             </Principal>
             <Dependent Role="RETENCION_PROV">
               <PropertyRef Name="WITHT" />
+              <PropertyRef Name="WT_WITHCD" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3822,9 +3859,11 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <ReferentialConstraint>
             <Principal Role="RETENCION">
               <PropertyRef Name="WITHT" />
+              <PropertyRef Name="WT_WITHCD" />
             </Principal>
             <Dependent Role="RETENCIONT">
               <PropertyRef Name="WITHT" />
+              <PropertyRef Name="WT_WITHCD" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4400,7 +4439,16 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             <End Role="PROYECTO" EntitySet="PROYECTOes" />
             <End Role="SOCIEDAD" EntitySet="SOCIEDADs" />
           </AssociationSet>
+          <EntitySet Name="ASIGN_PROY_SOC" EntityType="WFARTHAModel.ASIGN_PROY_SOC" />
         </EntityContainer>
+        <EntityType Name="ASIGN_PROY_SOC">
+          <Key>
+            <PropertyRef Name="ID_PSPNR" />
+            <PropertyRef Name="ID_BUKRS" />
+          </Key>
+          <Property Name="ID_PSPNR" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="ID_BUKRS" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4886,6 +4934,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             <EntityTypeMapping TypeName="WFARTHAModel.RETENCION">
               <MappingFragment StoreEntitySet="RETENCION">
                 <ScalarProperty Name="WITHT" ColumnName="WITHT" />
+                <ScalarProperty Name="WT_WITHCD" ColumnName="WT_WITHCD" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
                 <ScalarProperty Name="ESTATUS" ColumnName="ESTATUS" />
                 <ScalarProperty Name="WITHT_SUB" ColumnName="WITHT_SUB" />
@@ -4908,6 +4957,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
               <MappingFragment StoreEntitySet="RETENCIONT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="WITHT" ColumnName="WITHT" />
+                <ScalarProperty Name="WT_WITHCD" ColumnName="WT_WITHCD" />
                 <ScalarProperty Name="TXT50" ColumnName="TXT50" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -5040,6 +5090,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
                 <ScalarProperty Name="MANAGER" ColumnName="MANAGER" />
                 <ScalarProperty Name="BACKUP_ID" ColumnName="BACKUP_ID" />
                 <ScalarProperty Name="BUNIT" ColumnName="BUNIT" />
+                <ScalarProperty Name="FIRMA" ColumnName="FIRMA" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5263,6 +5314,14 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
               <ScalarProperty Name="BUKRS" ColumnName="ID_BUKRS" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="ASIGN_PROY_SOC">
+            <EntityTypeMapping TypeName="WFARTHAModel.ASIGN_PROY_SOC">
+              <MappingFragment StoreEntitySet="ASIGN_PROY_SOC">
+                <ScalarProperty Name="ID_BUKRS" ColumnName="ID_BUKRS" />
+                <ScalarProperty Name="ID_PSPNR" ColumnName="ID_PSPNR" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
