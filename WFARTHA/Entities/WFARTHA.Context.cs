@@ -88,5 +88,6 @@ namespace WFARTHA.Entities
         public virtual DbSet<DOCUMENTOV> DOCUMENTOVs { get; set; }
         public virtual DbSet<PAGINAV> PAGINAVs { get; set; }
         public virtual DbSet<WARNINGV> WARNINGVs { get; set; }
+        public virtual DbSet<ASIGN_PROY_SOC> ASIGN_PROY_SOC { get; set; }
     }
 }

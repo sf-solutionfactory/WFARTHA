@@ -440,6 +440,7 @@ namespace WFARTHA.Controllers
             FORMATO formato = new FORMATO();
             string spras = "";
             string user_id = "";//MGC 02-10-2018 Cadena de autorización
+            string pselG = "";//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
             using (WFARTHAEntities db = new WFARTHAEntities())
             {
 
@@ -465,7 +466,9 @@ namespace WFARTHA.Controllers
             try
             {
                 string p = Session["pr"].ToString();
+                string pid = Session["id_pr"].ToString();
                 ViewBag.PrSl = p;
+                pselG = pid;//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
             }
             catch
             {
@@ -474,8 +477,21 @@ namespace WFARTHA.Controllers
             }
             //Obtener las sociedadess
             //List<SOCIEDAD> sociedadesl = new List<SOCIEDAD>();
-            var sociedades = db.SOCIEDADs.Select(s => new { s.BUKRS, TEXT = s.BUKRS + " - " + s.BUTXT }).ToList();
+            //MGC 16-10-2018 Obtener las sociedades asignadas al usuario a partir del proyecto seleccionado -->
+            List<ASIGN_PROY_SOC> aps = new List<ASIGN_PROY_SOC>();
+            aps = db.ASIGN_PROY_SOC.Where(ap => ap.ID_PSPNR == pselG).ToList();
 
+            var sociedades = (from ap in aps
+                              join soc in db.SOCIEDADs
+                              on ap.ID_BUKRS equals soc.BUKRS
+                              select new
+                              {
+                                  soc.BUKRS,
+                                  TEXT = soc.BUKRS + " - " + soc.BUTXT
+                              }).ToList();
+
+            //var sociedades = db.SOCIEDADs.Select(s => new { s.BUKRS, TEXT = s.BUKRS + " - " + s.BUTXT }).ToList();//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
+            //MGC 16-10-2018 Obtener las sociedades asignadas al usuario <--
             //MGC 03-10-2018 solicitud con orden de compra -->
             //Obtener la solicitud con la configuración
             var tsoll = (from ts in db.TSOLs
@@ -2763,7 +2779,7 @@ namespace WFARTHA.Controllers
         public JsonResult getPercentage(string witht)
         {
             //Obtener el concepto
-            decimal porc = 0;
+            decimal? porc = 0; //MGC 16-10-2018 Convertir a decimal
 
             porc = db.RETENCIONs.Where(co => co.WITHT == witht).FirstOrDefault().PORC;
 
