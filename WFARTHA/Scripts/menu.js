@@ -13,8 +13,9 @@ function abrir(controler) {
     sessionStorage.setItem('menu.hide', 'false');
     document.getElementById('div-menu').style.width = '320px';
 
-    var creates = "Solicitudes/Create"
-    var details = "Solicitudes/Details"
+    var creates = "Solicitudes/Create";
+    var edit = "Solicitudes/Edit";
+    var details = "Solicitudes/Details";
 
     var pathname = window.location.pathname;
     if (pathname.indexOf(creates) != -1 | pathname.indexOf(details) != -1) {
@@ -32,8 +33,9 @@ function cerrar() {
     sessionStorage.setItem('menu.hide', 'true');
     document.getElementById('div-menu').style.width = '100px';
 
-    var creates = "Solicitudes/Create"
-    var details = "Solicitudes/Details"
+    var creates = "Solicitudes/Create";
+    var edit = "Solicitudes/Edit";
+    var details = "Solicitudes/Details";
 
     var pathname = window.location.pathname;
     if (pathname.indexOf(creates) != -1 | pathname.indexOf(details) != -1) {
