@@ -477,16 +477,6 @@
                             </div>
                         </div>
 
-                        <script>
-                            tipo_cam = $('#TIPO_CAMBIO').val();
-
-                            if (tipo_cam != null && tipo_cam != "") {
-
-                                $('#TIPO_CAMBIO').val(toShowNum(tipo_cam));
-                            }
-
-                        </script>
-
                         <div class="form-group col s3">
                             @Html.LabelFor(model => model.D.IMPUESTO, "Impuesto NT", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
@@ -502,15 +492,6 @@
                                 <input type="text" disabled class="form-control" value="@montomd" />
                             </div>
                         </div>
-                        <script>
-                            //monto_doc = $('#MONTO_DOC_MD').val();
-                            //var v = $('#montoD').val();
-                            //if (v != null && v != "") {
-
-                            //    $('#MONTO_DOC_MD').val(v);
-                            //}
-
-                        </script>
 
                     </div>
                     <div class="row" style="margin-bottom:0">
@@ -749,6 +730,7 @@
                                     for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
                                     {
                                         <tr>
+                                            <td></td>
                                             <td>
                                                 @Model.D.DOCUMENTOPSTR[i].POS
                                             </td>

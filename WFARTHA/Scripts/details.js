@@ -1,7 +1,6 @@
 ﻿
 $(document).ready(function () {
 
-
     //Inicializar las tabs
     $('#tabs').tabs();
 
