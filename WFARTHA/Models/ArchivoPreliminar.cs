@@ -275,7 +275,7 @@ namespace WFARTHA.Models
                         bjahr + "|" +
                         bukrs + "|"
                         );
-                    sw.WriteLine("");
+                    //sw.WriteLine(""); //MGC 17-10-2018.2 Adaptación a archivo
 
                     //DETDOC	|TIPODOC|ACCION|BELNR|GJAHR|BUKRS DETDOC EJE	FACSINOC|CONTABILIZAR|10000000|2018|1010| //MGC 11-10-2018 Acciones para el encabezado <--
 
@@ -289,11 +289,11 @@ namespace WFARTHA.Models
                         //+ "|" + //MGC 11-10-2018 Acciones para el encabezado
                         doc.REFERENCIA + "|" +
                         doc.CONCEPTO + "|" + //MGC 11-10-2018 Acciones para el encabezado
-                        "X" + "|" +
-                        doc.TIPO_CAMBIO + "|" //MGC 11-10-2018 Acciones para el encabezado
-                        + ""
+                        "" + "|" +
+                        "" + "|" +
+                        doc.TIPO_CAMBIO  //MGC 11-10-2018 Acciones para el encabezado
                         );
-                    sw.WriteLine("");
+                    //sw.WriteLine("");//MGC 17-10-2018.2 Adaptación a archivo
                     //for (int i = 0; i < det.Count; i++)
                     for (int i = 0; i < doc.DOCUMENTOPs.Count; i++)
                     {
@@ -375,8 +375,8 @@ namespace WFARTHA.Models
                         doc.DOCUMENTORs.ElementAt(i).WITHT + "|" +
                         doc.DOCUMENTORs.ElementAt(i).WT_WITHCD + "|" +
                         doc.DOCUMENTORs.ElementAt(i).BIMPONIBLE + "|" +
-                        doc.DOCUMENTORs.ElementAt(i).IMPORTE_RET + "|" +
-                        ""
+                        doc.DOCUMENTORs.ElementAt(i).IMPORTE_RET //+ "|" //MGC 17-10-2018.2 Adaptación a archivo
+
                         );
                     }
                     //MGC 11-10-2018 Acciones para el encabezado RETENCIONES <--
