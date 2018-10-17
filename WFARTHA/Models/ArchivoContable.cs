@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Reflection;
 using WFARTHA.Services;
+using System.Net;
 
 namespace WFARTHA.Models
 {
@@ -193,155 +194,329 @@ namespace WFARTHA.Models
                 //}
                 var dir = new Files().createDir(dirFile);//RSG 01.08.2018
 
-                //Evaluar que se creo el directorio
-                if (dir.Equals(""))
-                {
-                    using (StreamWriter sw = new StreamWriter(docname))
-                    {
+                ////Evaluar que se creo el directorio
+                //if (dir.Equals(""))
+                //{
+                //    using (StreamWriter sw = new StreamWriter(docname))
+                //    {
 
-                        string belnr = "";
-                        string bjahr = "";
-                        string bukrs = "";
+                //        string belnr = "";
+                //        string bjahr = "";
+                //        string bukrs = "";
 
-                        if (accion == "R")
-                        {
-                            belnr = doc.NUM_PRE + "";
-                            bjahr = doc.EJERCICIO_PRE + "";
-                            bukrs = doc.SOCIEDAD_PRE + "";
-                        }
+                //        if (accion == "R")
+                //        {
+                //            belnr = doc.NUM_PRE + "";
+                //            bjahr = doc.EJERCICIO_PRE + "";
+                //            bukrs = doc.SOCIEDAD_PRE + "";
+                //        }
 
-                        //DETDOC	|TIPODOC|ACCION|BELNR|GJAHR|BUKRS DETDOC EJE	FACSINOC|CONTABILIZAR|10000000|2018|1010| //MGC 11-10-2018 Acciones para el encabezado -->
-                        sw.WriteLine(
-                            "1" + "|" +
-                            ts.TIPO_DOCFILE.Trim() + "|" +
-                            doc.NUM_DOC + "|" +
-                            accionhead.Trim() + "|" +
-                            belnr + "|" +
-                            bjahr + "|" +
-                            bukrs + "|"
-                            );
-                        sw.WriteLine("");
+                //        //DETDOC	|TIPODOC|ACCION|BELNR|GJAHR|BUKRS DETDOC EJE	FACSINOC|CONTABILIZAR|10000000|2018|1010| //MGC 11-10-2018 Acciones para el encabezado -->
+                //        sw.WriteLine(
+                //            "1" + "|" +
+                //            ts.TIPO_DOCFILE.Trim() + "|" +
+                //            doc.NUM_DOC + "|" +
+                //            accionhead.Trim() + "|" +
+                //            belnr + "|" +
+                //            bjahr + "|" +
+                //            bukrs + "|"
+                //            );
+                //        sw.WriteLine("");
 
-                        //DETDOC	|TIPODOC|ACCION|BELNR|GJAHR|BUKRS DETDOC EJE	FACSINOC|CONTABILIZAR|10000000|2018|1010| //MGC 11-10-2018 Acciones para el encabezado <--
+                //        //DETDOC	|TIPODOC|ACCION|BELNR|GJAHR|BUKRS DETDOC EJE	FACSINOC|CONTABILIZAR|10000000|2018|1010| //MGC 11-10-2018 Acciones para el encabezado <--
 
-                        //Formato a fecha mes, día, año
+                //        //Formato a fecha mes, día, año
 
-                        sw.WriteLine(
-                            "2" + "|" +
-                            doc.DOCUMENTO_SAP + "|" +
-                            doc.SOCIEDAD_ID.Trim() + "|"
-                            + String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|"
-                            + doc.MONEDA_ID.Trim() + "|"+
-                            //+ dir.HEADER_TEXT.Trim() + "|"
-                            //+ dir.REFERENCIA.Trim() + "|"
-                            //+ dir.CALC_TAXT.ToString().Replace("True", "X").Replace("False", "") + "|"
-                            //+ dir.NOTA.Trim() + "|"
-                            //+ dir.CORRESPONDENCIA.Trim()
-                            //+ "|" +
-                            doc.REFERENCIA + "|"+
-                            doc.CONCEPTO + "|" + //MGC 11-10-2018 Acciones para el encabezado
-                            "X" + "|" +
-                            doc.TIPO_CAMBIO + "|" //MGC 11-10-2018 Acciones para el encabezado
+                //        sw.WriteLine(
+                //            "2" + "|" +
+                //            doc.DOCUMENTO_SAP + "|" +
+                //            doc.SOCIEDAD_ID.Trim() + "|"
+                //            + String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|"
+                //            + doc.MONEDA_ID.Trim() + "|"+
+                //            //+ dir.HEADER_TEXT.Trim() + "|"
+                //            //+ dir.REFERENCIA.Trim() + "|"
+                //            //+ dir.CALC_TAXT.ToString().Replace("True", "X").Replace("False", "") + "|"
+                //            //+ dir.NOTA.Trim() + "|"
+                //            //+ dir.CORRESPONDENCIA.Trim()
+                //            //+ "|" +
+                //            doc.REFERENCIA + "|"+
+                //            doc.CONCEPTO + "|" + //MGC 11-10-2018 Acciones para el encabezado
+                //            "X" + "|" +
+                //            doc.TIPO_CAMBIO + "|" //MGC 11-10-2018 Acciones para el encabezado
                  
-                            + ""
-                            );
-                        sw.WriteLine("");
-                        //for (int i = 0; i < det.Count; i++)
-                        for (int i = 0; i < doc.DOCUMENTOPs.Count; i++)
-                        {
-                            string post = "";
-                            string postk = "";
+                //            + ""
+                //            );
+                //        sw.WriteLine("");
+                //        //for (int i = 0; i < det.Count; i++)
+                //        for (int i = 0; i < doc.DOCUMENTOPs.Count; i++)
+                //        {
+                //            string post = "";
+                //            string postk = "";
                             
-                            if(doc.DOCUMENTOPs.ElementAt(i).ACCION == "H")
-                            {
-                                post = "P";
-                                postk = "31";
-                            }
-                            else if (doc.DOCUMENTOPs.ElementAt(i).ACCION == "D")
-                            {
-                                post = "G";
-                                postk = "40";
+                //            if(doc.DOCUMENTOPs.ElementAt(i).ACCION == "H")
+                //            {
+                //                post = "P";
+                //                postk = "31";
+                //            }
+                //            else if (doc.DOCUMENTOPs.ElementAt(i).ACCION == "D")
+                //            {
+                //                post = "G";
+                //                postk = "40";
                                 
-                            }
-                            sw.WriteLine(
-                                //det[i].POS_TYPE + "|" +
-                                "3" + "|" +
-                                post + "|" +
-                                doc.SOCIEDAD_ID.Trim() + "|" + //det[i].COMP_CODE + "|" + //
-                                //det[i].BUS_AREA + "|" +
-                                "|" +
-                                //det[i].POST_KEY + "|" +
-                                postk + "|" +
-                                doc.DOCUMENTOPs.ElementAt(i).CUENTA + "|" +//det[i].ACCOUNT + "|" +
-                                doc.DOCUMENTOPs.ElementAt(i).CCOSTO + "|" +//det[i].COST_CENTER + "|" +
-                                doc.DOCUMENTOPs.ElementAt(i).IMPUTACION + "|" +
-                                doc.DOCUMENTOPs.ElementAt(i).MONTO + "|" +//det[i].BALANCE + "|" +
-                                "TEXTO PRUEBA " + i +"|" + //det[i].TEXT + "|" +
-                                //det[i].SALES_ORG + "|" +
-                                //det[i].DIST_CHANEL + "|" +
-                                "|" +
-                                "|" +
-                                //det[i].DIVISION + "|" +
-                                "|" +
-                                //"|" +
-                                //"|" +
-                                //"|" +
-                                //"|" +
-                                //"|" +
-                                //det[i].INV_REF + "|" +
-                                //det[i].PAY_TERM + "|" +
-                                //det[i].JURIS_CODE + "|" +
-                                "|" +
-                                "|" +
-                                "|" +
-                                //"|" +
-                                //det[i].CUSTOMER + "|" +
-                                //det[i].PRODUCT + "|" +
-                                "|" +
-                                "|" +
-                                doc.DOCUMENTOPs.ElementAt(i).MWSKZ + "|" +//det[i].TAX_CODE + "|" +
-                                //det[i].PLANT + "|" +
-                                //det[i].REF_KEY1 + "|" +
-                                //det[i].REF_KEY3 + "|" +
-                                //det[i].ASSIGNMENT + "|" +
-                                //det[i].QTY + "|" +
-                                //det[i].BASE_UNIT + "|" +
-                                //det[i].AMOUNT_LC + "|" +
-                                //det[i].RETENCION_ID + "|"
-                                "|" +
-                                "|" +
-                                "|" +
-                                "|" +
-                                "|" +
-                                "|" +
-                                "|" +
-                                "|"
-                                );
-                        }
+                //            }
+                //            sw.WriteLine(
+                //                //det[i].POS_TYPE + "|" +
+                //                "3" + "|" +
+                //                post + "|" +
+                //                doc.SOCIEDAD_ID.Trim() + "|" + //det[i].COMP_CODE + "|" + //
+                //                //det[i].BUS_AREA + "|" +
+                //                "|" +
+                //                //det[i].POST_KEY + "|" +
+                //                postk + "|" +
+                //                doc.DOCUMENTOPs.ElementAt(i).CUENTA + "|" +//det[i].ACCOUNT + "|" +
+                //                doc.DOCUMENTOPs.ElementAt(i).CCOSTO + "|" +//det[i].COST_CENTER + "|" +
+                //                doc.DOCUMENTOPs.ElementAt(i).IMPUTACION + "|" +
+                //                doc.DOCUMENTOPs.ElementAt(i).MONTO + "|" +//det[i].BALANCE + "|" +
+                //                "TEXTO PRUEBA " + i +"|" + //det[i].TEXT + "|" +
+                //                //det[i].SALES_ORG + "|" +
+                //                //det[i].DIST_CHANEL + "|" +
+                //                "|" +
+                //                "|" +
+                //                //det[i].DIVISION + "|" +
+                //                "|" +
+                //                //"|" +
+                //                //"|" +
+                //                //"|" +
+                //                //"|" +
+                //                //"|" +
+                //                //det[i].INV_REF + "|" +
+                //                //det[i].PAY_TERM + "|" +
+                //                //det[i].JURIS_CODE + "|" +
+                //                "|" +
+                //                "|" +
+                //                "|" +
+                //                //"|" +
+                //                //det[i].CUSTOMER + "|" +
+                //                //det[i].PRODUCT + "|" +
+                //                "|" +
+                //                "|" +
+                //                doc.DOCUMENTOPs.ElementAt(i).MWSKZ + "|" +//det[i].TAX_CODE + "|" +
+                //                //det[i].PLANT + "|" +
+                //                //det[i].REF_KEY1 + "|" +
+                //                //det[i].REF_KEY3 + "|" +
+                //                //det[i].ASSIGNMENT + "|" +
+                //                //det[i].QTY + "|" +
+                //                //det[i].BASE_UNIT + "|" +
+                //                //det[i].AMOUNT_LC + "|" +
+                //                //det[i].RETENCION_ID + "|"
+                //                "|" +
+                //                "|" +
+                //                "|" +
+                //                "|" +
+                //                "|" +
+                //                "|" +
+                //                "|" +
+                //                "|"
+                //                );
+                //        }
 
 
-                        //MGC 11-10-2018 Acciones para el encabezado RETENCIONES -->
-                        for (int i = 0; i < doc.DOCUMENTORs.Count; i++)
-                        {
-                            sw.WriteLine(
-                            "4" + "|" +
-                            "W" + "|" +
-                            doc.DOCUMENTORs.ElementAt(i).WITHT + "|" +
-                            doc.DOCUMENTORs.ElementAt(i).WT_WITHCD + "|" +
-                            doc.DOCUMENTORs.ElementAt(i).BIMPONIBLE + "|" +
-                            doc.DOCUMENTORs.ElementAt(i).IMPORTE_RET + "|" +
-                            ""
-                            );
-                        }
-                        //MGC 11-10-2018 Acciones para el encabezado RETENCIONES <--
-                        sw.Close();
+                //        //MGC 11-10-2018 Acciones para el encabezado RETENCIONES -->
+                //        for (int i = 0; i < doc.DOCUMENTORs.Count; i++)
+                //        {
+                //            sw.WriteLine(
+                //            "4" + "|" +
+                //            "W" + "|" +
+                //            doc.DOCUMENTORs.ElementAt(i).WITHT + "|" +
+                //            doc.DOCUMENTORs.ElementAt(i).WT_WITHCD + "|" +
+                //            doc.DOCUMENTORs.ElementAt(i).BIMPONIBLE + "|" +
+                //            doc.DOCUMENTORs.ElementAt(i).IMPORTE_RET + "|" +
+                //            ""
+                //            );
+                //        }
+                //        //MGC 11-10-2018 Acciones para el encabezado RETENCIONES <--
+                //        sw.Close();
+                //    }
+
+                //}
+                //else
+                //{
+                //    errorMessage = dir;
+                //}
+
+                //MGC prueba FTP---------------------------------------------------------------------------------------------------------------------------------------->
+
+                //Obtener la configuración de la url desde app setting
+                string ftpServerIP = "";
+                try
+                {
+                    ftpServerIP = db.APPSETTINGs.Where(aps => aps.NOMBRE.Equals("URL_FTP_PRELIMINAR") && aps.ACTIVO == true).FirstOrDefault().VALUE.ToString();
+                    url_prel += @"POSTING";
+                    dirFile = url_prel;
+                }
+                catch (Exception e)
+                {
+
+                }
+                string targetFileName = "/SAP/POSTING/INBOUND_PREL" + ts.ID.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-1.txt";
+
+                //string ftpServerIP = "192.168.32.207:21";
+                //string targetFileName = "/SAP/POSTING/prueba.txt";
+                string username = "matias.gallegos";
+                string password = "Mimapo-2179=p23";
+
+                Uri uri = new Uri(String.Format("ftp://{0}/{1}", ftpServerIP, targetFileName));
+                FtpWebRequest reqFTP = (FtpWebRequest)FtpWebRequest.Create(uri);
+                reqFTP.Credentials = new NetworkCredential(username, password);
+                reqFTP.Method = WebRequestMethods.Ftp.UploadFile;
+                reqFTP.KeepAlive = false;
+                reqFTP.UsePassive = false;
+
+
+                MemoryStream stIn = new MemoryStream();
+                using (StreamWriter sw = new StreamWriter(stIn))
+                {
+                    string belnr = "";
+                    string bjahr = "";
+                    string bukrs = "";
+
+                    if (accion == "R")
+                    {
+                        belnr = doc.NUM_PRE + "";
+                        bjahr = doc.EJERCICIO_PRE + "";
+                        bukrs = doc.SOCIEDAD_PRE + "";
                     }
 
+                    //DETDOC	|TIPODOC|ACCION|BELNR|GJAHR|BUKRS DETDOC EJE	FACSINOC|CONTABILIZAR|10000000|2018|1010| //MGC 11-10-2018 Acciones para el encabezado -->
+                    sw.WriteLine(
+                        "1" + "|" +
+                        ts.TIPO_DOCFILE.Trim() + "|" +
+                        doc.NUM_DOC + "|" +
+                        accionhead.Trim() + "|" +
+                        belnr + "|" +
+                        bjahr + "|" +
+                        bukrs + "|"
+                        );
+                    sw.WriteLine("");
+
+                    //DETDOC	|TIPODOC|ACCION|BELNR|GJAHR|BUKRS DETDOC EJE	FACSINOC|CONTABILIZAR|10000000|2018|1010| //MGC 11-10-2018 Acciones para el encabezado <--
+
+                    //Formato a fecha mes, día, año
+                    sw.WriteLine(
+                        "2" + "|" +
+                        doc.DOCUMENTO_SAP + "|" +
+                        doc.SOCIEDAD_ID.Trim() + "|" +
+                        String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|" +
+                        doc.MONEDA_ID.Trim() + "|" +
+                        //+ "|" + //MGC 11-10-2018 Acciones para el encabezado
+                        doc.REFERENCIA + "|" +
+                        doc.CONCEPTO + "|" + //MGC 11-10-2018 Acciones para el encabezado
+                        "X" + "|" +
+                        doc.TIPO_CAMBIO + "|" //MGC 11-10-2018 Acciones para el encabezado
+                        + ""
+                        );
+                    sw.WriteLine("");
+                    //for (int i = 0; i < det.Count; i++)
+                    for (int i = 0; i < doc.DOCUMENTOPs.Count; i++)
+                    {
+                        string post = "";
+                        string postk = "";
+
+                        if (doc.DOCUMENTOPs.ElementAt(i).ACCION == "H")
+                        {
+                            post = "P";
+                            postk = "31";
+                        }
+                        else if (doc.DOCUMENTOPs.ElementAt(i).ACCION == "D")
+                        {
+                            post = "G";
+                            postk = "40";
+
+                        }
+                        sw.WriteLine(
+                            //det[i].POS_TYPE + "|" +
+                            "3" + "|" +
+                            post + "|" +
+                            doc.SOCIEDAD_ID.Trim() + "|" + //det[i].COMP_CODE + "|" + //
+                                                           //det[i].BUS_AREA + "|" +
+                            "|" +
+                            //det[i].POST_KEY + "|" +
+                            postk + "|" +
+                            doc.DOCUMENTOPs.ElementAt(i).CUENTA + "|" +//det[i].ACCOUNT + "|" +
+                            doc.DOCUMENTOPs.ElementAt(i).CCOSTO + "|" +//det[i].COST_CENTER + "|" +
+                            doc.DOCUMENTOPs.ElementAt(i).IMPUTACION + "|" +
+                            doc.DOCUMENTOPs.ElementAt(i).MONTO + "|" +//det[i].BALANCE + "|" +
+                            doc.DOCUMENTOPs.ElementAt(i).TEXTO + "|" + //det[i].TEXT + "|" +
+                                                                       //det[i].SALES_ORG + "|" +
+                                                                       //det[i].DIST_CHANEL + "|" +
+                            "|" +
+                            "|" +
+                            //det[i].DIVISION + "|" +
+                            "|" +
+                            //"|" +
+                            //"|" +
+                            //"|" +
+                            //"|" +
+                            //"|" +
+                            //det[i].INV_REF + "|" +
+                            //det[i].PAY_TERM + "|" +
+                            //det[i].JURIS_CODE + "|" +
+                            "|" +
+                            "|" +
+                            "|" +
+                            //"|" +
+                            //det[i].CUSTOMER + "|" +
+                            //det[i].PRODUCT + "|" +
+                            "|" +
+                            "|" +
+                            doc.DOCUMENTOPs.ElementAt(i).MWSKZ + "|" +//det[i].TAX_CODE + "|" +
+                                                                      //det[i].PLANT + "|" +
+                                                                      //det[i].REF_KEY1 + "|" +
+                                                                      //det[i].REF_KEY3 + "|" +
+                                                                      //det[i].ASSIGNMENT + "|" +
+                                                                      //det[i].QTY + "|" +
+                                                                      //det[i].BASE_UNIT + "|" +
+                                                                      //det[i].AMOUNT_LC + "|" +
+                                                                      //det[i].RETENCION_ID + "|"
+                            "|" +
+                            "|" +
+                            "|" +
+                            "|" +
+                            "|" +
+                            "|" +
+                            "|" +
+                            "|"
+                            );
+                    }
+                    //MGC 11-10-2018 Acciones para el encabezado RETENCIONES -->
+                    for (int i = 0; i < doc.DOCUMENTORs.Count; i++)
+                    {
+                        sw.WriteLine(
+                        "4" + "|" +
+                        "W" + "|" +
+                        doc.DOCUMENTORs.ElementAt(i).WITHT + "|" +
+                        doc.DOCUMENTORs.ElementAt(i).WT_WITHCD + "|" +
+                        doc.DOCUMENTORs.ElementAt(i).BIMPONIBLE + "|" +
+                        doc.DOCUMENTORs.ElementAt(i).IMPORTE_RET + "|" +
+                        ""
+                        );
+                    }
+                    //MGC 11-10-2018 Acciones para el encabezado RETENCIONES <--
+
+                    //sw.Close();
+                    sw.Flush();
+
+                    using (Stream stOut = reqFTP.GetRequestStream())
+                    {
+                        stOut.Write(stIn.GetBuffer(), 0, (int)stIn.Length);
+                    }
+
+
+
                 }
-                else
-                {
-                    errorMessage = dir;
-                }
+
+                FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse();
+                response.Close();
 
                 //if (tab.RELACION != 0 && tab.RELACION != null)
                 //{
@@ -349,7 +524,7 @@ namespace WFARTHA.Models
                 //}
                 //else
                 //{
-                    //return "";
+                //return "";
                 //}
             }
             catch (Exception e)
