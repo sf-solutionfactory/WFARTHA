@@ -17,4 +17,13 @@ namespace WFARTHA.Models
         public Nullable<decimal> BIMPONIBLE { get; set; }
         public Nullable<decimal> IMPORTE_RET { get; set; }
     }
+    public class listRet
+    {
+
+        public string LIFNR { get; set; }
+        public string BUKRS { get; set; }
+        public string WITHT { get; set; }
+        public string WT_WITHCD { get; set; }
+        public string DESC { get; set; }
+    }
 }

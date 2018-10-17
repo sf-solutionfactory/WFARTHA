@@ -277,43 +277,62 @@ namespace WFARTHA.Controllers
 
             retl = db.DOCUMENTORs.Where(x => x.NUM_DOC == id).ToList();
 
-            retlt = (from r in retl
-                     join rt in db.RETENCIONTs
-                     on r.WITHT equals rt.WITHT
-                     into jj
-                     from rt in jj.DefaultIfEmpty()
-                     where rt.SPRAS_ID.Equals("ES")
-                     select new DOCUMENTOR_MOD
-                     {
-                         WITHT = r.WITHT,
-                         DESC = rt.TXT50 == null ? String.Empty : "",
-                         WT_WITHCD = r.WT_WITHCD,
-                         BIMPONIBLE = r.BIMPONIBLE,
-                         IMPORTE_RET = r.IMPORTE_RET
+            //retlt = (from r in retl
+            //         join rt in db.RETENCIONTs
+            //         on r.WITHT equals rt.WITHT
+            //         into jj
+            //         from rt in jj.DefaultIfEmpty()
+            //         where rt.SPRAS_ID.Equals("ES")
+            //         select new DOCUMENTOR_MOD
+            //         {
+            //             WITHT = r.WITHT,
+            //             DESC = rt.TXT50 == null ? String.Empty : "",
+            //             WT_WITHCD = r.WT_WITHCD,
+            //             BIMPONIBLE = r.BIMPONIBLE,
+            //             IMPORTE_RET = r.IMPORTE_RET
 
-                     }).ToList();
+            //         }).ToList();
 
-            List<DOCUMENTOR_MOD> _relt = new List<DOCUMENTOR_MOD>();
-            var _retl = db.RETENCIONs.Where(rt => rt.ESTATUS == true)
-                .Join(
-                db.RETENCION_PROV.Where(rtp => rtp.LIFNR == dOCUMENTO.PAYER_ID && rtp.BUKRS == dOCUMENTO.SOCIEDAD_ID),
-                ret => ret.WITHT,
-                retp => retp.WITHT,
-                (ret, retp) => new
-                {
-                    LIFNR = retp.LIFNR,
-                    BUKRS = retp.BUKRS,
-                    WITHT = retp.WITHT,
-                    DESC = ret.DESCRIPCION,
-                    WT_WITHCD = retp.WT_WITHCD
+            //List<DOCUMENTOR_MOD> _relt = new List<DOCUMENTOR_MOD>();
+            //var _retl = db.RETENCIONs.Where(rt => rt.ESTATUS == true)
+            //    .Join(
+            //    db.RETENCION_PROV.Where(rtp => rtp.LIFNR == dOCUMENTO.PAYER_ID && rtp.BUKRS == dOCUMENTO.SOCIEDAD_ID),
+            //    ret => ret.WITHT,
+            //    retp => retp.WITHT,
+            //    (ret, retp) => new
+            //    {
+            //        LIFNR = retp.LIFNR,
+            //        BUKRS = retp.BUKRS,
+            //        WITHT = retp.WITHT,
+            //        DESC = ret.DESCRIPCION,
+            //        WT_WITHCD = retp.WT_WITHCD
 
-                }).ToList();
-            if (_retl != null && _retl.Count > 0)
+            //    }).ToList();
+
+            List<listRet> lstret = new List<listRet>();
+            var lifnr = dOCUMENTO.PAYER_ID;
+            var bukrs = dOCUMENTO.SOCIEDAD_ID;
+            var _retl = db.RETENCION_PROV.Where(rtp => rtp.LIFNR == lifnr && rtp.BUKRS == bukrs).ToList();
+            var _retl2 = db.RETENCIONs.Where(rtp => rtp.ESTATUS == true).ToList();
+            for (int x = 0; x < _retl.Count; x++)
+            {
+                listRet _l = new listRet();
+                var rttt = _retl2.Where(o => o.WITHT == _retl[x].WITHT && o.WT_WITHCD == _retl[x].WT_WITHCD).FirstOrDefault();
+                _l.LIFNR = _retl[x].LIFNR;
+                _l.BUKRS = _retl[x].BUKRS;
+                _l.WITHT = rttt.WITHT;
+                _l.DESC = rttt.DESCRIPCION;
+                _l.WT_WITHCD = rttt.WT_WITHCD;
+
+                lstret.Add(_l);
+            }
+            var _relt = lstret;
+            if (_relt != null && _relt.Count > 0)
             {
                 //Obtener los textos de las retenciones
-                _relt = (from r in _retl
+                retlt = (from r in _relt
                          join rt in db.RETENCIONTs
-                         on r.WITHT equals rt.WITHT
+                         on new { A = r.WITHT, B = r.WT_WITHCD } equals new { A = rt.WITHT, B = rt.WT_WITHCD }
                          into jj
                          from rt in jj.DefaultIfEmpty()
                          where rt.SPRAS_ID.Equals("ES")
@@ -327,9 +346,9 @@ namespace WFARTHA.Controllers
 
                          }).ToList();
             }
-            for (int i = 0; i < _relt.Count; i++)
+            for (int i = 0; i < retlt.Count; i++)
             {
-                var wtht = _relt[i].WITHT;
+                var wtht = retlt[i].WITHT;
                 decimal _bi = 0;
                 decimal _iret = 0;
                 //aqui hacemos la sumatoria
@@ -339,11 +358,11 @@ namespace WFARTHA.Controllers
                     _bi = _bi + decimal.Parse(_res[y].BIMPONIBLE.ToString());
                     _iret = _iret + decimal.Parse(_res[y].IMPORTE_RET.ToString());
                 }
-                _relt[i].BIMPONIBLE = _bi;
-                _relt[i].IMPORTE_RET = _iret;
+                retlt[i].BIMPONIBLE = _bi;
+                retlt[i].IMPORTE_RET = _iret;
             }
             //ViewBag.ret = retlt;
-            ViewBag.ret = _relt;
+            ViewBag.ret = retlt;
 
             //Obtener datos del proveedor
             PROVEEDOR prov = db.PROVEEDORs.Where(pr => pr.LIFNR == doc.PAYER_ID).FirstOrDefault();
@@ -1651,43 +1670,61 @@ namespace WFARTHA.Controllers
 
             retl = db.DOCUMENTORs.Where(x => x.NUM_DOC == id).ToList();
 
-            retlt = (from r in retl
-                     join rt in db.RETENCIONTs
-                     on r.WITHT equals rt.WITHT
-                     into jj
-                     from rt in jj.DefaultIfEmpty()
-                     where rt.SPRAS_ID.Equals("ES")
-                     select new DOCUMENTOR_MOD
-                     {
-                         WITHT = r.WITHT,
-                         DESC = rt.TXT50 == null ? String.Empty : "",
-                         WT_WITHCD = r.WT_WITHCD,
-                         BIMPONIBLE = r.BIMPONIBLE,
-                         IMPORTE_RET = r.IMPORTE_RET
+            //retlt = (from r in retl
+            //         join rt in db.RETENCIONTs
+            //         on r.WITHT equals rt.WITHT
+            //         into jj
+            //         from rt in jj.DefaultIfEmpty()
+            //         where rt.SPRAS_ID.Equals("ES")
+            //         select new DOCUMENTOR_MOD
+            //         {
+            //             WITHT = r.WITHT,
+            //             DESC = rt.TXT50 == null ? String.Empty : "",
+            //             WT_WITHCD = r.WT_WITHCD,
+            //             BIMPONIBLE = r.BIMPONIBLE,
+            //             IMPORTE_RET = r.IMPORTE_RET
 
-                     }).ToList();
+            //         }).ToList();
 
-            List<DOCUMENTOR_MOD> _relt = new List<DOCUMENTOR_MOD>();
-            var _retl = db.RETENCIONs.Where(rt => rt.ESTATUS == true)
-                .Join(
-                db.RETENCION_PROV.Where(rtp => rtp.LIFNR == dOCUMENTO.PAYER_ID && rtp.BUKRS == dOCUMENTO.SOCIEDAD_ID),
-                ret => ret.WITHT,
-                retp => retp.WITHT,
-                (ret, retp) => new
-                {
-                    LIFNR = retp.LIFNR,
-                    BUKRS = retp.BUKRS,
-                    WITHT = retp.WITHT,
-                    DESC = ret.DESCRIPCION,
-                    WT_WITHCD = retp.WT_WITHCD
+            //List<DOCUMENTOR_MOD> _relt = new List<DOCUMENTOR_MOD>();
+            //var _retl = db.RETENCIONs.Where(rt => rt.ESTATUS == true)
+            //    .Join(
+            //    db.RETENCION_PROV.Where(rtp => rtp.LIFNR == dOCUMENTO.PAYER_ID && rtp.BUKRS == dOCUMENTO.SOCIEDAD_ID),
+            //    ret => ret.WITHT,
+            //    retp => retp.WITHT,
+            //    (ret, retp) => new
+            //    {
+            //        LIFNR = retp.LIFNR,
+            //        BUKRS = retp.BUKRS,
+            //        WITHT = retp.WITHT,
+            //        DESC = ret.DESCRIPCION,
+            //        WT_WITHCD = retp.WT_WITHCD
 
-                }).ToList();
-            if (_retl != null && _retl.Count > 0)
+            //    }).ToList();
+            List<listRet> lstret = new List<listRet>();
+            var lifnr = dOCUMENTO.PAYER_ID;
+            var bukrs = dOCUMENTO.SOCIEDAD_ID;
+            var _retl = db.RETENCION_PROV.Where(rtp => rtp.LIFNR == lifnr && rtp.BUKRS == bukrs).ToList();
+            var _retl2 = db.RETENCIONs.Where(rtp => rtp.ESTATUS == true).ToList();
+            for (int x = 0; x < _retl.Count; x++)
+            {
+                listRet _l = new listRet();
+                var rttt = _retl2.Where(o => o.WITHT == _retl[x].WITHT && o.WT_WITHCD == _retl[x].WT_WITHCD).FirstOrDefault();
+                _l.LIFNR = _retl[x].LIFNR;
+                _l.BUKRS = _retl[x].BUKRS;
+                _l.WITHT = rttt.WITHT;
+                _l.DESC = rttt.DESCRIPCION;
+                _l.WT_WITHCD = rttt.WT_WITHCD;
+
+                lstret.Add(_l);
+            }
+            var _relt = lstret;
+            if (_relt != null && _relt.Count > 0)
             {
                 //Obtener los textos de las retenciones
-                _relt = (from r in _retl
+                retlt = (from r in _relt
                          join rt in db.RETENCIONTs
-                         on r.WITHT equals rt.WITHT
+                         on new { A = r.WITHT, B = r.WT_WITHCD } equals new { A = rt.WITHT, B = rt.WT_WITHCD }
                          into jj
                          from rt in jj.DefaultIfEmpty()
                          where rt.SPRAS_ID.Equals("ES")
@@ -1701,15 +1738,15 @@ namespace WFARTHA.Controllers
 
                          }).ToList();
             }
-            for (int i = 0; i < _relt.Count; i++)
+            for (int i = 0; i < retlt.Count; i++)
             {
-                var wtht = _relt[i].WITHT;
+                var wtht = retlt[i].WITHT;
                 var _res = db.DOCUMENTORPs.Where(nd => nd.NUM_DOC == dOCUMENTO.NUM_DOC && nd.WITHT == wtht).FirstOrDefault();
-                _relt[i].BIMPONIBLE = _res.BIMPONIBLE;
-                _relt[i].IMPORTE_RET = _res.IMPORTE_RET;
+                retlt[i].BIMPONIBLE = _res.BIMPONIBLE;
+                retlt[i].IMPORTE_RET = _res.IMPORTE_RET;
             }
             //ViewBag.ret = retlt;
-            ViewBag.ret = _relt;
+            ViewBag.ret = retlt;
             //Obtener datos del proveedor
             PROVEEDOR prov = db.PROVEEDORs.Where(pr => pr.LIFNR == doc.PAYER_ID).FirstOrDefault();
             ViewBag.prov = prov;
@@ -2702,27 +2739,42 @@ namespace WFARTHA.Controllers
 
             List<DOCUMENTOR_MOD> retlt = new List<DOCUMENTOR_MOD>();
             //Obtener las retenciones a partir del proveedor y sociedad
-            var retl = db.RETENCIONs.Where(rt => rt.ESTATUS == true)
-                .Join(
-                db.RETENCION_PROV.Where(rtp => rtp.LIFNR == lifnr && rtp.BUKRS == bukrs),
-                ret => ret.WITHT,
-                retp => retp.WITHT,
-                (ret, retp) => new
-                {
-                    LIFNR = retp.LIFNR,
-                    BUKRS = retp.BUKRS,
-                    WITHT = retp.WITHT,
-                    DESC = ret.DESCRIPCION,
-                    WT_WITHCD = retp.WT_WITHCD
+            //var retl = db.RETENCIONs.Where(rt => rt.ESTATUS == true)
+            //    .Join(
+            //    db.RETENCION_PROV.Where(rtp => rtp.LIFNR == lifnr && rtp.BUKRS == bukrs),
+            //    ret => ret.WITHT,
+            //    retp => retp.WITHT,
+            //    (ret, retp) => new
+            //    {
+            //        LIFNR = retp.LIFNR,
+            //        BUKRS = retp.BUKRS,
+            //        WITHT = retp.WITHT,
+            //        DESC = ret.DESCRIPCION,
+            //        WT_WITHCD = retp.WT_WITHCD
 
-                }).ToList();
-
+            //    }).ToList();
+            List<listRet> lstret = new List<listRet>();
+            var _retl = db.RETENCION_PROV.Where(rtp => rtp.LIFNR == lifnr && rtp.BUKRS == bukrs).ToList();
+            var _retl2 = db.RETENCIONs.Where(rtp => rtp.ESTATUS == true).ToList();
+            for (int x = 0; x < _retl.Count; x++)
+            {
+                listRet _l = new listRet();
+                var rttt = _retl2.Where(o => o.WITHT == _retl[x].WITHT && o.WT_WITHCD == _retl[x].WT_WITHCD).FirstOrDefault() ;
+                _l.LIFNR = _retl[x].LIFNR;
+                _l.BUKRS = _retl[x].BUKRS;
+                _l.WITHT = rttt.WITHT;
+                _l.DESC = rttt.DESCRIPCION;
+                _l.WT_WITHCD = rttt.WT_WITHCD;
+               
+                lstret.Add(_l);
+            }
+            var retl = lstret;
             if (retl != null && retl.Count > 0)
             {
                 //Obtener los textos de las retenciones
                 retlt = (from r in retl
                          join rt in db.RETENCIONTs
-                         on r.WITHT equals rt.WITHT
+                         on new { A=r.WITHT, B=r.WT_WITHCD} equals new { A=rt.WITHT,B=rt.WT_WITHCD}
                          into jj
                          from rt in jj.DefaultIfEmpty()
                          where rt.SPRAS_ID.Equals("ES")
@@ -3191,43 +3243,61 @@ namespace WFARTHA.Controllers
 
             retl = db.DOCUMENTORs.Where(x => x.NUM_DOC == id).ToList();
 
-            retlt = (from r in retl
-                     join rt in db.RETENCIONTs
-                     on r.WITHT equals rt.WITHT
-                     into jj
-                     from rt in jj.DefaultIfEmpty()
-                     where rt.SPRAS_ID.Equals("ES")
-                     select new DOCUMENTOR_MOD
-                     {
-                         WITHT = r.WITHT,
-                         DESC = rt.TXT50 == null ? String.Empty : "",
-                         WT_WITHCD = r.WT_WITHCD,
-                         BIMPONIBLE = r.BIMPONIBLE,
-                         IMPORTE_RET = r.IMPORTE_RET
+            //retlt = (from r in retl
+            //         join rt in db.RETENCIONTs
+            //         on r.WITHT equals rt.WITHT
+            //         into jj
+            //         from rt in jj.DefaultIfEmpty()
+            //         where rt.SPRAS_ID.Equals("ES")
+            //         select new DOCUMENTOR_MOD
+            //         {
+            //             WITHT = r.WITHT,
+            //             DESC = rt.TXT50 == null ? String.Empty : "",
+            //             WT_WITHCD = r.WT_WITHCD,
+            //             BIMPONIBLE = r.BIMPONIBLE,
+            //             IMPORTE_RET = r.IMPORTE_RET
 
-                     }).ToList();
+            //         }).ToList();
 
-            List<DOCUMENTOR_MOD> _relt = new List<DOCUMENTOR_MOD>();
-            var _retl = db.RETENCIONs.Where(rt => rt.ESTATUS == true)
-                .Join(
-                db.RETENCION_PROV.Where(rtp => rtp.LIFNR == dOCUMENTO.PAYER_ID && rtp.BUKRS == dOCUMENTO.SOCIEDAD_ID),
-                ret => ret.WITHT,
-                retp => retp.WITHT,
-                (ret, retp) => new
-                {
-                    LIFNR = retp.LIFNR,
-                    BUKRS = retp.BUKRS,
-                    WITHT = retp.WITHT,
-                    DESC = ret.DESCRIPCION,
-                    WT_WITHCD = retp.WT_WITHCD
+            //List<DOCUMENTOR_MOD> _relt = new List<DOCUMENTOR_MOD>();
+            //var _retl = db.RETENCIONs.Where(rt => rt.ESTATUS == true)
+            //    .Join(
+            //    db.RETENCION_PROV.Where(rtp => rtp.LIFNR == dOCUMENTO.PAYER_ID && rtp.BUKRS == dOCUMENTO.SOCIEDAD_ID),
+            //    ret => ret.WITHT,
+            //    retp => retp.WITHT,
+            //    (ret, retp) => new
+            //    {
+            //        LIFNR = retp.LIFNR,
+            //        BUKRS = retp.BUKRS,
+            //        WITHT = retp.WITHT,
+            //        DESC = ret.DESCRIPCION,
+            //        WT_WITHCD = retp.WT_WITHCD
 
-                }).ToList();
-            if (_retl != null && _retl.Count > 0)
+            //    }).ToList();
+            List<listRet> lstret = new List<listRet>();
+            var lifnr = dOCUMENTO.PAYER_ID;
+            var bukrs = dOCUMENTO.SOCIEDAD_ID;
+            var _retl = db.RETENCION_PROV.Where(rtp => rtp.LIFNR == lifnr && rtp.BUKRS == bukrs).ToList();
+            var _retl2 = db.RETENCIONs.Where(rtp => rtp.ESTATUS == true).ToList();
+            for (int x = 0; x < _retl.Count; x++)
+            {
+                listRet _l = new listRet();
+                var rttt = _retl2.Where(o => o.WITHT == _retl[x].WITHT && o.WT_WITHCD == _retl[x].WT_WITHCD).FirstOrDefault();
+                _l.LIFNR = _retl[x].LIFNR;
+                _l.BUKRS = _retl[x].BUKRS;
+                _l.WITHT = rttt.WITHT;
+                _l.DESC = rttt.DESCRIPCION;
+                _l.WT_WITHCD = rttt.WT_WITHCD;
+
+                lstret.Add(_l);
+            }
+            var _relt = lstret;
+            if (_relt != null && _relt.Count > 0)
             {
                 //Obtener los textos de las retenciones
-                _relt = (from r in _retl
+                retlt = (from r in _relt
                          join rt in db.RETENCIONTs
-                         on r.WITHT equals rt.WITHT
+                         on new { A = r.WITHT, B = r.WT_WITHCD } equals new { A = rt.WITHT, B = rt.WT_WITHCD }
                          into jj
                          from rt in jj.DefaultIfEmpty()
                          where rt.SPRAS_ID.Equals("ES")
@@ -3241,15 +3311,23 @@ namespace WFARTHA.Controllers
 
                          }).ToList();
             }
-            for (int i = 0; i < _relt.Count; i++)
+            for (int i = 0; i < retlt.Count; i++)
             {
-                var wtht = _relt[i].WITHT;
-                var _res = db.DOCUMENTORPs.Where(nd => nd.NUM_DOC == dOCUMENTO.NUM_DOC && nd.WITHT == wtht).FirstOrDefault();
-                _relt[i].BIMPONIBLE = _res.BIMPONIBLE;
-                _relt[i].IMPORTE_RET = _res.IMPORTE_RET;
+                var wtht = retlt[i].WITHT;
+                decimal _bi = 0;
+                decimal _iret = 0;
+                //aqui hacemos la sumatoria
+                var _res = db.DOCUMENTORPs.Where(nd => nd.NUM_DOC == dOCUMENTO.NUM_DOC && nd.WITHT == wtht).ToList();
+                for (int y = 0; y < _res.Count; y++)
+                {
+                    _bi = _bi + decimal.Parse(_res[y].BIMPONIBLE.ToString());
+                    _iret = _iret + decimal.Parse(_res[y].IMPORTE_RET.ToString());
+                }
+                retlt[i].BIMPONIBLE = _bi;
+                retlt[i].IMPORTE_RET = _iret;
             }
-            ViewBag.ret = _relt;
-            JsonResult jc = Json(_relt, JsonRequestBehavior.AllowGet);
+            ViewBag.ret = retlt;
+            JsonResult jc = Json(retlt, JsonRequestBehavior.AllowGet);
             return jc;
         }
 
@@ -3464,11 +3542,11 @@ namespace WFARTHA.Controllers
 
             StreamReader streamReader = new StreamReader(file.InputStream);
             byte[] fileContents = System.Text.Encoding.UTF8.GetBytes(streamReader.ReadToEnd());
-            sourceStream.Close();
+            //sourceStream.Close();           
             requestStream.Write(fileContents, 0, fileContents.Length);
             requestStream.Close();
             request.ContentLength = fileContents.Length;
-
+       
             var response = (FtpWebResponse)request.GetResponse();
             //-------------------------------------------------------------------
             //Parte para guardar archivo en el servidor
@@ -3641,6 +3719,9 @@ namespace WFARTHA.Controllers
                     break;
                 case "msg":
                     contentType = "application/vnd.ms-outlook";
+                    break;
+                case "txt":
+                    contentType = "text/plain";
                     break;
             }
         }
