@@ -63,7 +63,7 @@ namespace WFARTHA.Services
             DOCUMENTO d = db.DOCUMENTOes.Find(id);
             bool ban = true;
             ArchivoContable sa = new ArchivoContable();
-            string file = sa.generarArchivo(d.NUM_DOC, 0);
+            string file = sa.generarArchivo(d.NUM_DOC, 0,"A");
 
             if (file == "")
             {
@@ -646,7 +646,7 @@ namespace WFARTHA.Services
                                 //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);//MGC 09-10-2018 Envío de correos
 
                                 ArchivoContable sa = new ArchivoContable();
-                                string file = sa.generarArchivo(d.NUM_DOC, 0);
+                                string file = sa.generarArchivo(d.NUM_DOC, 0, "A");
 
                                 if (file == "")
                                 {

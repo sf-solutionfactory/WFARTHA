@@ -28,8 +28,20 @@ namespace WFARTHA.Models
                 string[] cc;
                 string cta = "";
 
+                //Obtener la configuración de la url desde app setting
+                string url_prel = "";
+                try
+                {
+                    url_prel = db.APPSETTINGs.Where(aps => aps.NOMBRE.Equals("URL_PREL") && aps.ACTIVO == true).FirstOrDefault().VALUE.ToString();
+                    url_prel += @"POSTING";
+                    dirFile = url_prel;
+                }
+                catch(Exception e)
+                {
+                    dirFile = ConfigurationManager.AppSettings["URL_PREL"].ToString() + @"POSTING";
+                }
 
-                dirFile = ConfigurationManager.AppSettings["URL_PREL"].ToString() + @"POSTING";
+                //dirFile = ConfigurationManager.AppSettings["URL_PREL"].ToString() + @"POSTING";
                 string docname = dirFile + @"\INBOUND_PREL" + ts.ID.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-1.txt";
 
                 //MGC 11-10-2018 Acciones para el encabezado -->
@@ -43,6 +55,10 @@ namespace WFARTHA.Models
                 }else if(accion == "R")
                 {
                     variable = "ACCION_BC";
+                }
+                else if (accion == "A")
+                {
+                    variable = "ACCION_CONTABILIZAR";
                 }
 
                 //Obtener el nombre de la acción desde la bd en APPSETTING
@@ -73,16 +89,18 @@ namespace WFARTHA.Models
                         string bjahr = "";
                         string bukrs = "";
 
-                        if(accion == "R")
+                        if (accion == "R")
                         {
-                            belnr = doc.NUM_PRE+"";
+                            belnr = doc.NUM_PRE + "";
                             bjahr = doc.EJERCICIO_PRE + "";
                             bukrs = doc.SOCIEDAD_PRE + "";
                         }
 
                         //DETDOC	|TIPODOC|ACCION|BELNR|GJAHR|BUKRS DETDOC EJE	FACSINOC|CONTABILIZAR|10000000|2018|1010| //MGC 11-10-2018 Acciones para el encabezado -->
                         sw.WriteLine(
+                            "1"+ "|" +
                             ts.TIPO_DOCFILE.Trim() + "|" +
+                            doc.NUM_DOC+"|" +
                             accionhead.Trim() + "|"+
                             belnr + "|"+
                             bjahr + "|"+
@@ -94,6 +112,7 @@ namespace WFARTHA.Models
 
                         //Formato a fecha mes, día, año
                         sw.WriteLine(
+                            "2" + "|" +
                             doc.DOCUMENTO_SAP + "|" +
                             doc.SOCIEDAD_ID.Trim() + "|" +
                             String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|"+
@@ -125,6 +144,7 @@ namespace WFARTHA.Models
                             }
                             sw.WriteLine(
                                 //det[i].POS_TYPE + "|" +
+                                "3" + "|" +
                                 post + "|" +
                                 doc.SOCIEDAD_ID.Trim() + "|" + //det[i].COMP_CODE + "|" + //
                                                                //det[i].BUS_AREA + "|" +
@@ -181,6 +201,7 @@ namespace WFARTHA.Models
                         for (int i = 0; i < doc.DOCUMENTORs.Count; i++)
                         {
                             sw.WriteLine(
+                            "4" + "|" +
                             "W" + "|" +
                             doc.DOCUMENTORs.ElementAt(i).WITHT + "|" +
                             doc.DOCUMENTORs.ElementAt(i).WT_WITHCD + "|" +
