@@ -764,7 +764,7 @@ namespace WFARTHA.Controllers
                                 dp.FACTURA = doc.DOCUMENTOP[i].FACTURA;
                                 dp.TCONCEPTO = doc.DOCUMENTOP[i].TCONCEPTO;
                                 dp.GRUPO = doc.DOCUMENTOP[i].GRUPO;
-                                dp.CUENTA = doc.PAYER_ID;
+                                dp.CUENTA = doc.DOCUMENTOP[i].CUENTA;//MGC 17-10-2018.2 Modificación Cuenta de PEP
                                 dp.TIPOIMP = doc.DOCUMENTOP[i].TIPOIMP;
                                 dp.IMPUTACION = doc.DOCUMENTOP[i].IMPUTACION;
                                 dp.CCOSTO = doc.DOCUMENTOP[i].CCOSTO;
