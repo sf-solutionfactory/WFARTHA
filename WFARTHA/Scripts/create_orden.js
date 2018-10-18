@@ -15,47 +15,50 @@ $('body').on('keydown.autocomplete', '#norden_compra', function () {
     var tr = $(this).closest('tr'); //Obtener el row
 
     //Obtener el id de la sociedad
-    var soc = $("#SOCIEDAD_ID").val();
+    var prov = $("#PAYER_ID").val();
+    var pedidosNum = [];
+    if (prov.trim() !== "") {
+        pedidosNum = ["4000000001", "4000000002", "4000000003", "4000000004", "4000000005"];
+    }
+        auto(this).autocomplete({
+            source: //function (request, response) {
+            //auto.ajax({
+            //    type: "POST",
+            //    url: 'getProveedor',
+            //    dataType: "json",
+            //    data: { "Prefix": request.term, bukrs: soc },
+            //    success: function (data) {
+            //        response(auto.map(data, function (item) {
 
-    auto(this).autocomplete({
-        source: //function (request, response) {
-        //auto.ajax({
-        //    type: "POST",
-        //    url: 'getProveedor',
-        //    dataType: "json",
-        //    data: { "Prefix": request.term, bukrs: soc },
-        //    success: function (data) {
-        //        response(auto.map(data, function (item) {
-
-        //            //return { label: trimStart('0', item.LIFNR) + " - " + item.NAME1, value: trimStart('0', item.LIFNR) };
-        //            return { label: trimStart('0', item.LIFNR) + " - " + item.NAME1, value: item.LIFNR };
-        //        }))
-        //    }
-        //})
-        ["4000000001", "4000000002", "4000000003", "4000000004", "4000000005"]
-        //}
-        ,
-        messages: {
-            noResults: '',
-            results: function (resultsCount) { }
-        },
-        change: function (e, ui) {
-            if (!(ui.item)) {
-                e.target.value = "";
+            //            //return { label: trimStart('0', item.LIFNR) + " - " + item.NAME1, value: trimStart('0', item.LIFNR) };
+            //            return { label: trimStart('0', item.LIFNR) + " - " + item.NAME1, value: item.LIFNR };
+            //        }))
+            //    }
+            //})
+            pedidosNum
+            //}
+            ,
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+            },
+            select: function (event, ui) {
+                pedidosSel = [];
+                var label = ui.item.label;
+                var value = ui.item.value;
+                for (var i = 0; i < pedidos.length; i++) {
+                    if (pedidos[i].NUM_PED == value)
+                        pedidosSel.push(pedidos[i]);
+                }
+                //alert(pedidosSel);
+                addPedido(pedidosSel);
             }
-        },
-        select: function (event, ui) {
-            pedidosSel = [];
-            var label = ui.item.label;
-            var value = ui.item.value;
-            for (var i = 0; i < pedidos.length; i++) {
-                if (pedidos[i].NUM_PED == value)
-                    pedidosSel.push(pedidos[i]);
-            }
-            //alert(pedidosSel);
-            addPedido(pedidosSel);
-        }
-    });
+        });
 });
 
 
