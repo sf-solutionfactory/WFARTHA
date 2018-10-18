@@ -18,7 +18,7 @@ using System.IO;
 
 namespace WFARTHA.Controllers
 {
-    [Authorize]
+    [Authorize]//ADD RSG 17.10.2018
     public class SolicitudesController : Controller
     {
         private WFARTHAEntities db = new WFARTHAEntities();
@@ -3726,6 +3726,46 @@ namespace WFARTHA.Controllers
                     break;
             }
         }
+        //BEGIN OF INSERT RSG 17.10.2018
+        [HttpPost]
+        public JsonResult getPedidos(string Prefix, string lifnr)
+        {
+            var c = (from N in db.EKKO_DUMM
+                     where (N.LIFNR == lifnr & N.EBELN.Contains(Prefix))
+                     select new { N.EBELN }).ToList();
+
+            JsonResult jc = Json(c, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+        [HttpPost]
+        public JsonResult getPedidosPos(string ebeln)
+        {
+            var c = (from N in db.EKPO_DUMM
+                     where (N.EBELN.Equals(ebeln))
+                     select new {
+                         N.BPUMN,
+                         N.BPUMZ,
+                         N.BRTWR,
+                         N.EBELN,
+                         N.EBELP,
+                         N.H_ANT_AMORT,
+                         N.H_ANT_PAG,
+                         N.H_ANT_SOL,
+                         N.H_QUANTITY,
+                         N.H_VAL_CURRENCY,
+                         N.H_VAL_FORCUR,
+                         N.H_VAL_LOCCUR,
+                         N.MATNR,
+                         N.MEINS,
+                         N.MENGE,
+                         N.NETWR,
+                         N.TXZ0
+                     }).ToList();
+
+            JsonResult jc = Json(c, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+        //END OF INSERT RSG 17.10.2018
     }
     public class TXTImp
     {

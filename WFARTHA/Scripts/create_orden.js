@@ -17,26 +17,25 @@ $('body').on('keydown.autocomplete', '#norden_compra', function () {
     //Obtener el id de la sociedad
     var prov = $("#PAYER_ID").val();
     var pedidosNum = [];
-    if (prov.trim() !== "") {
-        pedidosNum = ["4000000001", "4000000002", "4000000003", "4000000004", "4000000005"];
-    }
+    //if (prov.trim() !== "") {
+    //    pedidosNum = ["4000000001", "4000000002", "4000000003", "4000000004", "4000000005"];
+    //}
         auto(this).autocomplete({
-            source: //function (request, response) {
-            //auto.ajax({
-            //    type: "POST",
-            //    url: 'getProveedor',
-            //    dataType: "json",
-            //    data: { "Prefix": request.term, bukrs: soc },
-            //    success: function (data) {
-            //        response(auto.map(data, function (item) {
-
-            //            //return { label: trimStart('0', item.LIFNR) + " - " + item.NAME1, value: trimStart('0', item.LIFNR) };
-            //            return { label: trimStart('0', item.LIFNR) + " - " + item.NAME1, value: item.LIFNR };
-            //        }))
-            //    }
-            //})
-            pedidosNum
-            //}
+            source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: 'getPedidos',
+                dataType: "json",
+                data: { "Prefix": request.term, lifnr: prov },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+                        //return { label: trimStart('0', item.LIFNR) + " - " + item.NAME1, value: trimStart('0', item.LIFNR) };
+                        return { label: trimStart('0', item.EBELN), value: trimStart('0', item.EBELN) };
+                    }))
+                }
+            })
+            //pedidosNum
+            }
             ,
             messages: {
                 noResults: '',
@@ -51,38 +50,49 @@ $('body').on('keydown.autocomplete', '#norden_compra', function () {
                 pedidosSel = [];
                 var label = ui.item.label;
                 var value = ui.item.value;
-                for (var i = 0; i < pedidos.length; i++) {
-                    if (pedidos[i].NUM_PED == value)
-                        pedidosSel.push(pedidos[i]);
-                }
-                //alert(pedidosSel);
-                addPedido(pedidosSel);
+                //for (var i = 0; i < pedidos.length; i++) {
+                //    if (pedidos[i].NUM_PED == value)
+                //        pedidosSel.push(pedidos[i]);
+                //}
+                ////alert(pedidosSel);
+                addPedido(value);
             }
         });
 });
 
 
-function addPedido(P) {
+function addPedido(ebeln) {
     var t = $('#table_info').DataTable();
 
     t.rows().remove().draw(false);
 
-    var posinfo = 0;
-    for (var i = 0; i < P.length; i++) {
-        var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", P[i].MONTO, "", "", "", "", "", "");//Lej 13.09.2018 //MGC 03-10-2018 solicitud con orden de compra
-        posinfo = i+1;
+    auto.ajax({
+        type: "POST",
+        url: 'getPedidosPos',
+        dataType: "json",
+        data: { ebeln: ebeln },
+        success: function (data) {
+            var P = data;
 
-        //Obtener el select de impuestos en la cabecera
-        var idselect = "infoSel" + posinfo;
+            var posinfo = 0;
+            for (var i = 0; i < P.length; i++) {
+                var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", P[i].MENGE, "", "", "", "", "", "");//Lej 13.09.2018 //MGC 03-10-2018 solicitud con orden de compra
+                posinfo = i + 1;
 
-        //Obtener el valor 
-        var imp = $('#IMPUESTO').val();
+                //Obtener el select de impuestos en la cabecera
+                var idselect = "infoSel" + posinfo;
 
-        //MGC 04092018 Conceptos
-        //Crear el nuevo select con los valores de impuestos
-        addSelectImpuesto(addedRowInfo, imp, idselect, "", "X");
+                //Obtener el valor 
+                var imp = $('#IMPUESTO').val();
+                addSelectImpuesto(addedRowInfo, imp, idselect, "", "X");
+                
+                updateFooter();
+            }
+        },
+        error: function (x) {
+            alert(x);
+        },
+        sync: false
+    });
 
-
-        updateFooter();
-    }
 }
