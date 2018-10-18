@@ -288,6 +288,12 @@
     <Compile Include="Entities\DOCUMENTOV.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\EKKO_DUMM.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\EKPO_DUMM.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\FLUJO.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>

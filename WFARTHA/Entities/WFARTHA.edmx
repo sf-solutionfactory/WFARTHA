@@ -120,8 +120,8 @@
           <Property Name="AGENTE_SIG" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="OVERRIDE" Type="bit" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.DET_AGENTECC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_AGENTECC' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DET_AGENTECC">
           <Key>
             <PropertyRef Name="VERSION" />
@@ -148,8 +148,8 @@ warning 6002: The table/view 'PAGOS.dbo.DET_AGENTECC' does not have a primary ke
           <Property Name="ID_USUARIO" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="STEP_FASE" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.DET_PEP' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_PEP' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DET_PEP">
           <Key>
             <PropertyRef Name="PSPNR" />
@@ -365,6 +365,45 @@ warning 6002: The table/view 'PAGOS.dbo.DET_PEP' does not have a primary key def
           <Property Name="IMPORTE" Type="decimal" Precision="13" Scale="5" />
           <Property Name="DESCR" Type="nvarchar" MaxLength="60" />
         </EntityType>
+        <EntityType Name="EKKO_DUMM">
+          <Key>
+            <PropertyRef Name="EBELN" />
+          </Key>
+          <Property Name="EBELN" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="LIFNR" Type="nchar" MaxLength="10" />
+          <Property Name="BEDAT" Type="nchar" MaxLength="8" />
+          <Property Name="BUKRS" Type="nchar" MaxLength="4" />
+          <Property Name="ZTERM" Type="nchar" MaxLength="4" />
+          <Property Name="EKORG" Type="nchar" MaxLength="4" />
+          <Property Name="WAERS" Type="nchar" MaxLength="5" />
+          <Property Name="WKURS" Type="decimal" Precision="13" Scale="5" />
+          <Property Name="RETPC" Type="decimal" Precision="13" Scale="5" />
+          <Property Name="DPPCT" Type="decimal" Precision="13" Scale="5" />
+          <Property Name="DPAMT" Type="decimal" Precision="13" Scale="5" />
+        </EntityType>
+        <EntityType Name="EKPO_DUMM">
+          <Key>
+            <PropertyRef Name="EBELN" />
+            <PropertyRef Name="EBELP" />
+          </Key>
+          <Property Name="EBELN" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="EBELP" Type="numeric" Precision="5" Scale="0" Nullable="false" />
+          <Property Name="TXZ0" Type="nvarchar" MaxLength="40" />
+          <Property Name="MATNR" Type="nvarchar" MaxLength="40" />
+          <Property Name="MENGE" Type="decimal" Precision="13" Scale="3" />
+          <Property Name="MEINS" Type="nvarchar" MaxLength="3" />
+          <Property Name="BPUMZ" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="BPUMN" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="NETWR" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="BRTWR" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="H_QUANTITY" Type="decimal" Precision="13" Scale="3" />
+          <Property Name="H_VAL_LOCCUR" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="H_VAL_FORCUR" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="H_VAL_CURRENCY" Type="nvarchar" MaxLength="5" />
+          <Property Name="H_ANT_PAG" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="H_ANT_SOL" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="H_ANT_AMORT" Type="decimal" Precision="13" Scale="2" />
+        </EntityType>
         <EntityType Name="FLUJO">
           <Key>
             <PropertyRef Name="WORKF_ID" />
@@ -401,8 +440,8 @@ warning 6002: The table/view 'PAGOS.dbo.DET_PEP' does not have a primary key def
           <Property Name="DECIMALES" Type="nchar" MaxLength="1" Nullable="false" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.IIMPUESTO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="IIMPUESTO">
           <Key>
             <PropertyRef Name="MWSKZ" />
@@ -774,8 +813,8 @@ warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key d
           <Property Name="USUARIO_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="FECHAC" Type="datetime" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.ASIGN_PROY_SOC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.ASIGN_PROY_SOC' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="ASIGN_PROY_SOC">
           <Key>
             <PropertyRef Name="ID_PSPNR" />
@@ -784,8 +823,8 @@ warning 6002: The table/view 'PAGOS.dbo.ASIGN_PROY_SOC' does not have a primary 
           <Property Name="ID_PSPNR" Type="nvarchar" MaxLength="8" Nullable="false" />
           <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.CARPETAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.CARPETAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CARPETAV">
           <Key>
             <PropertyRef Name="USUARIO_ID" />
@@ -797,8 +836,8 @@ warning 6002: The table/view 'PAGOS.dbo.CARPETAV' does not have a primary key de
           <Property Name="TXT50" Type="nvarchar" MaxLength="50" />
           <Property Name="ICON" Type="nvarchar" MaxLength="20" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.DOCUMENTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.DOCUMENTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DOCUMENTOV">
           <Key>
             <PropertyRef Name="POS" />
@@ -858,8 +897,8 @@ warning 6002: The table/view 'PAGOS.dbo.DOCUMENTOV' does not have a primary key 
           <Property Name="USUARIOA_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="EXPR2" Type="nchar" MaxLength="1" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.PAGINAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.PAGINAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="PAGINAV">
           <Key>
             <PropertyRef Name="ID" />
@@ -879,8 +918,8 @@ warning 6002: The table/view 'PAGOS.dbo.PAGINAV' does not have a primary key def
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="USUARIO_SPRAS" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="WARNINGV">
           <Key>
             <PropertyRef Name="PAGINA_ID" />
@@ -1259,6 +1298,18 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             </Principal>
             <Dependent Role="DOCUMENTOSAP">
               <PropertyRef Name="NUM_DOC" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EKPO_DUMM_EKKO_DUMM">
+          <End Role="EKKO_DUMM" Type="Self.EKKO_DUMM" Multiplicity="1" />
+          <End Role="EKPO_DUMM" Type="Self.EKPO_DUMM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EKKO_DUMM">
+              <PropertyRef Name="EBELN" />
+            </Principal>
+            <Dependent Role="EKPO_DUMM">
+              <PropertyRef Name="EBELN" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1806,6 +1857,8 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <EntitySet Name="DOCUMENTOR" EntityType="Self.DOCUMENTOR" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DOCUMENTORP" EntityType="Self.DOCUMENTORP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DOCUMENTOSAP" EntityType="Self.DOCUMENTOSAP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EKKO_DUMM" EntityType="Self.EKKO_DUMM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EKPO_DUMM" EntityType="Self.EKPO_DUMM" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FLUJO" EntityType="Self.FLUJO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FORMATO" EntityType="Self.FORMATO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IMPUESTO" EntityType="Self.IMPUESTO" Schema="dbo" store:Type="Tables" />
@@ -2084,6 +2137,10 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <AssociationSet Name="FK_DOCUMENTOSAP_DOCUMENTO" Association="Self.FK_DOCUMENTOSAP_DOCUMENTO">
             <End Role="DOCUMENTO" EntitySet="DOCUMENTO" />
             <End Role="DOCUMENTOSAP" EntitySet="DOCUMENTOSAP" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EKPO_DUMM_EKKO_DUMM" Association="Self.FK_EKPO_DUMM_EKKO_DUMM">
+            <End Role="EKKO_DUMM" EntitySet="EKKO_DUMM" />
+            <End Role="EKPO_DUMM" EntitySet="EKPO_DUMM" />
           </AssociationSet>
           <AssociationSet Name="FK_FLUJO_DOCUMENTO" Association="Self.FK_FLUJO_DOCUMENTO">
             <End Role="DOCUMENTO" EntitySet="DOCUMENTO" />
@@ -4440,6 +4497,12 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             <End Role="SOCIEDAD" EntitySet="SOCIEDADs" />
           </AssociationSet>
           <EntitySet Name="ASIGN_PROY_SOC" EntityType="WFARTHAModel.ASIGN_PROY_SOC" />
+          <EntitySet Name="EKKO_DUMM" EntityType="WFARTHAModel.EKKO_DUMM" />
+          <EntitySet Name="EKPO_DUMM" EntityType="WFARTHAModel.EKPO_DUMM" />
+          <AssociationSet Name="FK_EKPO_DUMM_EKKO_DUMM" Association="WFARTHAModel.FK_EKPO_DUMM_EKKO_DUMM">
+            <End Role="EKKO_DUMM" EntitySet="EKKO_DUMM" />
+            <End Role="EKPO_DUMM" EntitySet="EKPO_DUMM" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="ASIGN_PROY_SOC">
           <Key>
@@ -4449,6 +4512,59 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <Property Name="ID_PSPNR" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
           <Property Name="ID_BUKRS" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="true" />
         </EntityType>
+        <EntityType Name="EKKO_DUMM">
+          <Key>
+            <PropertyRef Name="EBELN" />
+          </Key>
+          <Property Name="EBELN" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="LIFNR" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="BEDAT" Type="String" MaxLength="8" FixedLength="true" Unicode="true" />
+          <Property Name="BUKRS" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="ZTERM" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="EKORG" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="WAERS" Type="String" MaxLength="5" FixedLength="true" Unicode="true" />
+          <Property Name="WKURS" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="RETPC" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="DPPCT" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="DPAMT" Type="Decimal" Precision="13" Scale="5" />
+          <NavigationProperty Name="EKPO_DUMM" Relationship="WFARTHAModel.FK_EKPO_DUMM_EKKO_DUMM" FromRole="EKKO_DUMM" ToRole="EKPO_DUMM" />
+        </EntityType>
+        <EntityType Name="EKPO_DUMM">
+          <Key>
+            <PropertyRef Name="EBELN" />
+            <PropertyRef Name="EBELP" />
+          </Key>
+          <Property Name="EBELN" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="EBELP" Type="Decimal" Nullable="false" Precision="5" Scale="0" />
+          <Property Name="TXZ0" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="MATNR" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="MENGE" Type="Decimal" Precision="13" Scale="3" />
+          <Property Name="MEINS" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="BPUMZ" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="BPUMN" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="NETWR" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="BRTWR" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="H_QUANTITY" Type="Decimal" Precision="13" Scale="3" />
+          <Property Name="H_VAL_LOCCUR" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="H_VAL_FORCUR" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="H_VAL_CURRENCY" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="H_ANT_PAG" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="H_ANT_SOL" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="H_ANT_AMORT" Type="Decimal" Precision="13" Scale="2" />
+          <NavigationProperty Name="EKKO_DUMM" Relationship="WFARTHAModel.FK_EKPO_DUMM_EKKO_DUMM" FromRole="EKPO_DUMM" ToRole="EKKO_DUMM" />
+        </EntityType>
+        <Association Name="FK_EKPO_DUMM_EKKO_DUMM">
+          <End Type="WFARTHAModel.EKKO_DUMM" Role="EKKO_DUMM" Multiplicity="1" />
+          <End Type="WFARTHAModel.EKPO_DUMM" Role="EKPO_DUMM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EKKO_DUMM">
+              <PropertyRef Name="EBELN" />
+            </Principal>
+            <Dependent Role="EKPO_DUMM">
+              <PropertyRef Name="EBELN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5319,6 +5435,46 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
               <MappingFragment StoreEntitySet="ASIGN_PROY_SOC">
                 <ScalarProperty Name="ID_BUKRS" ColumnName="ID_BUKRS" />
                 <ScalarProperty Name="ID_PSPNR" ColumnName="ID_PSPNR" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EKKO_DUMM">
+            <EntityTypeMapping TypeName="WFARTHAModel.EKKO_DUMM">
+              <MappingFragment StoreEntitySet="EKKO_DUMM">
+                <ScalarProperty Name="DPAMT" ColumnName="DPAMT" />
+                <ScalarProperty Name="DPPCT" ColumnName="DPPCT" />
+                <ScalarProperty Name="RETPC" ColumnName="RETPC" />
+                <ScalarProperty Name="WKURS" ColumnName="WKURS" />
+                <ScalarProperty Name="WAERS" ColumnName="WAERS" />
+                <ScalarProperty Name="EKORG" ColumnName="EKORG" />
+                <ScalarProperty Name="ZTERM" ColumnName="ZTERM" />
+                <ScalarProperty Name="BUKRS" ColumnName="BUKRS" />
+                <ScalarProperty Name="BEDAT" ColumnName="BEDAT" />
+                <ScalarProperty Name="LIFNR" ColumnName="LIFNR" />
+                <ScalarProperty Name="EBELN" ColumnName="EBELN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EKPO_DUMM">
+            <EntityTypeMapping TypeName="WFARTHAModel.EKPO_DUMM">
+              <MappingFragment StoreEntitySet="EKPO_DUMM">
+                <ScalarProperty Name="H_ANT_AMORT" ColumnName="H_ANT_AMORT" />
+                <ScalarProperty Name="H_ANT_SOL" ColumnName="H_ANT_SOL" />
+                <ScalarProperty Name="H_ANT_PAG" ColumnName="H_ANT_PAG" />
+                <ScalarProperty Name="H_VAL_CURRENCY" ColumnName="H_VAL_CURRENCY" />
+                <ScalarProperty Name="H_VAL_FORCUR" ColumnName="H_VAL_FORCUR" />
+                <ScalarProperty Name="H_VAL_LOCCUR" ColumnName="H_VAL_LOCCUR" />
+                <ScalarProperty Name="H_QUANTITY" ColumnName="H_QUANTITY" />
+                <ScalarProperty Name="BRTWR" ColumnName="BRTWR" />
+                <ScalarProperty Name="NETWR" ColumnName="NETWR" />
+                <ScalarProperty Name="BPUMN" ColumnName="BPUMN" />
+                <ScalarProperty Name="BPUMZ" ColumnName="BPUMZ" />
+                <ScalarProperty Name="MEINS" ColumnName="MEINS" />
+                <ScalarProperty Name="MENGE" ColumnName="MENGE" />
+                <ScalarProperty Name="MATNR" ColumnName="MATNR" />
+                <ScalarProperty Name="TXZ0" ColumnName="TXZ0" />
+                <ScalarProperty Name="EBELP" ColumnName="EBELP" />
+                <ScalarProperty Name="EBELN" ColumnName="EBELN" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
