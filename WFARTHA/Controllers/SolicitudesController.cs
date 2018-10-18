@@ -2760,13 +2760,13 @@ namespace WFARTHA.Controllers
             for (int x = 0; x < _retl.Count; x++)
             {
                 listRet _l = new listRet();
-                var rttt = _retl2.Where(o => o.WITHT == _retl[x].WITHT && o.WT_WITHCD == _retl[x].WT_WITHCD).FirstOrDefault() ;
+                var rttt = _retl2.Where(o => o.WITHT == _retl[x].WITHT && o.WT_WITHCD == _retl[x].WT_WITHCD).FirstOrDefault();
                 _l.LIFNR = _retl[x].LIFNR;
                 _l.BUKRS = _retl[x].BUKRS;
                 _l.WITHT = rttt.WITHT;
                 _l.DESC = rttt.DESCRIPCION;
                 _l.WT_WITHCD = rttt.WT_WITHCD;
-               
+
                 lstret.Add(_l);
             }
             var retl = lstret;
@@ -2775,7 +2775,7 @@ namespace WFARTHA.Controllers
                 //Obtener los textos de las retenciones
                 retlt = (from r in retl
                          join rt in db.RETENCIONTs
-                         on new { A=r.WITHT, B=r.WT_WITHCD} equals new { A=rt.WITHT,B=rt.WT_WITHCD}
+                         on new { A = r.WITHT, B = r.WT_WITHCD } equals new { A = rt.WITHT, B = rt.WT_WITHCD }
                          into jj
                          from rt in jj.DefaultIfEmpty()
                          where rt.SPRAS_ID.Equals("ES")
@@ -3507,12 +3507,12 @@ namespace WFARTHA.Controllers
         }
 
         [HttpPost]
-        public FileResult Descargar(string archivo)
+        public FileResult Descargar(string btnArchivo)
         {
             //LEJ 03.10.2018
             string nombre = "", contentyp = "";
-            contDescarga(archivo, ref contentyp, ref nombre);
-            return File(descargarArchivo(archivo, contentyp, nombre), contentyp, nombre);
+            contDescarga(btnArchivo, ref contentyp, ref nombre);
+            return File(descargarArchivo(btnArchivo, contentyp, nombre), contentyp, nombre);
         }
 
         public string SaveFile(HttpPostedFileBase file, string path)
@@ -3547,7 +3547,7 @@ namespace WFARTHA.Controllers
             requestStream.Write(fileContents, 0, fileContents.Length);
             requestStream.Close();
             request.ContentLength = fileContents.Length;
-       
+
             var response = (FtpWebResponse)request.GetResponse();
             //-------------------------------------------------------------------
             //Parte para guardar archivo en el servidor
@@ -3573,41 +3573,6 @@ namespace WFARTHA.Controllers
         public string descargarArchivo(string dir, string tipoDoc, string nombre)
         {
             int resp = 0;
-            //string RemoteFtpPath = "ftp://ftp.csidata.com:21/Futures.20150305.gz";
-            /*string _tipo = "";
-            switch (tipoDoc)
-            {               
-                case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                    _tipo = "xlsx";
-                    break;
-                case "application/vnd.ms-excel.sheet.macroEnabled.12":
-                    _tipo = "xlsm";
-                    break;              
-                case "application/vnd.ms-excel":
-                    _tipo = "xls";
-                    break;              
-                case "application/msword":
-                    _tipo = "doc";
-                    break;
-                case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-                    _tipo = "docx";
-                    break;
-                case "application/vnd.openxmlformats-officedocument.wordprocessingml.template":
-                    _tipo = "dotx";
-                    break;              
-                case "pdf":
-                    _tipo = "application/pdf";
-                    break;
-                case "application/zip":
-                    _tipo = "zip";
-                    break;
-                case "image/jpeg":
-                    _tipo = "jpg";
-                    break;
-                case "image/png":
-                    _tipo = "png";
-                    break;
-            }*/
             string LocalDestinationPath = @"C:\Users\EQUIPO\Documents\GitHub\WFARTHA\WFARTHA\Descargas\" + nombre;
             string Username = "luis.gonzalez";
             const string Comillas = "\"";
@@ -3649,7 +3614,8 @@ namespace WFARTHA.Controllers
             response.Close();
             if (resp > 0)
             {
-                return LocalDestinationPath;
+                //return LocalDestinationPath;
+                return dir;
             }
             return "";
         }
@@ -3742,7 +3708,8 @@ namespace WFARTHA.Controllers
         {
             var c = (from N in db.EKPO_DUMM
                      where (N.EBELN.Equals(ebeln))
-                     select new {
+                     select new
+                     {
                          N.BPUMN,
                          N.BPUMZ,
                          N.BRTWR,

@@ -183,6 +183,8 @@ namespace WFARTHA.Controllers
             {
                 //Session["pais"] = null;
                 FormsAuthentication.SignOut();
+                Session["id_pr"] = null;
+                Session["pr"] = null;
                 return RedirectToAction("Index", "Home");
             }
             catch
