@@ -369,6 +369,13 @@ $(document).ready(function () {
         event.cancel = true;
     });
 
+    $('#delRowAnex').click(function (e) {
+        var t = $('#table_anexa').DataTable();
+        t.rows('.selected').remove().draw(false);
+        event.returnValue = false;
+        event.cancel = true;
+    });
+
     $('#table_info tbody').on('click', 'td.select_row', function () {
         var t = $('#table_info').DataTable();
         var tr = $(this).closest('tr');
