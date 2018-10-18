@@ -408,7 +408,7 @@ namespace WFARTHA.Models
                         String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|" +
                         doc.MONEDA_ID.Trim() + "|" +
                         //+ "|" + //MGC 11-10-2018 Acciones para el encabezado
-                        doc.REFERENCIA + "|" +
+                        doc.REFERENCIA.Trim() + "|" +
                         doc.CONCEPTO + "|" + //MGC 11-10-2018 Acciones para el encabezado
                         "" + "|" +
                         "" + "|" +
@@ -441,9 +441,9 @@ namespace WFARTHA.Models
                             "|" +
                             //det[i].POST_KEY + "|" +
                             postk + "|" +
-                            doc.DOCUMENTOPs.ElementAt(i).CUENTA + "|" +//det[i].ACCOUNT + "|" +
-                            doc.DOCUMENTOPs.ElementAt(i).CCOSTO + "|" +//det[i].COST_CENTER + "|" +
-                            doc.DOCUMENTOPs.ElementAt(i).IMPUTACION + "|" +
+                            doc.DOCUMENTOPs.ElementAt(i).CUENTA.Trim() + "|" +//det[i].ACCOUNT + "|" +
+                            doc.DOCUMENTOPs.ElementAt(i).CCOSTO.Trim() + "|" +//det[i].COST_CENTER + "|" +
+                            doc.DOCUMENTOPs.ElementAt(i).IMPUTACION.Trim() + "|" +
                             doc.DOCUMENTOPs.ElementAt(i).MONTO + "|" +//det[i].BALANCE + "|" +
                             doc.DOCUMENTOPs.ElementAt(i).TEXTO + "|" + //det[i].TEXT + "|" +
                                                                        //det[i].SALES_ORG + "|" +
