@@ -1391,7 +1391,7 @@ $('body').on('focusout', '.OPER', function (e) {
         }
     }
     updateFooter();
-    $(".extrasC").trigger("focusout");
+    //$(".extrasC").trigger("focusout"); //lej18102018
 });
 
 function sumarColumnasExtras(tr) {
@@ -1857,7 +1857,6 @@ $('body').on('focusout', '.extrasC', function (e) {
     //var y = parseFloat(num);
     var total = 0;
     var _t = $('#table_ret').DataTable();
-    var centi = 999;
     var _this = $(this);
     var tr = $(this).closest('tr'); //Obtener el row 
     //sumarizarTodoRow(_this);
@@ -1872,17 +1871,37 @@ $('body').on('focusout', '.extrasC', function (e) {
         _nnm = parseFloat(_nnm.replace(',', ''));
     }
 
-    if (_nnm != "") {
+    if (_nnm !== "") {
         var cl = _this.attr('class');
         var arrcl = cl.split('p');
         var _res = porcentajeImpRet(tRet2[arrcl[1]]);
         _res = (_nnm * _res) / 100;//Saco el porcentaje
         tr.find("td.ImpRet" + tRet2[arrcl[1]] + " input").val(toShow(_res));
-        //Hacer focusout para actualizar todos los valores
-        $(".extrasC2").trigger("focusout");
+        //--------------------------------------LEJ18102018---------------------->
+        //hare la operacion para actualizar el total del renglon
+        var _mnt = tr.find("td.MONTO input").val().replace('$', '');
+        if (_mnt === "") {
+            //si esta vacio le agrego un valor de 0.0
+            _mnt = parseFloat("0.0");
+        }
+        else {
+            _mnt = parseFloat(_mnt.replace(',', ''));
+        }
+        var _iva = tr.find("td.IVA input").val().replace('$', '');
+        if (_iva === "") {
+            //si esta vacio le agrego un valor de 0.0
+            _iva = parseFloat("0.0");
+        } else {
+            _iva = parseFloat(_iva.replace(',', ''));
+        }
+        var _ttal = (_mnt + _iva) - sumarColumnasExtras(tr);;
+        //actualizar el total
+        tr.find("td.TOTAL input").val(toShow(_ttal));
+        //--------------------------------------LEJ18102018----------------------<
     }
     $(this).val("$" + _nnm.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-    $("#table_info > tbody > tr[role = 'row']").each(function (index) {
+    updateFooter();
+    /*$("#table_info > tbody > tr[role = 'row']").each(function (index) {
         for (x = 0; x < tRet2.length; x++) {
             var _var = "BaseImp" + x;
             _v2 = "BaseImp" + (tRet2[x]);
@@ -1903,7 +1922,7 @@ $('body').on('focusout', '.extrasC', function (e) {
     if (centi != 9999) {
         $('#table_ret tbody tr').eq(centi).find('td').eq(3).text('$' + total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
         $('#table_ret tbody tr').eq(centi + 2).find('td').eq(3).text('$' + total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-    }
+    }*/
 });
 
 $('body').on('focusout', '.extrasC2', function (e) {
