@@ -12,26 +12,27 @@ namespace WFARTHA.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class WORKFH
+    public partial class EKKO_DUMM
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public WORKFH()
+        public EKKO_DUMM()
         {
-            this.WORKFVs = new HashSet<WORKFV>();
+            this.EKPO_DUMM = new HashSet<EKPO_DUMM>();
         }
     
-        public string ID { get; set; }
-        public string DESCRIPCION { get; set; }
-        public string TSOL_ID { get; set; }
-        public Nullable<bool> ESTATUS { get; set; }
-        public string USUARIO_ID { get; set; }
-        public Nullable<System.DateTime> FECHAC { get; set; }
+        public string EBELN { get; set; }
+        public string LIFNR { get; set; }
+        public string BEDAT { get; set; }
         public string BUKRS { get; set; }
-        public Nullable<int> ROL_ID { get; set; }
+        public string ZTERM { get; set; }
+        public string EKORG { get; set; }
+        public string WAERS { get; set; }
+        public Nullable<decimal> WKURS { get; set; }
+        public Nullable<decimal> RETPC { get; set; }
+        public Nullable<decimal> DPPCT { get; set; }
+        public Nullable<decimal> DPAMT { get; set; }
     
-        public virtual TSOL TSOL { get; set; }
-        public virtual USUARIO USUARIO { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WORKFV> WORKFVs { get; set; }
+        public virtual ICollection<EKPO_DUMM> EKPO_DUMM { get; set; }
     }
 }
