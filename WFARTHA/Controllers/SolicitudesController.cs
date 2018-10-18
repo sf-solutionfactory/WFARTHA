@@ -18,6 +18,7 @@ using System.IO;
 
 namespace WFARTHA.Controllers
 {
+    [Authorize]
     public class SolicitudesController : Controller
     {
         private WFARTHAEntities db = new WFARTHAEntities();
