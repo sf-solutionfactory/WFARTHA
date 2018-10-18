@@ -287,7 +287,7 @@ namespace WFARTHA.Models
                         String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|" +
                         doc.MONEDA_ID.Trim() + "|" +
                         //+ "|" + //MGC 11-10-2018 Acciones para el encabezado
-                        doc.REFERENCIA + "|" +
+                        doc.REFERENCIA.Trim() + "|" +
                         doc.CONCEPTO + "|" + //MGC 11-10-2018 Acciones para el encabezado
                         "" + "|" +
                         "" + "|" +
@@ -295,6 +295,9 @@ namespace WFARTHA.Models
                         );
                     //sw.WriteLine("");//MGC 17-10-2018.2 Adaptación a archivo
                     //for (int i = 0; i < det.Count; i++)
+
+                    List<DOCUMENTOP> docp = doc.DOCUMENTOPs.OrderBy(p => p.ACCION).ToList();
+
                     for (int i = 0; i < doc.DOCUMENTOPs.Count; i++)
                     {
                         string post = "";
@@ -311,6 +314,11 @@ namespace WFARTHA.Models
                             postk = "40";
 
                         }
+
+                        string cuenta = doc.DOCUMENTOPs.ElementAt(i).CUENTA+"";
+                        string ccosto = doc.DOCUMENTOPs.ElementAt(i).CCOSTO + "";
+                        string imputacion = doc.DOCUMENTOPs.ElementAt(i).IMPUTACION + "";
+
                         sw.WriteLine(
                             //det[i].POS_TYPE + "|" +
                             "3" + "|" +
@@ -320,9 +328,9 @@ namespace WFARTHA.Models
                             "|" +
                             //det[i].POST_KEY + "|" +
                             postk + "|" +
-                            doc.DOCUMENTOPs.ElementAt(i).CUENTA + "|" +//det[i].ACCOUNT + "|" +
-                            doc.DOCUMENTOPs.ElementAt(i).CCOSTO + "|" +//det[i].COST_CENTER + "|" +
-                            doc.DOCUMENTOPs.ElementAt(i).IMPUTACION + "|" +
+                            cuenta.Trim() + "|" +//det[i].ACCOUNT + "|" +
+                            ccosto.Trim() + "|" +//det[i].COST_CENTER + "|" +
+                            imputacion.Trim() + "|" +
                             doc.DOCUMENTOPs.ElementAt(i).MONTO + "|" +//det[i].BALANCE + "|" +
                             doc.DOCUMENTOPs.ElementAt(i).TEXTO + "|" + //det[i].TEXT + "|" +
                                                                        //det[i].SALES_ORG + "|" +
