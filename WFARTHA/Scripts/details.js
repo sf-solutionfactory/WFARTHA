@@ -1,4 +1,6 @@
-﻿
+﻿//Variables globales
+var firmaVal = "";
+
 $(document).ready(function () {
 
     //Inicializar las tabs
@@ -202,6 +204,7 @@ $(document).ready(function () {
 
     var val3 = $('#tsol').val();
     showHide(val3);
+    
 });
 
 //Cuando se termina de cargar la página
@@ -324,8 +327,40 @@ function ocultarCampos(opc, load) {
 }
 
 
+    //MGC 18-10-2018 Firma del usuario -------------------------------------------------->
+    //Validar la firma del usuario
+
+function valF(frmValues) {
+
+    firmaVal = "";
+    firmaVallocal = "";
+    $.ajax({
+        type: "POST",
+        url: '../ValF',
+        //dataType: "json",
+        data: { "pws": frmValues },
+
+        success: function (data) {
+
+            asigF(data);
+           
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            var a = xhr;
+        },
+        async: false
+    });
 
 
+    firmaVallocal = firmaVal;
+    return firmaVallocal;
+}
 
+function asigF(fir) {
+    firmaVal = fir;
+}
+
+
+//MGC 18-10-2018 Firma del usuario --------------------------------------------------<
 
 

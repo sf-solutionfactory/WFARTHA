@@ -296,28 +296,30 @@ namespace WFARTHA.Models
                     //sw.WriteLine("");//MGC 17-10-2018.2 Adaptación a archivo
                     //for (int i = 0; i < det.Count; i++)
 
-                    List<DOCUMENTOP> docp = doc.DOCUMENTOPs.OrderBy(p => p.ACCION).ToList();
+                    //Obtener los rows H
+                    List<DOCUMENTOP> lh = doc.DOCUMENTOPs.Where(docl => docl.ACCION == "H").ToList();
+                    List<DOCUMENTOP> ld = doc.DOCUMENTOPs.Where(docl => docl.ACCION == "D").ToList();                  
 
-                    for (int i = 0; i < doc.DOCUMENTOPs.Count; i++)
+                    for (int i = 0; i < lh.Count; i++)
                     {
                         string post = "";
                         string postk = "";
 
-                        if (doc.DOCUMENTOPs.ElementAt(i).ACCION == "H")
+                        if (lh[i].ACCION == "H")
                         {
                             post = "P";
                             postk = "31";
                         }
-                        else if (doc.DOCUMENTOPs.ElementAt(i).ACCION == "D")
+                        else if (lh[i].ACCION == "D")
                         {
                             post = "G";
                             postk = "40";
 
                         }
 
-                        string cuenta = doc.DOCUMENTOPs.ElementAt(i).CUENTA+"";
-                        string ccosto = doc.DOCUMENTOPs.ElementAt(i).CCOSTO + "";
-                        string imputacion = doc.DOCUMENTOPs.ElementAt(i).IMPUTACION + "";
+                        string cuenta = lh[i].CUENTA+"";
+                        string ccosto = lh[i].CCOSTO + "";
+                        string imputacion = lh[i].IMPUTACION + "";
 
                         sw.WriteLine(
                             //det[i].POS_TYPE + "|" +
@@ -331,8 +333,8 @@ namespace WFARTHA.Models
                             cuenta.Trim() + "|" +//det[i].ACCOUNT + "|" +
                             ccosto.Trim() + "|" +//det[i].COST_CENTER + "|" +
                             imputacion.Trim() + "|" +
-                            doc.DOCUMENTOPs.ElementAt(i).MONTO + "|" +//det[i].BALANCE + "|" +
-                            doc.DOCUMENTOPs.ElementAt(i).TEXTO + "|" + //det[i].TEXT + "|" +
+                            lh[i].MONTO + "|" +//det[i].BALANCE + "|" +
+                            lh[i].TEXTO + "|" + //det[i].TEXT + "|" +
                                                                        //det[i].SALES_ORG + "|" +
                                                                        //det[i].DIST_CHANEL + "|" +
                             "|" +
@@ -355,7 +357,7 @@ namespace WFARTHA.Models
                             //det[i].PRODUCT + "|" +
                             "|" +
                             "|" +
-                            doc.DOCUMENTOPs.ElementAt(i).MWSKZ + "|" +//det[i].TAX_CODE + "|" +
+                            lh[i].MWSKZ + "|" +//det[i].TAX_CODE + "|" +
                                                                       //det[i].PLANT + "|" +
                                                                       //det[i].REF_KEY1 + "|" +
                                                                       //det[i].REF_KEY3 + "|" +
@@ -374,6 +376,84 @@ namespace WFARTHA.Models
                             "|"
                             );
                     }
+
+                    for (int i = 0; i < ld.Count; i++)
+                    {
+                        string post = "";
+                        string postk = "";
+
+                        if (ld[i].ACCION == "H")
+                        {
+                            post = "P";
+                            postk = "31";
+                        }
+                        else if (ld[i].ACCION == "D")
+                        {
+                            post = "G";
+                            postk = "40";
+
+                        }
+
+                        string cuenta = ld[i].CUENTA + "";
+                        string ccosto = ld[i].CCOSTO + "";
+                        string imputacion = ld[i].IMPUTACION + "";
+
+                        sw.WriteLine(
+                            //det[i].POS_TYPE + "|" +
+                            "3" + "|" +
+                            post + "|" +
+                            doc.SOCIEDAD_ID.Trim() + "|" + //det[i].COMP_CODE + "|" + //
+                                                           //det[i].BUS_AREA + "|" +
+                            "|" +
+                            //det[i].POST_KEY + "|" +
+                            postk + "|" +
+                            cuenta.Trim() + "|" +//det[i].ACCOUNT + "|" +
+                            ccosto.Trim() + "|" +//det[i].COST_CENTER + "|" +
+                            imputacion.Trim() + "|" +
+                            ld[i].MONTO + "|" +//det[i].BALANCE + "|" +
+                            ld[i].TEXTO + "|" + //det[i].TEXT + "|" +
+                                                //det[i].SALES_ORG + "|" +
+                                                //det[i].DIST_CHANEL + "|" +
+                            "|" +
+                            "|" +
+                            //det[i].DIVISION + "|" +
+                            "|" +
+                            //"|" +
+                            //"|" +
+                            //"|" +
+                            //"|" +
+                            //"|" +
+                            //det[i].INV_REF + "|" +
+                            //det[i].PAY_TERM + "|" +
+                            //det[i].JURIS_CODE + "|" +
+                            "|" +
+                            "|" +
+                            "|" +
+                            //"|" +
+                            //det[i].CUSTOMER + "|" +
+                            //det[i].PRODUCT + "|" +
+                            "|" +
+                            "|" +
+                            ld[i].MWSKZ + "|" +//det[i].TAX_CODE + "|" +
+                                               //det[i].PLANT + "|" +
+                                               //det[i].REF_KEY1 + "|" +
+                                               //det[i].REF_KEY3 + "|" +
+                                               //det[i].ASSIGNMENT + "|" +
+                                               //det[i].QTY + "|" +
+                                               //det[i].BASE_UNIT + "|" +
+                                               //det[i].AMOUNT_LC + "|" +
+                                               //det[i].RETENCION_ID + "|"
+                            "|" +
+                            "|" +
+                            "|" +
+                            "|" +
+                            "|" +
+                            "|" +
+                            "|" +
+                            "|"
+                            );
+                    }
+
                     //MGC 11-10-2018 Acciones para el encabezado RETENCIONES -->
                     for (int i = 0; i < doc.DOCUMENTORs.Count; i++)
                     {
