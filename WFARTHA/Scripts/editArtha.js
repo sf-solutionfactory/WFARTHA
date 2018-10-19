@@ -3,6 +3,9 @@ $(document).ready(function () {
     var elem = document.querySelectorAll('select');
     var instance = M.Select.init(elem, []);
 
+    //Formato a campo tipo_cambio
+    var _Tc = $('#TIPO_CAMBIO').val();
+    $('#TIPO_CAMBIO').val(toShow(_Tc));
     //Inicializar las tabs
     $('#tabs').tabs();
 
@@ -291,6 +294,7 @@ function armarTablaInfo(datos) {
     //LEJ16102018
     //traigo los campos de la tabla de detalle nt de la parte de baseimpoinle e importe de retencion
     var _infoBIIR = [];
+    var _infoAnex = [];
     $.ajax({
         type: "POST",
         url: '../getDocsPr',
@@ -306,33 +310,55 @@ function armarTablaInfo(datos) {
         },
         async: false
     });
+
+    $.ajax({
+        type: "POST",
+        url: '../getAnexos',
+        dataType: "json",
+        data: { 'id': _ref },
+        success: function (data) {
+            if (data !== null || data !== "") {
+                _infoAnex = data;
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
     var _infoc = _infoBIIR.length / 2;
     var arrColExTA = [];
-    if (_infoc === datos.DOCUMENTOPSTR.length) {
-        for (var i = 0; i < datos.DOCUMENTOPSTR.length; i++) {
-            for (var x = 0; x < _infoBIIR.length; x++) {
-                if (_infoBIIR[x].POS === (i + 1)) {
-                    arrColExTA.push(_infoBIIR[x]);
+    if (_infoAnex.length === datos.DOCUMENTOPSTR.length) {
+        if (_infoc === datos.DOCUMENTOPSTR.length) {
+            for (var i = 0; i < datos.DOCUMENTOPSTR.length; i++) {
+                for (var x = 0; x < _infoBIIR.length; x++) {
+                    if (_infoBIIR[x].POS === (i + 1)) {
+                        arrColExTA.push(_infoBIIR[x]);
+                    }
                 }
+                if (datos.DOCUMENTOPSTR[i].TEXTO === null) {
+                    datos.DOCUMENTOPSTR[i].TEXTO = "";
+                }
+                if (datos.DOCUMENTOPSTR[i].IMPUTACION === null) {
+                    datos.DOCUMENTOPSTR[i].IMPUTACION = "";
+                }
+                addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, _infoAnex[i].a1, _infoAnex[i].a2, _infoAnex[i].a3, _infoAnex[i].a4, _infoAnex[i].a5, datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, "", datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
+                    datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, "", datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
             }
-            addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, "", "", "", "", "", datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, "", datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
-                datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, "", datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
         }
     }
-
-
 }
 
-function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5, CA, FACTURA, TIPO_CONCEPTO, GRUPO, CUENTA, CUENTANOM, TIPOIMP, IMPUTACION, CCOSTO, MONTO, IMPUESTO, IVA, TEXTO, TOTAL, disabled, check,colsBIIR) { //MGC 03 - 10 - 2018 solicitud con orden de compra
+function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5, CA, FACTURA, TIPO_CONCEPTO, GRUPO, CUENTA, CUENTANOM, TIPOIMP, IMPUTACION, CCOSTO, MONTO, IMPUESTO, IVA, TEXTO, TOTAL, disabled, check, colsBIIR) { //MGC 03 - 10 - 2018 solicitud con orden de compra
 
     var r = addRowl(
         t,
         POS,
-        "<input disabled  class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo + "\">",
-        "<input disabled  class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo2 + "\">",
-        "<input disabled  class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo3 + "\">",
-        "<input disabled  class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo4 + "\">",
-        "<input disabled  class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo5 + "\">",
+        "<input class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo + "\">",
+        "<input class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo2 + "\">",
+        "<input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo3 + "\">",
+        "<input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo4 + "\">",
+        "<input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo5 + "\">",
         CA,//MGC 04092018 Conceptos
         "<input " + disabled + " class=\"FACTURA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + FACTURA + "\">",
         TIPO_CONCEPTO,
@@ -355,17 +381,17 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
 }
 
 function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, grupo, cuenta, cuentanom, tipoimp, imputacion, ccentro, monto, impuesto,
-    iva, texto, total, check,_dExtra) {
+    iva, texto, total, check, _dExtra) {
     //Lej 13.09.2018---
     var colstoAdd = "";
     for (i = 0; i < extraCols; i++) {
-        colstoAdd += '<td class=\"BaseImp' + tRet2[i] + '\"><input class=\"extrasC BaseImp' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + _dExtra[0].BIMPONIBLE + '\"></td>';
-        colstoAdd += '<td class=\"ImpRet' + tRet2[i] + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + _dExtra[0].IMPORTE_RET +'\"></td>';
+        colstoAdd += '<td class=\"BaseImp' + toShow(tRet2[i]) + '\"><input class=\"extrasC BaseImp' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[0].BIMPONIBLE) + '\"></td>';
+        colstoAdd += '<td class=\"ImpRet' + toShow(tRet2[i]) + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[0].IMPORTE_RET) + '\"></td>';
 
     }
     colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"
         + "<td><p><label><input type=\"checkbox\" checked=\"" + check + "\" /><span></span></label></p></td>";//MGC 03 - 10 - 2018 solicitud con orden de compra
-    var table_rows = '<tr><td></td><td>' + pos + '</td><td><input class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td>' +
+    var table_rows = '<tr><td></td><td>' + pos + '</td><td>' + nA + '</td><td>' + nA2 + '</td><td>' + nA3 + '</td><td>' + nA4 + '</td><td>' + nA5 + '</td><td>' +
         ca + '</td><td>' + factura + '</td><td>' + tipo_concepto
         + '</td><td>' + grupo + '</td><td>' + cuenta + '</td><td>' + cuentanom + '</td><td>' + tipoimp + '</td><td>' + imputacion
         + '</td><td>' + ccentro + '</td><td>' + monto + '</td><td>' + impuesto + '</td><td>' + iva + '</td><td>' + texto + '</td>' + colstoAdd + '</tr>';
