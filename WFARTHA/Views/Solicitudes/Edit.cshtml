@@ -10,7 +10,7 @@
     List<WFARTHA.Models.DOCUMENTOR_MOD> drets = ViewBag.ret as List<WFARTHA.Models.DOCUMENTOR_MOD>;
     WFARTHA.Entities.PROVEEDOR dprov = ViewBag.prov as WFARTHA.Entities.PROVEEDOR;
     WFARTHA.Models.DocumentoFlujo DF = ViewBag.docFl as WFARTHA.Models.DocumentoFlujo;
-    //List<WFARTHA.Models.DOCUMENTORP_MOD> lstDrp = ViewBag.DocsRp as List<WFARTHA.Models.DOCUMENTORP_MOD>;
+    List<WFARTHA.Entities.DOCUMENTOA> lstDocsA = ViewBag.docAn as List<WFARTHA.Entities.DOCUMENTOA>;
     List<string> colsret = ViewBag.Retenciones as List<string>;
     var total = ViewBag.total;
     var montomd = formatoc.toShow(total, ViewBag.dec);
@@ -21,6 +21,8 @@
 <script src="~/Scripts/jquery.dataTables.min.js"></script>
 
 <script src="~/Scripts/editArtha.js"></script>@*LEJGG-04-10-2018*@
+<script src="~/Scripts/ValidarCampos.js"></script>@*LEJGG-19-10-2018*@
+<script src="~/Scripts/formatos.js"></script>
 
 @if (ViewBag.error != "")
 {
@@ -612,9 +614,7 @@
                                 <a class="btn"><i class="material-icons left">clear</i><span id="delRowInfo">Registro Del NT</span></a>
                             </div>
                             <div>
-                                <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
-                                   
-                                </table>
+                                <table class="table display mdl-data-table striped" id="table_info" style="width:100%;"></table>
                             </div>
                             <table class="table display mdl-data-table striped" id="table_infoh" style="width:100%; display:none">
                                 <thead>
@@ -733,7 +733,31 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
+                                    {
+                                        if (@lstDocsA != null)
+                                        {
+                                            for (int i = 0; i < @lstDocsA.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        @(i + 1)
+                                                    </td>
+                                                    <td>OK</td>
+                                                    @{var _xtr = lstDocsA[i].PATH.Split('/'); var nombre = _xtr[_xtr.Length - 1];}
+                                                    <td>@_xtr</td>
+                                                    <td> @lstDocsA[i].TIPO</td>
+                                                    <td> @lstDocsA[i].DESC</td>
+                                                    <td>
+                                                        <button name="archivo" class="btn" type="submit" value="@lstDocsA[i].PATH">DESCARGAR</button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                </tbody>
                             </table>
                         </div>
                     </div>

@@ -1608,7 +1608,9 @@ namespace WFARTHA.Controllers
             var sociedades = db.SOCIEDADs.Select(s => new { s.BUKRS, TEXT = s.BUKRS + " - " + s.BUTXT }).ToList();
 
             ViewBag.Title += id; //MGC 05-10-2018 Modificación para work flow al ser editada
-
+            //LEJGG19 10 2018----------------------------------------------------->
+            ViewBag.docAn = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList(); 
+            //LEJGG19 10 2018-----------------------------------------------------<
             //solicitud con orden de compra ------>
             //Obtener la solicitud con la configuración
             var tsoll = (from ts in db.TSOLs
@@ -3506,6 +3508,44 @@ namespace WFARTHA.Controllers
             }
         }
 
+        [HttpPost]//LEJGG 19102018
+        public JsonResult getAnexos(decimal id)
+        {
+            var c = db.DOCUMENTOAs.Where(i => i.NUM_DOC == id).ToList();
+            List<Anexo> _lstax = new List<Anexo>();
+            Anexo _ax = new Anexo();
+            List<decimal> lstd = new List<decimal>();
+            for (int i = 0; i < c.Count; i++) {
+                var _1filtro = c.Where(x => x.POS == (i + 1)).ToList();
+                for (int y = 0; y < _1filtro.Count; y++)
+                {
+                    _ax = new Anexo();
+                    switch (y + 1) {
+                        case 1:
+                            _ax.a1 = int.Parse(_1filtro[y].POSD.ToString());
+                            break;
+                        case 2:
+                            _ax.a2 = int.Parse(_1filtro[y].POSD.ToString());
+                            break;
+                        case 3:
+                            _ax.a3 = int.Parse(_1filtro[y].POSD.ToString());
+                            break;
+                        case 4:
+                            _ax.a4 = int.Parse(_1filtro[y].POSD.ToString());
+                            break;
+                        case 5:
+                            _ax.a5 = int.Parse(_1filtro[y].POSD.ToString());
+                            break;
+                        default:
+                            break;
+                    }
+                    _lstax.Add(_ax);
+                }
+            }
+            JsonResult jc = Json(_lstax, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
         [HttpPost]
         public FileResult Descargar(string btnArchivo)
         {
@@ -3797,5 +3837,4 @@ namespace WFARTHA.Controllers
         public int a5 { get; set; }
     }
 
-    
 }
