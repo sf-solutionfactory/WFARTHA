@@ -3733,6 +3733,53 @@ namespace WFARTHA.Controllers
             return jc;
         }
         //END OF INSERT RSG 17.10.2018
+
+        //MGC 18-10-2018 Firma del usuario ------------------------------------------------->
+        [HttpPost]
+        public string ValF(string pws)
+        {
+            //Valor para devolver
+            string res = "false";
+            //Obtener el usuario
+            string u = User.Identity.Name;
+
+            bool m = false; 
+            //Add usuario
+            if(m == true)
+            {
+                Cryptography cr = new Cryptography();
+                USUARIO us = db.USUARIOs.Where(usr => usr.ID == "admin").FirstOrDefault();
+                string passn = cr.Encrypt("admin1");
+
+                us.FIRMA = passn;
+
+                db.Entry(us).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+
+            USUARIO userm = new USUARIO();
+            USUARIO user = new USUARIO();
+            userm.ID = u;
+            userm.PASS = pws;
+
+            Cryptography c = new Cryptography();
+            string pass = c.Encrypt(userm.PASS);
+
+            using (WFARTHAEntities db = new WFARTHAEntities())
+            {
+                user = db.USUARIOs.Where(a => a.ID.Equals(userm.ID) && a.FIRMA.Equals(pass)).FirstOrDefault();
+            }
+
+            if(user != null)
+            {
+                res = "true";
+            }
+
+            return res;
+        }
+
+        //MGC 18-10-2018 Firma del usuario --------------------------------------------------<
     }
     public class TXTImp
     {
@@ -3749,4 +3796,6 @@ namespace WFARTHA.Controllers
         public int a4 { get; set; }
         public int a5 { get; set; }
     }
+
+    
 }

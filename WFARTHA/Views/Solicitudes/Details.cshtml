@@ -953,11 +953,11 @@
     @*MGC 04-10-2018 Botones para acciones WF-->*@
     @if (ViewBag.acciones != null)
     {
-        using (Html.BeginForm("Procesa", "Flujos"))
+        using (Html.BeginForm("Procesa", "Flujos", FormMethod.Post, new { id = "form_procesa"}))
         {
             <div id="modal1" class="modal  bottom-sheet">
                 @Html.AntiForgeryToken()
-                <div class="modal-content">
+                <div class="modal-content" style="padding-bottom:0px">
                     <div class="row">
                         <h4 id="txt_app" style="display:none">Aprobar solicitud</h4>
                         <h4 id="txt_rec" style="display:none"> Rechazar solicitud</h4>
@@ -989,13 +989,19 @@
                                     @Html.TextAreaFor(model => model.F.COMENTARIO, new { @class = "materialize-textarea", @id = "txt_comentario" })
                                     @Html.LabelFor(model => model.F.COMENTARIO, new { @id = "lbl_userid" })
                                 </div>
+                                @*//MGC 18-10-2018 Firma del usuario -------------------------------------------------->*@
+                                <div class="input-field col s2 offset-s1">
+                                    <input type="password" name="txtfirma_us" id="txtfirma_us" value="" />
+                                    <label for="txtfirma_us" id="lbl_firma">Firma NT</label>
+                                </div>
+                                @*//MGC 18-10-2018 Firma del usuario --------------------------------------------------<*@
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-fixed-footer right">
                     <a href="#!" class="modal-action modal-close btn-flat">Cancelar</a>
-                    <input id="cont_send" type="submit" value="Aceptar" class="modal-action modal-close btn-flat" onclick="document.getElementById('loader').style.display = 'initial';" />
+                    <input id="cont_send" type="button" value="Aceptar" class="modal-action modal-close btn-flat" onclick="document.getElementById('loader').style.display = 'initial';" />
                     @*<a class="btn-small btn-default" href="@Url.Action(" Details", "Solicitudes" , new { id=Model.F.NUM_DOC})">Cancelar</a>*@
                 </div>
             </div>
@@ -1048,7 +1054,17 @@
                     document.getElementById("txt_rec").style.display = 'none';
                     document.getElementById("txt_nex").style.display = 'none';
                     document.getElementById("txt_cont").style.display = 'none';
-                    document.getElementById("txt_comentario").value = '';
+                    //document.getElementById("txt_comentario").value = ''; //MGC 18-10-2018 Firma del usuario
+                    document.getElementById("txtfirma_us").value = '';//MGC 18-10-2018 Firma del usuario
+                    document.getElementById("wf_estatus").value = 'A';
+                }
+                function aprobar2() {
+                    document.getElementById("txt_app").style.display = 'initial';
+                    document.getElementById("txt_rec").style.display = 'none';
+                    document.getElementById("txt_nex").style.display = 'none';
+                    document.getElementById("txt_cont").style.display = 'none';
+                   //document.getElementById("txt_comentario").value = '';
+                    document.getElementById("txtfirma_us").value = '';
                     document.getElementById("wf_estatus").value = 'A';
                 }
                 function rechazar() {
@@ -1072,11 +1088,44 @@
                     document.getElementById("txt_app").style.display = 'none';
                     document.getElementById("txt_nex").style.display = 'none';
                     document.getElementById("txt_cont").style.display = 'initial';
-                    document.getElementById("txt_comentario").value = '';
+                    //document.getElementById("txt_comentario").value = ''; //MGC 18-10-2018 Firma del usuario
                     document.getElementById("wf_estatus").value = 'A';
-                    document.getElementById('cont_send').click();
+                    document.getElementById("txtfirma_us").value = '';//MGC 18-10-2018 Firma del usuario
+                    //document.getElementById('cont_send').click();//MGC 18-10-2018 Firma del usuario
 
                 }
+
+                //MGC 18-10-2018 Firma del usuario -------------------------------------------------->
+                //Validar la firma del usuario
+                //$("#form_procesa").submit(function (e) {
+                $("#cont_send").click(function (e) {
+
+                    //var $this = $(this);
+                    //var frmValues = JSON.stringify($this)
+
+                    var p = $("#txtfirma_us").val();
+
+                    var resc = false;
+                    res = valF(p);
+
+                    if (res == "true") {
+                        resc = true;
+                    }
+
+                    if (!resc) {
+                        //Error 
+                        document.getElementById('loader').style.display = 'none';
+                        M.toast({ html: 'Error con la Firma del usuario' });
+                        e.preventDefault();
+
+                    } else {
+                        //Hacer el submit
+                        $("#form_procesa").submit();
+                    }
+                    document.getElementById('loader').style.display = 'none';
+                });
+
+                //MGC 18-10-2018 Firma del usuario --------------------------------------------------<
             </script>
         }
     }
