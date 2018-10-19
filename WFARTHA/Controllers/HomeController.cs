@@ -161,16 +161,16 @@ namespace WFARTHA.Controllers
                 detsoc = db.DET_TIPOPRESUPUESTO.Where(tp => tp.ID_USER == user.ID).ToList();
 
                 //MGC 16-10-2018 Obtener los proyectos de las sociedades -->
-                List<ASIGN_PROY_SOC> ps = new List<ASIGN_PROY_SOC>();
-                ps = (from det in detsoc
-                      join aps in db.ASIGN_PROY_SOC
+                //List<ASIGN_PROY_SOC> ps = new List<ASIGN_PROY_SOC>();//MGC 19-10-2018 Cambio en archivo
+                var ps = (from det in detsoc//MGC 19-10-2018 Cambio en archivo
+                          join aps in db.ASIGN_PROY_SOC
                       on det.BUKRS equals aps.ID_BUKRS
-                      select new ASIGN_PROY_SOC
+                      select new
                       {
                           ID_PSPNR = aps.ID_PSPNR,
-                          ID_BUKRS = aps.ID_BUKRS
+                          //ID_BUKRS = aps.ID_BUKRS//MGC 19-10-2018 Cambio en archivo
                       }
-                      ).ToList();
+                      ).Distinct().ToList();
 
 
                 var p = (from asig in ps
