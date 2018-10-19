@@ -115,7 +115,7 @@ function toShowNum(string) {
         }
     }
     else {
-        string = ("$ 0" + _decimales + "00");
+        string = ("0" + _decimales + "00");
     }
     return string;
 }

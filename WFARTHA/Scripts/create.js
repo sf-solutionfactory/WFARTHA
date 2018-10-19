@@ -728,7 +728,8 @@ $('body').on('change', '#tsol', function (event, param1) {
     $.each(jsval, function (i, dataj) {
         $("#tsol_id2").val(dataj.ID);
 
-        ocultarCampos(dataj.EDITDET, param1)
+        ocultarCampos(dataj.EDITDET, param1);
+        mostrarTabla(dataj.EDITDET);
     });
 
 });
