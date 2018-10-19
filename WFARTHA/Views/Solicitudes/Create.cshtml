@@ -373,7 +373,7 @@
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.CONDICIONES, "Condiciones NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4" } })@*LEJ 04.09.2018*@
+                                    @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4", @id = "condiciones_prov" } })@*LEJ 04.09.2018*@ @*//MGC 19-10-2018 Condiciones*@
                                 </div>
                             </div>
 

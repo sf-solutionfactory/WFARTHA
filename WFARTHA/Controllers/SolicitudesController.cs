@@ -3143,7 +3143,7 @@ namespace WFARTHA.Controllers
         }
 
         [HttpPost]
-        public JsonResult getProveedorD(string lifnr)
+        public JsonResult getProveedorD(string lifnr, string soc)//MGC 19-10-2018 Condiciones
         {
 
             if (lifnr == null)
@@ -3151,8 +3151,22 @@ namespace WFARTHA.Controllers
 
             WFARTHAEntities db = new WFARTHAEntities();
 
-            var lprov = db.PROVEEDORs.Where(p => p.LIFNR == lifnr).Select(pr => new { LIFNR = pr.LIFNR.ToString(), NAME1 = pr.NAME1.ToString(), STCD1 = pr.STCD1.ToString() }).FirstOrDefault();
+            //MGC 19-10-2018 Condiciones-->
+            var lprov = (from pr in db.PROVEEDORs.Where(p => p.LIFNR == lifnr)
+                          join rt in db.DET_PROVEEDORV.Where(dp => dp.ID_LIFNR == lifnr && dp.ID_BUKRS == soc)
+                                   on pr.LIFNR equals rt.ID_LIFNR
+                                   into jj
+                          from rt in jj.DefaultIfEmpty()
+                          select new
+                          {
+                              LIFNR = pr.LIFNR.ToString(),
+                              NAME1 = pr.NAME1.ToString(),
+                              STCD1 = pr.STCD1.ToString(),
+                              COND_PAGO = rt.COND_PAGO.ToString() == null ? String.Empty : rt.COND_PAGO.ToString()
+                          }).FirstOrDefault();
 
+            //var lprov = db.PROVEEDORs.Where(p => p.LIFNR == lifnr).Select(pr => new { LIFNR = pr.LIFNR.ToString(), NAME1 = pr.NAME1.ToString(), STCD1 = pr.STCD1.ToString() }).FirstOrDefault();
+            //MGC 19-10-2018 Condiciones--<
             JsonResult cc = Json(lprov, JsonRequestBehavior.AllowGet);
             return cc;
         }
@@ -3780,6 +3794,55 @@ namespace WFARTHA.Controllers
         }
 
         //MGC 18-10-2018 Firma del usuario --------------------------------------------------<
+        //MGC 19-10-2018 CECOS -------------------------------------------------------------->
+        [HttpPost]
+        public JsonResult getCcosto(string Prefix, string bukrs)
+        {
+
+            if (Prefix == null)
+                Prefix = "";
+
+            WFARTHAEntities db = new WFARTHAEntities();
+
+            SOCIEDAD c = db.SOCIEDADs.Where(soc => soc.BUKRS == bukrs).FirstOrDefault();
+            //List<PROVEEDOR> lprov = new List<PROVEEDOR>();
+            //List<PROVEEDOR> lprov2 = new List<PROVEEDOR>();
+
+            var r = (dynamic)null;
+
+            if (c != null)
+            {
+                var lprov = (from cc1 in db.CECOes
+                             where cc1.CECO1.Contains(Prefix) && cc1.BUKRS == c.BUKRS
+                             select new CECO
+                             {
+                                 BUKRS = cc1.BUKRS.ToString(),
+                                 CECO1 = cc1.CECO1.ToString(),
+                                 TEXT = cc1.TEXT.ToString()
+                             }).ToList();
+
+                if (lprov.Count == 0)
+                {
+                    var lprov2 = (from cc1 in db.CECOes
+                                  where cc1.TEXT.Contains(Prefix) && cc1.BUKRS == c.BUKRS
+                                  select new CECO
+                                  {
+                                      BUKRS = cc1.BUKRS.ToString(),
+                                      CECO1 = cc1.CECO1.ToString(),
+                                      TEXT = cc1.TEXT.ToString()
+                                  }).ToList();
+
+                    lprov.AddRange(lprov2);
+                }
+
+                r = lprov;
+            }
+
+            JsonResult cc = Json(r, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        //MGC 19-10-2018 CECOS --------------------------------------------------------------<
     }
     public class TXTImp
     {

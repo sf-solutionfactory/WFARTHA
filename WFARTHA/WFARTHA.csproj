@@ -231,7 +231,13 @@
     <Compile Include="Entities\CARPETAV.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CECO.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CONCEPTO.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CONDICIONES_PAGO.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CONMAIL.cs">
@@ -253,6 +259,9 @@
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DET_PEP.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DET_PROVEEDORV.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DET_SOCIEDAD.cs">
