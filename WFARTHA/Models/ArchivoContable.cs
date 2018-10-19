@@ -395,7 +395,7 @@ namespace WFARTHA.Models
                         accionhead.Trim() + "|" +
                         belnr + "|" +
                         bjahr + "|" +
-                        bukrs + "|"
+                        bukrs //MGC 19-10-2018 Cambio en archivo
                         );
 
                     //DETDOC	|TIPODOC|ACCION|BELNR|GJAHR|BUKRS DETDOC EJE	FACSINOC|CONTABILIZAR|10000000|2018|1010| //MGC 11-10-2018 Acciones para el encabezado <--
@@ -405,7 +405,7 @@ namespace WFARTHA.Models
                         "2" + "|" +
                         doc.DOCUMENTO_SAP + "|" +
                         doc.SOCIEDAD_ID.Trim() + "|" +
-                        String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|" +
+                        String.Format("{0:dd.MM.yyyy}", doc.FECHAC).Replace(".", "") + "|" +
                         doc.MONEDA_ID.Trim() + "|" +
                         //+ "|" + //MGC 11-10-2018 Acciones para el encabezado
                         doc.REFERENCIA.Trim() + "|" +

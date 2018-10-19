@@ -273,7 +273,7 @@ namespace WFARTHA.Models
                         accionhead.Trim() + "|" +
                         belnr + "|" +
                         bjahr + "|" +
-                        bukrs + "|"
+                        bukrs //MGC 19-10-2018 Cambio en archivo
                         );
                     //sw.WriteLine(""); //MGC 17-10-2018.2 Adaptación a archivo
 
@@ -284,7 +284,7 @@ namespace WFARTHA.Models
                         "2" + "|" +
                         doc.DOCUMENTO_SAP + "|" +
                         doc.SOCIEDAD_ID.Trim() + "|" +
-                        String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|" +
+                        String.Format("{0:dd.MM.yyyy}", doc.FECHAC).Replace(".", "") + "|" +
                         doc.MONEDA_ID.Trim() + "|" +
                         //+ "|" + //MGC 11-10-2018 Acciones para el encabezado
                         doc.REFERENCIA.Trim() + "|" +
