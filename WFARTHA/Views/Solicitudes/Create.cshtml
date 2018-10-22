@@ -314,15 +314,15 @@
                             </script>
                             @*MGC 03-10-2018 solicitud con orden de compra -->*@
                             @*<div class="form-group col s3">*@
-                            <div id="div_norden_compra" class="input-field col s3" style="display:none">
-                                @*@Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @*<div id="div_norden_compra" class="input-field col s3" style="display:none">
+                                @Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
                                         @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })
-                                    </div>*@
+                                    </div>
 
                                 <input type="text" id="norden_compra" value="" />
                                 <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
-                            </div>
+                            </div>*@
                             @*MGC 03-10-2018 solicitud con orden de compra <--*@
                         </div>
                         <div class="row" style="margin-bottom:0">
@@ -532,6 +532,35 @@
         @*Información Contable*@
         <div id="Contable_cont" class="col s12" style="font-size:12px;">
             <div class="row">
+                <div class="col s12 hide" id="div_garantia">
+                    <div class="card-panel">
+                        <div class="row" style="margin-bottom:0px;">
+                            <div id="div_norden_compra" class="input-field col s12 m12 l3" style="display:none">
+                                <!--ADD RSG 19.10.2018-->
+                                @*@Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })
+                        </div>*@
+
+                                @*<input type="text" id="norden_compra" value="" />*@<!--ADD RSG 19.10.2018-->
+                                <select id="norden_compra" onchange="addPedido(this.value);"><option></option></select><!--ADD RSG 19.10.2018-->
+                                <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
+                            </div>
+                            <div class="input-field col s12 m12 l3">
+                                <input id="fondo_g" name="fondo_g" type="text" class="validate" disabled />
+                                <label for="fondo_g">Fondo de garantía</label>
+                            </div>
+                            <div class="input-field col s12 m12 l3">
+                                <input id="Rfondo_g" name="Rfondo_g" type="text" class="validate" disabled />
+                                <label for="Rfondo_g">Retenido fondo de garantía</label>
+                            </div>
+                            <div class="input-field col s12 m12 l3">
+                                <input id="Resfondo_g" name="Resfondo_g" type="text" class="validate" disabled />
+                                <label for="Resfondo_g">Restante fondo de garantía</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col s12">
                     <div class="card-panel">
                         <h5 id="head_cabecera">Detalle NT</h5>
@@ -539,7 +568,7 @@
 
                             @*//MGC 04092018 Conceptos*@
                             @{string jval = ViewBag.TSOL_VALUES;
-                        @Html.Hidden("impuestosval", jval)
+                                @Html.Hidden("impuestosval", jval)
                             }
                             <!--ADD RSG 18.10.2018-->
                             <div id="div_sinPedido" class="col s12">
@@ -882,9 +911,9 @@
                                 <tbody></tbody>
                             </table>
                         </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
         <div class="row">
             <div class="col s12">

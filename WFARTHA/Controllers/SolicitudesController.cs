@@ -3751,7 +3751,7 @@ namespace WFARTHA.Controllers
         public JsonResult getPedidos(string Prefix, string lifnr)
         {
             var c = (from N in db.EKKO_DUMM
-                     where (N.LIFNR == lifnr & N.EBELN.Contains(Prefix))
+                     where (N.LIFNR == lifnr)// & N.EBELN.Contains(Prefix))
                      select new { N.EBELN }).ToList();
 
             JsonResult jc = Json(c, JsonRequestBehavior.AllowGet);
@@ -3787,6 +3787,23 @@ namespace WFARTHA.Controllers
             return jc;
         }
         //END OF INSERT RSG 17.10.2018
+        //START OF INSERT RSG 19.10.2018
+        [HttpPost]
+        public JsonResult getFondos(string ebeln)
+        {
+            var c = (from N in db.EKKO_DUMM
+                     where (N.EBELN.Equals(ebeln))
+                     select new
+                     {
+                         N.EBELN,
+                         N.FONDOG,
+                         N.RES_FONDOG,
+                         N.RET_FONDOG,
+                     });
+            JsonResult jc = Json(c, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+        //END OF INSERT RSG 19.10.2018
 
         //MGC 18-10-2018 Firma del usuario ------------------------------------------------->
         [HttpPost]
