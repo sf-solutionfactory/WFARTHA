@@ -91,5 +91,8 @@ namespace WFARTHA.Entities
         public virtual DbSet<ASIGN_PROY_SOC> ASIGN_PROY_SOC { get; set; }
         public virtual DbSet<EKKO_DUMM> EKKO_DUMM { get; set; }
         public virtual DbSet<EKPO_DUMM> EKPO_DUMM { get; set; }
+        public virtual DbSet<CECO> CECOes { get; set; }
+        public virtual DbSet<CONDICIONES_PAGO> CONDICIONES_PAGO { get; set; }
+        public virtual DbSet<DET_PROVEEDORV> DET_PROVEEDORV { get; set; }
     }
 }

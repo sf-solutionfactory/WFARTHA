@@ -187,7 +187,7 @@
             <li class="tab col s2 tabs_menu"><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado NT</a></li>
             <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Detalle NT</a></li>
             <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_cont">Información NT</a></li>
-            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_sap">Información SAP</a></li>
+            @*<li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_sap">Información SAP</a></li>*@
         </ul>
     </div>
 </div>
@@ -373,7 +373,7 @@
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.CONDICIONES, "Condiciones NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4" } })@*LEJ 04.09.2018*@
+                                    @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4", @id = "condiciones_prov" } })@*LEJ 04.09.2018*@ @*//MGC 19-10-2018 Condiciones*@
                                 </div>
                             </div>
 
@@ -1075,7 +1075,7 @@
         </div>
     </div>
 
-    @*Soporte SAP*@
+    @*
     <div id="Informacion_sap" class="col s12" style="font-size:12px;">
         <div class="row">
             <div class="col s12">
@@ -1083,6 +1083,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>*@
 </div>
 }

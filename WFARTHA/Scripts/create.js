@@ -1210,7 +1210,7 @@ function asignarValConC(val) {
     conceptoValC = val;
 }
 
-function getProveedorC(prov, message) {
+function getProveedorC(prov, message, soc) {//MGC 19-10-2018 Condiciones
     proveedorValC = "";
     var localval = "";
     if (prov != "") {
@@ -1218,7 +1218,7 @@ function getProveedorC(prov, message) {
             type: "POST",
             url: 'getProveedorD',
             dataType: "json",
-            data: { "lifnr": prov },
+            data: { "lifnr": prov, "soc": soc },//MGC 19-10-2018 Condiciones
 
             success: function (data) {
 
