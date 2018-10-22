@@ -792,20 +792,21 @@ $('body').on('change', '#tsol', function (event, param1) {
     val3 = val3.replace(/\ /g, "");
     var jsval = $.parseJSON(val3);
 
+    //LEJGG 22-10-2018---------------------->
+    //Para pago de facturas
+    if (jsval[0].ID === "SSO") {
+        $("#FECHAD").prop('disabled', true);
+    }
+    else {
+        $("#FECHAD").prop('disabled', false);
+    }
+    //LEJGG 22-10-2018---------------------->
+
     $.each(jsval, function (i, dataj) {
         $("#tsol_id2").val(dataj.ID);
 
         ocultarCampos(dataj.EDITDET, param1);
         mostrarTabla(dataj.EDITDET);
-        //LEJGG 22-10-2018---------------------->
-        //Para pago de facturas
-        if (dataj.ID === "SSO") {
-            $("#FECHAD").prop('disabled', true);
-        }
-        else {
-            $("#FECHAD").prop('disabled', false);
-        }
-        //LEJGG 22-10-2018---------------------->
     });
 });
 //MGC 03-10-2018 solicitud con orden de compra
