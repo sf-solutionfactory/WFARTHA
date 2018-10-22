@@ -650,6 +650,7 @@ namespace WFARTHA.Controllers
             //LEJGG 22/10/2018
             if (doc.FECHAD == null)
             {
+                //Si doc.FECHAD viene vacio o nulo, le asgino la fecha que tiene fechado, su campo oculto
                 doc.FECHAD = DateTime.Parse(FECHADO);
             }
             if (ModelState.IsValid)
