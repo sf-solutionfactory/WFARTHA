@@ -257,9 +257,26 @@ $('body').on('keydown.autocomplete', '.CCOSTO', function () {
 
             var label = ui.item.label;
             var value = ui.item.value;
-            //selectCeco(value);
+            selectCeco(value, tr);
         }
     });
 });
+
+function selectCeco(val, tr) {
+
+    var t = $('#table_info').DataTable();
+
+    //Obtener el row para el plugin //MGC 19-10-2018 
+    var trp = $(tr);
+    var indexopc = t.row(trp).index();     
+
+    tr.find("td.CCOSTO input").val();
+    if (val != null & val != "") {
+        //Asignar número de ceco a la columna
+        
+        tr.find("td.CCOSTO input").val(val);
+
+    } 
+}
 
 //MGC 19-10-2018 CECOS---------------------------------------------------<

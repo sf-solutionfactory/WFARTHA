@@ -3812,7 +3812,7 @@ namespace WFARTHA.Controllers
 
             if (c != null)
             {
-                var lprov = (from cc1 in db.CECOes
+                var lprov = (from cc1 in db.CECOes.ToList()
                              where cc1.CECO1.Contains(Prefix) && cc1.BUKRS == c.BUKRS
                              select new CECO
                              {
@@ -3823,7 +3823,7 @@ namespace WFARTHA.Controllers
 
                 if (lprov.Count == 0)
                 {
-                    var lprov2 = (from cc1 in db.CECOes
+                    var lprov2 = (from cc1 in db.CECOes.ToList()
                                   where cc1.TEXT.Contains(Prefix) && cc1.BUKRS == c.BUKRS
                                   select new CECO
                                   {
