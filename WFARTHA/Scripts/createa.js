@@ -84,7 +84,7 @@ $('body').on('keydown.autocomplete', '.GRUPO_INPUT', function () {
 
             val = val.replace(/\s/g, '');
 
-            ui.item.value = val;
+            ui.item.value = tipo + "" + val;//MGC 22-10-2018 Etiquetas
 
 
             selectConcepto(val, tr, tipo);
@@ -142,7 +142,7 @@ function selectConcepto(val, tr, tipo) {
     } else {
         //Agregar el id
         tr.find("td.GRUPO input").val();
-        tr.find("td.GRUPO input").val(val);
+        tr.find("td.GRUPO input").val(tipo + "" + val);//MGC 22-10-2018 Etiquetas
         //Obtener la sociedad
         var soc = $("#SOCIEDAD_ID").val();
         //Cancepto

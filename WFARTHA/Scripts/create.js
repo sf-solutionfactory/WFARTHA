@@ -66,27 +66,29 @@ $(document).ready(function () {
                 "visible": false //MGC 04092018 Conceptos
             },
             {
-                "name": 'NumAnexo',
+                "name": 'A1',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo',
-                "orderable": false
+                "orderable": false,
+                "width": "10px"
+                
             },
             {
-                "name": 'NumAnexo2',
+                "name": 'A2',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo2',
                 "orderable": false
             },
             {
-                "name": 'NumAnexo3',
+                "name": 'A3',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo3',
                 "orderable": false
             },
             {
-                "name": 'NumAnexo4',
+                "name": 'A4',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo4',
                 "orderable": false
             },
             {
-                "name": 'NumAnexo5',
+                "name": 'A5',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo5',
                 "orderable": false
             },
@@ -104,7 +106,8 @@ $(document).ready(function () {
             {
                 "name": 'TCONCEPTO',
                 "className": 'TCONCEPTO',
-                "orderable": false
+                "orderable": false,
+                "visible": false//MGC 22-10-2018 Etiquetas
             },
             {
                 "name": 'GRUPO',
@@ -126,7 +129,8 @@ $(document).ready(function () {
             {
                 "name": 'TIPOIMP',
                 "className": 'TIPOIMP',
-                "orderable": false
+                "orderable": false,
+                "visible": false//MGC 22-10-2018 Etiquetas
             },
             {
                 "name": 'IMPUTACION',
@@ -935,27 +939,28 @@ function obtenerRetenciones(flag) {
                 "visible": false //MGC 04092018 Conceptos
             },
             {
-                "name": 'NumAnexo',
+                "name": 'A1',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo',
-                "orderable": false
+                "orderable": false,
+                "width": "1px"
             },
             {
-                "name": 'NumAnexo2',
+                "name": 'A2',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo2',
                 "orderable": false
             },
             {
-                "name": 'NumAnexo3',
+                "name": 'A3',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo3',
                 "orderable": false
             },
             {
-                "name": 'NumAnexo4',
+                "name": 'A4',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo4',
                 "orderable": false
             },
             {
-                "name": 'NumAnexo5',
+                "name": 'A5',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo5',
                 "orderable": false
             },
@@ -973,7 +978,8 @@ function obtenerRetenciones(flag) {
             {
                 "name": 'TCONCEPTO',
                 "className": 'TCONCEPTO',
-                "orderable": false
+                "orderable": false,
+                "visible": false//MGC 22-10-2018 Etiquetas
             },
             {
                 "name": 'GRUPO',
@@ -995,7 +1001,8 @@ function obtenerRetenciones(flag) {
             {
                 "name": 'TIPOIMP',
                 "className": 'TIPOIMP',
-                "orderable": false
+                "orderable": false,
+                "visible": false//MGC 22-10-2018 Etiquetas
             },
             {
                 "name": 'IMPUTACION',
@@ -1027,7 +1034,8 @@ function obtenerRetenciones(flag) {
             {
                 "name": 'TEXTO',
                 "className": 'TEXTO',
-                "orderable": false
+                "orderable": false,
+                "width": "80px"
             }
         ];
         //Se rearmara la tabla en HTML
@@ -1039,24 +1047,24 @@ function obtenerRetenciones(flag) {
         thead.append($("<tr />"));
         //Theads
         $("#table_info>thead>tr").append("<th></th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_pos\">Pos NT</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">Num Anexo</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">Num Anexo2</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">Num Anexo3</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">Num Anexo4</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">Num Anexo5</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_cargoAbono\">D/H NT</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_factura\">Factura NT</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_tconcepto\">TIPO CONCEPTO NT</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_grupo\">Grupo NT</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_cuenta\">Cuenta NT</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_cuentaNom\">Nombre de cuenta NT</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_tipoimp\">Tipo Imp. NT</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_imputacion\">Imputación NT</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_ccosto\">Centro de costo NT</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_monto\">Monto NT</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_impuesto\">Impuesto NT</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_iva\">IVA NT</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_pos\">Pos</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A1</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A2</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A3</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A4</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A5</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_cargoAbono\">D/H</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_factura\">Factura</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_tconcepto\">TIPO CONCEPTO</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_grupo\">Grupo</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_cuenta\">Cuenta</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_cuentaNom\">Nombre de cuenta</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_tipoimp\">Tipo Imp.</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_imputacion\">Imputación</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_ccosto\">Centro de costo</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_monto\">Monto</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_impuesto\">Impuesto</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_iva\">IVA</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_Texto\">TEXTO</th>");
         var colspan = 20;
         tRet2 = tRet;
@@ -1118,7 +1126,8 @@ function obtenerRetenciones(flag) {
         arrCols.push({
             "name": 'CHECK',
             "className": 'CHECK',
-            "orderable": false
+            "orderable": false,
+            "visible": false//MGC 22-10-2018 Etiquetas
         });
 
         //Lej 17.09.18
@@ -1135,6 +1144,11 @@ function obtenerRetenciones(flag) {
             "searching": false,
             "columns": arrCols
         });
+
+        //MGC 22-10-2018 Etiquetas------------------------------------------>
+        //Columna tipo de concepto y columna tipo imputación ocultarlas
+
+        //MGC 22-10-2018 Etiquetas------------------------------------------<
         //Lej 12.09.18-------------------------------------------------------
     } else {
         //Enviar mensaje de error true
