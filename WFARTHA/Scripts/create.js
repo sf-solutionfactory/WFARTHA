@@ -646,14 +646,11 @@ $(document).ready(function () {
                         processData: false,
                         success: function (data) {
                             if (data !== null || data !== "") {
-                                var xmlDoc = $.parseXML(data),
-                                    $xml = $(xmlDoc);
-                                var $title = $xml.find("cfdi");
-                                if ($title.length > 0) {
-                                    $title.find("cfdi").each(function () {
-                                        var _result = $(this).find("fecha").text();
-                                    });
-                                }
+                                $('#FECHAD').val(data[0]);
+                                $('#FECHADO').val(data[0]);
+                                $("#FECHAD").trigger("change");
+                                data[1];//Monto Total
+                                data[2];//RFC
                             }
                         },
                         error: function (xhr, httpStatusMessage, customErrorMessage) {

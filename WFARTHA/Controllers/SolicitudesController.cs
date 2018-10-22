@@ -16,6 +16,8 @@ using System.Linq.Expressions;
 using System.Configuration;
 using System.IO;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace WFARTHA.Controllers
 {
@@ -582,7 +584,7 @@ namespace WFARTHA.Controllers
                             ACTIVO = ii.ACTIVO
                         }).ToList();
 
-            var impuestosv = JsonConvert.SerializeObject(impl, Formatting.Indented);
+            var impuestosv = JsonConvert.SerializeObject(impl, Newtonsoft.Json.Formatting.Indented);
             ViewBag.impuestosval = impuestosv;
             //Workflow
             //ViewBag.worflw = "'aaa','bbb','ccc','ddd','eee'";//lej 10.09.2018
@@ -618,7 +620,7 @@ namespace WFARTHA.Controllers
 
             ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
 
-            ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Formatting.Indented);
+            ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Newtonsoft.Json.Formatting.Indented);
 
             return View(d);
         }
@@ -637,7 +639,7 @@ namespace WFARTHA.Controllers
             "AGENTE_ACTUAL,FECHA_PASO_ACTUAL,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,FECHACON,FECHA_BASE,REFERENCIA," +
             "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo")] Models.DOCUMENTO_MOD doc, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc,
             //MGC 02-10-2018 Cadenas de autorización
-            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr)
+            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr, string FECHADO)
 
         {
             int pagina = 202; //ID EN BASE DE DATOS
@@ -645,6 +647,11 @@ namespace WFARTHA.Controllers
             FORMATO formato = new FORMATO();
             string spras = "";
             string user_id = ""; //MGC 02-10-2018 Cadenas de autorización
+            //LEJGG 22/10/2018
+            if (doc.FECHAD == null)
+            {
+                doc.FECHAD = DateTime.Parse(FECHADO);
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -1819,7 +1826,7 @@ namespace WFARTHA.Controllers
                             ACTIVO = ii.ACTIVO
                         }).ToList();
 
-            var impuestosv = JsonConvert.SerializeObject(impl, Formatting.Indented);
+            var impuestosv = JsonConvert.SerializeObject(impl, Newtonsoft.Json.Formatting.Indented);
             ViewBag.impuestosval = impuestosv;
             //Workflow
             //ViewBag.worflw = "'aaa','bbb','ccc','ddd','eee'";//lej 10.09.2018
@@ -1854,7 +1861,7 @@ namespace WFARTHA.Controllers
                 }).ToList();
 
             ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
-            ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Formatting.Indented);
+            ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Newtonsoft.Json.Formatting.Indented);
 
             //lejgg 05.10.2018------>
             DocumentoFlujo DF = new DocumentoFlujo();
@@ -2844,12 +2851,30 @@ namespace WFARTHA.Controllers
         }
 
         //------------------------------------------------------------------------------->
+        //Lejggg 22-10-2018
         [HttpPost]
         public JsonResult procesarXML(IEnumerable<HttpPostedFileBase> file)
         {
-            var _ff=file.ToList();
+            var _ff = file.ToList();
             var lines = ReadLines(() => _ff[0].InputStream, Encoding.UTF8).ToArray();
-            JsonResult jc = Json(lines[0], JsonRequestBehavior.AllowGet);
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(lines[0]);
+            var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
+            var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
+
+            var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
+            var _Mt = xmlnode[0].Attributes["Total"].Value;
+            var _RFC = xmlnode2[0].Attributes["Rfc"].Value;
+            /* List<string> childNodes = new List<string>();
+             for (int i = 0; i < xmlnode[0].ChildNodes.Count; i++)
+             {
+                 childNodes.Add(xmlnode[0].ChildNodes.Item(i).Name);
+             }*/
+            List<string> lstvals = new List<string>();
+            lstvals.Add(_F);//Fecha
+            lstvals.Add(_Mt);//Monto
+            lstvals.Add(_RFC);//RFC
+            JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
             return jc;
         }
 
