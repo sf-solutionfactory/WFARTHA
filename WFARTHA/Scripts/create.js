@@ -476,7 +476,7 @@ $(document).ready(function () {
         copiarTableInfoControl();
         //copiarTableSopControl();
         copiarTableRet();
-
+        var res = validarFacs();//Lejgg 22-10-2018
         //dar formato al monto
         var enca_monto = $("#MONTO_DOC_MD").val();
         enca_monto = enca_monto.replace(/\s/g, '');
@@ -2485,6 +2485,26 @@ function copiarTableSopControl() {
         });
     }
 
+}
+
+//lEJGG 22-10-2018
+function validarFacs() {
+    var _ban = false;
+    $("#table_anexa > tbody  > tr[role='row']").each(function () {
+        var t = $("#table_anexa").DataTable();
+        //Obtener el row para el plugin
+        var tr = $(this);
+        var indexopc = t.row(tr).index();
+
+        //Obtener valores visibles en la tabla
+        var _tipoAr = $(this).find("td.TYPE").text();
+        if ("xml" === _tipoAr) {
+            _ban = true;
+        }
+        if (_ban)
+            return;
+    });
+    return _ban;
 }
 
 function resetTabs() {
