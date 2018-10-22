@@ -20,7 +20,8 @@
 <script src="~/Scripts/create.js"></script>
 <script src="~/Scripts/formatos.js"></script>
 <script src="~/Scripts/ValidarCampos.js"></script>
-@*<script src="~/Scripts/validarColsExtras.js"></script>*@
+@*
+    <script src="~/Scripts/validarColsExtras.js"></script>*@
 
 @if (ViewBag.error != "")
 {
@@ -30,12 +31,14 @@
         function errorMessage(msg) {
             M.toast({ html: msg });
         }
+        /**/
         var message = '@ViewBag.error';
+    /**/
 
-        if (message != "") {
-            errorMessage(message);
-        }
-    });
+    if (message != "") {
+        errorMessage(message);
+    }
+});
     </script>
 }
 
@@ -164,7 +167,7 @@
             <a id="btn_borradore" class="btn btn-small" style="display :@display">Descartar Borrador NT</a>
             <input type="text" id="borradore" name="borradore" value="@ViewBag.borradore" hidden />
         }
-        <a href="@Url.Action("Index", "Home" )" class="btn btn-small">Cancelar NT</a>
+        <a href="@Url.Action(" Index", "Home" )" class="btn btn-small">Cancelar NT</a>
         <a id="btn_guardarh" class="btn btn-small">Enviar NT</a>
         <script>
             //function guardah() {
@@ -313,16 +316,13 @@
 
                             </script>
                             @*MGC 03-10-2018 solicitud con orden de compra -->*@
-                            @*<div class="form-group col s3">*@
-                            <div id="div_norden_compra" class="input-field col s3" style="display:none">
-                                @*@Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-10">
-                                        @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })
-                                    </div>*@
-
-                                <input type="text" id="norden_compra" value="" />
-                                <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
-                            </div>
+                            @*<div class="form-group col s3">
+                            *@
+                            @*<div id="div_norden_compra" class="input-field col s3" style="display:none">
+                                    <!--DELETE RSG 19.10.2018-->
+                                    <input type="text" id="norden_compra" value="" />
+                                    <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
+                                </div>*@
                             @*MGC 03-10-2018 solicitud con orden de compra <--*@
                         </div>
                         <div class="row" style="margin-bottom:0">
@@ -532,6 +532,35 @@
         @*Información Contable*@
         <div id="Contable_cont" class="col s12" style="font-size:12px;">
             <div class="row">
+                <div class="col s12 hide" id="div_garantia">
+                    <div class="card-panel">
+                        <div class="row" style="margin-bottom:0px;">
+                            <div id="div_norden_compra" class="input-field col s12 m12 l3" style="display:none">
+                                <!--ADD RSG 19.10.2018-->
+                                @*@Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })
+        </div>*@
+
+                                @*<input type="text" id="norden_compra" value="" />*@<!--ADD RSG 19.10.2018-->
+                                <select id="norden_compra" onchange="addPedido(this.value);"><option></option></select><!--ADD RSG 19.10.2018-->
+                                <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
+                            </div>
+                            <div class="input-field col s12 m12 l3">
+                                <input id="fondo_g" name="fondo_g" type="text" class="validate" disabled />
+                                <label for="fondo_g">Fondo de garantía</label>
+                            </div>
+                            <div class="input-field col s12 m12 l3">
+                                <input id="Rfondo_g" name="Rfondo_g" type="text" class="validate" disabled/>
+                                <label for="Rfondo_g">Retenido fondo de garantía</label>
+                            </div>
+                            <div class="input-field col s12 m12 l3">
+                                <input id="Resfondo_g" name="Resfondo_g" type="text" class="validate" disabled/>
+                                <label for="Resfondo_g">Restante fondo de garantía</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col s12">
                     <div class="card-panel">
                         <h5 id="head_cabecera">Detalle NT</h5>
@@ -539,7 +568,7 @@
 
                             @*//MGC 04092018 Conceptos*@
                             @{string jval = ViewBag.TSOL_VALUES;
-                        @Html.Hidden("impuestosval", jval)
+                                @Html.Hidden("impuestosval", jval)
                             }
                             <!--ADD RSG 18.10.2018-->
                             <div id="div_sinPedido" class="col s12">
@@ -771,7 +800,7 @@
                                                     Cantidad faltante
                                                 </th>
                                                 <th id="lbl_meins">
-                                                    UMedida
+
                                                 </th>
                                                 <th id="">
                                                     Ant. solicitado
@@ -882,207 +911,207 @@
                                 <tbody></tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <div class="card-panel">
+                        <h5 id="head_cabecera">ANEXOS</h5>
+                        <div class="row" style="margin-bottom:0">
+                            <div>
+                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowAnex">Registro Del A</span></a>
+                            </div>
+                            <div class="file-field input-field" id="cargar_archivo">
+                                <div class="btn" style="margin-left: 2px;">
+                                    <span id="span_fileloadAnexar">Anexar</span>
+                                    <input name="file_sopAnexar" id="file_sopAnexar" type="file" multiple="multiple" />
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate file_sopAnexar" type="text">
+                                </div>
+                            </div>
+                            <table class="table display mdl-data-table striped" id="table_anexa" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th class="">
+                                        </th>
+                                        <th class="">
+                                            Num
+                                        </th>
+                                        <th class="">
+                                            Status
+                                        </th>
+                                        <th class="">
+                                            Nombres Archivo
+                                        </th>
+                                        <th class="">
+                                            Tipo de Archivo
+                                        </th>
+                                        <th class="">
+                                            Descripcion
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col s12">
-                <div class="card-panel">
-                    <h5 id="head_cabecera">ANEXOS</h5>
-                    <div class="row" style="margin-bottom:0">
-                        <div>
-                            <a class="btn"><i class="material-icons left">clear</i><span id="delRowAnex">Registro Del A</span></a>
-                        </div>
-                        <div class="file-field input-field" id="cargar_archivo">
-                            <div class="btn" style="margin-left: 2px;">
-                                <span id="span_fileloadAnexar">Anexar</span>
-                                <input name="file_sopAnexar" id="file_sopAnexar" type="file" multiple="multiple" />
+        @*Soporte Contable*@
+        <div id="Informacion_cont" class="col s12" style="font-size:12px;">
+            <div class="row">
+
+                @*MGC 02-10-2018 Cadena de autorización -->*@
+                <div class="col s12">
+                    <div class="card-panel">
+                        <h5 id="head_cabecera">Autorización NT</h5>
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s6">
+                                @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa" })
+                                </div>
+                                <input id="DETTA_VERSION" name="DETTA_VERSION" value="" hidden />
+                                <input id="DETTA_USUARIOC_ID" name="DETTA_USUARIOC_ID" value="" hidden />
+                                <input id="DETTA_ID_RUTA_AGENTE" name="DETTA_ID_RUTA_AGENTE" value="" hidden />
+                                <input id="DETTA_USUARIOA_ID" name="DETTA_USUARIOA_ID" value="" hidden />
                             </div>
-                            <div class="file-path-wrapper">
-                                <input class="file-path validate file_sopAnexar" type="text">
+                        </div>
+                    </div>
+                </div>
+                @*MGC 02-10-2018 Cadena de autorización <--*@
+
+                <div class="col s12" style="display:none">
+                    <div class="card-panel">
+                        <h5 id="head_cabecera">Detalle NT</h5>
+                        <div class="row" style="margin-bottom:0">
+
+                            <div class="file-field input-field" id="cargar_archivo" style="display:none">
+                                <div class="btn">
+                                    <span id="span_fileload">Examinar</span>
+                                    <input id="file_sop" type="file">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+
+                            <div id="div_btns_row_sop">
+                                <a class="btn"><i class="material-icons left">add</i><span id="addRowSop">Registros Add NT</span></a>
+                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowSop">Registro Del NT</span></a>
+                            </div>
+
+                            <table class="table display mdl-data-table striped" id="table_sop" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>
+
+                                        </th>
+                                        <th class="lbl_opc">
+                                            OPC NT
+                                        </th>
+                                        <th class="lbl_pos">
+                                            Pos NT
+                                        </th>
+                                        <th class="lbl_rfc">
+                                            RFC NT
+                                        </th>
+                                        <th class="lbl_factura">
+                                            Factura NT
+                                        </th>
+                                        <th id="lbl_fecha">
+                                            Fecha NT
+                                        </th>
+                                        <th id="lbl_monto">
+                                            Monto NT
+                                        </th>
+                                        <th id="lbl_iva">
+                                            IVA NT
+                                        </th>
+                                        <th id="lbl_total">
+                                            Total NT
+                                        </th>
+                                        <th id="lbl_archivo">
+                                            Archivo NT
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Create" id="btn_guardar" style="display:none" class="btn btn-default" />
+                                </div>
                             </div>
                         </div>
-                        <table class="table display mdl-data-table striped" id="table_anexa" style="width:100%;">
-                            <thead>
-                                <tr>
-                                    <th class="">
-                                    </th>
-                                    <th class="">
-                                        Num
-                                    </th>
-                                    <th class="">
-                                        Status
-                                    </th>
-                                    <th class="">
-                                        Nombres Archivo
-                                    </th>
-                                    <th class="">
-                                        Tipo de Archivo
-                                    </th>
-                                    <th class="">
-                                        Descripcion
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="display:none;">
+                <div class="col s12">
+                    <div class="card-panel">
+                        <h5 id="head_cabecera">WORKFLOW</h5>
+                        <div class="row" style="margin-bottom:0">
+                            <table class="table  mdl-data-table striped" id="table_wf" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th class="lbl_pos">
+                                            Pos NT
+                                        </th>
+                                        <th class="lbl_cargoAbono">
+                                            Cargo/Abono NT
+                                        </th>
+                                        <th class="lbl_factura">
+                                            Factura NT
+                                        </th>
+                                        <th id="lbl_tconcepto">
+                                            TIPO CONCEPTO NT
+                                        </th>
+                                        <th id="lbl_grupo">
+                                            Grupo NT
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @*@arrwf[0]*@
+                                        </td>
+                                        <td>
+                                            @*@arrwf[1]*@
+                                        </td>
+                                        <td>
+                                            @*@arrwf[2]*@
+                                        </td>
+                                        <td>
+                                            @*@arrwf[3]*@
+                                        </td>
+                                        <td>
+                                            @*@arrwf[4]*@
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        @*Soporte SAP*@
+        <div id="Informacion_sap" class="col s12" style="font-size:12px;">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card-panel">
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    @*Soporte Contable*@
-    <div id="Informacion_cont" class="col s12" style="font-size:12px;">
-        <div class="row">
-
-            @*MGC 02-10-2018 Cadena de autorización -->*@
-            <div class="col s12">
-                <div class="card-panel">
-                    <h5 id="head_cabecera">Autorización NT</h5>
-                    <div class="row" style="margin-bottom:0">
-                        <div class="form-group col s6">
-                            @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa" })
-                            </div>
-                            <input id="DETTA_VERSION" name="DETTA_VERSION" value="" hidden />
-                            <input id="DETTA_USUARIOC_ID" name="DETTA_USUARIOC_ID" value="" hidden />
-                            <input id="DETTA_ID_RUTA_AGENTE" name="DETTA_ID_RUTA_AGENTE" value="" hidden />
-                            <input id="DETTA_USUARIOA_ID" name="DETTA_USUARIOA_ID" value="" hidden />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @*MGC 02-10-2018 Cadena de autorización <--*@
-
-            <div class="col s12" style="display:none">
-                <div class="card-panel">
-                    <h5 id="head_cabecera">Detalle NT</h5>
-                    <div class="row" style="margin-bottom:0">
-
-                        <div class="file-field input-field" id="cargar_archivo" style="display:none">
-                            <div class="btn">
-                                <span id="span_fileload">Examinar</span>
-                                <input id="file_sop" type="file">
-                            </div>
-                            <div class="file-path-wrapper">
-                                <input class="file-path validate" type="text">
-                            </div>
-                        </div>
-
-                        <div id="div_btns_row_sop">
-                            <a class="btn"><i class="material-icons left">add</i><span id="addRowSop">Registros Add NT</span></a>
-                            <a class="btn"><i class="material-icons left">clear</i><span id="delRowSop">Registro Del NT</span></a>
-                        </div>
-
-                        <table class="table display mdl-data-table striped" id="table_sop" style="width:100%;">
-                            <thead>
-                                <tr>
-                                    <th>
-
-                                    </th>
-                                    <th class="lbl_opc">
-                                        OPC NT
-                                    </th>
-                                    <th class="lbl_pos">
-                                        Pos NT
-                                    </th>
-                                    <th class="lbl_rfc">
-                                        RFC NT
-                                    </th>
-                                    <th class="lbl_factura">
-                                        Factura NT
-                                    </th>
-                                    <th id="lbl_fecha">
-                                        Fecha NT
-                                    </th>
-                                    <th id="lbl_monto">
-                                        Monto NT
-                                    </th>
-                                    <th id="lbl_iva">
-                                        IVA NT
-                                    </th>
-                                    <th id="lbl_total">
-                                        Total NT
-                                    </th>
-                                    <th id="lbl_archivo">
-                                        Archivo NT
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
-                                <input type="submit" value="Create" id="btn_guardar" style="display:none" class="btn btn-default" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row" style="display:none;">
-            <div class="col s12">
-                <div class="card-panel">
-                    <h5 id="head_cabecera">WORKFLOW</h5>
-                    <div class="row" style="margin-bottom:0">
-                        <table class="table  mdl-data-table striped" id="table_wf" style="width:100%;">
-                            <thead>
-                                <tr>
-                                    <th class="lbl_pos">
-                                        Pos NT
-                                    </th>
-                                    <th class="lbl_cargoAbono">
-                                        Cargo/Abono NT
-                                    </th>
-                                    <th class="lbl_factura">
-                                        Factura NT
-                                    </th>
-                                    <th id="lbl_tconcepto">
-                                        TIPO CONCEPTO NT
-                                    </th>
-                                    <th id="lbl_grupo">
-                                        Grupo NT
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        @*@arrwf[0]*@
-                                    </td>
-                                    <td>
-                                        @*@arrwf[1]*@
-                                    </td>
-                                    <td>
-                                        @*@arrwf[2]*@
-                                    </td>
-                                    <td>
-                                        @*@arrwf[3]*@
-                                    </td>
-                                    <td>
-                                        @*@arrwf[4]*@
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    @*Soporte SAP*@
-    <div id="Informacion_sap" class="col s12" style="font-size:12px;">
-        <div class="row">
-            <div class="col s12">
-                <div class="card-panel">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 }

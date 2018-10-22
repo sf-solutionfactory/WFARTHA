@@ -184,12 +184,118 @@
     $('#table_infoP tbody').on('click', 'td.select_row', function () {
         $(tr).toggleClass('selected');
     });
+
+
+    $('body').on('focusout', '.OPERP', function (e) {
+
+        var t = $('#table_infop').DataTable();
+        var tr = $(this).closest('tr'); //Obtener el row 
+
+        //Obtener el valor del impuesto
+        //var imp = tr.find("td.IMPUESTOP input").val();
+        var imp = tr.find("td.IMPUESTOP").find("select").val();
+
+        //Calcular impuesto y subtotal
+        var impimp = impuestoVal(imp);
+        impimp = parseFloat(impimp);
+
+        //Desde el total
+        if ($(this).hasClass("TOTAL")) {
+
+            var total = $(this).val();
+            total = parseFloat(total);
+
+            var impv = (total * impimp) / 100;
+            impv = parseFloat(impv);
+            var sub = total - impv;
+
+            impv = toShow(impv);
+            sub = toShow(sub);
+            total = toShow(total);
+
+            //Enviar los valores a la tabla
+            //Subtotal
+            tr.find("td.MONTO_F input").val();
+            tr.find("td.MONTO_F input").val(sub);
+
+            //IVA
+            tr.find("td.IVA input").val();
+            tr.find("td.IVA input").val(impv);
+
+            //Total
+            tr.find("td.TOTAL input").val();
+            tr.find("td.TOTAL input").val(total);
+
+
+        }
+        else if ($(this).hasClass("MONTO_F")) {
+
+            //Desde el subtotal
+            var sub = $(this).val().replace('$', '').replace(',', '');
+            sub = parseFloat(sub);
+
+            //Lleno los campos de Base Imponible con el valor del monto
+            for (x = 0; x < tRet2.length; x++) {
+                var _xvalue = tr.find("td.BaseImp" + tRet2[x] + " input").val();
+                if (_xvalue == "") {
+                    tr.find("td.BaseImp" + tRet2[x] + " input").val(toShow(sub));
+                    //Ejecutamos un ajax para llenar el valor de importe de retencion
+                    var _res = porcentajeImpRet(tRet2[x]);
+                    _res = (sub * _res) / 100;//Saco el porcentaje
+                    tr.find("td.ImpRet" + tRet2[x] + " input").val(toShow(_res));
+                }
+            }
+            //Ejecutamos el metodo para sumarizar las columnas
+            var colTotal = sumarColumnasExtras(tr);
+
+            // rimpimp = 100 - impimp;
+
+            var impv = (sub * impimp) / 100;
+            impv = parseFloat(impv);
+            var total = sub + impv;
+            total = parseFloat(total);
+
+            var sub = total - impv;
+
+            impv = toShow(impv);
+            sub = toShow(sub);
+            total = toShow(total);
+
+            //Enviar los valores a la tabla
+            //Subtotal
+            tr.find("td.MONTO_F input").val();
+            tr.find("td.MONTO_F input").val(sub);
+
+            //IVA
+            tr.find("td.IVA input").val();
+            tr.find("td.IVA input").val(impv);
+
+            //Total
+            tr.find("td.TOTAL input").val();
+            if (colTotal > 0) {
+                var sumt = parseFloat(total.replace('$', '').replace(',', '')) - parseFloat(colTotal);
+                tr.find("td.TOTAL input").val(toShow(sumt));
+            }
+            else {
+                tr.find("td.TOTAL input").val(total);
+            }
+        } else {
+            $(this).val(toShowNum($(this).val()));
+        }
+        updateFooter();
+        //$(".extrasC").trigger("focusout"); //lej18102018
+    });
+
+    $('body').on('change', '#PAYER_ID', function (event) {
+        llenaOrdenes($(this).val());
+    });
 });
 
 var pedidosSel = [];
 
 $('body').on('keydown.autocomplete', '#norden_compra', function () {
     var tr = $(this).closest('tr'); //Obtener el row
+    var t = $('#table_infoP').DataTable();
 
     //Obtener el id de la sociedad
     var prov = $("#PAYER_ID").val();
@@ -221,6 +327,7 @@ $('body').on('keydown.autocomplete', '#norden_compra', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 e.target.value = "";
+                t.rows().remove().draw(false);
             }
         },
         select: function (event, ui) {
@@ -237,13 +344,43 @@ $('body').on('keydown.autocomplete', '#norden_compra', function () {
     });
 });
 
+function llenaOrdenes(lifnr) {
+    var tr = $(this).closest('tr'); //Obtener el row
+    var t = $('#table_infoP').DataTable();
+
+    //Obtener el id de la sociedad
+    var prov = lifnr
+    var pedidosNum = [];
+    $("#norden_compra").empty();
+
+    auto.ajax({
+        type: "POST",
+        url: 'getPedidos',
+        dataType: "json",
+        data: { "Prefix": "", lifnr: prov },
+        success: function (data) {
+            $("#norden_compra").append($("<option>").attr('value', "").text(""));
+            for (var i = 0; i < data.length; i++) {
+                var ebeln = data[i].EBELN
+                $("#norden_compra").append($("<option>").attr('value', ebeln).text(ebeln));
+            }
+
+            var elem = document.querySelectorAll("select");
+            var instance = M.Select.init(elem, []);
+        }
+    });
+}
+
+
 function mostrarTabla(ban) {
     if (ban == "False") {
         $("#div_sinPedido").addClass("hide");
         $("#div_conPedido").removeClass("hide");
+        $("#div_garantia").removeClass("hide");
     } else {
         $("#div_conPedido").addClass("hide");
         $("#div_sinPedido").removeClass("hide");
+        $("#div_garantia").addClass("hide");
     }
 }
 
@@ -253,6 +390,7 @@ function addPedido(ebeln) {
 
     t.rows().remove().draw(false);
     ti.rows().remove().draw(false);
+    document.getElementById("loader").style.display = "initial";
 
     auto.ajax({
         type: "POST",
@@ -272,13 +410,34 @@ function addPedido(ebeln) {
 
                 //Obtener el valor 
                 var imp = $('#IMPUESTO').val();
-                //addSelectImpuesto(addedRowInfo, imp, idselect, "", "X");
+                addSelectImpuestoP(addedRowInfo, imp, idselect, "", "X");
 
                 updateFooterP();
             }
+            document.getElementById("loader").style.display = "none";
         },
         error: function (x) {
             alert(x);
+            document.getElementById("loader").style.display = "none";
+        },
+        sync: false
+    });
+
+    document.getElementById("loader").style.display = "initial";
+    auto.ajax({
+        type: "POST",
+        url: 'getFondos',
+        dataType: "json",
+        data: { ebeln: ebeln },
+        success: function (data) {
+            $("#fondo_g").val(data.FONDOG);
+            $("#Rfondo_g").val(data.RET_FONDOG);
+            $("#Resfondo_g").val(data.RES_FONDOG);
+            document.getElementById("loader").style.display = "none";
+        },
+        error: function (x) {
+            alert(x);
+            document.getElementById("loader").style.display = "none";
         },
         sync: false
     });
@@ -308,11 +467,12 @@ function addRowInfoP(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo
         TIPOIMP,
         IMPUTACION,
         "<input disabled class='CCOSTO' style='font-size:12px;' type='text' id='' name='' value='" + CCOSTO + "'>",
-        "<input " + disabled + " class='MONTO OPER' style='font-size:12px;' type='text' id='' name='' value='" + MONTO + "'>",
+        "<input " + disabled + " class='MONTO OPERP' style='font-size:12px;' type='text' id='' name='' value='" + MONTO + "'>",
+        //"<div class='input-field'></div>",
         "",
         "<input disabled class='IVA' style='font-size:12px;' type='text' id='' name='' value='" + IVA + "'>",
         "<input " + disabled + " class='' style='font-size:12px;' type='text' id='' name='' value='" + TEXTO + "'>",//Lej 13.09.2018
-        TOTAL,//"<input " + disabled + " class='TOTAL OPER' style='font-size:12px;' type='text' id='' name='' value='" + TOTAL + "'>"
+        TOTAL,//"<input " + disabled + " class='TOTAL OPERP' style='font-size:12px;' type='text' id='' name='' value='" + TOTAL + "'>"
         check //MGC 03-10-2018 solicitud con orden de compra
         ,
         //PED
@@ -320,8 +480,8 @@ function addRowInfoP(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo
         PED.TXZ0 + "",//P.TEXTO,//-------------------TEXTO
         "<input disabled class='' style='font-size:12px;' type='text' id='' name='' value='" + toShow(PED.NETWR) + "'>",//P.MENGE,//-------------------CANTIDAD
         "<input disabled class='' style='font-size:12px;' type='text' id='' name='' value='" + toShowNum(PED.MENGE) + "'>",//P.MEINS,//-------------------MEINS
-        "<input class='' style='font-size:12px;' type='text' id='' name='' value='" + toShow(PED.NETWR - PED.H_VAL_LOCCUR) + "'>",//P.MEINS,//-------------------MEINS
-        "<input class='' style='font-size:12px;' type='text' id='' name='' value='" + toShowNum(PED.MENGE - PED.H_QUANTITY) + "'>",//P.MEINS,//-------------------MEINS
+        "<input class='MONTO_F OPERP' style='font-size:12px;' type='text' id='' name='' value='" + toShow(PED.NETWR - PED.H_VAL_LOCCUR) + "'>",//P.MEINS,//-------------------MEINS
+        "<input class='OPERP' style='font-size:12px;' type='text' id='' name='' value='" + toShowNum(PED.MENGE - PED.H_QUANTITY) + "'>",//P.MEINS,//-------------------MEINS
         PED.MEINS,
         toShow(PED.H_ANT_SOL),
         toShow(PED.H_ANT_PAG),
@@ -345,7 +505,7 @@ function addRowlP(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gr
         //{
         //}
     }
-    colstoAdd += "<td><input disabled class='TOTAL OPER' style='font-size:12px;' type='text' id='' name='' value='" + total + "'></td>"
+    colstoAdd += "<td><input disabled class='TOTAL OPERP' style='font-size:12px;' type='text' id='' name='' value='" + total + "'></td>"
         //+ "<td><input class='CHECK' style='font-size:12px;' type='checkbox' id='' name='' value='" + check + "'></td>" //MGC 03 - 10 - 2018 solicitud con orden de compra
         + "<td><p><label><input type='checkbox' checked='" + check + "' /><span></span></label></p></td>";//MGC 03 - 10 - 2018 solicitud con orden de compra
     var table_rows = '<tr><td></td><td>' + pos + '</td><td><input class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td>' +
@@ -378,7 +538,7 @@ function addRowlP(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gr
             impuesto,
             iva,
             //texto,
-            "<input disabled class='TOTAL OPER' style='font-size:12px;' type='text' id='' name='' value='" + total + "'>",
+            "<input disabled class='TOTAL OPERP' style='font-size:12px;' type='text' id='' name='' value='" + total + "'>",
             "<input class='CHECK' style='font-size:12px;' type='checkbox' id='' name='' value='" + check + "'>" //MGC 03 - 10 - 2018 solicitud con orden de compra
         ]).draw(false).node();
     } else {
@@ -442,3 +602,93 @@ function updateFooterP() {
     $('#total_info').text(toShow(total));
     $('#MONTO_DOC_MD').val(toShow(total));//Lej 18.09.2018
 }
+
+//MGC 04092018 Conceptos
+function addSelectImpuestoP(addedRowInfo, imp, idselect, disabled, clase) {
+
+    //Obtener la celda del row agregado
+    var ar = $(addedRowInfo).find("td.IMPUESTOP");
+
+
+    var sel = $("<select class = 'IMPUESTOP_SELECT browser-default' id = '" + idselect + "'> ").appendTo(ar);
+    //var sel = $("<select class = 'IMPUESTOP_SELECT' id = '" + idselect + "'> ").appendTo(ar);
+    $("#IMPUESTO option").each(function () {
+        var _valor = $(this).val();//lej 19.09.2018
+        var _texto = $(this).text();//lej 19.09.2018
+        sel.append($("<option>").attr('value', _valor).text(_texto));//lej 19.09.2018
+    });
+
+    //Seleccionar el valor
+    //$("#" + idselect + "").val(imp).change("sel");    
+    // $("#" + idselect + "").val(imp).trigger("change", ["tr"]);
+    $("#" + idselect + "").val(imp);
+    $("#" + idselect + "").siblings(".select-dropdown").css("font-size", "12px");
+    if (disabled == "X") {
+
+        $("#" + idselect + "").prop('disabled', 'disabled');
+    }
+
+    //Iniciar el select agregado
+    //var elem = document.getElementById(idselect);
+    //var options = {
+    //    dropdownOptions: {
+    //        constrainWidth: false
+    //        //,container: "div_selP"
+    //    }
+    //}
+    //var instance = M.Select.init(elem, []);
+    $(".IMPUESTOP_SELECT").trigger("change");
+}
+
+$('body').on('change', '.IMPUESTOP_SELECT', function (event, param1) {
+
+    if (param1 != "tr") {
+        //Modificación del sub, iva y total
+
+        var t = $('#table_infop').DataTable();
+        var tr = $(this).closest('tr'); //Obtener el row 
+
+        //Obtener el valor del impuesto
+        var imp = tr.find("td.IMPUESTOP").find("select").val();
+
+        //Calcular impuesto y subtotal
+        var impimp = impuestoVal(imp);
+        impimp = parseFloat(impimp);
+        var colTotal = sumarColumnasExtras(tr);//lej 19.08.18
+
+        var sub = tr.find("td.MONTO_F input").val().replace('$', '').replace(',', '');
+        sub = parseFloat(sub);
+
+        //rimpimp = 100 - impimp;//lej 19.08.18
+
+        var impv = (sub * impimp) / 100;
+        impv = parseFloat(impv);
+        var total = sub + impv;
+        total = parseFloat(total);
+
+        impv = toShow(impv);
+        sub = toShow(sub);
+        total = toShow(total);
+
+        //Enviar los valores a la tabla
+        //Subtotal
+        tr.find("td.MONTO_F input").val();
+        tr.find("td.MONTO_F input").val(sub);
+
+        //IVA
+        tr.find("td.IVA input").val();
+        tr.find("td.IVA input").val(impv);
+
+        //Total
+        tr.find("td.TOTAL input").val();
+        if (colTotal > 0) {
+            var sumt = parseFloat(total.replace('$', '').replace(',', '')) + parseFloat(colTotal);
+            tr.find("td.TOTAL input").val(toShow(sumt));
+        }
+        else {
+            tr.find("td.TOTAL input").val(total);
+        }
+        updateFooterP();
+    }
+
+});

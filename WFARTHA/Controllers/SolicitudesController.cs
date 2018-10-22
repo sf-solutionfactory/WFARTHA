@@ -3697,9 +3697,25 @@ namespace WFARTHA.Controllers
         public JsonResult getPedidos(string Prefix, string lifnr)
         {
             var c = (from N in db.EKKO_DUMM
-                     where (N.LIFNR == lifnr & N.EBELN.Contains(Prefix))
+                     where (N.LIFNR == lifnr)// & N.EBELN.Contains(Prefix))
                      select new { N.EBELN }).ToList();
 
+            JsonResult jc = Json(c, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
+        [HttpPost]
+        public JsonResult getFondos(string ebeln)
+        {
+            var c = (from N in db.EKKO_DUMM
+                      where (N.EBELN.Equals(ebeln))
+                      select new
+                      {
+                          N.EBELN,
+                          N.FONDOG,
+                          N.RES_FONDOG,
+                          N.RET_FONDOG,
+                      });
             JsonResult jc = Json(c, JsonRequestBehavior.AllowGet);
             return jc;
         }

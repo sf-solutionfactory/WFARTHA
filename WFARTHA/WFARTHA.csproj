@@ -234,6 +234,9 @@
     <Compile Include="Entities\CONCEPTO.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CONDICIONES_PAGO.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CONMAIL.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
