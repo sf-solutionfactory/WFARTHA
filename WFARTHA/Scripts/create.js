@@ -625,13 +625,43 @@ $(document).ready(function () {
         var tdata = "";
         var _tab = $('#table_anexa').DataTable();
         for (var i = 0; i < length; i++) {
-            var nr = _tab.rows().count()
+            var nr = _tab.rows().count();
             //Si nr es 0 significa que la tabla esta vacia
-            if (nr == 0) {
+            if (nr === 0) {
                 var file = $(this).get(0).files[i];
                 var fileName = file.name;
                 var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
                 tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                //Lejgg 22-10-2018
+                if (fileNameExt.toLowerCase() === "xml") {
+                    var data = new FormData();
+                    data.append('file', file);
+                    $.ajax({
+                        type: "POST",
+                        url: 'procesarXML',
+                        data: data,
+                        dataType: "json",
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data !== null || data !== "") {
+                                var xmlDoc = $.parseXML(data),
+                                    $xml = $(xmlDoc);
+                                var $title = $xml.find("cfdi");
+                                if ($title.length > 0) {
+                                    $title.find("cfdi").each(function () {
+                                        var _result = $(this).find("fecha").text();
+                                    });
+                                }
+                            }
+                        },
+                        error: function (xhr, httpStatusMessage, customErrorMessage) {
+                            //
+                        },
+                        async: false
+                    });
+                }
                 _tab.row.add(
                     $(tdata)
                 ).draw(false).node();
@@ -639,10 +669,43 @@ $(document).ready(function () {
                 var file = $(this).get(0).files[i];
                 var fileName = file.name;
                 var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-                tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
-                _tab.row.add(
-                    $(tdata)
-                ).draw(false).node();
+                var _ban = false;
+                //Lejgg 22-10-2018------------------------------------------------>
+                $("#table_anexa > tbody  > tr[role='row']").each(function () {
+                    var t = $("#table_anexa").DataTable();
+                    //Obtener el row para el plugin
+                    var tr = $(this);
+                    var indexopc = t.row(tr).index();
+
+                    //Obtener valores visibles en la tabla
+                    var _tipoAr = $(this).find("td.TYPE").text();
+                    if (fileNameExt.toLowerCase() === _tipoAr) {
+                        _ban = true;
+                    }
+                    if (_ban)
+                        return;
+                });
+                //Si el archivo es xml entra
+                if (fileNameExt.toLowerCase() === "xml") {
+                    //Si ban es false, no hay ningun otro archivo xml, entonces metere el registro
+                    if (!_ban) {
+                        tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                        _tab.row.add(
+                            $(tdata)
+                        ).draw(false).node();
+                    }
+                    else {
+                        //Alert no se metio porque ya hay un xml en la tabla
+                        M.toast({ html: "Ya existe una factura" });
+                    }
+                }
+                else {
+                    tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                    _tab.row.add(
+                        $(tdata)
+                    ).draw(false).node();
+                }
+                //Lejgg 22-10-2018------------------------------------------------>
             }
         }
     });
@@ -730,15 +793,23 @@ $('body').on('change', '#tsol', function (event, param1) {
     val3 = val3.replace(/\,/g, "\" , \"");
     val3 = val3.replace(/\=/g, "\" : \"");
     val3 = val3.replace(/\ /g, "");
-    var jsval = $.parseJSON(val3)
+    var jsval = $.parseJSON(val3);
 
     $.each(jsval, function (i, dataj) {
         $("#tsol_id2").val(dataj.ID);
 
         ocultarCampos(dataj.EDITDET, param1);
         mostrarTabla(dataj.EDITDET);
+        //LEJGG 22-10-2018---------------------->
+        //Para pago de facturas
+        if (dataj.ID === "SSO") {
+            $("#FECHAD").prop('disabled', true);
+        }
+        else {
+            $("#FECHAD").prop('disabled', false);
+        }
+        //LEJGG 22-10-2018---------------------->
     });
-
 });
 //MGC 03-10-2018 solicitud con orden de compra
 function ocultarCampos(opc, load) {

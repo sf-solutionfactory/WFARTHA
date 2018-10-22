@@ -15,6 +15,7 @@ using WFARTHA.Services;
 using System.Linq.Expressions;
 using System.Configuration;
 using System.IO;
+using System.Text;
 
 namespace WFARTHA.Controllers
 {
@@ -1609,7 +1610,7 @@ namespace WFARTHA.Controllers
 
             ViewBag.Title += id; //MGC 05-10-2018 Modificación para work flow al ser editada
             //LEJGG19 10 2018----------------------------------------------------->
-            ViewBag.docAn = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList(); 
+            ViewBag.docAn = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
             //LEJGG19 10 2018-----------------------------------------------------<
             //solicitud con orden de compra ------>
             //Obtener la solicitud con la configuración
@@ -2842,6 +2843,31 @@ namespace WFARTHA.Controllers
             return jc;
         }
 
+        //------------------------------------------------------------------------------->
+        [HttpPost]
+        public JsonResult procesarXML(IEnumerable<HttpPostedFileBase> file)
+        {
+            var _ff=file.ToList();
+            var lines = ReadLines(() => _ff[0].InputStream, Encoding.UTF8).ToArray();
+            JsonResult jc = Json(lines[0], JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
+        public IEnumerable<string> ReadLines(Func<Stream> streamProvider,
+                                     Encoding encoding)
+        {
+            using (var stream = streamProvider())
+            using (var reader = new StreamReader(stream, encoding))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    yield return line;
+                }
+            }
+        }
+        //-------------------------------------------------------------------------------<
+
         [HttpPost]
         public JsonResult getConceptoI(string Prefix, string bukrs)
         {
@@ -3515,12 +3541,14 @@ namespace WFARTHA.Controllers
             List<Anexo> _lstax = new List<Anexo>();
             Anexo _ax = new Anexo();
             List<decimal> lstd = new List<decimal>();
-            for (int i = 0; i < c.Count; i++) {
+            for (int i = 0; i < c.Count; i++)
+            {
                 var _1filtro = c.Where(x => x.POS == (i + 1)).ToList();
                 for (int y = 0; y < _1filtro.Count; y++)
                 {
                     _ax = new Anexo();
-                    switch (y + 1) {
+                    switch (y + 1)
+                    {
                         case 1:
                             _ax.a1 = int.Parse(_1filtro[y].POSD.ToString());
                             break;
@@ -3783,9 +3811,9 @@ namespace WFARTHA.Controllers
             //Obtener el usuario
             string u = User.Identity.Name;
 
-            bool m = false; 
+            bool m = false;
             //Add usuario
-            if(m == true)
+            if (m == true)
             {
                 Cryptography cr = new Cryptography();
                 USUARIO us = db.USUARIOs.Where(usr => usr.ID == "admin").FirstOrDefault();
@@ -3811,7 +3839,7 @@ namespace WFARTHA.Controllers
                 user = db.USUARIOs.Where(a => a.ID.Equals(userm.ID) && a.FIRMA.Equals(pass)).FirstOrDefault();
             }
 
-            if(user != null)
+            if (user != null)
             {
                 res = "true";
             }
