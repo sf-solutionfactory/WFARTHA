@@ -484,7 +484,7 @@ $(document).ready(function () {
         var _decimales = $("#dec").val();
 
         //Guardar los valores de la tabla en el modelo para enviarlos al controlador
-        copiarTableInfoControl();
+        copiarTableInfoControl(); copiarTableInfoPControl();
         //copiarTableSopControl();
         copiarTableRet();
 
@@ -512,8 +512,9 @@ $(document).ready(function () {
             var pos = $(this).find("td.POS").text();
             _vs.push(pos);
         });
-
-        $("#table_info > tbody  > tr[role='row']").each(function () {
+        var tabble = "table_info";
+        if ($("table#table_info tbody tr[role='row']").length == 0) { tabble = "table_infoP" }
+        $("#" + tabble + " > tbody  > tr[role='row']").each(function () {
             _rni++;
             //Obtener valores visibles en la tabla
             var na1 = $(this).find("td.NumAnexo input").val();
