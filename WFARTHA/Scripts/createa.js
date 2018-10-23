@@ -160,7 +160,8 @@ function selectConcepto(val, tr, tipo) {
             //tr.find("td.CUENTANOM").text(con.DESC_CONCEPTO);//MGC 11-10-2018 No enviar correos 
 
             //Tipo de imputación
-            tr.find("td.TIPOIMP").text(con.TIPO_IMPUTACION);
+            //tr.find("td.TIPOIMP").text(con.TIPO_IMPUTACION);//MGC 22-10-2018 Modificación en etiquetas
+            t.cell(indexopc, 13).data(con.TIPO_IMPUTACION).draw();//MGC 22-10-2018 Modificación en etiquetas
 
             //Actualizar el tipo concepto
             var indexopc = t.row(tr).index();

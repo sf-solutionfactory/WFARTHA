@@ -69,8 +69,6 @@ $(document).ready(function () {
                 "name": 'A1',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo',
                 "orderable": false,
-                "width": "10px"
-                
             },
             {
                 "name": 'A2',//MGC 22-10-2018 Etiquetas
@@ -175,6 +173,15 @@ $(document).ready(function () {
                 "className": 'CHECK',
                 "orderable": false
             }
+        ],
+        columnDefs: [
+            { targets: 2, width: '580px' },
+            { targets: 3, width: '40px' },
+            { targets: 4, width: '580px' },
+            { targets: 5, width: '580px' },
+            { targets: 6, width: '580px'},
+            { targets: 19, width: '580px'}
+  
         ]
     });
 
@@ -1035,7 +1042,7 @@ function obtenerRetenciones(flag) {
                 "name": 'TEXTO',
                 "className": 'TEXTO',
                 "orderable": false,
-                "width": "80px"
+                "width": "80%"
             }
         ];
         //Se rearmara la tabla en HTML
@@ -1142,7 +1149,16 @@ function obtenerRetenciones(flag) {
             "paging": false,
             "info": false,
             "searching": false,
-            "columns": arrCols
+            "columns": arrCols,
+            columnDefs: [
+                { targets: 2, width: '580px' },
+                { targets: 3, width: '40px' },
+                { targets: 4, width: '580px' },
+                { targets: 5, width: '580px' },
+                { targets: 6, width: '580px' },
+                { targets: 19, width: '580px' }
+
+            ]
         });
 
         //MGC 22-10-2018 Etiquetas------------------------------------------>
@@ -2185,6 +2201,10 @@ function copiarTableInfoControl() {
             //Obtener la imputación
             var imputacion = t.row(indexopc).data()[14];
 
+            //MGC 22-10-2018 Modificación en etiquetas
+            //Obtener el nombre de la cuenta
+            var cuentanom = t.row(indexopc).data()[12];
+
             //MGC 11-10-2018 Obtener valor de columnas ocultas <---------------------------
             //Lej 14.08.2018-------------------------------------------------------------I
             var colsAdded = tRet2.length;//Las retenciones que se agregaron a la tabla
@@ -2196,9 +2216,20 @@ function copiarTableInfoControl() {
             var factura = $(this).find("td.FACTURA input").val();
             //var tconcepto = $(this).find("td.TCONCEPTO").text();
             var grupo = $(this).find("td.GRUPO input").val();
+
+            //quitar espacios en blanco //MGC 22-10-2018 Modificación en etiquetas
+            grupo = grupo.replace(/\s/g, '');
+            var grupoaux = grupo;
+            grupo = "";
+
+            //Quitar el tipo de concepto de la llave
+            grupo = grupoaux.substring(2, grupoaux.length);
+
             //var cuenta = $(this).find("td.CUENTA").text();//MGC 04092018 Conceptos //MGC 11-10-2018 Obtener valor de columnas oculta
-            var cuentanom = $(this).find("td.CUENTANOM").text();
-            var tipoimp = $(this).find("td.TIPOIMP").text();
+            //var cuentanom = $(this).find("td.CUENTANOM").text();//MGC 22-10-2018 Modificación en etiquetas
+            //var tipoimp = $(this).find("td.TIPOIMP").text();//MGC 22-10-2018 Modificación en etiquetas
+            var tipoimp = t.row(indexopc).data()[13];//MGC 22-10-2018 Modificación en etiquetas
+
             //var imputacion = $(this).find("td.IMPUTACION").text(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var ccosto = $(this).find("td.CCOSTO input").val(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var impuesto = $(this).find("td.IMPUESTO input").val();
