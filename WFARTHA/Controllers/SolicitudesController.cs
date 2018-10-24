@@ -15,6 +15,9 @@ using WFARTHA.Services;
 using System.Linq.Expressions;
 using System.Configuration;
 using System.IO;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace WFARTHA.Controllers
 {
@@ -581,7 +584,7 @@ namespace WFARTHA.Controllers
                             ACTIVO = ii.ACTIVO
                         }).ToList();
 
-            var impuestosv = JsonConvert.SerializeObject(impl, Formatting.Indented);
+            var impuestosv = JsonConvert.SerializeObject(impl, Newtonsoft.Json.Formatting.Indented);
             ViewBag.impuestosval = impuestosv;
             //Workflow
             //ViewBag.worflw = "'aaa','bbb','ccc','ddd','eee'";//lej 10.09.2018
@@ -617,7 +620,7 @@ namespace WFARTHA.Controllers
 
             ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
 
-            ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Formatting.Indented);
+            ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Newtonsoft.Json.Formatting.Indented);
 
             return View(d);
         }
@@ -636,14 +639,19 @@ namespace WFARTHA.Controllers
             "AGENTE_ACTUAL,FECHA_PASO_ACTUAL,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,FECHACON,FECHA_BASE,REFERENCIA," +
             "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo")] Models.DOCUMENTO_MOD doc, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc,
             //MGC 02-10-2018 Cadenas de autorización
-            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr)
-
+            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr, string FECHADO)
         {
             int pagina = 202; //ID EN BASE DE DATOS
             string errorString = "";
             FORMATO formato = new FORMATO();
             string spras = "";
             string user_id = ""; //MGC 02-10-2018 Cadenas de autorización
+            //LEJGG 22/10/2018
+            if (doc.FECHAD == null)
+            {
+                //Si doc.FECHAD viene vacio o nulo, le asgino la fecha que tiene fechado, su campo oculto
+                doc.FECHAD = DateTime.Parse(FECHADO);
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -1609,7 +1617,7 @@ namespace WFARTHA.Controllers
 
             ViewBag.Title += id; //MGC 05-10-2018 Modificación para work flow al ser editada
             //LEJGG19 10 2018----------------------------------------------------->
-            ViewBag.docAn = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList(); 
+            ViewBag.docAn = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
             //LEJGG19 10 2018-----------------------------------------------------<
             //solicitud con orden de compra ------>
             //Obtener la solicitud con la configuración
@@ -1818,7 +1826,7 @@ namespace WFARTHA.Controllers
                             ACTIVO = ii.ACTIVO
                         }).ToList();
 
-            var impuestosv = JsonConvert.SerializeObject(impl, Formatting.Indented);
+            var impuestosv = JsonConvert.SerializeObject(impl, Newtonsoft.Json.Formatting.Indented);
             ViewBag.impuestosval = impuestosv;
             //Workflow
             //ViewBag.worflw = "'aaa','bbb','ccc','ddd','eee'";//lej 10.09.2018
@@ -1853,7 +1861,7 @@ namespace WFARTHA.Controllers
                 }).ToList();
 
             ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
-            ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Formatting.Indented);
+            ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Newtonsoft.Json.Formatting.Indented);
 
             //lejgg 05.10.2018------>
             DocumentoFlujo DF = new DocumentoFlujo();
@@ -2842,6 +2850,49 @@ namespace WFARTHA.Controllers
             return jc;
         }
 
+        //------------------------------------------------------------------------------->
+        //Lejggg 22-10-2018
+        [HttpPost]
+        public JsonResult procesarXML(IEnumerable<HttpPostedFileBase> file)
+        {
+            var _ff = file.ToList();
+            var lines = ReadLines(() => _ff[0].InputStream, Encoding.UTF8).ToArray();
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(lines[0]);
+            var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
+            var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
+
+            var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
+            var _Mt = xmlnode[0].Attributes["Total"].Value;
+            var _RFC = xmlnode2[0].Attributes["Rfc"].Value;
+            /* List<string> childNodes = new List<string>();
+             for (int i = 0; i < xmlnode[0].ChildNodes.Count; i++)
+             {
+                 childNodes.Add(xmlnode[0].ChildNodes.Item(i).Name);
+             }*/
+            List<string> lstvals = new List<string>();
+            lstvals.Add(_F);//Fecha
+            lstvals.Add(_Mt);//Monto
+            lstvals.Add(_RFC);//RFC
+            JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
+        public IEnumerable<string> ReadLines(Func<Stream> streamProvider,
+                                     Encoding encoding)
+        {
+            using (var stream = streamProvider())
+            using (var reader = new StreamReader(stream, encoding))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    yield return line;
+                }
+            }
+        }
+        //-------------------------------------------------------------------------------<
+
         [HttpPost]
         public JsonResult getConceptoI(string Prefix, string bukrs)
         {
@@ -3529,12 +3580,14 @@ namespace WFARTHA.Controllers
             List<Anexo> _lstax = new List<Anexo>();
             Anexo _ax = new Anexo();
             List<decimal> lstd = new List<decimal>();
-            for (int i = 0; i < c.Count; i++) {
+            for (int i = 0; i < c.Count; i++)
+            {
                 var _1filtro = c.Where(x => x.POS == (i + 1)).ToList();
                 for (int y = 0; y < _1filtro.Count; y++)
                 {
                     _ax = new Anexo();
-                    switch (y + 1) {
+                    switch (y + 1)
+                    {
                         case 1:
                             _ax.a1 = int.Parse(_1filtro[y].POSD.ToString());
                             break;
@@ -3814,9 +3867,9 @@ namespace WFARTHA.Controllers
             //Obtener el usuario
             string u = User.Identity.Name;
 
-            bool m = false; 
+            bool m = false;
             //Add usuario
-            if(m == true)
+            if (m == true)
             {
                 Cryptography cr = new Cryptography();
                 USUARIO us = db.USUARIOs.Where(usr => usr.ID == "admin").FirstOrDefault();
@@ -3842,7 +3895,7 @@ namespace WFARTHA.Controllers
                 user = db.USUARIOs.Where(a => a.ID.Equals(userm.ID) && a.FIRMA.Equals(pass)).FirstOrDefault();
             }
 
-            if(user != null)
+            if (user != null)
             {
                 res = "true";
             }

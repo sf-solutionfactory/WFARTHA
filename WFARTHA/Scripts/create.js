@@ -33,8 +33,8 @@ $(document).ready(function () {
     });
     //LEJ 11.09.2018------------------------------------
 
-    //Establecer el valor V3  de impuesto
-    //$('#IMPUESTO').val('V3');//LEJ 24.09.2018
+    //Establecer fechas
+    $("#FECHADO").val($("#FECHAD").val());
 
     //Inicializar las tabs
     $('#tabs').tabs();
@@ -488,6 +488,8 @@ $(document).ready(function () {
         //copiarTableSopControl();
         copiarTableRet();
 
+        //If res == false signfica que sera invoice, osea no hay xml
+        //CODIGO
         //dar formato al monto
         var enca_monto = $("#MONTO_DOC_MD").val();
         enca_monto = enca_monto.replace(/\s/g, '');
@@ -512,9 +514,23 @@ $(document).ready(function () {
             var pos = $(this).find("td.POS").text();
             _vs.push(pos);
         });
+
+        //LEJGG 23-10-18
+        //Aqui verificare si es invoice o factura
+        var res = validarFacs();//Lejgg 23-10-2018
+        if (res) {//si es true signfica que si hay factura
+            //Fechade la factura
+            var _fdo = $("#FECHADO").val();
+        } else {
+            //si es false signfica que es invoice(fecha de la creacion)
+            var fdo = $("#FECHADO").val();
+        }
+
+        //$("#table_info > tbody  > tr[role='row']").each(function () { //MGC 24-10-2018 Conflicto Enrique-Rogelio
         var tabble = "table_info";
         if ($("table#table_info tbody tr[role='row']").length == 0) { tabble = "table_infoP" }
         $("#" + tabble + " > tbody  > tr[role='row']").each(function () {
+
             _rni++;
             //Obtener valores visibles en la tabla
             var na1 = $(this).find("td.NumAnexo input").val();
@@ -588,7 +604,7 @@ $(document).ready(function () {
             }
         });
         if (_b) {
-            $('#btn_guardar').trigger("click");
+            // $('#btn_guardar').trigger("click");
         } else {
             M.toast({ html: msgerror });
         }
@@ -637,24 +653,135 @@ $(document).ready(function () {
         var tdata = "";
         var _tab = $('#table_anexa').DataTable();
         for (var i = 0; i < length; i++) {
-            var nr = _tab.rows().count()
+            var nr = _tab.rows().count();
             //Si nr es 0 significa que la tabla esta vacia
-            if (nr == 0) {
+            if (nr === 0) {
                 var file = $(this).get(0).files[i];
                 var fileName = file.name;
                 var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
                 tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
-                _tab.row.add(
-                    $(tdata)
-                ).draw(false).node();
+                //Lejgg 22-10-2018
+                if (fileNameExt.toLowerCase() === "xml") {
+                    var data = new FormData();
+                    var _fbool = false;
+                    data.append('file', file);
+                    $.ajax({
+                        type: "POST",
+                        url: 'procesarXML',
+                        data: data,
+                        dataType: "json",
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data !== null || data !== "") {
+                                $('#FECHAD').val(data[0]);
+                                $('#FECHADO').val(data[0]);
+                                $("#FECHAD").trigger("change");
+                                data[1];//Monto Total
+                                _fbool = validarRFC(data[2]);
+                                //data[2];//RFC
+                            }
+                        },
+                        error: function (xhr, httpStatusMessage, customErrorMessage) {
+                            //
+                        },
+                        async: false
+                    });
+                }
+                if (fileNameExt.toLowerCase() === "xml") {
+                    //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
+                    if (_fbool) {
+                        _tab.row.add(
+                            $(tdata)
+                        ).draw(false).node();
+                    }
+                    else {
+                        //Alert no se metio porque ya hay un xml en la tabla
+                        M.toast({ html: "No Coincide el rfc" });
+                    }
+                }
+                else {
+                    _tab.row.add(
+                        $(tdata)
+                    ).draw(false).node();
+                }
             } else {
                 var file = $(this).get(0).files[i];
                 var fileName = file.name;
                 var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-                tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
-                _tab.row.add(
-                    $(tdata)
-                ).draw(false).node();
+                var _ban = false;
+                //Lejgg 22-10-2018------------------------------------------------>
+                $("#table_anexa > tbody  > tr[role='row']").each(function () {
+                    var t = $("#table_anexa").DataTable();
+                    //Obtener el row para el plugin
+                    var tr = $(this);
+                    var indexopc = t.row(tr).index();
+
+                    //Obtener valores visibles en la tabla
+                    var _tipoAr = $(this).find("td.TYPE").text();
+                    if (fileNameExt.toLowerCase() === _tipoAr) {
+                        _ban = true;
+                    }
+                    if (_ban)
+                        return;
+                });
+                //Si el archivo es xml entra
+                //LEJGG23/10/18---------------------------------------------------->
+                if (fileNameExt.toLowerCase() === "xml") {
+                    var _fbool = false;
+                    //Si ban es false, no hay ningun otro archivo xml, entonces metere el registro
+                    if (!_ban) {
+                        tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                        var data = new FormData();
+                        data.append('file', file);
+                        $.ajax({
+                            type: "POST",
+                            url: 'procesarXML',
+                            data: data,
+                            dataType: "json",
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                if (data !== null || data !== "") {
+                                    $('#FECHAD').val(data[0]);
+                                    $('#FECHADO').val(data[0]);
+                                    $("#FECHAD").trigger("change");
+                                    data[1];//Monto Total
+                                    _fbool = validarRFC(data[2]);
+                                    //data[2];//RFC
+                                }
+                            },
+                            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                //
+                            },
+                            async: false
+                        });
+                        //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
+                        if (_fbool) {
+                            _tab.row.add(
+                                $(tdata)
+                            ).draw(false).node();
+                        }
+                        else {
+                            //Alert no se metio porque ya hay un xml en la tabla
+                            M.toast({ html: "No Coincide el rfc" });
+                        }
+                    }
+                    else {
+                        //Alert no se metio porque ya hay un xml en la tabla
+                        M.toast({ html: "Ya existe una factura" });
+                    }
+                }
+                //LEJGG23/10/18----------------------------------------------------<
+                else {
+                    tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                    _tab.row.add(
+                        $(tdata)
+                    ).draw(false).node();
+                }
+                //Lejgg 22-10-2018------------------------------------------------>
             }
         }
     });
@@ -742,7 +869,17 @@ $('body').on('change', '#tsol', function (event, param1) {
     val3 = val3.replace(/\,/g, "\" , \"");
     val3 = val3.replace(/\=/g, "\" : \"");
     val3 = val3.replace(/\ /g, "");
-    var jsval = $.parseJSON(val3)
+    var jsval = $.parseJSON(val3);
+
+    //LEJGG 22-10-2018---------------------->
+    //Para pago de facturas
+    if (jsval[0].ID === "SSO") {
+        $("#FECHAD").prop('disabled', true);
+    }
+    else {
+        $("#FECHAD").prop('disabled', false);
+    }
+    //LEJGG 22-10-2018---------------------->
 
     $.each(jsval, function (i, dataj) {
         $("#tsol_id2").val(dataj.ID);
@@ -750,7 +887,6 @@ $('body').on('change', '#tsol', function (event, param1) {
         ocultarCampos(dataj.EDITDET, param1);
         mostrarTabla(dataj.EDITDET);
     });
-
 });
 //MGC 03-10-2018 solicitud con orden de compra
 function ocultarCampos(opc, load) {
@@ -784,6 +920,16 @@ function ocultarCampos(opc, load) {
 
     //Deshabilitar campos de la tabla
     ocultarColumnas(opc);
+}
+
+function validarRFC(rfc) {
+    var _rfc = $('#rfc_proveedor').val();
+    if (_rfc === rfc) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 //MGC 03-10-2018 solicitud con orden de compra
@@ -1423,6 +1569,8 @@ $('body').on('focusout', '.OPER', function (e) {
         }
     }
     updateFooter();
+    llenarRetencionesIRet();
+    llenarRetencionesBImp();
     //$(".extrasC").trigger("focusout"); //lej18102018
 });
 
@@ -1933,6 +2081,8 @@ $('body').on('focusout', '.extrasC', function (e) {
     }
     $(this).val("$" + _nnm.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     updateFooter();
+    llenarRetencionesBImp();
+    llenarRetencionesIRet();
     /*$("#table_info > tbody > tr[role = 'row']").each(function (index) {
         for (x = 0; x < tRet2.length; x++) {
             var _var = "BaseImp" + x;
@@ -2462,6 +2612,88 @@ function copiarTableSopControl() {
         });
     }
 
+}
+
+//lejgg 23/10/18
+function llenarRetencionesIRet() {
+    var _t = [];
+    var centi = 9999;
+    for (x = 0; x < tRet2.length; x++) {
+        _t.push("0");
+    }
+    $("#table_info > tbody > tr[role = 'row']").each(function (index) {
+        for (x = 0; x < tRet2.length; x++) {
+            var _var = "ImpRet" + x;
+            _v2 = "ImpRet" + tRet2[x];
+            if ($(this).find("td." + _v2 + " input").hasClass(_var)) {
+                centi = x;
+                var colex = $(this).find("td." + _v2 + " input").val().replace("$", "").replace(',', '');
+                //de esta manera saco el renglon y la celad en especifico
+                //var er = $('#table_ret tbody tr').eq(x).find('td').eq(3).text().replace('$', '');
+                var txbi = $.trim(colex);
+                var sum = parseFloat(txbi);
+                _t[x] = parseFloat(_t[x]) + sum;
+                //break;
+            }
+        }
+        /* var colex = $(this).find("td." + _v2 + " input").val().replace("$", "").replace(',', '');
+         //de esta manera saco el renglon y la celad en especifico
+         //var er = $('#table_ret tbody tr').eq(x).find('td').eq(3).text().replace('$', '');
+         var txbi = $.trim(colex);
+         var sum = parseFloat(txbi);
+         // sum = parseFloat(sum + y).toFixed(2);
+         _t += sum;*/
+    });
+    for (x = 0; x < tRet2.length; x++) {
+        $('#table_ret tbody tr').eq(x).find('td').eq(4).text('$' + parseFloat(_t[x]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    }
+    //$('#table_ret tbody tr').eq(0).find('td').eq(4).text('$' + _t[].toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    // $('#table_ret tbody tr').eq(1).find('td').eq(4).text('$' + _t.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+
+}
+
+function llenarRetencionesBImp() {
+    var _t = [];
+    var centi = 0;
+    for (x = 0; x < tRet2.length; x++) {
+        _t.push("0");
+    }
+    $("#table_info > tbody > tr[role = 'row']").each(function (index) {
+        for (x = 0; x < tRet2.length; x++) {
+            var _var = "BaseImp" + x;
+            _v2 = "BaseImp" + tRet2[x];
+            if ($(this).find("td." + _v2 + " input").hasClass(_var)) {
+                var colex = $(this).find("td." + _v2 + " input").val().replace("$", "").replace(',', '');
+                var txbi = $.trim(colex);
+                var sum = parseFloat(txbi);
+                _t[x] = parseFloat(_t[x]) + sum;
+            }
+        }
+    });
+    for (x = 0; x < tRet2.length; x++) {
+        $('#table_ret tbody tr').eq(x).find('td').eq(3).text('$' + parseFloat(_t[x]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    }
+
+}
+
+//lEJGG 22-10-2018
+function validarFacs() {
+    var _ban = false;
+    $("#table_anexa > tbody  > tr[role='row']").each(function () {
+        var t = $("#table_anexa").DataTable();
+        //Obtener el row para el plugin
+        var tr = $(this);
+        var indexopc = t.row(tr).index();
+
+        //Obtener valores visibles en la tabla
+        var _tipoAr = $(this).find("td.TYPE").text();
+        if ("xml" === _tipoAr) {
+            _ban = true;
+        }
+        if (_ban)
+            return;
+    });
+    return _ban;
 }
 
 function resetTabs() {
