@@ -55,7 +55,7 @@ namespace WFARTHA.Models
                 if (existd)
                 {
                     //dirFile = ConfigurationManager.AppSettings["URL_PREL"].ToString() + @"POSTING";
-                    string docname = dirFile + @"\INBOUND_PREL" + ts.ID.Substring(0, 3) + docum.ToString().PadLeft(10, '0') + "-1.txt";
+                    string docname = dirFile + @"\INBOUND_PREL" + ts.ID.Substring(0, 3) + docum.ToString().PadLeft(10, '0') + "-1";
 
                     //MGC 11-10-2018 Acciones para el encabezado -->
 
@@ -96,7 +96,9 @@ namespace WFARTHA.Models
                     //MemoryStream stIn = new MemoryStream();
                     try
                     {
-                        using (StreamWriter sw = new StreamWriter(docname))
+                        FileStream fs = null;
+                        fs = new FileStream(docname, FileMode.CreateNew);
+                        using (StreamWriter sw = new StreamWriter(fs,System.Text.Encoding.ASCII))
                         {
                             string belnr = "";
                             string bjahr = "";
