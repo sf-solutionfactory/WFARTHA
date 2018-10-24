@@ -84,7 +84,7 @@ $('body').on('keydown.autocomplete', '.GRUPO_INPUT', function () {
 
             val = val.replace(/\s/g, '');
 
-            ui.item.value = val;
+            ui.item.value = tipo + "" + val;//MGC 22-10-2018 Etiquetas
 
 
             selectConcepto(val, tr, tipo);
@@ -94,17 +94,22 @@ $('body').on('keydown.autocomplete', '.GRUPO_INPUT', function () {
 
 function selectProveedor(val) {
 
+    //Obtener las sociedad//MGC 19-10-2018 Condiciones
+    var soc = $("#SOCIEDAD_ID").val();//MGC 19-10-2018 Condiciones
+
     //Add MGC Validar que los proveedores no existan duplicados en la tabla
-    var prov = getProveedorC(val, "");
+    var prov = getProveedorC(val, "", soc);//MGC 19-10-2018 Condiciones
 
     $('#rfc_proveedor').val();
     $('#nom_proveedor').val();
+    $('#condiciones_prov').val();//MGC 19-10-2018.2 Condiciones
 
     if (prov != null & prov != "") {
         //Asignar valores
         $('#PAYER_ID').val(prov.LIFNR);
         $('#rfc_proveedor').val(prov.STCD1);
-        $('#nom_proveedor').val(prov.NAME1);
+        $('#nom_proveedor').val(prov.NAME1); 
+        $('#condiciones_prov').val(prov.COND_PAGO);//MGC 19-10-2018.2 Condiciones
         obtenerRetenciones(false);//LEJ 05.09.2018
     }
 }
@@ -137,7 +142,7 @@ function selectConcepto(val, tr, tipo) {
     } else {
         //Agregar el id
         tr.find("td.GRUPO input").val();
-        tr.find("td.GRUPO input").val(val);
+        tr.find("td.GRUPO input").val(tipo + "" + val);//MGC 22-10-2018 Etiquetas
         //Obtener la sociedad
         var soc = $("#SOCIEDAD_ID").val();
         //Cancepto
@@ -155,7 +160,8 @@ function selectConcepto(val, tr, tipo) {
             //tr.find("td.CUENTANOM").text(con.DESC_CONCEPTO);//MGC 11-10-2018 No enviar correos 
 
             //Tipo de imputación
-            tr.find("td.TIPOIMP").text(con.TIPO_IMPUTACION);
+            //tr.find("td.TIPOIMP").text(con.TIPO_IMPUTACION);//MGC 22-10-2018 Modificación en etiquetas
+            t.cell(indexopc, 13).data(con.TIPO_IMPUTACION).draw();//MGC 22-10-2018 Modificación en etiquetas
 
             //Actualizar el tipo concepto
             var indexopc = t.row(tr).index();
@@ -214,3 +220,64 @@ function valConcepto(con, tipo) {
 
     return res;
 }
+
+//MGC 19-10-2018 CECOS--------------------------------------------------->
+
+$('body').on('keydown.autocomplete', '.CCOSTO', function () {
+    var tr = $(this).closest('tr'); //Obtener el row
+
+    //Obtener el id de la sociedad
+    var soc = $("#SOCIEDAD_ID").val();
+
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: 'getCcosto',
+                dataType: "json",
+                data: { "Prefix": request.term, "bukrs": soc },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+
+                        //return { label: trimStart('0', item.LIFNR) + " - " + item.NAME1, value: trimStart('0', item.LIFNR) };
+                        return { label: trimStart('0', item.CECO1) + " - " + item.TEXT, value: item.CECO1 };
+                    }))
+                }
+            })
+        },
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+        change: function (e, ui) {
+            if (!(ui.item)) {
+                e.target.value = "";
+            }
+        },
+        select: function (event, ui) {
+
+            var label = ui.item.label;
+            var value = ui.item.value;
+            selectCeco(value, tr);
+        }
+    });
+});
+
+function selectCeco(val, tr) {
+
+    var t = $('#table_info').DataTable();
+
+    //Obtener el row para el plugin //MGC 19-10-2018 
+    var trp = $(tr);
+    var indexopc = t.row(trp).index();     
+
+    tr.find("td.CCOSTO input").val();
+    if (val != null & val != "") {
+        //Asignar número de ceco a la columna
+        
+        tr.find("td.CCOSTO input").val(val);
+
+    } 
+}
+
+//MGC 19-10-2018 CECOS---------------------------------------------------<

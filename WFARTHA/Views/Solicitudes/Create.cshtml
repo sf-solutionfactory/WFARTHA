@@ -11,7 +11,7 @@
 
 @*<link type="text/css" href="~/Content/datatables.min.css" rel="stylesheet" />
     <script src="~/Scripts/jquery.dataTables.min.js"></script>*@
-<script src="~/Scripts/jquery.dataTables.min.js"></script>
+@*<script src="~/Scripts/jquery.dataTables.min.js"></script>*@
 <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
 <link href="~/Content/dataTable.css" rel="stylesheet" />
@@ -187,7 +187,7 @@
             <li class="tab col s2 tabs_menu"><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado NT</a></li>
             <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Detalle NT</a></li>
             <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_cont">Información NT</a></li>
-            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_sap">Información SAP</a></li>
+            @*<li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_sap">Información SAP</a></li>*@
         </ul>
     </div>
 </div>
@@ -315,15 +315,15 @@
                             </script>
                             @*MGC 03-10-2018 solicitud con orden de compra -->*@
                             @*<div class="form-group col s3">*@
-                            <div id="div_norden_compra" class="input-field col s3" style="display:none">
-                                @*@Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @*<div id="div_norden_compra" class="input-field col s3" style="display:none">
+                                @Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
                                         @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })
-                                    </div>*@
+                                    </div>
 
                                 <input type="text" id="norden_compra" value="" />
                                 <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
-                            </div>
+                            </div>*@
                             @*MGC 03-10-2018 solicitud con orden de compra <--*@
                         </div>
                         <div class="row" style="margin-bottom:0">
@@ -374,7 +374,7 @@
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.CONDICIONES, "Condiciones NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4" } })@*LEJ 04.09.2018*@
+                                    @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4", @id = "condiciones_prov" } })@*LEJ 04.09.2018*@ @*//MGC 19-10-2018 Condiciones*@
                                 </div>
                             </div>
 
@@ -533,6 +533,35 @@
         @*Información Contable*@
         <div id="Contable_cont" class="col s12" style="font-size:12px;">
             <div class="row">
+                <div class="col s12 hide" id="div_garantia">
+                    <div class="card-panel">
+                        <div class="row" style="margin-bottom:0px;">
+                            <div id="div_norden_compra" class="input-field col s12 m12 l3" style="display:none">
+                                <!--ADD RSG 19.10.2018-->
+                                @*@Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })
+                        </div>*@
+
+                                @*<input type="text" id="norden_compra" value="" />*@<!--ADD RSG 19.10.2018-->
+                                <select id="norden_compra" onchange="addPedido(this.value);"><option></option></select><!--ADD RSG 19.10.2018-->
+                                <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
+                            </div>
+                            <div class="input-field col s12 m12 l3">
+                                <input id="fondo_g" name="fondo_g" type="text" class="validate" disabled />
+                                <label for="fondo_g">Fondo de garantía</label>
+                            </div>
+                            <div class="input-field col s12 m12 l3">
+                                <input id="Rfondo_g" name="Rfondo_g" type="text" class="validate" disabled />
+                                <label for="Rfondo_g">Retenido fondo de garantía</label>
+                            </div>
+                            <div class="input-field col s12 m12 l3">
+                                <input id="Resfondo_g" name="Resfondo_g" type="text" class="validate" disabled />
+                                <label for="Resfondo_g">Restante fondo de garantía</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col s12">
                     <div class="card-panel">
                         <h5 id="head_cabecera">Detalle NT</h5>
@@ -559,55 +588,55 @@
                                                     Pos NT
                                                 </th>
                                                 <th class="lbl_NmAnexo">
-                                                    Numero Anexo1
+                                                    A1
                                                 </th>
                                                 <th class="lbl_NmAnexo">
-                                                    Numero Anexo2
+                                                    A2
                                                 </th>
                                                 <th class="lbl_NmAnexo">
-                                                    Numero Anexo3
+                                                    A3
                                                 </th>
                                                 <th class="lbl_NmAnexo">
-                                                    Numero Anexo4
+                                                    A4
                                                 </th>
                                                 <th class="lbl_NmAnexo">
-                                                    Numero Anexo5
+                                                    A5
                                                 </th>
                                                 <th class="lbl_cargoAbono">
                                                     D/H NT
                                                 </th>
                                                 <th class="lbl_factura">
-                                                    Factura NT
+                                                    Factura
                                                 </th>
                                                 <th id="lbl_tconcepto">
-                                                    TIPO CONCEPTO NT
+                                                    TIPO CONCEPTO
                                                 </th>
                                                 <th id="lbl_grupo">
-                                                    Grupo NT
+                                                    Grupo
                                                 </th>
                                                 <th id="lbl_cuenta">
-                                                    Cuenta NT
+                                                    Cuenta
                                                 </th>
                                                 <th id="lbl_cuentaNom">
-                                                    Nombre de cuenta NT
+                                                    Nombre de cuenta
                                                 </th>
                                                 <th id="lbl_tipoimp">
-                                                    Tipo Imp. NT
+                                                    Tipo Imp.
                                                 </th>
                                                 <th id="lbl_imputacion">
-                                                    Imputación NT
+                                                    Imputación
                                                 </th>
                                                 <th id="lbl_ccosto">
-                                                    Centro de costo NT
+                                                    Centro de costo
                                                 </th>
                                                 <th id="lbl_monto">
-                                                    Monto NT
+                                                    Monto
                                                 </th>
                                                 <th id="lbl_impuesto">
-                                                    Impuesto NT
+                                                    Impuesto
                                                 </th>
                                                 <th id="lbl_iva">
-                                                    IVA NT
+                                                    IVA
                                                 </th>
                                                 <th id="lbl_Texto">
                                                     TEXTO
@@ -637,55 +666,55 @@
                                                 Pos NT
                                             </th>
                                             <th class="lbl_NmAnexo">
-                                                Numero Anexo1
+                                                A1
                                             </th>
                                             <th class="lbl_NmAnexo">
-                                                Numero Anexo2
+                                                A2
                                             </th>
                                             <th class="lbl_NmAnexo">
-                                                Numero Anexo3
+                                                A3
                                             </th>
                                             <th class="lbl_NmAnexo">
-                                                Numero Anexo4
+                                                A4
                                             </th>
                                             <th class="lbl_NmAnexo">
-                                                Numero Anexo5
+                                                A5
                                             </th>
                                             <th class="lbl_cargoAbono">
-                                                Cargo/Abono NT
+                                                Cargo/Abono
                                             </th>
                                             <th class="lbl_factura">
-                                                Factura NT
+                                                Factura
                                             </th>
                                             <th id="lbl_tconcepto">
-                                                TIPO CONCEPTO NT
+                                                TIPO CONCEPTO
                                             </th>
                                             <th id="lbl_grupo">
-                                                Grupo NT
+                                                Grupo
                                             </th>
                                             <th id="lbl_cuenta">
-                                                Cuenta NT
+                                                Cuenta
                                             </th>
                                             <th id="lbl_cuentaNom">
-                                                Nombre de cuenta NT
+                                                Nombre de cuenta
                                             </th>
                                             <th id="lbl_tipoimp">
-                                                Tipo Imp. NT
+                                                Tipo Imp.
                                             </th>
                                             <th id="lbl_imputacion">
-                                                Imputación NT
+                                                Imputación
                                             </th>
                                             <th id="lbl_ccosto">
-                                                Centro de costo NT
+                                                Centro de costo
                                             </th>
                                             <th id="lbl_monto">
-                                                Monto NT
+                                                Monto
                                             </th>
                                             <th id="lbl_impuesto">
-                                                Impuesto NT
+                                                Impuesto
                                             </th>
                                             <th id="lbl_iva">
-                                                IVA NT
+                                                IVA
                                             </th>
                                             <th id="lbl_texto">
                                                 TEXTO
@@ -712,46 +741,46 @@
                                                     Pos NT
                                                 </th>
                                                 <th class="lbl_NmAnexo">
-                                                    Numero Anexo1
+                                                    A1
                                                 </th>
                                                 <th class="lbl_NmAnexo">
-                                                    Numero Anexo2
+                                                    A2
                                                 </th>
                                                 <th class="lbl_NmAnexo">
-                                                    Numero Anexo3
+                                                    A3
                                                 </th>
                                                 <th class="lbl_NmAnexo">
-                                                    Numero Anexo4
+                                                    A4
                                                 </th>
                                                 <th class="lbl_NmAnexo">
-                                                    Numero Anexo5
+                                                    A5
                                                 </th>
                                                 <th class="lbl_cargoAbono">
-                                                    D/H NT
+                                                    D/H
                                                 </th>
                                                 <th class="lbl_factura">
-                                                    Factura NT
+                                                    Factura
                                                 </th>
                                                 <th id="lbl_tconcepto">
-                                                    TIPO CONCEPTO NT
+                                                    TIPO CONCEPTO
                                                 </th>
                                                 <th id="lbl_grupo">
-                                                    Grupo NT
+                                                    Grupo
                                                 </th>
                                                 <th id="lbl_cuenta">
-                                                    Cuenta NT
+                                                    Cuenta
                                                 </th>
                                                 <th id="lbl_cuentaNom">
-                                                    Nombre de cuenta NT
+                                                    Nombre de cuenta
                                                 </th>
                                                 <th id="lbl_tipoimp">
-                                                    Tipo Imp. NT
+                                                    Tipo Imp.
                                                 </th>
                                                 <th id="lbl_imputacion">
-                                                    Imputación NT
+                                                    Imputación
                                                 </th>
                                                 <th id="lbl_ccosto">
-                                                    Centro de costo NT
+                                                    Centro de costo
                                                 </th>
                                                 <th id="lbl_matnr">
                                                     Material
@@ -784,10 +813,10 @@
                                                     Ant. amortizado
                                                 </th>
                                                 <th id="lbl_impuesto">
-                                                    Impuesto NT
+                                                    Impuesto
                                                 </th>
                                                 <th id="lbl_iva">
-                                                    IVA NT
+                                                    IVA
                                                 </th>
                                                 <th id="lbl_total">
                                                     Total
@@ -802,7 +831,7 @@
                                         <tfoot id="tfoot_info" style="overflow:auto;">
                                             <tr>
                                                 <th colspan="17" style="text-align:right">Total:</th>
-                                                <th id="total_info"></th>
+                                                <th id="total_infoP"></th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -814,61 +843,61 @@
                                                 Pos NT
                                             </th>
                                             <th class="lbl_NmAnexo">
-                                                Numero Anexo1
+                                                A1
                                             </th>
                                             <th class="lbl_NmAnexo">
-                                                Numero Anexo2
+                                                A2
                                             </th>
                                             <th class="lbl_NmAnexo">
-                                                Numero Anexo3
+                                               A3
                                             </th>
                                             <th class="lbl_NmAnexo">
-                                                Numero Anexo4
+                                               A4
                                             </th>
                                             <th class="lbl_NmAnexo">
-                                                Numero Anexo5
+                                                A5
                                             </th>
                                             <th class="lbl_cargoAbono">
-                                                Cargo/Abono NT
+                                                Cargo/Abono
                                             </th>
                                             <th class="lbl_factura">
-                                                Factura NT
+                                                Factura
                                             </th>
                                             <th id="lbl_tconcepto">
-                                                TIPO CONCEPTO NT
+                                                TIPO CONCEPTO
                                             </th>
                                             <th id="lbl_grupo">
-                                                Grupo NT
+                                                Grupo
                                             </th>
                                             <th id="lbl_cuenta">
-                                                Cuenta NT
+                                                Cuenta
                                             </th>
                                             <th id="lbl_cuentaNom">
-                                                Nombre de cuenta NT
+                                                Nombre de cuenta
                                             </th>
                                             <th id="lbl_tipoimp">
-                                                Tipo Imp. NT
+                                                Tipo Imp.
                                             </th>
                                             <th id="lbl_imputacion">
-                                                Imputación NT
+                                                Imputación
                                             </th>
                                             <th id="lbl_ccosto">
-                                                Centro de costo NT
+                                                Centro de costo
                                             </th>
                                             <th id="lbl_monto">
-                                                Monto NT
+                                                Monto
                                             </th>
                                             <th id="lbl_impuesto">
-                                                Impuesto NT
+                                                Impuesto
                                             </th>
                                             <th id="lbl_iva">
-                                                IVA NT
+                                                IVA
                                             </th>
                                             <th id="lbl_texto">
                                                 TEXTO
                                             </th>
                                             <th id="lbl_total">
-                                                Total
+                                                TOTAL
                                             </th>
                                         </tr>
                                     </thead>
@@ -1076,14 +1105,16 @@
             </div>
         </div>
 
-        @*Soporte SAP*@
-        <div id="Informacion_sap" class="col s12" style="font-size:12px;">
-            <div class="row">
-                <div class="col s12">
-                    <div class="card-panel">
-                    </div>
+
+    @*
+    <div id="Informacion_sap" class="col s12" style="font-size:12px;">
+        <div class="row">
+            <div class="col s12">
+                <div class="card-panel">
                 </div>
             </div>
         </div>
-    </div>
+    </div>*@
+</div>
+
 }
