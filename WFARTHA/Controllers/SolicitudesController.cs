@@ -640,7 +640,6 @@ namespace WFARTHA.Controllers
             "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo")] Models.DOCUMENTO_MOD doc, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc,
             //MGC 02-10-2018 Cadenas de autorización
             string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr, string FECHADO)
-
         {
             int pagina = 202; //ID EN BASE DE DATOS
             string errorString = "";
