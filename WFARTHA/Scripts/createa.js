@@ -110,7 +110,10 @@ function selectProveedor(val) {
         $('#rfc_proveedor').val(prov.STCD1);
         $('#nom_proveedor').val(prov.NAME1); 
         $('#condiciones_prov').val(prov.COND_PAGO);//MGC 19-10-2018.2 Condiciones
-        obtenerRetenciones(false);//LEJ 05.09.2018
+        if (!conOrden())
+            obtenerRetenciones(false);//LEJ 05.09.2018
+        else
+            obtenerRetencionesP(false);//LEJ 05.09.2018
     }
 }
 
