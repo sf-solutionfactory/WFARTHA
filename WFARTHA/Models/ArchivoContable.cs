@@ -166,7 +166,7 @@ namespace WFARTHA.Models
                             string bjahr = "";
                             string bukrs = "";
 
-                            if (accion == "R")
+                            if (accion == "R" || accion == "A")//MGC 
                             {
                                 belnr = doc.NUM_PRE + "";
                                 bjahr = doc.EJERCICIO_PRE + "";
