@@ -567,8 +567,13 @@ namespace WFARTHA.Controllers
                 //saco el primer registro, que sera el que ponga el combobox por default
                 p1 = xsc[0].BUKRS;
             }
-            var sc = db.SOCIEDADs.Where(x => x.BUKRS == p1).First();
-            ViewBag.PROVE = new SelectList(sc.PROVEEDORs, "LIFNR", "LIFNR");
+
+            //var sc = db.SOCIEDADs.Where(x => x.BUKRS == p1).First();//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
+
+            var detprov = db.DET_PROVEEDOR.Where(pp => pp.ID_BUKRS == p1).Select(pp1 => pp1.ID_LIFNR).Distinct().ToList();//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
+
+            //ViewBag.PROVE = new SelectList(sc.PROVEEDORs, "LIFNR", "LIFNR");//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
+            ViewBag.PROVE = new SelectList(detprov, "LIFNR", "LIFNR");//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
 
             //MGC 04092018 Conceptos
             //Obtener los valores de los impuestos
@@ -1812,8 +1817,11 @@ namespace WFARTHA.Controllers
                 //saco el primer registro, que sera el que ponga el combobox por default
                 p1 = xsc[0].BUKRS;
             }
-            var sc = db.SOCIEDADs.Where(x => x.BUKRS == p1).First();
-            ViewBag.PROVE = new SelectList(sc.PROVEEDORs, "LIFNR", "LIFNR");
+
+            var detprov = db.DET_PROVEEDOR.Where(pp => pp.ID_BUKRS == p1).Select(pp1 => pp1.ID_LIFNR).ToList();//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
+
+            //ViewBag.PROVE = new SelectList(sc.PROVEEDORs, "LIFNR", "LIFNR");//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
+            ViewBag.PROVE = new SelectList(detprov, "LIFNR", "LIFNR");//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
 
             //MGC 04092018 Conceptos
             //Obtener los valores de los impuestos
@@ -3163,15 +3171,30 @@ namespace WFARTHA.Controllers
             //              select new { m.ID, m.MAKTX }).ToList();
             //    c.AddRange(c2);
 
-            SOCIEDAD c = db.SOCIEDADs.Where(soc => soc.BUKRS == bukrs).Include(s => s.PROVEEDORs).FirstOrDefault();
+            //SOCIEDAD c = db.SOCIEDADs.Where(soc => soc.BUKRS == bukrs).Include(s => s.PROVEEDORs).FirstOrDefault();//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
+
+            var pp = db.DET_PROVEEDOR.Where(soc => soc.ID_BUKRS == bukrs).Select(pp1 => new { pp1.ID_LIFNR }).Distinct().ToList();//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
+
+            //List<PROVEEDOR> prov = new List<PROVEEDOR>();//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
+
+            var prov = (from ppl in pp.ToList()
+                        join pr in db.PROVEEDORs
+                        on ppl.ID_LIFNR equals pr.LIFNR
+                        select new
+                        {
+                            LIFNR = pr.LIFNR.ToString(),
+                            NAME1 = pr.NAME1.ToString()
+                        }).ToList();
+
             //List<PROVEEDOR> lprov = new List<PROVEEDOR>();
             //List<PROVEEDOR> lprov2 = new List<PROVEEDOR>();
 
             var r = (dynamic)null;
 
-            if (c != null)
+            if (pp != null)//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
             {
-                var lprov = (from p in c.PROVEEDORs
+                //var lprov = (from p in c.PROVEEDORs                
+                var lprov = (from p in prov//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
                              where p.LIFNR.Contains(Prefix)
                              select new
                              {
@@ -3181,7 +3204,8 @@ namespace WFARTHA.Controllers
 
                 if (lprov.Count == 0)
                 {
-                    var lprov2 = (from p in c.PROVEEDORs
+                    //var lprov2 = (from p in c.PROVEEDORs
+                    var lprov2 = (from p in prov //MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
                                   where p.NAME1.Contains(Prefix)
                                   select new
                                   {
