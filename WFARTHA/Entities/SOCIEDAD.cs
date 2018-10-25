@@ -23,7 +23,6 @@ namespace WFARTHA.Entities
             this.DOCUMENTOes = new HashSet<DOCUMENTO>();
             this.RETENCION_PROV = new HashSet<RETENCION_PROV>();
             this.PROYECTOes = new HashSet<PROYECTO>();
-            this.PROVEEDORs = new HashSet<PROVEEDOR>();
         }
     
         public string BUKRS { get; set; }
@@ -50,7 +49,5 @@ namespace WFARTHA.Entities
         public virtual ICollection<RETENCION_PROV> RETENCION_PROV { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PROYECTO> PROYECTOes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PROVEEDOR> PROVEEDORs { get; set; }
     }
 }
