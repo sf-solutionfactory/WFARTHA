@@ -604,7 +604,7 @@ $(document).ready(function () {
             }
         });
         if (_b) {
-            // $('#btn_guardar').trigger("click");
+            $('#btn_guardar').trigger("click");
         } else {
             M.toast({ html: msgerror });
         }
