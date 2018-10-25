@@ -954,46 +954,48 @@ namespace WFARTHA.Controllers
                         }
                         if (numFiles > 0)
                         {
+                            //-------------------------------------------------------------
                             //Obtener las variables con los datos de sesión y ruta
-                            string url = ConfigurationManager.AppSettings["URL_Serv"];
-                            var bandera = false;
-                            try
-                            {
-                                //WebRequest request = WebRequest.Create(url + "Nueva Carpeta");
-                                FtpWebRequest requestDir = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + url));
-                                requestDir.Method = WebRequestMethods.Ftp.MakeDirectory;
-                                const string Comillas = "\"";
-                                string pwd = "Rumaki,2571" + Comillas + "k41";
-                                requestDir.Credentials = new NetworkCredential("luis.gonzalez", pwd);
-                                requestDir.UsePassive = true;
-                                requestDir.UseBinary = true;
-                                requestDir.KeepAlive = false;
-                                using (FtpWebResponse response = (FtpWebResponse)requestDir.GetResponse())
-                                {
-                                    var xpr = response.StatusCode;
-                                }
-                                //Stream ftpStream = response.GetResponseStream();
-                                //ftpStream.Close();
-                                // response.Close();
-                                bandera = true;
-                            }
-                            catch (WebException ex)
-                            {
-                                FtpWebResponse response = (FtpWebResponse)ex.Response;
-                                if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
-                                {
-                                    response.Close();
-                                    bandera = true;
-                                }
-                                else
-                                {
-                                    response.Close();
-                                    bandera = false;
-                                }
-                            }
-
+                            //string url = ConfigurationManager.AppSettings["URL_Serv"];
+                            //var bandera = false;
+                            //try
+                            //{
+                            //    //WebRequest request = WebRequest.Create(url + "Nueva Carpeta");
+                            //    FtpWebRequest requestDir = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + url));
+                            //    requestDir.Method = WebRequestMethods.Ftp.MakeDirectory;
+                            //    const string Comillas = "\"";
+                            //    string pwd = "Rumaki,2571" + Comillas + "k41";
+                            //    requestDir.Credentials = new NetworkCredential("luis.gonzalez", pwd);
+                            //    requestDir.UsePassive = true;
+                            //    requestDir.UseBinary = true;
+                            //    requestDir.KeepAlive = false;
+                            //    using (FtpWebResponse response = (FtpWebResponse)requestDir.GetResponse())
+                            //    {
+                            //        var xpr = response.StatusCode;
+                            //    }
+                            //    //Stream ftpStream = response.GetResponseStream();
+                            //    //ftpStream.Close();
+                            //    // response.Close();
+                            //    bandera = true;
+                            //}
+                            //catch (WebException ex)
+                            //{
+                            //    FtpWebResponse response = (FtpWebResponse)ex.Response;
+                            //    if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
+                            //    {
+                            //        response.Close();
+                            //        bandera = true;
+                            //    }
+                            //    else
+                            //    {
+                            //        response.Close();
+                            //        bandera = false;
+                            //    }
+                            //}
+                            //-------------------------------------------------------------
                             //Evaluar que se creo el directorio
-                            if (bandera)
+                            // if (bandera)
+                            if (true)
                             {
                                 int indexlabel = 0;
                                 foreach (HttpPostedFileBase file in file_sopAnexar)
@@ -1024,7 +1026,8 @@ namespace WFARTHA.Controllers
                                             string path = "";
                                             string filename = file.FileName;
                                             errorfiles = "";
-                                            res = SaveFile(file, url);
+                                            //res = SaveFile(file, url);
+                                            res = SaveFile(file, doc.NUM_DOC);
                                             listaDirectorios.Add(res);
                                         }
                                     }
@@ -2342,7 +2345,7 @@ namespace WFARTHA.Controllers
                                             string path = "";
                                             string filename = file.FileName;
                                             errorfiles = "";
-                                            res = SaveFile(file, url);
+                                            //res = SaveFile(file, url);
                                             listaDirectorios.Add(res);
                                         }
                                     }
@@ -3614,118 +3617,238 @@ namespace WFARTHA.Controllers
         }
 
         [HttpPost]
-        public FileResult Descargar(string btnArchivo)
+        public FileResult Descargar(string archivo)
         {
             //LEJ 03.10.2018
             string nombre = "", contentyp = "";
-            contDescarga(btnArchivo, ref contentyp, ref nombre);
-            return File(descargarArchivo(btnArchivo, contentyp, nombre), contentyp, nombre);
+            contDescarga(archivo, ref contentyp, ref nombre);
+            //return File(descargarArchivo(btnArchivo, contentyp, nombre), contentyp, nombre);
+            return File(archivo, contentyp, nombre);
         }
 
-        public string SaveFile(HttpPostedFileBase file, string path)
+        /*  public string SaveFile(HttpPostedFileBase file, string path)
+          {
+              string ex = "";
+              //string exdir = "";
+              // Get the name of the file to upload.
+              string fileName = file.FileName;//System.IO.Path.GetExtension(file.FileName);    // must be declared in the class above
+
+              // Specify the path to save the uploaded file to.
+              string savePath = path + "//";
+
+              // Create the path and file name to check for duplicates.
+              string pathToCheck = savePath;
+
+              // Append the name of the file to upload to the path.
+              savePath += fileName;
+              //-------------------------------------------------------------------
+              FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + path + "/" + fileName);
+              request.Method = WebRequestMethods.Ftp.UploadFile;
+
+              const string Comillas = "\"";
+              string pwd = "Rumaki,2571" + Comillas + "k41";
+              request.Credentials = new NetworkCredential("luis.gonzalez", pwd);
+              var sourceStream = file.InputStream;
+              Stream requestStream = request.GetRequestStream();
+              request.ContentLength = sourceStream.Length;
+
+              StreamReader streamReader = new StreamReader(file.InputStream);
+              byte[] fileContents = System.Text.Encoding.UTF8.GetBytes(streamReader.ReadToEnd());
+              //sourceStream.Close();           
+              requestStream.Write(fileContents, 0, fileContents.Length);
+              requestStream.Close();
+              request.ContentLength = fileContents.Length;
+
+              var response = (FtpWebResponse)request.GetResponse();
+              //-------------------------------------------------------------------
+              //Parte para guardar archivo en el servidor
+              try
+              {
+                  //Guardar el archivo
+                  // file.SaveAs(savePath);
+              }
+              catch (Exception e)
+              {
+                  ex = "";
+                  ex = fileName;
+              }
+
+              //Guardarlo en la base de datos
+              if (ex == "")
+              {
+
+              }
+              return savePath;
+          }*/
+
+
+        //------------------------------------------------------------------------<
+        //Lejgg 25-10-2018
+        public string SaveFile(HttpPostedFileBase file, decimal nd)
         {
-            string ex = "";
-            //string exdir = "";
-            // Get the name of the file to upload.
-            string fileName = file.FileName;//System.IO.Path.GetExtension(file.FileName);    // must be declared in the class above
-
-            // Specify the path to save the uploaded file to.
-            string savePath = path + "//";
-
-            // Create the path and file name to check for duplicates.
-            string pathToCheck = savePath;
-
-            // Append the name of the file to upload to the path.
-            savePath += fileName;
-            //-------------------------------------------------------------------
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + path + "/" + fileName);
-            request.Method = WebRequestMethods.Ftp.UploadFile;
-
-            const string Comillas = "\"";
-            string pwd = "Rumaki,2571" + Comillas + "k41";
-            request.Credentials = new NetworkCredential("luis.gonzalez", pwd);
-            var sourceStream = file.InputStream;
-            Stream requestStream = request.GetRequestStream();
-            request.ContentLength = sourceStream.Length;
-
-            StreamReader streamReader = new StreamReader(file.InputStream);
-            byte[] fileContents = System.Text.Encoding.UTF8.GetBytes(streamReader.ReadToEnd());
-            //sourceStream.Close();           
-            requestStream.Write(fileContents, 0, fileContents.Length);
-            requestStream.Close();
-            request.ContentLength = fileContents.Length;
-
-            var response = (FtpWebResponse)request.GetResponse();
-            //-------------------------------------------------------------------
-            //Parte para guardar archivo en el servidor
+            var url_prel = "";
+            var dirFile = "";
+            string carpeta = "att";
             try
             {
-                //Guardar el archivo
-                // file.SaveAs(savePath);
+                url_prel = getDirPrel(carpeta, nd);
+                dirFile = url_prel;
             }
             catch (Exception e)
             {
-                ex = "";
-                ex = fileName;
+                dirFile = ConfigurationManager.AppSettings["URL_ATT"].ToString() + @"att";
             }
+            bool existd = ValidateIOPermission(dirFile);
 
-            //Guardarlo en la base de datos
-            if (ex == "")
+            try
             {
-
-            }
-            return savePath;
-        }
-
-        public string descargarArchivo(string dir, string tipoDoc, string nombre)
-        {
-            int resp = 0;
-            string LocalDestinationPath = @"C:\Users\EQUIPO\Documents\GitHub\WFARTHA\WFARTHA\Descargas\" + nombre;
-            string Username = "luis.gonzalez";
-            const string Comillas = "\"";
-            string pwd = "Rumaki,2571" + Comillas + "k41";
-            bool UseBinary = true; // use true for .zip file or false for a text file
-            bool UsePassive = false;
-
-            FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + dir));
-            // FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://"+dir);
-            request.Method = WebRequestMethods.Ftp.DownloadFile;
-            request.KeepAlive = true;
-            request.UsePassive = UsePassive;
-            request.UseBinary = UseBinary;
-
-            request.Credentials = new NetworkCredential(Username, pwd);
-
-            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-
-            Stream responseStream = response.GetResponseStream();
-            StreamReader reader = new StreamReader(responseStream);
-
-            using (FileStream writer = new FileStream(LocalDestinationPath, FileMode.Create))
-            {
-                long length = response.ContentLength;
-                int bufferSize = 2048;
-                int readCount;
-                byte[] buffer = new byte[2048];
-
-                readCount = responseStream.Read(buffer, 0, bufferSize);
-                while (readCount > 0)
+                //El direcorio existe
+                if (existd)
                 {
-                    writer.Write(buffer, 0, readCount);
-                    readCount = responseStream.Read(buffer, 0, bufferSize);
+                    var fileName = Path.GetFileName(file.FileName);
+                    file.SaveAs(Path.Combine(dirFile, fileName));
                 }
-                resp++;
+                else
+                {
+                    //System.IO.Directory.CreateDirectory(Server.MapPath(dirFile));
+                }
+            }
+            catch (Exception e)
+            { }
+            return dirFile + "\\" + file.FileName;
+        }
+
+        private string getDirPrel(string carpeta, decimal numdoc)
+        {
+            string dir = "";
+            try
+            {
+                dir = db.APPSETTINGs.Where(aps => aps.NOMBRE.Equals("URL_ATT") && aps.ACTIVO == true).FirstOrDefault().VALUE.ToString();
+                dir += carpeta + "\\" + numdoc;
+            }
+            catch (Exception e)
+            {
+                dir = "";
             }
 
-            reader.Close();
-            response.Close();
-            if (resp > 0)
-            {
-                //return LocalDestinationPath;
-                return dir;
-            }
-            return "";
+            return dir;
         }
+
+        private bool ValidateIOPermission(string path)
+        {
+            string user = "";
+            string pass = "";
+
+            user = getUserPrel();
+            pass = getPassPrel();
+            try
+            {
+                try
+                {
+                    if (Directory.Exists(path))
+                        return true;
+
+                    else
+                    {
+                        Directory.CreateDirectory(path);
+                        return true;
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        private string getUserPrel()
+        {
+            string user = "";
+            try
+            {
+                user = db.APPSETTINGs.Where(aps => aps.NOMBRE.Equals("USER_PREL") && aps.ACTIVO == true).FirstOrDefault().VALUE.ToString();
+
+            }
+            catch (Exception e)
+            {
+                user = "";
+            }
+
+            return user;
+
+        }
+
+        private string getPassPrel()
+        {
+            string pass = "";
+            try
+            {
+                pass = db.APPSETTINGs.Where(aps => aps.NOMBRE.Equals("PASS_PREL") && aps.ACTIVO == true).FirstOrDefault().VALUE.ToString();
+
+            }
+            catch (Exception e)
+            {
+                pass = "";
+            }
+
+            return pass;
+
+        }
+        //------------------------------------------------------------------------<
+        //public string descargarArchivo(string dir, string tipoDoc, string nombre)
+        //{
+        //    int resp = 0;
+        //    string LocalDestinationPath = @"C:\Users\EQUIPO\Documents\GitHub\WFARTHA\WFARTHA\Descargas\" + nombre;
+        //    string Username = "luis.gonzalez";
+        //    const string Comillas = "\"";
+        //    string pwd = "Rumaki,2571" + Comillas + "k41";
+        //    bool UseBinary = true; // use true for .zip file or false for a text file
+        //    bool UsePassive = false;
+
+        //    FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + dir));
+        //    // FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://"+dir);
+        //    request.Method = WebRequestMethods.Ftp.DownloadFile;
+        //    request.KeepAlive = true;
+        //    request.UsePassive = UsePassive;
+        //    request.UseBinary = UseBinary;
+
+        //    request.Credentials = new NetworkCredential(Username, pwd);
+
+        //    FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+        //    Stream responseStream = response.GetResponseStream();
+        //    StreamReader reader = new StreamReader(responseStream);
+
+        //    using (FileStream writer = new FileStream(LocalDestinationPath, FileMode.Create))
+        //    {
+        //        long length = response.ContentLength;
+        //        int bufferSize = 2048;
+        //        int readCount;
+        //        byte[] buffer = new byte[2048];
+
+        //        readCount = responseStream.Read(buffer, 0, bufferSize);
+        //        while (readCount > 0)
+        //        {
+        //            writer.Write(buffer, 0, readCount);
+        //            readCount = responseStream.Read(buffer, 0, bufferSize);
+        //        }
+        //        resp++;
+        //    }
+
+        //    reader.Close();
+        //    response.Close();
+        //    if (resp > 0)
+        //    {
+        //        //return LocalDestinationPath;
+        //        return dir;
+        //    }
+        //    return "";
+        //}
 
         public void contDescarga(string ruta, ref string contentType, ref string nombre)
         {
@@ -3796,6 +3919,9 @@ namespace WFARTHA.Controllers
                     break;
                 case "txt":
                     contentType = "text/plain";
+                    break;
+                case "xml":
+                    contentType = "text/html";
                     break;
             }
         }
