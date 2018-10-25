@@ -1892,7 +1892,7 @@ namespace WFARTHA.Controllers
             "MONTO_BASE_GS_PCT_ML2,MONTO_BASE_NS_PCT_ML2,PORC_ADICIONAL,IMPUESTO,FECHAI_VIG,FECHAF_VIG,ESTATUS_EXT,SOLD_TO_ID,PAYER_ID,PAYER_NOMBRE,PAYER_EMAIL,GRUPO_CTE_ID," +
             "CANAL_ID,MONEDA_ID,MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIO,TIPO_CAMBIOL,TIPO_CAMBIOL2,NO_FACTURA,FECHAD_SOPORTE,METODO_PAGO,NO_PROVEEDOR,PASO_ACTUAL,AGENTE_ACTUAL," +
             "FECHA_PASO_ACTUAL,VKORG,VTWEG,SPART,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,PORC_APOYO,LIGADA,OBJETIVOQ,FRECUENCIA_LIQ,OBJQ_PORC,FECHACON,FECHA_BASE,REFERENCIA," +
-            "TEXTO_POS,ASIGNACION_POS,CLAVE_CTA,MONTO_DOC_IMP")] DOCUMENTO dOCUMENTO)
+            "TEXTO_POS,ASIGNACION_POS,CLAVE_CTA,MONTO_DOC_IMP")] Models.DOCUMENTO_MOD dOCUMENTO, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc, string FECHADO)
         {
             string errorString = "";
             if (ModelState.IsValid)
@@ -3206,17 +3206,17 @@ namespace WFARTHA.Controllers
 
             //MGC 19-10-2018 Condiciones-->
             var lprov = (from pr in db.PROVEEDORs.Where(p => p.LIFNR == lifnr)
-                          join rt in db.DET_PROVEEDORV.Where(dp => dp.ID_LIFNR == lifnr && dp.ID_BUKRS == soc)
-                                   on pr.LIFNR equals rt.ID_LIFNR
-                                   into jj
-                          from rt in jj.DefaultIfEmpty()
-                          select new
-                          {
-                              LIFNR = pr.LIFNR.ToString(),
-                              NAME1 = pr.NAME1.ToString(),
-                              STCD1 = pr.STCD1.ToString(),
-                              COND_PAGO = rt.COND_PAGO.ToString() == null ? String.Empty : rt.COND_PAGO.ToString()
-                          }).FirstOrDefault();
+                         join rt in db.DET_PROVEEDORV.Where(dp => dp.ID_LIFNR == lifnr && dp.ID_BUKRS == soc)
+                                  on pr.LIFNR equals rt.ID_LIFNR
+                                  into jj
+                         from rt in jj.DefaultIfEmpty()
+                         select new
+                         {
+                             LIFNR = pr.LIFNR.ToString(),
+                             NAME1 = pr.NAME1.ToString(),
+                             STCD1 = pr.STCD1.ToString(),
+                             COND_PAGO = rt.COND_PAGO.ToString() == null ? String.Empty : rt.COND_PAGO.ToString()
+                         }).FirstOrDefault();
 
             //var lprov = db.PROVEEDORs.Where(p => p.LIFNR == lifnr).Select(pr => new { LIFNR = pr.LIFNR.ToString(), NAME1 = pr.NAME1.ToString(), STCD1 = pr.STCD1.ToString() }).FirstOrDefault();
             //MGC 19-10-2018 Condiciones--<

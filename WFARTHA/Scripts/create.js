@@ -179,9 +179,9 @@ $(document).ready(function () {
             { targets: 3, width: '40px' },
             { targets: 4, width: '580px' },
             { targets: 5, width: '580px' },
-            { targets: 6, width: '580px'},
-            { targets: 19, width: '580px'}
-  
+            { targets: 6, width: '580px' },
+            { targets: 19, width: '580px' }
+
         ]
     });
 
@@ -488,7 +488,6 @@ $(document).ready(function () {
         //copiarTableSopControl();
         copiarTableRet();
 
-        //If res == false signfica que sera invoice, osea no hay xml
         //CODIGO
         //dar formato al monto
         var enca_monto = $("#MONTO_DOC_MD").val();
