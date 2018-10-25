@@ -4704,6 +4704,100 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
             <End Role="SOCIEDAD" EntitySet="SOCIEDADs" />
           </AssociationSet>
         </EntityContainer>
+
+        <EntityType Name="ASIGN_PROY_SOC">
+          <Key>
+            <PropertyRef Name="ID_PSPNR" />
+            <PropertyRef Name="ID_BUKRS" />
+          </Key>
+          <Property Name="ID_PSPNR" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="ID_BUKRS" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="EKKO_DUMM">
+          <Key>
+            <PropertyRef Name="EBELN" />
+          </Key>
+          <Property Name="EBELN" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="LIFNR" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="BEDAT" Type="String" MaxLength="8" FixedLength="true" Unicode="true" />
+          <Property Name="BUKRS" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="ZTERM" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="EKORG" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="WAERS" Type="String" MaxLength="5" FixedLength="true" Unicode="true" />
+          <Property Name="WKURS" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="RETPC" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="DPPCT" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="DPAMT" Type="Decimal" Precision="13" Scale="5" />
+          <NavigationProperty Name="EKPO_DUMM" Relationship="WFARTHAModel.FK_EKPO_DUMM_EKKO_DUMM" FromRole="EKKO_DUMM" ToRole="EKPO_DUMM" />
+          <Property Name="FONDOG" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="RET_FONDOG" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="RES_FONDOG" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="TOTAL" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="POR_ANTICIPO" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="POR_FONDO" Type="Decimal" Precision="13" Scale="2" />
+        </EntityType>
+        <EntityType Name="EKPO_DUMM">
+          <Key>
+            <PropertyRef Name="EBELN" />
+            <PropertyRef Name="EBELP" />
+          </Key>
+          <Property Name="EBELN" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="EBELP" Type="Decimal" Nullable="false" Precision="5" Scale="0" />
+          <Property Name="TXZ0" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="MATNR" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="MENGE" Type="Decimal" Precision="13" Scale="3" />
+          <Property Name="MEINS" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="BPUMZ" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="BPUMN" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="NETWR" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="BRTWR" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="H_QUANTITY" Type="Decimal" Precision="13" Scale="3" />
+          <Property Name="H_VAL_LOCCUR" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="H_VAL_FORCUR" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="H_VAL_CURRENCY" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="H_ANT_PAG" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="H_ANT_SOL" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="H_ANT_AMORT" Type="Decimal" Precision="13" Scale="2" />
+          <NavigationProperty Name="EKKO_DUMM" Relationship="WFARTHAModel.FK_EKPO_DUMM_EKKO_DUMM" FromRole="EKPO_DUMM" ToRole="EKKO_DUMM" />
+        </EntityType>
+        <Association Name="FK_EKPO_DUMM_EKKO_DUMM">
+          <End Type="WFARTHAModel.EKKO_DUMM" Role="EKKO_DUMM" Multiplicity="1" />
+          <End Type="WFARTHAModel.EKPO_DUMM" Role="EKPO_DUMM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EKKO_DUMM">
+              <PropertyRef Name="EBELN" />
+            </Principal>
+            <Dependent Role="EKPO_DUMM">
+              <PropertyRef Name="EBELN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CECO">
+          <Key>
+            <PropertyRef Name="BUKRS" />
+            <PropertyRef Name="CECO1" />
+          </Key>
+          <Property Name="BUKRS" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="CECO1" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="TEXT" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CONDICIONES_PAGO">
+          <Key>
+            <PropertyRef Name="COND_PAGO" />
+          </Key>
+          <Property Name="COND_PAGO" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="TEXT" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="DET_PROVEEDORV">
+          <Key>
+            <PropertyRef Name="ID_LIFNR" />
+            <PropertyRef Name="ID_BUKRS" />
+          </Key>
+          <Property Name="ID_LIFNR" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="ID_BUKRS" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="COND_PAGO" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
+        </EntityType>
+
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5665,6 +5759,87 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
               <ScalarProperty Name="BUKRS" ColumnName="ID_BUKRS" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="ASIGN_PROY_SOC">
+            <EntityTypeMapping TypeName="WFARTHAModel.ASIGN_PROY_SOC">
+              <MappingFragment StoreEntitySet="ASIGN_PROY_SOC">
+                <ScalarProperty Name="ID_BUKRS" ColumnName="ID_BUKRS" />
+                <ScalarProperty Name="ID_PSPNR" ColumnName="ID_PSPNR" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EKKO_DUMM">
+            <EntityTypeMapping TypeName="WFARTHAModel.EKKO_DUMM">
+              <MappingFragment StoreEntitySet="EKKO_DUMM">
+                <ScalarProperty Name="POR_FONDO" ColumnName="POR_FONDO" />
+                <ScalarProperty Name="POR_ANTICIPO" ColumnName="POR_ANTICIPO" />
+                <ScalarProperty Name="TOTAL" ColumnName="TOTAL" />
+                <ScalarProperty Name="RES_FONDOG" ColumnName="RES_FONDOG" />
+                <ScalarProperty Name="RET_FONDOG" ColumnName="RET_FONDOG" />
+                <ScalarProperty Name="FONDOG" ColumnName="FONDOG" />
+                <ScalarProperty Name="DPAMT" ColumnName="DPAMT" />
+                <ScalarProperty Name="DPPCT" ColumnName="DPPCT" />
+                <ScalarProperty Name="RETPC" ColumnName="RETPC" />
+                <ScalarProperty Name="WKURS" ColumnName="WKURS" />
+                <ScalarProperty Name="WAERS" ColumnName="WAERS" />
+                <ScalarProperty Name="EKORG" ColumnName="EKORG" />
+                <ScalarProperty Name="ZTERM" ColumnName="ZTERM" />
+                <ScalarProperty Name="BUKRS" ColumnName="BUKRS" />
+                <ScalarProperty Name="BEDAT" ColumnName="BEDAT" />
+                <ScalarProperty Name="LIFNR" ColumnName="LIFNR" />
+                <ScalarProperty Name="EBELN" ColumnName="EBELN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EKPO_DUMM">
+            <EntityTypeMapping TypeName="WFARTHAModel.EKPO_DUMM">
+              <MappingFragment StoreEntitySet="EKPO_DUMM">
+                <ScalarProperty Name="H_ANT_AMORT" ColumnName="H_ANT_AMORT" />
+                <ScalarProperty Name="H_ANT_SOL" ColumnName="H_ANT_SOL" />
+                <ScalarProperty Name="H_ANT_PAG" ColumnName="H_ANT_PAG" />
+                <ScalarProperty Name="H_VAL_CURRENCY" ColumnName="H_VAL_CURRENCY" />
+                <ScalarProperty Name="H_VAL_FORCUR" ColumnName="H_VAL_FORCUR" />
+                <ScalarProperty Name="H_VAL_LOCCUR" ColumnName="H_VAL_LOCCUR" />
+                <ScalarProperty Name="H_QUANTITY" ColumnName="H_QUANTITY" />
+                <ScalarProperty Name="BRTWR" ColumnName="BRTWR" />
+                <ScalarProperty Name="NETWR" ColumnName="NETWR" />
+                <ScalarProperty Name="BPUMN" ColumnName="BPUMN" />
+                <ScalarProperty Name="BPUMZ" ColumnName="BPUMZ" />
+                <ScalarProperty Name="MEINS" ColumnName="MEINS" />
+                <ScalarProperty Name="MENGE" ColumnName="MENGE" />
+                <ScalarProperty Name="MATNR" ColumnName="MATNR" />
+                <ScalarProperty Name="TXZ0" ColumnName="TXZ0" />
+                <ScalarProperty Name="EBELP" ColumnName="EBELP" />
+                <ScalarProperty Name="EBELN" ColumnName="EBELN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CECOes">
+            <EntityTypeMapping TypeName="WFARTHAModel.CECO">
+              <MappingFragment StoreEntitySet="CECO">
+                <ScalarProperty Name="TEXT" ColumnName="TEXT" />
+                <ScalarProperty Name="CECO1" ColumnName="CECO" />
+                <ScalarProperty Name="BUKRS" ColumnName="BUKRS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CONDICIONES_PAGO">
+            <EntityTypeMapping TypeName="WFARTHAModel.CONDICIONES_PAGO">
+              <MappingFragment StoreEntitySet="CONDICIONES_PAGO">
+                <ScalarProperty Name="TEXT" ColumnName="TEXT" />
+                <ScalarProperty Name="COND_PAGO" ColumnName="COND_PAGO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DET_PROVEEDORV">
+            <EntityTypeMapping TypeName="WFARTHAModel.DET_PROVEEDORV">
+              <MappingFragment StoreEntitySet="DET_PROVEEDORV">
+                <ScalarProperty Name="COND_PAGO" ColumnName="COND_PAGO" />
+                <ScalarProperty Name="ID_BUKRS" ColumnName="ID_BUKRS" />
+                <ScalarProperty Name="ID_LIFNR" ColumnName="ID_LIFNR" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
