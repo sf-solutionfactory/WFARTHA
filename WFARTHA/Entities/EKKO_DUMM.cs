@@ -34,6 +34,9 @@ namespace WFARTHA.Entities
         public Nullable<decimal> FONDOG { get; set; }
         public Nullable<decimal> RET_FONDOG { get; set; }
         public Nullable<decimal> RES_FONDOG { get; set; }
+        public Nullable<decimal> TOTAL { get; set; }
+        public Nullable<decimal> POR_ANTICIPO { get; set; }
+        public Nullable<decimal> POR_FONDO { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EKPO_DUMM> EKPO_DUMM { get; set; }

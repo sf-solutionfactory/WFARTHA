@@ -3852,6 +3852,9 @@ namespace WFARTHA.Controllers
                          N.FONDOG,
                          N.RES_FONDOG,
                          N.RET_FONDOG,
+                         N.TOTAL,
+                         N.POR_ANTICIPO,
+                         N.POR_FONDO
                      });
             JsonResult jc = Json(c, JsonRequestBehavior.AllowGet);
             return jc;

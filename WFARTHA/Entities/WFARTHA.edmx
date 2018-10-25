@@ -402,6 +402,9 @@ warning 6002: The table/view 'PAGOS.dbo.DET_PEP' does not have a primary key def
           <Property Name="FONDOG" Type="decimal" Precision="13" Scale="2" />
           <Property Name="RET_FONDOG" Type="decimal" Precision="13" Scale="2" />
           <Property Name="RES_FONDOG" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="TOTAL" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="POR_ANTICIPO" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="POR_FONDO" Type="decimal" Precision="13" Scale="2" />
         </EntityType>
         <EntityType Name="EKPO_DUMM">
           <Key>
@@ -4581,6 +4584,9 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <Property Name="FONDOG" Type="Decimal" Precision="13" Scale="2" />
           <Property Name="RET_FONDOG" Type="Decimal" Precision="13" Scale="2" />
           <Property Name="RES_FONDOG" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="TOTAL" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="POR_ANTICIPO" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="POR_FONDO" Type="Decimal" Precision="13" Scale="2" />
         </EntityType>
         <EntityType Name="EKPO_DUMM">
           <Key>
@@ -5519,6 +5525,9 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <EntitySetMapping Name="EKKO_DUMM">
             <EntityTypeMapping TypeName="WFARTHAModel.EKKO_DUMM">
               <MappingFragment StoreEntitySet="EKKO_DUMM">
+                <ScalarProperty Name="POR_FONDO" ColumnName="POR_FONDO" />
+                <ScalarProperty Name="POR_ANTICIPO" ColumnName="POR_ANTICIPO" />
+                <ScalarProperty Name="TOTAL" ColumnName="TOTAL" />
                 <ScalarProperty Name="RES_FONDOG" ColumnName="RES_FONDOG" />
                 <ScalarProperty Name="RET_FONDOG" ColumnName="RET_FONDOG" />
                 <ScalarProperty Name="FONDOG" ColumnName="FONDOG" />
