@@ -2346,6 +2346,7 @@ namespace WFARTHA.Controllers
                                             string filename = file.FileName;
                                             errorfiles = "";
                                             //res = SaveFile(file, url);
+                                            res = SaveFile(file, doc.NUM_DOC);
                                             listaDirectorios.Add(res);
                                         }
                                     }
