@@ -71,9 +71,18 @@
         @foreach (var item in Model)
             {
                 <tr>
+                    @if (item.ESTATUS.Equals("B"))
+                    {
+                    <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                        @item.NUM_DOC
+                    </td>
+                    }
+                    else
+                    {
                     <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
                         @item.NUM_DOC
                     </td>
+                    }
                     <td>
                         @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
                     </td>
@@ -85,7 +94,14 @@
                     <td>
                         @item.HORAC.Value.ToString().Split('.')[0]
                     </td>
-                    @if (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("S"))
+                    @*//MGC 26-10-2018 Modificación a borrador, Label de borrador*@
+                    @if (item.ESTATUS.Equals("B"))
+                    {
+                        <td class="yellow darken-2 white-text">
+                            <div class="lbl_pending">Borrador</div>
+                        </td>
+                    }
+                    else if (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("S"))
                     {
                         <td class="yellow darken-2 white-text">
                             <div class="lbl_pending">Pendiente</div>
