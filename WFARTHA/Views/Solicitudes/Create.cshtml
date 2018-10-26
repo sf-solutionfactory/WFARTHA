@@ -325,6 +325,24 @@
                                     <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
                                 </div>*@
                             @*MGC 03-10-2018 solicitud con orden de compra <--*@
+
+                            @* Lejgg 26 10 2018 *@
+
+                            <div class="form-group col s3">
+                                @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.MONTO_DOC_MD, new { htmlAttributes = new { @class = "form-control valmon", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+                            <div class="form-group col s6">
+                                @Html.LabelFor(model => model.IMPUESTO, "Impuesto NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @class = "form-control ddl" })@*LEJ 04.09.2018*@
+                                    @*<select id="selectImp" class="form-control ddl">-</select>*@
+                                </div>
+                            </div>
+
+                            @* Lejgg 26 10 2018 *@
                         </div>
                         <div class="row" style="margin-bottom:0">
                             <div class="form-group col s3">
@@ -340,52 +358,15 @@
                                     @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon" } })@*LEJ 04.09.2018*@
                                 </div>
                             </div>
-
-                            <div class="form-group col s3">
-                                @Html.LabelFor(model => model.IMPUESTO, "Impuesto NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @class = "form-control ddl" })@*LEJ 04.09.2018*@
-                                    @*<select id="selectImp" class="form-control ddl">-</select>*@
-                                </div>
-                            </div>
-
-                            <div class="form-group col s3">
-                                @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    @Html.EditorFor(model => model.MONTO_DOC_MD, new { htmlAttributes = new { @class = "form-control valmon", @disabled = "disabled" } })@*LEJ 04.09.2018*@
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row" style="margin-bottom:0">
-                            <div class="form-group col s3" style="display:none">
-                                @Html.LabelFor(model => model.REFERENCIA, "Referencia NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-10col s2">
-                                    @Html.EditorFor(model => model.REFERENCIA, new { htmlAttributes = new { @class = "form-control", @maxlength = "16", @disabled = "disabled" } })@*LEJ 04.09.2018*@
-                                </div>
-                            </div>
-
-                            <div class="form-group col s6">
-                                @Html.LabelFor(model => model.CONCEPTO, "TEXTO", htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    @Html.EditorFor(model => model.CONCEPTO, "Concepto NT", new { htmlAttributes = new { @class = "form-control", @maxlength = "25" } })@*LEJ 04.09.2018*@
-                                </div>
-                            </div>
-
+                            @* Lejgg 26 10 2018 *@
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.CONDICIONES, "Condiciones NT", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
                                     @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4", @id = "condiciones_prov" } })@*LEJ 04.09.2018*@ @*//MGC 19-10-2018 Condiciones*@
                                 </div>
                             </div>
-
-                            <div class="form-group col s3" style="display:none">
-                                @Html.LabelFor(model => model.CLAVE_CTA, "Clave Cuenta NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    @Html.EditorFor(model => model.CLAVE_CTA, new { htmlAttributes = new { @class = "form-control", @maxlength = "2" } })@*LEJ 04.09.2018*@
-                                </div>
-                            </div>
+                            @* Lejgg 26 10 2018 *@
                         </div>
-
                         <div class="row" style="margin-bottom:0">
                             <div class="input-field col s3">
 
@@ -425,6 +406,30 @@
                             @*<div class="form-group col s3">
                                     <a id="btn_retenciones" class="waves-effect waves-light btn">Retenciones NT</a>
                                 </div>*@
+                        </div>
+                        <div class="row" style="margin-bottom:0">
+                            <div class="form-group col s3" style="display:none">
+                                @Html.LabelFor(model => model.REFERENCIA, "Referencia NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10col s2">
+                                    @Html.EditorFor(model => model.REFERENCIA, new { htmlAttributes = new { @class = "form-control", @maxlength = "16", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col s6">
+                                @Html.LabelFor(model => model.CONCEPTO, "TEXTO", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CONCEPTO, "Concepto NT", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-group col s3" style="display:none">
+                                @Html.LabelFor(model => model.CLAVE_CTA, "Clave Cuenta NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CLAVE_CTA, new { htmlAttributes = new { @class = "form-control", @maxlength = "2" } })@*LEJ 04.09.2018*@
+                                </div>
+                            </div>
                         </div>
                     </div>
 
