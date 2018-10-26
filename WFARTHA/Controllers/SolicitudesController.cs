@@ -981,7 +981,7 @@ namespace WFARTHA.Controllers
                                     }
                                     catch (Exception ex)
                                     {
-                                        listaDescArchivos.Add("");
+                                        listaNombreArchivos.Add("");
                                     }
                                     string errorfiles = "";
                                     if (file != null)
@@ -1156,10 +1156,11 @@ namespace WFARTHA.Controllers
                                 _dA.POSD = i + 1;
                                 _dA.POS = pos;
                                 var de = "";
+                                int a1 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a1 > 0 && doc.Anexo[i].a1 <= listaNombreArchivos.Count)
                                 {
-                                    var a1 = doc.Anexo[i].a1;                                    
+                                    a1 = doc.Anexo[i].a1;
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a1 - 1]);
@@ -1203,7 +1204,7 @@ namespace WFARTHA.Controllers
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
-                                    listaNombreArchivos2.Remove(de);
+                                    listaNombreArchivos2.RemoveAt(a1 - 1);
                                 }
                                 catch (Exception e)
                                 {
@@ -1216,13 +1217,15 @@ namespace WFARTHA.Controllers
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
                                 _dA.POS = pos;
+                                var de = "";
+                                int a2 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a2 > 0 && doc.Anexo[i].a2 <= listaNombreArchivos.Count)
                                 {
-                                    var a2 = doc.Anexo[i].a2;
+                                    a2 = doc.Anexo[i].a2;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[a2 - 1]);
+                                        de = Path.GetExtension(listaNombreArchivos[a2 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1261,6 +1264,9 @@ namespace WFARTHA.Controllers
                                     db.DOCUMENTOAs.Add(_dA);
                                     db.SaveChanges();
                                     pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a2 - 1);
                                 }
                                 catch (Exception e)
                                 {
@@ -1273,13 +1279,15 @@ namespace WFARTHA.Controllers
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
                                 _dA.POS = pos;
+                                var de = "";
+                                int a3 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a3 > 0 && doc.Anexo[i].a3 <= listaNombreArchivos.Count)
                                 {
-                                    var a3 = doc.Anexo[i].a3;
+                                    a3 = doc.Anexo[i].a3;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[a3 - 1]);
+                                        de = Path.GetExtension(listaNombreArchivos[a3 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1318,6 +1326,9 @@ namespace WFARTHA.Controllers
                                     db.DOCUMENTOAs.Add(_dA);
                                     db.SaveChanges();
                                     pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a3 - 1);
                                 }
                                 catch (Exception e)
                                 {
@@ -1330,13 +1341,15 @@ namespace WFARTHA.Controllers
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
                                 _dA.POS = pos;
+                                var de = "";
+                                int a4 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a4 > 0 && doc.Anexo[i].a4 <= listaNombreArchivos.Count)
                                 {
-                                    var a4 = doc.Anexo[i].a4;
+                                    a4 = doc.Anexo[i].a4;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[a4 - 1]);
+                                        de = Path.GetExtension(listaNombreArchivos[a4 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1375,6 +1388,9 @@ namespace WFARTHA.Controllers
                                     db.DOCUMENTOAs.Add(_dA);
                                     db.SaveChanges();
                                     pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a4 - 1);
                                 }
                                 catch (Exception e)
                                 {
@@ -1387,13 +1403,15 @@ namespace WFARTHA.Controllers
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
                                 _dA.POS = pos;
+                                var de = "";
+                                int a5 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a5 > 0 && doc.Anexo[i].a5 <= listaNombreArchivos.Count)
                                 {
-                                    var a5 = doc.Anexo[i].a5;
+                                    a5 = doc.Anexo[i].a5;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[a5 - 1]);
+                                        de = Path.GetExtension(listaNombreArchivos[a5 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1432,6 +1450,9 @@ namespace WFARTHA.Controllers
                                     db.DOCUMENTOAs.Add(_dA);
                                     db.SaveChanges();
                                     pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a5 - 1);
                                 }
                                 catch (Exception e)
                                 {
@@ -1442,299 +1463,54 @@ namespace WFARTHA.Controllers
                     }
                     //Lej-02.10.2018------
                     //Lejgg 26.10.2018---------------------------------------->
+                    //Los anexos que no se agreguen a documentoa se agregaran a documentoas(documentoa1), significa que estan en lista porque no se ligaron a ningun detalle
                     if (listaDirectorios2.Count == listaDescArchivos2.Count && listaDirectorios2.Count == listaNombreArchivos2.Count)
                     {
-                        for (int i = 0; i < doc.Anexo.Count; i++)
-                        {
-                            var pos = 1;
-                            DOCUMENTOA _dA = new DOCUMENTOA();
-                            if (doc.Anexo[i].a1 != 0)
+                        var pos = 1;
+                        for (int i = 0; i < listaDescArchivos2.Count; i++)
+                        {                           
+                            DOCUMENTOA1 _dA = new DOCUMENTOA1();
+                            _dA.NUM_DOC = doc.NUM_DOC;
+                            _dA.POS = pos;
+                            var de = "";
+                            try
                             {
-                                _dA.NUM_DOC = doc.NUM_DOC;
-                                _dA.POSD = i + 1;
-                                _dA.POS = pos;
-                                var de = "";
-                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
-                                if (doc.Anexo[i].a1 > 0 && doc.Anexo[i].a1 <= listaNombreArchivos.Count)
-                                {
-                                    var a1 = doc.Anexo[i].a1;
-                                    try
-                                    {
-                                        de = Path.GetExtension(listaNombreArchivos[a1 - 1]);
-                                        _dA.TIPO = de.Replace(".", "");
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.TIPO = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.DESC = listaDescArchivos[a1 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.DESC = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.PATH = listaDirectorios[a1 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.PATH = "";
-                                    }
-                                }
-                                else
-                                {
-                                    _dA.TIPO = "";
-                                    _dA.DESC = "";
-                                    _dA.PATH = "";
-                                }
-                                _dA.CLASE = "OTR";
-                                _dA.STEP_WF = 1;
-                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
-                                _dA.ACTIVO = true;
-                                try
-                                {
-                                    db.DOCUMENTOAs.Add(_dA);
-                                    db.SaveChanges();
-                                    pos++;
-                                    listaDirectorios2.Remove(_dA.PATH);
-                                    listaDescArchivos2.Remove(_dA.DESC);
-                                    listaNombreArchivos2.Remove(de);
-                                }
-                                catch (Exception e)
-                                {
-                                    //
-                                }
+                                de = Path.GetExtension(listaNombreArchivos2[i]);
+                                _dA.TIPO = de.Replace(".", "");
                             }
-                            _dA = new DOCUMENTOA();
-                            if (doc.Anexo[i].a2 != 0)
+                            catch (Exception c)
                             {
-                                _dA.NUM_DOC = doc.NUM_DOC;
-                                _dA.POSD = i + 1;
-                                _dA.POS = pos;
-                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
-                                if (doc.Anexo[i].a2 > 0 && doc.Anexo[i].a2 <= listaNombreArchivos.Count)
-                                {
-                                    var a2 = doc.Anexo[i].a2;
-                                    try
-                                    {
-                                        var de = Path.GetExtension(listaNombreArchivos[a2 - 1]);
-                                        _dA.TIPO = de.Replace(".", "");
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.TIPO = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.DESC = listaDescArchivos[a2 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.DESC = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.PATH = listaDirectorios[a2 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.PATH = "";
-                                    }
-                                }
-                                else
-                                {
-                                    _dA.TIPO = "";
-                                    _dA.DESC = "";
-                                    _dA.PATH = "";
-                                }
-                                _dA.CLASE = "OTR";
-                                _dA.STEP_WF = 1;
-                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
-                                _dA.ACTIVO = true;
-                                try
-                                {
-                                    db.DOCUMENTOAs.Add(_dA);
-                                    db.SaveChanges();
-                                    pos++;
-                                }
-                                catch (Exception e)
-                                {
-                                    //
-                                }
+                                _dA.TIPO = "";
                             }
-                            _dA = new DOCUMENTOA();
-                            if (doc.Anexo[i].a3 != 0)
+                            try
                             {
-                                _dA.NUM_DOC = doc.NUM_DOC;
-                                _dA.POSD = i + 1;
-                                _dA.POS = pos;
-                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
-                                if (doc.Anexo[i].a3 > 0 && doc.Anexo[i].a3 <= listaNombreArchivos.Count)
-                                {
-                                    var a3 = doc.Anexo[i].a3;
-                                    try
-                                    {
-                                        var de = Path.GetExtension(listaNombreArchivos[a3 - 1]);
-                                        _dA.TIPO = de.Replace(".", "");
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.TIPO = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.DESC = listaDescArchivos[a3 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.DESC = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.PATH = listaDirectorios[a3 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.PATH = "";
-                                    }
-                                }
-                                else
-                                {
-                                    _dA.TIPO = "";
-                                    _dA.DESC = "";
-                                    _dA.PATH = "";
-                                }
-                                _dA.CLASE = "OTR";
-                                _dA.STEP_WF = 1;
-                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
-                                _dA.ACTIVO = true;
-                                try
-                                {
-                                    db.DOCUMENTOAs.Add(_dA);
-                                    db.SaveChanges();
-                                    pos++;
-                                }
-                                catch (Exception e)
-                                {
-                                    //
-                                }
+                                _dA.DESC = listaDescArchivos2[i];
                             }
-                            _dA = new DOCUMENTOA();
-                            if (doc.Anexo[i].a4 != 0)
+                            catch (Exception c)
                             {
-                                _dA.NUM_DOC = doc.NUM_DOC;
-                                _dA.POSD = i + 1;
-                                _dA.POS = pos;
-                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
-                                if (doc.Anexo[i].a4 > 0 && doc.Anexo[i].a4 <= listaNombreArchivos.Count)
-                                {
-                                    var a4 = doc.Anexo[i].a4;
-                                    try
-                                    {
-                                        var de = Path.GetExtension(listaNombreArchivos[a4 - 1]);
-                                        _dA.TIPO = de.Replace(".", "");
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.TIPO = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.DESC = listaDescArchivos[a4 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.DESC = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.PATH = listaDirectorios[a4 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.PATH = "";
-                                    }
-                                }
-                                else
-                                {
-                                    _dA.TIPO = "";
-                                    _dA.DESC = "";
-                                    _dA.PATH = "";
-                                }
-                                _dA.CLASE = "OTR";
-                                _dA.STEP_WF = 1;
-                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
-                                _dA.ACTIVO = true;
-                                try
-                                {
-                                    db.DOCUMENTOAs.Add(_dA);
-                                    db.SaveChanges();
-                                    pos++;
-                                }
-                                catch (Exception e)
-                                {
-                                    //
-                                }
+                                _dA.DESC = "";
                             }
-                            _dA = new DOCUMENTOA();
-                            if (doc.Anexo[i].a5 != 0)
+                            try
                             {
-                                _dA.NUM_DOC = doc.NUM_DOC;
-                                _dA.POSD = i + 1;
-                                _dA.POS = pos;
-                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
-                                if (doc.Anexo[i].a5 > 0 && doc.Anexo[i].a5 <= listaNombreArchivos.Count)
-                                {
-                                    var a5 = doc.Anexo[i].a5;
-                                    try
-                                    {
-                                        var de = Path.GetExtension(listaNombreArchivos[a5 - 1]);
-                                        _dA.TIPO = de.Replace(".", "");
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.TIPO = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.DESC = listaDescArchivos[a5 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.DESC = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.PATH = listaDirectorios[a5 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.PATH = "";
-                                    }
-                                }
-                                else
-                                {
-                                    _dA.TIPO = "";
-                                    _dA.DESC = "";
-                                    _dA.PATH = "";
-                                }
-                                _dA.CLASE = "OTR";
-                                _dA.STEP_WF = 1;
-                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
-                                _dA.ACTIVO = true;
-                                try
-                                {
-                                    db.DOCUMENTOAs.Add(_dA);
-                                    db.SaveChanges();
-                                    pos++;
-                                }
-                                catch (Exception e)
-                                {
-                                    //
-                                }
+                                _dA.PATH = listaDirectorios2[i];
+                            }
+                            catch (Exception c)
+                            {
+                                _dA.PATH = "";
+                            }
+                            _dA.CLASE = "OTR";
+                            _dA.STEP_WF = 1;
+                            _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                            _dA.ACTIVO = true;
+                            try
+                            {
+                                db.DOCUMENTOAS1.Add(_dA);
+                                db.SaveChanges();
+                                pos++;
+                            }
+                            catch (Exception e)
+                            {
+                                //
                             }
                         }
                     }
