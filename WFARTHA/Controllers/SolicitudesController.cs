@@ -657,6 +657,10 @@ namespace WFARTHA.Controllers
                 //Si doc.FECHAD viene vacio o nulo, le asgino la fecha que tiene fechado, su campo oculto
                 doc.FECHAD = DateTime.Parse(FECHADO);
             }
+
+            //MGC 26-10-2018 Agregar usuario solicitante a la bd
+            doc.USUARIOD_ID = DETTA_USUARIOA_ID;
+
             if (ModelState.IsValid)
             {
                 try
@@ -672,6 +676,7 @@ namespace WFARTHA.Controllers
                     dOCUMENTO.MONEDA_ID = doc.MONEDA_ID;
                     dOCUMENTO.TIPO_CAMBIO = doc.TIPO_CAMBIO;
                     dOCUMENTO.IMPUESTO = doc.IMPUESTO;
+                    dOCUMENTO.USUARIOD_ID = doc.USUARIOD_ID;//MGC 26-10-2018 Agregar usuario solicitante a la bd
                     // dOCUMENTO.MONTO_DOC_MD = doc.MONTO_DOC_MD;
                     //LEJGG 10-10-2018------------------------>
                     try
@@ -746,7 +751,7 @@ namespace WFARTHA.Controllers
                     }
 
                     //Estatus wf
-                    dOCUMENTO.ESTATUS_WF = "P";
+                    dOCUMENTO.ESTATUS_WF = "P";//MGC 26-10-2018 Si el wf es p es que no se ha creado, si es A, es que se creo el archivo, cambia al generar el preliminar
 
                     db.DOCUMENTOes.Add(dOCUMENTO);
                     db.SaveChanges();//Codigolej
