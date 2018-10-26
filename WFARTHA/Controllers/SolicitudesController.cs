@@ -959,48 +959,8 @@ namespace WFARTHA.Controllers
                         }
                         if (numFiles > 0)
                         {
-                            //-------------------------------------------------------------
-                            //Obtener las variables con los datos de sesión y ruta
-                            //string url = ConfigurationManager.AppSettings["URL_Serv"];
-                            //var bandera = false;
-                            //try
-                            //{
-                            //    //WebRequest request = WebRequest.Create(url + "Nueva Carpeta");
-                            //    FtpWebRequest requestDir = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + url));
-                            //    requestDir.Method = WebRequestMethods.Ftp.MakeDirectory;
-                            //    const string Comillas = "\"";
-                            //    string pwd = "Rumaki,2571" + Comillas + "k41";
-                            //    requestDir.Credentials = new NetworkCredential("luis.gonzalez", pwd);
-                            //    requestDir.UsePassive = true;
-                            //    requestDir.UseBinary = true;
-                            //    requestDir.KeepAlive = false;
-                            //    using (FtpWebResponse response = (FtpWebResponse)requestDir.GetResponse())
-                            //    {
-                            //        var xpr = response.StatusCode;
-                            //    }
-                            //    //Stream ftpStream = response.GetResponseStream();
-                            //    //ftpStream.Close();
-                            //    // response.Close();
-                            //    bandera = true;
-                            //}
-                            //catch (WebException ex)
-                            //{
-                            //    FtpWebResponse response = (FtpWebResponse)ex.Response;
-                            //    if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
-                            //    {
-                            //        response.Close();
-                            //        bandera = true;
-                            //    }
-                            //    else
-                            //    {
-                            //        response.Close();
-                            //        bandera = false;
-                            //    }
-                            //}
-                            //-------------------------------------------------------------
                             //Evaluar que se creo el directorio
-                            // if (bandera)
-                            if (true)
+                            try
                             {
                                 int indexlabel = 0;
                                 foreach (HttpPostedFileBase file in file_sopAnexar)
@@ -1043,7 +1003,7 @@ namespace WFARTHA.Controllers
                                     }
                                 }
                             }
-                            else
+                            catch (Exception e)
                             {
                                 // errorMessage = dir;
                             }
@@ -1181,6 +1141,9 @@ namespace WFARTHA.Controllers
                     //Lej-02.10.2018------
                     //DOCUMENTOA
                     //Misma cantidad de archivos y nombres, osea todo bien
+                    var listaDescArchivos2 = listaDescArchivos;//para documentoas
+                    var listaDirectorios2 = listaDirectorios;//para documentoas
+                    var listaNombreArchivos2 = listaNombreArchivos;//para documentoas
                     if (listaDirectorios.Count == listaDescArchivos.Count && listaDirectorios.Count == listaNombreArchivos.Count)
                     {
                         for (int i = 0; i < doc.Anexo.Count; i++)
@@ -1192,13 +1155,14 @@ namespace WFARTHA.Controllers
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
                                 _dA.POS = pos;
+                                var de = "";
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a1 > 0 && doc.Anexo[i].a1 <= listaNombreArchivos.Count)
                                 {
-                                    var a1 = doc.Anexo[i].a1;
+                                    var a1 = doc.Anexo[i].a1;                                    
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[a1 - 1]);
+                                        de = Path.GetExtension(listaNombreArchivos[a1 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1237,6 +1201,9 @@ namespace WFARTHA.Controllers
                                     db.DOCUMENTOAs.Add(_dA);
                                     db.SaveChanges();
                                     pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.Remove(de);
                                 }
                                 catch (Exception e)
                                 {
@@ -1474,7 +1441,304 @@ namespace WFARTHA.Controllers
                         }
                     }
                     //Lej-02.10.2018------
-
+                    //Lejgg 26.10.2018---------------------------------------->
+                    if (listaDirectorios2.Count == listaDescArchivos2.Count && listaDirectorios2.Count == listaNombreArchivos2.Count)
+                    {
+                        for (int i = 0; i < doc.Anexo.Count; i++)
+                        {
+                            var pos = 1;
+                            DOCUMENTOA _dA = new DOCUMENTOA();
+                            if (doc.Anexo[i].a1 != 0)
+                            {
+                                _dA.NUM_DOC = doc.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                _dA.POS = pos;
+                                var de = "";
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (doc.Anexo[i].a1 > 0 && doc.Anexo[i].a1 <= listaNombreArchivos.Count)
+                                {
+                                    var a1 = doc.Anexo[i].a1;
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a1 - 1]);
+                                        _dA.TIPO = de.Replace(".", "");
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.TIPO = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.DESC = listaDescArchivos[a1 - 1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.DESC = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.PATH = listaDirectorios[a1 - 1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.PATH = "";
+                                    }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    db.SaveChanges();
+                                    pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.Remove(de);
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                            _dA = new DOCUMENTOA();
+                            if (doc.Anexo[i].a2 != 0)
+                            {
+                                _dA.NUM_DOC = doc.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                _dA.POS = pos;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (doc.Anexo[i].a2 > 0 && doc.Anexo[i].a2 <= listaNombreArchivos.Count)
+                                {
+                                    var a2 = doc.Anexo[i].a2;
+                                    try
+                                    {
+                                        var de = Path.GetExtension(listaNombreArchivos[a2 - 1]);
+                                        _dA.TIPO = de.Replace(".", "");
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.TIPO = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.DESC = listaDescArchivos[a2 - 1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.DESC = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.PATH = listaDirectorios[a2 - 1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.PATH = "";
+                                    }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    db.SaveChanges();
+                                    pos++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                            _dA = new DOCUMENTOA();
+                            if (doc.Anexo[i].a3 != 0)
+                            {
+                                _dA.NUM_DOC = doc.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                _dA.POS = pos;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (doc.Anexo[i].a3 > 0 && doc.Anexo[i].a3 <= listaNombreArchivos.Count)
+                                {
+                                    var a3 = doc.Anexo[i].a3;
+                                    try
+                                    {
+                                        var de = Path.GetExtension(listaNombreArchivos[a3 - 1]);
+                                        _dA.TIPO = de.Replace(".", "");
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.TIPO = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.DESC = listaDescArchivos[a3 - 1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.DESC = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.PATH = listaDirectorios[a3 - 1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.PATH = "";
+                                    }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    db.SaveChanges();
+                                    pos++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                            _dA = new DOCUMENTOA();
+                            if (doc.Anexo[i].a4 != 0)
+                            {
+                                _dA.NUM_DOC = doc.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                _dA.POS = pos;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (doc.Anexo[i].a4 > 0 && doc.Anexo[i].a4 <= listaNombreArchivos.Count)
+                                {
+                                    var a4 = doc.Anexo[i].a4;
+                                    try
+                                    {
+                                        var de = Path.GetExtension(listaNombreArchivos[a4 - 1]);
+                                        _dA.TIPO = de.Replace(".", "");
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.TIPO = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.DESC = listaDescArchivos[a4 - 1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.DESC = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.PATH = listaDirectorios[a4 - 1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.PATH = "";
+                                    }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    db.SaveChanges();
+                                    pos++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                            _dA = new DOCUMENTOA();
+                            if (doc.Anexo[i].a5 != 0)
+                            {
+                                _dA.NUM_DOC = doc.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                _dA.POS = pos;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (doc.Anexo[i].a5 > 0 && doc.Anexo[i].a5 <= listaNombreArchivos.Count)
+                                {
+                                    var a5 = doc.Anexo[i].a5;
+                                    try
+                                    {
+                                        var de = Path.GetExtension(listaNombreArchivos[a5 - 1]);
+                                        _dA.TIPO = de.Replace(".", "");
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.TIPO = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.DESC = listaDescArchivos[a5 - 1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.DESC = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.PATH = listaDirectorios[a5 - 1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.PATH = "";
+                                    }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    db.SaveChanges();
+                                    pos++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                        }
+                    }
+                    //Lejgg 26.10.2018----------------------------------------<
                 }
                 catch (Exception e)
                 {
