@@ -252,12 +252,14 @@ namespace WFARTHA.Services
                         if (paso_a.EMAIL.Equals("X"))
                             correcto = "1";
                     }
-                    d.ESTATUS_WF = "P";
+
+                    //d.ESTATUS_WF = "P";//MGC 26-10-2018 Modificaión para validar creación del archivo
                     db.Entry(d).State = EntityState.Modified;
 
                     //Crear el archivo para el preliminar //MGC Preliminar
                     string corr = procesaPreliminar(d, edit);
 
+                    //Se genero el preliminar
                     if (corr == "0")
                     {
                         DOCUMENTOPRE dp = new DOCUMENTOPRE();
@@ -273,7 +275,12 @@ namespace WFARTHA.Services
                         {
                             string r = "";
                         }
+
+                        //Actualizar wf del documento
+                        d.ESTATUS_WF = "A";//MGC 26-10-2018 Modificaión para validar creación del archivo
+                        db.Entry(d).State = EntityState.Modified;
                     }
+                    //No se genero el preliminar
                     else
                     {
                         string m;
@@ -301,6 +308,8 @@ namespace WFARTHA.Services
                         }
                     }
 
+                    d.ESTATUS_WF = "P";//MGC 26-10-2018 Modificaión para validar creación del archivo
+                    db.Entry(d).State = EntityState.Modified;
 
                     db.SaveChanges();
                 }

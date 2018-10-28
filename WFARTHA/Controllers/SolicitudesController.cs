@@ -657,6 +657,10 @@ namespace WFARTHA.Controllers
                 //Si doc.FECHAD viene vacio o nulo, le asgino la fecha que tiene fechado, su campo oculto
                 doc.FECHAD = DateTime.Parse(FECHADO);
             }
+
+            //MGC 26-10-2018 Agregar usuario solicitante a la bd
+            doc.USUARIOD_ID = DETTA_USUARIOA_ID;
+
             if (ModelState.IsValid)
             {
                 try
@@ -672,6 +676,7 @@ namespace WFARTHA.Controllers
                     dOCUMENTO.MONEDA_ID = doc.MONEDA_ID;
                     dOCUMENTO.TIPO_CAMBIO = doc.TIPO_CAMBIO;
                     dOCUMENTO.IMPUESTO = doc.IMPUESTO;
+                    dOCUMENTO.USUARIOD_ID = doc.USUARIOD_ID;//MGC 26-10-2018 Agregar usuario solicitante a la bd
                     // dOCUMENTO.MONTO_DOC_MD = doc.MONTO_DOC_MD;
                     //LEJGG 10-10-2018------------------------>
                     try
@@ -746,7 +751,7 @@ namespace WFARTHA.Controllers
                     }
 
                     //Estatus wf
-                    dOCUMENTO.ESTATUS_WF = "P";
+                    dOCUMENTO.ESTATUS_WF = "P";//MGC 26-10-2018 Si el wf es p es que no se ha creado, si es A, es que se creo el archivo, cambia al generar el preliminar
 
                     db.DOCUMENTOes.Add(dOCUMENTO);
                     db.SaveChanges();//Codigolej
@@ -959,48 +964,8 @@ namespace WFARTHA.Controllers
                         }
                         if (numFiles > 0)
                         {
-                            //-------------------------------------------------------------
-                            //Obtener las variables con los datos de sesión y ruta
-                            //string url = ConfigurationManager.AppSettings["URL_Serv"];
-                            //var bandera = false;
-                            //try
-                            //{
-                            //    //WebRequest request = WebRequest.Create(url + "Nueva Carpeta");
-                            //    FtpWebRequest requestDir = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + url));
-                            //    requestDir.Method = WebRequestMethods.Ftp.MakeDirectory;
-                            //    const string Comillas = "\"";
-                            //    string pwd = "Rumaki,2571" + Comillas + "k41";
-                            //    requestDir.Credentials = new NetworkCredential("luis.gonzalez", pwd);
-                            //    requestDir.UsePassive = true;
-                            //    requestDir.UseBinary = true;
-                            //    requestDir.KeepAlive = false;
-                            //    using (FtpWebResponse response = (FtpWebResponse)requestDir.GetResponse())
-                            //    {
-                            //        var xpr = response.StatusCode;
-                            //    }
-                            //    //Stream ftpStream = response.GetResponseStream();
-                            //    //ftpStream.Close();
-                            //    // response.Close();
-                            //    bandera = true;
-                            //}
-                            //catch (WebException ex)
-                            //{
-                            //    FtpWebResponse response = (FtpWebResponse)ex.Response;
-                            //    if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
-                            //    {
-                            //        response.Close();
-                            //        bandera = true;
-                            //    }
-                            //    else
-                            //    {
-                            //        response.Close();
-                            //        bandera = false;
-                            //    }
-                            //}
-                            //-------------------------------------------------------------
                             //Evaluar que se creo el directorio
-                            // if (bandera)
-                            if (true)
+                            try
                             {
                                 int indexlabel = 0;
                                 foreach (HttpPostedFileBase file in file_sopAnexar)
@@ -1021,7 +986,7 @@ namespace WFARTHA.Controllers
                                     }
                                     catch (Exception ex)
                                     {
-                                        listaDescArchivos.Add("");
+                                        listaNombreArchivos.Add("");
                                     }
                                     string errorfiles = "";
                                     if (file != null)
@@ -1043,7 +1008,7 @@ namespace WFARTHA.Controllers
                                     }
                                 }
                             }
-                            else
+                            catch (Exception e)
                             {
                                 // errorMessage = dir;
                             }
@@ -1184,6 +1149,9 @@ namespace WFARTHA.Controllers
                     List<string> listaDescArchivos2 = listaDescArchivos;
                     //DOCUMENTOA
                     //Misma cantidad de archivos y nombres, osea todo bien
+                    var listaDescArchivos2 = listaDescArchivos;//para documentoas
+                    var listaDirectorios2 = listaDirectorios;//para documentoas
+                    var listaNombreArchivos2 = listaNombreArchivos;//para documentoas
                     if (listaDirectorios.Count == listaDescArchivos.Count && listaDirectorios.Count == listaNombreArchivos.Count)
                     {
                         //un contador para los archivos que se borran de las listas
@@ -1208,6 +1176,9 @@ namespace WFARTHA.Controllers
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a1]);
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a1 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1273,6 +1244,9 @@ namespace WFARTHA.Controllers
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a2]);
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a2 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1338,6 +1312,9 @@ namespace WFARTHA.Controllers
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a3]);
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a3 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1380,6 +1357,7 @@ namespace WFARTHA.Controllers
                                     listaDescArchivos2.Remove(_dA.DESC);
                                     listaNombreArchivos2.RemoveAt(a3);
                                     arBorr++;
+
                                 }
                                 catch (Exception e)
                                 {
@@ -1403,6 +1381,9 @@ namespace WFARTHA.Controllers
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a4]);
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a4 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1456,6 +1437,7 @@ namespace WFARTHA.Controllers
                             {
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
+                                _dA.POS = pos;
                                 var de = "";
                                 int a5 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
@@ -1468,6 +1450,9 @@ namespace WFARTHA.Controllers
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a5]);
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a5 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
