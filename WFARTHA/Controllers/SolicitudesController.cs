@@ -1149,9 +1149,6 @@ namespace WFARTHA.Controllers
                     List<string> listaDescArchivos2 = listaDescArchivos;
                     //DOCUMENTOA
                     //Misma cantidad de archivos y nombres, osea todo bien
-                    var listaDescArchivos2 = listaDescArchivos;//para documentoas
-                    var listaDirectorios2 = listaDirectorios;//para documentoas
-                    var listaNombreArchivos2 = listaNombreArchivos;//para documentoas
                     if (listaDirectorios.Count == listaDescArchivos.Count && listaDirectorios.Count == listaNombreArchivos.Count)
                     {
                         //un contador para los archivos que se borran de las listas
@@ -1173,12 +1170,10 @@ namespace WFARTHA.Controllers
                                     a1 = a1 - arBorr;
                                     a1 = a1 - 1;
                                     _dA.POS = doc.Anexo[i].a1;
+
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a1]);
-                                    try
-                                    {
-                                        de = Path.GetExtension(listaNombreArchivos[a1 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1244,9 +1239,6 @@ namespace WFARTHA.Controllers
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a2]);
-                                    try
-                                    {
-                                        de = Path.GetExtension(listaNombreArchivos[a2 - 1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1307,36 +1299,38 @@ namespace WFARTHA.Controllers
                                 {
                                     a3 = doc.Anexo[i].a3;
                                     a3 = a3 - arBorr;
-                                    a3 = a3 - 1; 
+                                    a3 = a3 - 1;
                                     _dA.POS = doc.Anexo[i].a3;
                                     try
                                     {
-                                        de = Path.GetExtension(listaNombreArchivos[a3]);
-                                    try
-                                    {
-                                        de = Path.GetExtension(listaNombreArchivos[a3 - 1]);
-                                        _dA.TIPO = de.Replace(".", "");
+                                        try
+                                        {
+                                            de = Path.GetExtension(listaNombreArchivos[a3]);
+                                            _dA.TIPO = de.Replace(".", "");
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.TIPO = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.DESC = listaDescArchivos[a3];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.DESC = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.PATH = listaDirectorios[a3];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.PATH = "";
+                                        }
                                     }
-                                    catch (Exception c)
-                                    {
-                                        _dA.TIPO = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.DESC = listaDescArchivos[a3];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.DESC = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.PATH = listaDirectorios[a3];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.PATH = "";
-                                    }
+                                    catch (Exception e)
+                                    { }
                                 }
                                 else
                                 {
@@ -1357,7 +1351,6 @@ namespace WFARTHA.Controllers
                                     listaDescArchivos2.Remove(_dA.DESC);
                                     listaNombreArchivos2.RemoveAt(a3);
                                     arBorr++;
-
                                 }
                                 catch (Exception e)
                                 {
@@ -1380,32 +1373,33 @@ namespace WFARTHA.Controllers
                                     _dA.POS = doc.Anexo[i].a4;
                                     try
                                     {
-                                        de = Path.GetExtension(listaNombreArchivos[a4]);
-                                    try
-                                    {
-                                        de = Path.GetExtension(listaNombreArchivos[a4 - 1]);
-                                        _dA.TIPO = de.Replace(".", "");
+                                        try
+                                        {
+                                            de = Path.GetExtension(listaNombreArchivos[a4]);
+                                            _dA.TIPO = de.Replace(".", "");
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.TIPO = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.DESC = listaDescArchivos[a4];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.DESC = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.PATH = listaDirectorios[a4];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.PATH = "";
+                                        }
                                     }
-                                    catch (Exception c)
-                                    {
-                                        _dA.TIPO = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.DESC = listaDescArchivos[a4];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.DESC = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.PATH = listaDirectorios[a4];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.PATH = "";
-                                    }
+                                    catch (Exception e) { }
                                 }
                                 else
                                 {
@@ -1449,32 +1443,33 @@ namespace WFARTHA.Controllers
                                     _dA.POS = doc.Anexo[i].a5;
                                     try
                                     {
-                                        de = Path.GetExtension(listaNombreArchivos[a5]);
-                                    try
-                                    {
-                                        de = Path.GetExtension(listaNombreArchivos[a5 - 1]);
-                                        _dA.TIPO = de.Replace(".", "");
+                                        try
+                                        {
+                                            de = Path.GetExtension(listaNombreArchivos[a5]);
+                                            _dA.TIPO = de.Replace(".", "");
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.TIPO = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.DESC = listaDescArchivos[a5];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.DESC = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.PATH = listaDirectorios[a5];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.PATH = "";
+                                        }
                                     }
-                                    catch (Exception c)
-                                    {
-                                        _dA.TIPO = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.DESC = listaDescArchivos[a5];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.DESC = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.PATH = listaDirectorios[a5];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.PATH = "";
-                                    }
+                                    catch (Exception e) { }
                                 }
                                 else
                                 {
@@ -1557,6 +1552,20 @@ namespace WFARTHA.Controllers
                         }
                     }
                     //Lejgg 26.10.2018----------------------------------------<
+                    //Lejgg 28.10.2018---------------------------------------->
+                    if (Uuid != string.Empty)
+                    {
+                        var pos = db.DOCUMENTOUUIDs.ToList();
+                        DOCUMENTOUUID duid = new DOCUMENTOUUID();
+                        duid.NUM_DOC = doc.NUM_DOC;
+                        duid.POS = pos.Count + 1;
+                        duid.DOCUMENTO_SAP = "";
+                        duid.UUID = Uuid;
+                        duid.ESTATUS = true;
+                        db.DOCUMENTOUUIDs.Add(duid);
+                        db.SaveChanges();
+                    }
+                    //Lejgg 28.10.2018----------------------------------------<
                 }
                 catch (Exception e)
                 {
@@ -1707,7 +1716,21 @@ namespace WFARTHA.Controllers
 
             ViewBag.Title += id; //MGC 05-10-2018 Modificación para work flow al ser editada
             //LEJGG19 10 2018----------------------------------------------------->
-            ViewBag.docAn = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
+            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
+            DOCUMENTOA d_a = new DOCUMENTOA();
+            var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id).ToList();
+            for (int i = 0; i < la1.Count; i++)
+            {
+                d_a = new DOCUMENTOA();
+                d_a.NUM_DOC = la1[i].NUM_DOC;
+                d_a.TIPO = la1[i].TIPO;
+                d_a.DESC = la1[i].DESC;
+                d_a.CLASE = la1[i].CLASE;
+                d_a.PATH = la1[i].PATH;
+                lst.Add(d_a);
+            }
+            ViewBag.docAn = lst;
+            //ViewBag.docAn2 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id).ToList(); //LEJGG 28-10 2018
             //LEJGG19 10 2018-----------------------------------------------------<
             //solicitud con orden de compra ------>
             //Obtener la solicitud con la configuración
@@ -3382,12 +3405,18 @@ namespace WFARTHA.Controllers
         [HttpPost]
         public JsonResult getUuid(string id)
         {
-            var ret = "";//db.DOCUMENTOUUID.Where(x => x.WITHT == id).FirstOrDefault().WITHT_SUB;
+            var ret = db.DOCUMENTOUUIDs.Where(x => x.UUID == id).FirstOrDefault();
+            var st = "";
+            //Significa que no hay coincidencia
             if (ret == null)
             {
-                ret = "Null";
+                st = "Null";
             }
-            JsonResult jc = Json(ret, JsonRequestBehavior.AllowGet);
+            else
+            {
+                st = "Match";
+            }
+            JsonResult jc = Json(st, JsonRequestBehavior.AllowGet);
             return jc;
         }
 

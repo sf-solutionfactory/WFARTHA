@@ -36,6 +36,12 @@ $(document).ready(function () {
         //Termina provisional
         $('#btn_guardar').click();
     });
+
+    $('.btnD').on("click", function (e) {
+        var val = $(this).val();
+        $('#archivo').val(val);
+        $('#btnDownload').trigger("click");
+    });
 });
 
 function copiarTableInfoControl() {
