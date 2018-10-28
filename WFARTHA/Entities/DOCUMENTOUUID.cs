@@ -12,15 +12,14 @@ namespace WFARTHA.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class RETENCION_PROV
+    public partial class DOCUMENTOUUID
     {
-        public string LIFNR { get; set; }
-        public string BUKRS { get; set; }
-        public string WITHT { get; set; }
-        public string WT_WITHCD { get; set; }
+        public decimal NUM_DOC { get; set; }
+        public decimal POS { get; set; }
+        public string DOCUMENTO_SAP { get; set; }
+        public string UUID { get; set; }
+        public bool ESTATUS { get; set; }
     
-        public virtual PROVEEDOR PROVEEDOR { get; set; }
-        public virtual RETENCION RETENCION { get; set; }
-        public virtual SOCIEDAD SOCIEDAD { get; set; }
+        public virtual DOCUMENTO DOCUMENTO { get; set; }
     }
 }

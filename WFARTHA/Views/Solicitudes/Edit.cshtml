@@ -11,10 +11,10 @@
     WFARTHA.Entities.PROVEEDOR dprov = ViewBag.prov as WFARTHA.Entities.PROVEEDOR;
     WFARTHA.Models.DocumentoFlujo DF = ViewBag.docFl as WFARTHA.Models.DocumentoFlujo;
     List<WFARTHA.Entities.DOCUMENTOA> lstDocsA = ViewBag.docAn as List<WFARTHA.Entities.DOCUMENTOA>;
+    //List<WFARTHA.Entities.DOCUMENTOA1> lstDocsA1 = ViewBag.docAn2 as List<WFARTHA.Entities.DOCUMENTOA1>;
     List<string> colsret = ViewBag.Retenciones as List<string>;
     var total = ViewBag.total;
     var montomd = formatoc.toShow(total, ViewBag.dec);
-
 }
 
 <link type="text/css" href="~/Content/datatables.min.css" rel="stylesheet" />
@@ -243,6 +243,12 @@
         </ul>
     </div>
 </div>
+
+@using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
+{
+    <input type="hidden" id="archivo" name="archivo" value="" />
+    <button id="btnDownload" class="btn" type="submit">DESCARGAR</button>
+}
 
 @using (Html.BeginForm())
 {
@@ -734,29 +740,29 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
+                                    @*@using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
+                                        {*@
+                                    @if (@lstDocsA != null)
                                     {
-                                        if (@lstDocsA != null)
+                                        for (int i = 0; i < @lstDocsA.Count; i++)
                                         {
-                                            for (int i = 0; i < @lstDocsA.Count; i++)
-                                            {
-                                                <tr>
-                                                    <td></td>
-                                                    <td>
-                                                        @(i + 1)
-                                                    </td>
-                                                    <td>OK</td>
-                                                    @{var _xtr = lstDocsA[i].PATH.Split('/'); var nombre = _xtr[_xtr.Length - 1];}
-                                                    <td>@_xtr</td>
-                                                    <td> @lstDocsA[i].TIPO</td>
-                                                    <td> @lstDocsA[i].DESC</td>
-                                                    <td>
-                                                        <button name="archivo" class="btn" type="submit" value="@lstDocsA[i].PATH">DESCARGAR</button>
-                                                    </td>
-                                                </tr>
-                                            }
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    @(i + 1)
+                                                </td>
+                                                <td>OK</td>
+                                                @{var _xtr = lstDocsA[i].PATH.Split('\\'); var nombre = _xtr[_xtr.Length - 1];}
+                                                <td>@nombre</td>
+                                                <td> @lstDocsA[i].TIPO</td>
+                                                <td> @lstDocsA[i].DESC</td>
+                                                <td>
+                                                    <button class="btn btnD" type="button" value="@lstDocsA[i].PATH">DESCARGAR</button>
+                                                </td>
+                                            </tr>
                                         }
                                     }
+                                    @*}*@
                                 </tbody>
                             </table>
                         </div>

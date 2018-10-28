@@ -696,7 +696,9 @@ $(document).ready(function () {
                             success: function (data) {
                                 if (data !== null || data !== "") {
                                     _resVu = validarUuid(data[4]);
-                                    if (_resVu) {
+                                    //si es false significa que no hay coincidencias
+                                    if (!_resVu) {
+                                        $('#Uuid').val(data[4]);
                                         $('#FECHAD').val(data[0]);
                                         $('#FECHADO').val(data[0]);
                                         $("#FECHAD").trigger("change");
@@ -713,15 +715,21 @@ $(document).ready(function () {
                         });
                     }
                     if (fileNameExt.toLowerCase() === "xml") {
-                        //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
-                        if (_fbool) {
-                            _tab.row.add(
-                                $(tdata)
-                            ).draw(false).node();
+                        if (_resVu) {
+                            //Alert no se metio porque ya hay un xml en la tabla
+                            M.toast({ html: "UUID existente en BD" });
                         }
                         else {
-                            //Alert no se metio porque ya hay un xml en la tabla
-                            M.toast({ html: "No Coincide el rfc" });
+                            //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
+                            if (_fbool) {
+                                _tab.row.add(
+                                    $(tdata)
+                                ).draw(false).node();
+                            }
+                            else {
+                                //Alert no se metio porque ya hay un xml en la tabla
+                                M.toast({ html: "No Coincide el rfc" });
+                            }
                         }
                     }
                     else {
@@ -770,7 +778,8 @@ $(document).ready(function () {
                                 success: function (data) {
                                     if (data !== null || data !== "") {
                                         _resVu = validarUuid(data[4]);
-                                        if (_resVu) {
+                                        if (!_resVu) {
+                                            $('#Uuid').val(data[4]);
                                             $('#FECHAD').val(data[0]);
                                             $('#FECHADO').val(data[0]);
                                             $("#FECHAD").trigger("change");
@@ -785,15 +794,21 @@ $(document).ready(function () {
                                 },
                                 async: false
                             });
-                            //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
-                            if (_fbool) {
-                                _tab.row.add(
-                                    $(tdata)
-                                ).draw(false).node();
+                            if (_resVu) {
+                                //Alert no se metio porque ya hay un xml en la tabla
+                                M.toast({ html: "UUID existente en BD" });
                             }
                             else {
-                                //Alert no se metio porque ya hay un xml en la tabla
-                                M.toast({ html: "No Coincide el rfc" });
+                                //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
+                                if (_fbool) {
+                                    _tab.row.add(
+                                        $(tdata)
+                                    ).draw(false).node();
+                                }
+                                else {
+                                    //Alert no se metio porque ya hay un xml en la tabla
+                                    M.toast({ html: "No Coincide el rfc" });
+                                }
                             }
                         }
                         else {
