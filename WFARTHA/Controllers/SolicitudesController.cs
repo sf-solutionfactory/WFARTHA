@@ -644,7 +644,7 @@ namespace WFARTHA.Controllers
             "AGENTE_ACTUAL,FECHA_PASO_ACTUAL,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,FECHACON,FECHA_BASE,REFERENCIA," +
             "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo")] Models.DOCUMENTO_MOD doc, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc,
             //MGC 02-10-2018 Cadenas de autorización
-            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr, string FECHADO)
+            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr, string FECHADO, string Uuid)
         {
             int pagina = 202; //ID EN BASE DE DATOS
             string errorString = "";
@@ -1144,6 +1144,9 @@ namespace WFARTHA.Controllers
                         //MGC 02-10-2018 Cadena de autorización work flow <---
                     }
                     //Lej-02.10.2018------
+                    List<string> listaDirectorios2 = listaDirectorios;
+                    List<string> listaNombreArchivos2 = listaNombreArchivos;
+                    List<string> listaDescArchivos2 = listaDescArchivos;
                     //DOCUMENTOA
                     //Misma cantidad de archivos y nombres, osea todo bien
                     var listaDescArchivos2 = listaDescArchivos;//para documentoas
@@ -1151,6 +1154,8 @@ namespace WFARTHA.Controllers
                     var listaNombreArchivos2 = listaNombreArchivos;//para documentoas
                     if (listaDirectorios.Count == listaDescArchivos.Count && listaDirectorios.Count == listaNombreArchivos.Count)
                     {
+                        //un contador para los archivos que se borran de las listas
+                        int arBorr = 0;
                         for (int i = 0; i < doc.Anexo.Count; i++)
                         {
                             var pos = 1;
@@ -1159,13 +1164,18 @@ namespace WFARTHA.Controllers
                             {
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
-                                _dA.POS = pos;
                                 var de = "";
                                 int a1 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a1 > 0 && doc.Anexo[i].a1 <= listaNombreArchivos.Count)
                                 {
                                     a1 = doc.Anexo[i].a1;
+                                    a1 = a1 - arBorr;
+                                    a1 = a1 - 1;
+                                    _dA.POS = doc.Anexo[i].a1;
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a1]);
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a1 - 1]);
@@ -1177,7 +1187,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.DESC = listaDescArchivos[a1 - 1];
+                                        _dA.DESC = listaDescArchivos[a1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1185,7 +1195,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.PATH = listaDirectorios[a1 - 1];
+                                        _dA.PATH = listaDirectorios[a1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1209,7 +1219,8 @@ namespace WFARTHA.Controllers
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
-                                    listaNombreArchivos2.RemoveAt(a1 - 1);
+                                    listaNombreArchivos2.RemoveAt(a1);
+                                    arBorr++;
                                 }
                                 catch (Exception e)
                                 {
@@ -1221,13 +1232,18 @@ namespace WFARTHA.Controllers
                             {
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
-                                _dA.POS = pos;
                                 var de = "";
                                 int a2 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a2 > 0 && doc.Anexo[i].a2 <= listaNombreArchivos.Count)
                                 {
                                     a2 = doc.Anexo[i].a2;
+                                    a2 = a2 - arBorr;
+                                    a2 = a2 - 1;
+                                    _dA.POS = doc.Anexo[i].a2;
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a2]);
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a2 - 1]);
@@ -1239,7 +1255,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.DESC = listaDescArchivos[a2 - 1];
+                                        _dA.DESC = listaDescArchivos[a2];
                                     }
                                     catch (Exception c)
                                     {
@@ -1247,7 +1263,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.PATH = listaDirectorios[a2 - 1];
+                                        _dA.PATH = listaDirectorios[a2];
                                     }
                                     catch (Exception c)
                                     {
@@ -1271,7 +1287,8 @@ namespace WFARTHA.Controllers
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
-                                    listaNombreArchivos2.RemoveAt(a2 - 1);
+                                    listaNombreArchivos2.RemoveAt(a2);
+                                    arBorr++;
                                 }
                                 catch (Exception e)
                                 {
@@ -1283,13 +1300,18 @@ namespace WFARTHA.Controllers
                             {
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
-                                _dA.POS = pos;
                                 var de = "";
                                 int a3 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a3 > 0 && doc.Anexo[i].a3 <= listaNombreArchivos.Count)
                                 {
                                     a3 = doc.Anexo[i].a3;
+                                    a3 = a3 - arBorr;
+                                    a3 = a3 - 1; 
+                                    _dA.POS = doc.Anexo[i].a3;
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a3]);
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a3 - 1]);
@@ -1301,7 +1323,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.DESC = listaDescArchivos[a3 - 1];
+                                        _dA.DESC = listaDescArchivos[a3];
                                     }
                                     catch (Exception c)
                                     {
@@ -1309,7 +1331,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.PATH = listaDirectorios[a3 - 1];
+                                        _dA.PATH = listaDirectorios[a3];
                                     }
                                     catch (Exception c)
                                     {
@@ -1333,7 +1355,9 @@ namespace WFARTHA.Controllers
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
-                                    listaNombreArchivos2.RemoveAt(a3 - 1);
+                                    listaNombreArchivos2.RemoveAt(a3);
+                                    arBorr++;
+
                                 }
                                 catch (Exception e)
                                 {
@@ -1345,13 +1369,18 @@ namespace WFARTHA.Controllers
                             {
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
-                                _dA.POS = pos;
                                 var de = "";
                                 int a4 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a4 > 0 && doc.Anexo[i].a4 <= listaNombreArchivos.Count)
                                 {
                                     a4 = doc.Anexo[i].a4;
+                                    a4 = a4 - arBorr;
+                                    a4 = a4 - 1;
+                                    _dA.POS = doc.Anexo[i].a4;
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a4]);
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a4 - 1]);
@@ -1363,7 +1392,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.DESC = listaDescArchivos[a4 - 1];
+                                        _dA.DESC = listaDescArchivos[a4];
                                     }
                                     catch (Exception c)
                                     {
@@ -1371,7 +1400,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.PATH = listaDirectorios[a4 - 1];
+                                        _dA.PATH = listaDirectorios[a4];
                                     }
                                     catch (Exception c)
                                     {
@@ -1395,7 +1424,8 @@ namespace WFARTHA.Controllers
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
-                                    listaNombreArchivos2.RemoveAt(a4 - 1);
+                                    listaNombreArchivos2.RemoveAt(a4);
+                                    arBorr++;
                                 }
                                 catch (Exception e)
                                 {
@@ -1414,6 +1444,12 @@ namespace WFARTHA.Controllers
                                 if (doc.Anexo[i].a5 > 0 && doc.Anexo[i].a5 <= listaNombreArchivos.Count)
                                 {
                                     a5 = doc.Anexo[i].a5;
+                                    a5 = a5 - arBorr;
+                                    a5 = a5 - 1;
+                                    _dA.POS = doc.Anexo[i].a5;
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a5]);
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a5 - 1]);
@@ -1425,7 +1461,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.DESC = listaDescArchivos[a5 - 1];
+                                        _dA.DESC = listaDescArchivos[a5];
                                     }
                                     catch (Exception c)
                                     {
@@ -1433,7 +1469,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.PATH = listaDirectorios[a5 - 1];
+                                        _dA.PATH = listaDirectorios[a5];
                                     }
                                     catch (Exception c)
                                     {
@@ -1457,7 +1493,8 @@ namespace WFARTHA.Controllers
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
-                                    listaNombreArchivos2.RemoveAt(a5 - 1);
+                                    listaNombreArchivos2.RemoveAt(a5);
+                                    arBorr++;
                                 }
                                 catch (Exception e)
                                 {
@@ -1473,7 +1510,7 @@ namespace WFARTHA.Controllers
                     {
                         var pos = 1;
                         for (int i = 0; i < listaDescArchivos2.Count; i++)
-                        {                           
+                        {
                             DOCUMENTOA1 _dA = new DOCUMENTOA1();
                             _dA.NUM_DOC = doc.NUM_DOC;
                             _dA.POS = pos;
@@ -2912,27 +2949,39 @@ namespace WFARTHA.Controllers
         [HttpPost]
         public JsonResult procesarXML(IEnumerable<HttpPostedFileBase> file)
         {
-            var _ff = file.ToList();
-            var lines = ReadLines(() => _ff[0].InputStream, Encoding.UTF8).ToArray();
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(lines[0]);
-            var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
-            var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
+            try
+            {
+                var _ff = file.ToList();
+                var lines = ReadLines(() => _ff[0].InputStream, Encoding.UTF8).ToArray();
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(lines[0]);
+                var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
+                var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
+                var xmlnode3 = doc.GetElementsByTagName("cfdi:Emisor");
+                var xmlnode4 = doc.GetElementsByTagName("tfd:TimbreFiscalDigital");
+                //var xmlnode4_2= xmlnode4.g
+                var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
+                var _Mt = xmlnode[0].Attributes["Total"].Value;
+                var _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;
+                var _RFCReceptor = xmlnode2[0].Attributes["Rfc"].Value;
+                var _RFCEmisor = xmlnode3[0].Attributes["Rfc"].Value;
+                var _Uuid = xmlnode4[0].Attributes["UUID"].Value;
+                List<string> lstvals = new List<string>();
+                lstvals.Add(_F);//Fecha
+                lstvals.Add(_Mt);//Monto
+                lstvals.Add(_RFCReceptor);//RFCReceptor
+                lstvals.Add(_RFCEmisor);//RFCEmisor
+                lstvals.Add(_Uuid);//UUID
+                lstvals.Add(_TipoCambio);//TCambio
+                JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
 
-            var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
-            var _Mt = xmlnode[0].Attributes["Total"].Value;
-            var _RFC = xmlnode2[0].Attributes["Rfc"].Value;
-            /* List<string> childNodes = new List<string>();
-             for (int i = 0; i < xmlnode[0].ChildNodes.Count; i++)
-             {
-                 childNodes.Add(xmlnode[0].ChildNodes.Item(i).Name);
-             }*/
-            List<string> lstvals = new List<string>();
-            lstvals.Add(_F);//Fecha
-            lstvals.Add(_Mt);//Monto
-            lstvals.Add(_RFC);//RFC
-            JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
-            return jc;
+                return jc;
+            }
+            catch (Exception)
+            {
+                JsonResult jc = Json("", JsonRequestBehavior.AllowGet);
+                return jc;
+            }
         }
 
         public IEnumerable<string> ReadLines(Func<Stream> streamProvider,
@@ -3322,6 +3371,18 @@ namespace WFARTHA.Controllers
         public JsonResult getRetLigadas(string id)
         {
             var ret = db.RETENCIONs.Where(x => x.WITHT == id).FirstOrDefault().WITHT_SUB;
+            if (ret == null)
+            {
+                ret = "Null";
+            }
+            JsonResult jc = Json(ret, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
+        [HttpPost]
+        public JsonResult getUuid(string id)
+        {
+            var ret = "";//db.DOCUMENTOUUID.Where(x => x.WITHT == id).FirstOrDefault().WITHT_SUB;
             if (ret == null)
             {
                 ret = "Null";
