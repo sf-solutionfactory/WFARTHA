@@ -516,18 +516,28 @@ $(document).ready(function () {
 
         //LEJGG 23-10-18
         //Aqui verificare si es invoice o factura
-        var res = validarFacs();//Lejgg 23-10-2018
-        if (res) {//si es true signfica que si hay factura
-            //Fechade la factura
-            var _fdo = $("#FECHADO").val();
-        } else {
-            //si es false signfica que es invoice(fecha de la creacion)
-            var fdo = $("#FECHADO").val();
-        }
+        var val3 = $('#tsol').val();
+        val3 = "[" + val3 + "]";
+        val3 = val3.replace("{", "{ \"");
+        val3 = val3.replace("}", "\" }");
+        val3 = val3.replace(/\,/g, "\" , \"");
+        val3 = val3.replace(/\=/g, "\" : \"");
+        val3 = val3.replace(/\ /g, "");
+        var jsval = $.parseJSON(val3);
+        if (jsval[0].ID === "SSO") {
+            var res = validarFacs();//Lejgg 23-10-2018
+            if (res) {//si es true signfica que si hay factura
+                //Fechade la factura
+                var _fdo = $("#FECHADO").val();
+            } else {
+                //si es false signfica que es invoice(fecha de la creacion)
+                var fdo = $("#FECHADO").val();
+            }
 
+        }
         //$("#table_info > tbody  > tr[role='row']").each(function () { //MGC 24-10-2018 Conflicto Enrique-Rogelio
         var tabble = "table_info";
-        if ($("table#table_info tbody tr[role='row']").length == 0) { tabble = "table_infoP" }
+        if ($("table#table_info tbody tr[role='row']").length === 0) { tabble = "table_infoP" }
         $("#" + tabble + " > tbody  > tr[role='row']").each(function () {
 
             _rni++;
@@ -648,91 +658,32 @@ $(document).ready(function () {
     });
 
     $('#file_sopAnexar').change(function () {
-        var length = $(this).get(0).files.length;
-        var tdata = "";
-        var _tab = $('#table_anexa').DataTable();
-        for (var i = 0; i < length; i++) {
-            var nr = _tab.rows().count();
-            //Si nr es 0 significa que la tabla esta vacia
-            if (nr === 0) {
-                var file = $(this).get(0).files[i];
-                var fileName = file.name;
-                var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-                tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
-                //Lejgg 22-10-2018
-                if (fileNameExt.toLowerCase() === "xml") {
-                    var data = new FormData();
-                    var _fbool = false;
-                    data.append('file', file);
-                    $.ajax({
-                        type: "POST",
-                        url: 'procesarXML',
-                        data: data,
-                        dataType: "json",
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        success: function (data) {
-                            if (data !== null || data !== "") {
-                                $('#FECHAD').val(data[0]);
-                                $('#FECHADO').val(data[0]);
-                                $("#FECHAD").trigger("change");
-                                data[1];//Monto Total
-                                _fbool = validarRFC(data[2]);
-                                //data[2];//RFC
-                            }
-                        },
-                        error: function (xhr, httpStatusMessage, customErrorMessage) {
-                            //
-                        },
-                        async: false
-                    });
-                }
-                if (fileNameExt.toLowerCase() === "xml") {
-                    //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
-                    if (_fbool) {
-                        _tab.row.add(
-                            $(tdata)
-                        ).draw(false).node();
-                    }
-                    else {
-                        //Alert no se metio porque ya hay un xml en la tabla
-                        M.toast({ html: "No Coincide el rfc" });
-                    }
-                }
-                else {
-                    _tab.row.add(
-                        $(tdata)
-                    ).draw(false).node();
-                }
-            } else {
-                var file = $(this).get(0).files[i];
-                var fileName = file.name;
-                var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-                var _ban = false;
-                //Lejgg 22-10-2018------------------------------------------------>
-                $("#table_anexa > tbody  > tr[role='row']").each(function () {
-                    var t = $("#table_anexa").DataTable();
-                    //Obtener el row para el plugin
-                    var tr = $(this);
-                    var indexopc = t.row(tr).index();
-
-                    //Obtener valores visibles en la tabla
-                    var _tipoAr = $(this).find("td.TYPE").text();
-                    if (fileNameExt.toLowerCase() === _tipoAr) {
-                        _ban = true;
-                    }
-                    if (_ban)
-                        return;
-                });
-                //Si el archivo es xml entra
-                //LEJGG23/10/18---------------------------------------------------->
-                if (fileNameExt.toLowerCase() === "xml") {
-                    var _fbool = false;
-                    //Si ban es false, no hay ningun otro archivo xml, entonces metere el registro
-                    if (!_ban) {
-                        tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+        //Validacion para saber si es sin orden de compra o reembolso
+        var val3 = $('#tsol').val();
+        val3 = "[" + val3 + "]";
+        val3 = val3.replace("{", "{ \"");
+        val3 = val3.replace("}", "\" }");
+        val3 = val3.replace(/\,/g, "\" , \"");
+        val3 = val3.replace(/\=/g, "\" : \"");
+        val3 = val3.replace(/\ /g, "");
+        var jsval = $.parseJSON(val3);
+        if (jsval[0].ID === "SSO") {
+            var length = $(this).get(0).files.length;
+            var tdata = "";
+            var _tab = $('#table_anexa').DataTable();
+            for (var i = 0; i < length; i++) {
+                var nr = _tab.rows().count();
+                //Si nr es 0 significa que la tabla esta vacia
+                if (nr === 0) {
+                    var file = $(this).get(0).files[i];
+                    var fileName = file.name;
+                    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+                    tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                    //Lejgg 22-10-2018
+                    if (fileNameExt.toLowerCase() === "xml") {
                         var data = new FormData();
+                        var _fbool = false;
+                        var _resVu = false;
                         data.append('file', file);
                         $.ajax({
                             type: "POST",
@@ -744,12 +695,15 @@ $(document).ready(function () {
                             processData: false,
                             success: function (data) {
                                 if (data !== null || data !== "") {
-                                    $('#FECHAD').val(data[0]);
-                                    $('#FECHADO').val(data[0]);
-                                    $("#FECHAD").trigger("change");
-                                    data[1];//Monto Total
-                                    _fbool = validarRFC(data[2]);
-                                    //data[2];//RFC
+                                    _resVu = validarUuid(data[4]);
+                                    if (_resVu) {
+                                        $('#FECHAD').val(data[0]);
+                                        $('#FECHADO').val(data[0]);
+                                        $("#FECHAD").trigger("change");
+                                        data[1];//Monto Total
+                                        _fbool = validarRFC(data[2]);
+                                        //data[2];//RFC
+                                    }
                                 }
                             },
                             error: function (xhr, httpStatusMessage, customErrorMessage) {
@@ -757,6 +711,8 @@ $(document).ready(function () {
                             },
                             async: false
                         });
+                    }
+                    if (fileNameExt.toLowerCase() === "xml") {
                         //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
                         if (_fbool) {
                             _tab.row.add(
@@ -769,18 +725,128 @@ $(document).ready(function () {
                         }
                     }
                     else {
-                        //Alert no se metio porque ya hay un xml en la tabla
-                        M.toast({ html: "Ya existe una factura" });
+                        _tab.row.add(
+                            $(tdata)
+                        ).draw(false).node();
+                    }
+                } else {
+                    var file = $(this).get(0).files[i];
+                    var fileName = file.name;
+                    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+                    var _ban = false;
+                    //Lejgg 22-10-2018------------------------------------------------>
+                    $("#table_anexa > tbody  > tr[role='row']").each(function () {
+                        var t = $("#table_anexa").DataTable();
+                        //Obtener el row para el plugin
+                        var tr = $(this);
+                        var indexopc = t.row(tr).index();
+
+                        //Obtener valores visibles en la tabla
+                        var _tipoAr = $(this).find("td.TYPE").text();
+                        if (fileNameExt.toLowerCase() === _tipoAr) {
+                            _ban = true;
+                        }
+                        if (_ban)
+                            return;
+                    });
+                    //Si el archivo es xml entra
+                    //LEJGG23/10/18---------------------------------------------------->
+                    if (fileNameExt.toLowerCase() === "xml") {
+                        var _fbool = false;
+                        //Si ban es false, no hay ningun otro archivo xml, entonces metere el registro
+                        if (!_ban) {
+                            tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                            var data = new FormData();
+                            var _resVu = false;
+                            data.append('file', file);
+                            $.ajax({
+                                type: "POST",
+                                url: 'procesarXML',
+                                data: data,
+                                dataType: "json",
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                success: function (data) {
+                                    if (data !== null || data !== "") {
+                                        _resVu = validarUuid(data[4]);
+                                        if (_resVu) {
+                                            $('#FECHAD').val(data[0]);
+                                            $('#FECHADO').val(data[0]);
+                                            $("#FECHAD").trigger("change");
+                                            data[1];//Monto Total
+                                            _fbool = validarRFC(data[2]);
+                                            //data[2];//RFC
+                                        }
+                                    }
+                                },
+                                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                    //
+                                },
+                                async: false
+                            });
+                            //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
+                            if (_fbool) {
+                                _tab.row.add(
+                                    $(tdata)
+                                ).draw(false).node();
+                            }
+                            else {
+                                //Alert no se metio porque ya hay un xml en la tabla
+                                M.toast({ html: "No Coincide el rfc" });
+                            }
+                        }
+                        else {
+                            //Alert no se metio porque ya hay un xml en la tabla
+                            M.toast({ html: "Ya existe una factura" });
+                        }
+                    }
+                    //LEJGG23/10/18----------------------------------------------------<
+                    else {
+                        tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                        _tab.row.add(
+                            $(tdata)
+                        ).draw(false).node();
+                    }
+                    //Lejgg 22-10-2018------------------------------------------------>
+                }
+            }
+        }
+        if (jsval[0].ID === "SRE") {
+            var _length = $(this).get(0).files.length;
+            var _tab2 = $('#table_anexa').DataTable();
+            for (var i = 0; i < _length; i++) {
+                var nr = _tab2.rows().count();
+                if (nr === 0) {
+                    var file = $(this).get(0).files[i];
+                    var fileName = file.name;
+                    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+                    var nr = _tab2.rows().count();
+                    var file = $(this).get(0).files[i];
+                    var _data = new FormData();
+                    _data.append('file', file);
+                    if (fileNameExt.toLowerCase() === "xml") {
+                        //Se saca el UUID
+                        $.ajax({
+                            type: "POST",
+                            url: 'procesarXML',
+                            data: _data,
+                            dataType: "json",
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                if (data !== null || data !== "") {
+                                    data[4];//UUID
+                                }
+                            },
+                            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                //
+                            },
+                            async: false
+                        });
                     }
                 }
-                //LEJGG23/10/18----------------------------------------------------<
-                else {
-                    tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
-                    _tab.row.add(
-                        $(tdata)
-                    ).draw(false).node();
-                }
-                //Lejgg 22-10-2018------------------------------------------------>
             }
         }
     });
@@ -887,6 +953,32 @@ $('body').on('change', '#tsol', function (event, param1) {
         mostrarTabla(dataj.EDITDET);
     });
 });
+
+//LEJGG 28-10-2018
+function validarUuid(uuid) {
+    var ban = false;
+    $.ajax({
+        type: "POST",
+        url: 'getUuid',
+        data: { 'id': uuid },
+        dataType: "json",
+        success: function (data) {
+            if (data !== null || data !== "") {
+                if (data != "Null") {
+                    ban = true;
+                }
+                else {
+                    //
+                }
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
+    return ban;
+}
 //MGC 03-10-2018 solicitud con orden de compra
 function ocultarCampos(opc, load) {
     //respuesta en minúscula
@@ -1809,7 +1901,7 @@ function impuestoVal(ti) {
 
     if (ti != "") {
         var tsol_val = $('#impuestosval').val();
-        var jsval = $.parseJSON(tsol_val)
+        var jsval = $.parseJSON(tsol_val);
         $.each(jsval, function (i, dataj) {
             var _i = ti.split('-');
             var _im = $.trim(_i[0]);
@@ -1828,11 +1920,11 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
     var r = addRowl(
         t,
         POS,
-        "<input disabled  class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo + "\">",
-        "<input disabled  class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo2 + "\">",
-        "<input disabled  class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo3 + "\">",
-        "<input disabled  class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo4 + "\">",
-        "<input disabled  class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo5 + "\">",
+        "<input class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo + "\">",
+        "<input class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo2 + "\">",
+        "<input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo3 + "\">",
+        "<input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo4 + "\">",
+        "<input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo5 + "\">",
         //"<input class=\"CA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + CA + "\">",//MGC 04092018 Conceptos
         CA,//MGC 04092018 Conceptos
         "<input " + disabled + " class=\"FACTURA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + FACTURA + "\">",
