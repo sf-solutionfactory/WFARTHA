@@ -1570,7 +1570,7 @@ $('body').on('change', '.IMPUESTO_SELECT', function (event, param1) {
         //Total
         tr.find("td.TOTAL input").val();
         if (colTotal > 0) {
-            var sumt = parseFloat(total.replace('$', '').replace(',', '')) + parseFloat(colTotal);
+            var sumt = parseFloat(total.replace('$', '').replace(',', '')) - parseFloat(colTotal);
             tr.find("td.TOTAL input").val(toShow(sumt));
         }
         else {
