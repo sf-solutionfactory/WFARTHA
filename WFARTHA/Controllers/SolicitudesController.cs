@@ -492,6 +492,8 @@ namespace WFARTHA.Controllers
                 string pid = Session["id_pr"].ToString();
                 ViewBag.PrSl = p;
                 pselG = pid;//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
+
+                ViewBag.pid = pid;//MGC 29-10-2018 Guardar el proyecto en el create
             }
             catch
             {
@@ -813,7 +815,7 @@ namespace WFARTHA.Controllers
                         _dp.POS = j;
                         _dp.ACCION = "H";
                         _dp.CUENTA = doc.PAYER_ID;
-                        _dp.MONTO = _monto;
+                        _dp.MONTO = _monto + _iva;////MGC 29-10-2018 Obtener las retenciones relacionadas con las ya mostradas en la tabla
                         _dp.MWSKZ = _mwskz;
                         _dp.IVA = _iva;
                         _dp.TOTAL = _total;
@@ -830,6 +832,7 @@ namespace WFARTHA.Controllers
 
                     }
 
+                    //Guardar las retenciones por posición
                     //Lej14.09.2018------
                     try
                     {
@@ -909,28 +912,99 @@ namespace WFARTHA.Controllers
                     }
                     //Lej14.09.2018------
 
+                    //Guardar las retenciones en el encabezado
                     try//LEJ 05.09.2018
                     {
+                        ////MGC 29-10-2018 Obtener las retenciones relacionadas con las ya mostradas en la tabla------------------------------>
+                        List<DOCUMENTOR_MOD> docrr = new List<DOCUMENTOR_MOD>();
+
+                        List<RETENCION> retsub = new List<RETENCION>();
+
+                        retsub = (from dr in doc.DOCUMENTOR.ToList()
+                               join ret1 in db.RETENCIONs.ToList()
+                               on new { dr.WITHT, dr.WT_WITHCD } equals new { ret1.WITHT, ret1.WT_WITHCD }
+                               select new RETENCION
+                               {
+                                   WITHT = ret1.WITHT,
+                                   WT_WITHCD = ret1.WT_WITHCD,
+                                   DESCRIPCION = ret1.DESCRIPCION,
+                                   ESTATUS = ret1.ESTATUS,
+                                   WITHT_SUB = ret1.WITHT_SUB,
+                                   PORC = ret1.PORC,
+                                   WT_WITHCD_SUB = ret1.WT_WITHCD_SUB,
+                                   CAMPO = ret1.CAMPO
+                               }
+                               ).ToList();
+
+                        //docrr = (from rs in retsub.ToList()
+                        //         join dr in db.RETENCIONs.ToList()
+                        //         on new { A = rs.WITHT_SUB, B = rs.WT_WITHCD_SUB } equals new { A = dr.WITHT, B = dr.WT_WITHCD }
+                        //         select new DOCUMENTOR_MOD
+                        //         {
+                        //             LIFNR = 
+                        //         }).ToList();
+
+                        ////MGC 29-10-2018 Obtener las retenciones relacionadas con las ya mostradas en la tabla------------------------------<
+
                         //Guardar las retenciones de la solicitud
+                        int ccr = 1;// Contador consecutivo ////MGC 29-10-2018
                         for (int i = 0; i < doc.DOCUMENTOR.Count; i++)
                         {
                             if (doc.DOCUMENTOR[i].BUKRS == doc.SOCIEDAD_ID && doc.DOCUMENTOR[i].LIFNR == doc.PAYER_ID)
                             {
+                                DOCUMENTOR dr = new DOCUMENTOR();
                                 try
                                 {
-                                    DOCUMENTOR dr = new DOCUMENTOR();
+                                    
                                     //dr.NUM_DOC = decimal.Parse(Session["NUM_DOC"].ToString());
                                     dr.NUM_DOC = doc.NUM_DOC;
                                     dr.WITHT = doc.DOCUMENTOR[i].WITHT;
                                     dr.WT_WITHCD = doc.DOCUMENTOR[i].WT_WITHCD;
-                                    dr.POS = db.DOCUMENTORs.ToList().Count + 1;
+                                    //dr.POS = db.DOCUMENTORs.ToList().Count + 1; // Contador consecutivo ////MGC 29-10-2018                                    
+                                    dr.POS = ccr; // Contador consecutivo ////MGC 29-10-2018
                                     dr.BIMPONIBLE = doc.DOCUMENTOR[i].BIMPONIBLE;
                                     dr.IMPORTE_RET = doc.DOCUMENTOR[i].IMPORTE_RET;
+                                    dr.VISIBLE = true;
                                     db.DOCUMENTORs.Add(dr);
                                     db.SaveChanges();
+
+                                    ////MGC 29-10-2018 Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                                    ccr++;// Contador consecutivo ////MGC 29-10-2018
                                 }
                                 catch (Exception e)
                                 {
+                                }
+
+                                //Obtener la relacionada
+                                RETENCION retrel = retsub.Where(rs => rs.WITHT == doc.DOCUMENTOR[i].WITHT && rs.WT_WITHCD == doc.DOCUMENTOR[i].WT_WITHCD).FirstOrDefault();
+
+                                if (retrel != null)
+                                {
+                                    if (retrel.WITHT_SUB != null | retrel.WITHT_SUB != "")
+                                    {
+                                        DOCUMENTOR drr = new DOCUMENTOR();
+                                        try
+                                        {
+
+                                            drr.NUM_DOC = doc.NUM_DOC;
+
+                                            drr.WITHT = retrel.WITHT_SUB;
+                                            drr.WT_WITHCD = retrel.WT_WITHCD_SUB;
+                                            //dr.POS = db.DOCUMENTORs.ToList().Count + 1; // Contador consecutivo ////MGC 29-10-2018                                    
+                                            drr.POS = ccr; // Contador consecutivo ////MGC 29-10-2018
+                                            drr.BIMPONIBLE = doc.DOCUMENTOR[i].BIMPONIBLE;
+                                            drr.IMPORTE_RET = doc.DOCUMENTOR[i].IMPORTE_RET;
+                                            drr.VISIBLE = false;
+                                            db.DOCUMENTORs.Add(drr);
+                                            db.SaveChanges();
+
+                                            ////MGC 29-10-2018 Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                                            ccr++;// Contador consecutivo ////MGC 29-10-2018
+                                        }
+                                        catch (Exception e)
+                                        {
+                                        }
+                                    }
                                 }
                             }
                         }

@@ -541,6 +541,13 @@
             <div class="row">
                 <div class="col s12 hide" id="div_garantia">
                     <div class="card-panel">
+
+                        @*MGC 29-10-2018 Agregar funcionalidad de proyecto ---------------------------------------------------->*@
+
+                        @{string proy =  ViewBag.pid + "";}
+                        @Html.Hidden("PROY_SEL", proy);
+                        @*MGC 29-10-2018 Agregar funcionalidad de proyecto ----------------------------------------------------<*@
+
                         <div class="row" style="margin-bottom:0px;">
                             <div class="col s12 m12 l3">
                                 <div id="div_norden_compra" class="input-field col s12" style="display:none">
