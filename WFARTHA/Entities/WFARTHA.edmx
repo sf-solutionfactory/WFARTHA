@@ -22,8 +22,8 @@
           <Property Name="VALUE" Type="nvarchar" MaxLength="255" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6013: La tabla o vista 'PAGOS.dbo.'CADENAS M$'' no tiene definida una clave principal y no es posible inferir ninguna clave principal válida. Esta tabla o vista se ha excluido. Para usar la entidad, necesitará revisar el esquema, agregar las claves correctas y quitar sus comentarios.
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'PAGOS.dbo.'CADENAS M$'' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
         <EntityType Name="'CADENAS M$'">
           <Property Name="VERSION" Type="float" />
           <Property Name="USUARIOC_ID" Type="nvarchar" MaxLength="255" />
@@ -72,6 +72,16 @@ advertencia 6013: La tabla o vista 'PAGOS.dbo.'CADENAS M$'' no tiene definida un
           <Property Name="CECO" Type="nchar" MaxLength="10" Nullable="false" />
           <Property Name="TEXT" Type="nvarchar" MaxLength="80" />
         </EntityType>
+        <EntityType Name="CLAVES_CONTA">
+          <Key>
+            <PropertyRef Name="TSOL" />
+            <PropertyRef Name="DH" />
+          </Key>
+          <Property Name="TSOL" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="DH" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="BSCHL" Type="nchar" MaxLength="2" />
+          <Property Name="BSCHLL" Type="nchar" MaxLength="1" />
+        </EntityType>
         <EntityType Name="CONCEPTO">
           <Key>
             <PropertyRef Name="ID_CONCEPTO" />
@@ -85,8 +95,8 @@ advertencia 6013: La tabla o vista 'PAGOS.dbo.'CADENAS M$'' no tiene definida un
           <Property Name="TIPO_PRESUPUESTO" Type="nchar" MaxLength="1" />
           <Property Name="CUENTA" Type="nchar" MaxLength="10" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.CONDICIONES_PAGO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.CONDICIONES_PAGO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CONDICIONES_PAGO">
           <Key>
             <PropertyRef Name="COND_PAGO" />
@@ -150,8 +160,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.CONDICIONES_PAGO' no tiene definid
           <Property Name="AGENTE_SIG" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="OVERRIDE" Type="bit" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_AGENTECC' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.DET_AGENTECC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DET_AGENTECC">
           <Key>
             <PropertyRef Name="VERSION" />
@@ -374,6 +384,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_AGENTECC' no tiene definida ni
           <Property Name="POS" Type="numeric" Precision="5" Scale="0" />
           <Property Name="BIMPONIBLE" Type="decimal" Precision="13" Scale="2" />
           <Property Name="IMPORTE_RET" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="VISIBLE" Type="bit" />
         </EntityType>
         <EntityType Name="DOCUMENTORP">
           <Key>
@@ -500,8 +511,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_AGENTECC' no tiene definida ni
           <Property Name="DECIMALES" Type="nchar" MaxLength="1" Nullable="false" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.IIMPUESTO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="IIMPUESTO">
           <Key>
             <PropertyRef Name="MWSKZ" />
@@ -649,6 +660,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.IIMPUESTO' no tiene definida ningu
           <Property Name="ESTATUS" Type="bit" Nullable="false" />
           <Property Name="WITHT_SUB" Type="nchar" MaxLength="2" />
           <Property Name="PORC" Type="decimal" Precision="13" Scale="8" />
+          <Property Name="WT_WITHCD_SUB" Type="nchar" MaxLength="2" />
+          <Property Name="CAMPO" Type="nchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="RETENCION_PROV">
           <Key>
@@ -705,7 +718,14 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.IIMPUESTO' no tiene definida ningu
           <Property Name="KTOPL" Type="nchar" MaxLength="10" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
           <Property Name="REGION" Type="nchar" MaxLength="10" />
+          <Property Name="STCD1" Type="nchar" MaxLength="16" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'PAGOS.dbo.SOCIEDADRFC$' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="SOCIEDADRFC$">
+          <Property Name="BURKS" Type="nchar" MaxLength="4" />
+          <Property Name="STCD1" Type="nchar" MaxLength="16" />
+        </EntityType>-->
         <EntityType Name="SPRAS">
           <Key>
             <PropertyRef Name="ID" />
@@ -873,8 +893,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.IIMPUESTO' no tiene definida ningu
           <Property Name="USUARIO_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="FECHAC" Type="datetime" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.ASIGN_PROY_SOC' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.ASIGN_PROY_SOC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ASIGN_PROY_SOC">
           <Key>
             <PropertyRef Name="ID_PSPNR" />
@@ -883,8 +903,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.ASIGN_PROY_SOC' no tiene definida 
           <Property Name="ID_PSPNR" Type="nvarchar" MaxLength="8" Nullable="false" />
           <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.CARPETAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.CARPETAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CARPETAV">
           <Key>
             <PropertyRef Name="USUARIO_ID" />
@@ -896,8 +916,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.CARPETAV' no tiene definida ningun
           <Property Name="TXT50" Type="nvarchar" MaxLength="50" />
           <Property Name="ICON" Type="nvarchar" MaxLength="20" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_APROBV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.DET_APROBV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DET_APROBV">
           <Key>
             <PropertyRef Name="VERSION" />
@@ -914,8 +934,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_APROBV' no tiene definida ning
           <Property Name="USUARIO" Type="nvarchar" MaxLength="171" Nullable="false" />
           <Property Name="STEP_FASE" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_PROVEEDORV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.DET_PROVEEDORV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DET_PROVEEDORV">
           <Key>
             <PropertyRef Name="ID_LIFNR" />
@@ -925,8 +945,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_PROVEEDORV' no tiene definida 
           <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
           <Property Name="COND_PAGO" Type="nchar" MaxLength="4" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.DOCUMENTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.DOCUMENTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DOCUMENTOV">
           <Key>
             <PropertyRef Name="POS" />
@@ -985,8 +1005,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.DOCUMENTOV' no tiene definida ning
           <Property Name="USUARIOA_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="EXPR2" Type="nchar" MaxLength="1" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.PAGINAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.PAGINAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PAGINAV">
           <Key>
             <PropertyRef Name="ID" />
@@ -1006,8 +1026,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.PAGINAV' no tiene definida ninguna
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="USUARIO_SPRAS" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="WARNINGV">
           <Key>
             <PropertyRef Name="PAGINA_ID" />
@@ -1940,6 +1960,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
           <EntitySet Name="CARPETA" EntityType="Self.CARPETA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CARPETAT" EntityType="Self.CARPETAT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CECO" EntityType="Self.CECO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CLAVES_CONTA" EntityType="Self.CLAVES_CONTA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CONCEPTO" EntityType="Self.CONCEPTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CONMAIL" EntityType="Self.CONMAIL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DELEGAR" EntityType="Self.DELEGAR" Schema="dbo" store:Type="Tables" />
@@ -2501,6 +2522,16 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
           <Property Name="CECO1" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="TEXT" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="CLAVES_CONTA">
+          <Key>
+            <PropertyRef Name="TSOL" />
+            <PropertyRef Name="DH" />
+          </Key>
+          <Property Name="TSOL" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DH" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="BSCHL" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="BSCHLL" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+        </EntityType>
         <EntityType Name="CONCEPTO">
           <Key>
             <PropertyRef Name="ID_CONCEPTO" />
@@ -2800,6 +2831,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
           <Property Name="POS" Type="Decimal" Precision="5" Scale="0" />
           <Property Name="BIMPONIBLE" Type="Decimal" Precision="13" Scale="2" />
           <Property Name="IMPORTE_RET" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="VISIBLE" Type="Boolean" />
           <NavigationProperty Name="DOCUMENTO" Relationship="Self.FK_DOCUMENTOR_DOCUMENTO" FromRole="DOCUMENTOR" ToRole="DOCUMENTO" />
         </EntityType>
         <EntityType Name="DOCUMENTORP">
@@ -3097,6 +3129,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
           <Property Name="ESTATUS" Type="Boolean" Nullable="false" />
           <Property Name="WITHT_SUB" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
           <Property Name="PORC" Type="Decimal" Precision="13" Scale="8" />
+          <Property Name="WT_WITHCD_SUB" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="CAMPO" Type="String" MaxLength="30" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="DOCUMENTORPs" Relationship="Self.FK_DOCUMENTORP_RETENCION" FromRole="RETENCION" ToRole="DOCUMENTORP" />
           <NavigationProperty Name="RETENCION_PROV" Relationship="Self.FK_RETENCION_PROV_RETENCION" FromRole="RETENCION" ToRole="RETENCION_PROV" />
           <NavigationProperty Name="RETENCIONTs" Relationship="Self.FK_RETENCIONT_RETENCION" FromRole="RETENCION" ToRole="RETENCIONT" />
@@ -3164,6 +3198,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
           <Property Name="KTOPL" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="ACTIVO" Type="Boolean" Nullable="false" />
           <Property Name="REGION" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="STCD1" Type="String" MaxLength="16" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="DET_PROVEEDOR" Relationship="Self.FK_DET_PROVEEDOR_SOCIEDAD" FromRole="SOCIEDAD" ToRole="DET_PROVEEDOR" />
           <NavigationProperty Name="DET_SOCIEDAD" Relationship="Self.FK_DET_SOCIEDAD_SOCIEDAD" FromRole="SOCIEDAD" ToRole="DET_SOCIEDAD" />
           <NavigationProperty Name="DET_TIPOPRESUPUESTO" Relationship="Self.FK_DET_TIPOPRESUPUESTO_SOCIEDAD" FromRole="SOCIEDAD" ToRole="DET_TIPOPRESUPUESTO" />
@@ -4459,6 +4494,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
           <EntitySet Name="CARPETAs" EntityType="Self.CARPETA" />
           <EntitySet Name="CARPETATs" EntityType="Self.CARPETAT" />
           <EntitySet Name="CECOes" EntityType="Self.CECO" />
+          <EntitySet Name="CLAVES_CONTA" EntityType="Self.CLAVES_CONTA" />
           <EntitySet Name="CONCEPTOes" EntityType="Self.CONCEPTO" />
           <EntitySet Name="CONMAILs" EntityType="Self.CONMAIL" />
           <EntitySet Name="DELEGARs" EntityType="Self.DELEGAR" />
@@ -4883,6 +4919,16 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="CLAVES_CONTA">
+            <EntityTypeMapping TypeName="WFARTHAModel.CLAVES_CONTA">
+              <MappingFragment StoreEntitySet="CLAVES_CONTA">
+                <ScalarProperty Name="TSOL" ColumnName="TSOL" />
+                <ScalarProperty Name="DH" ColumnName="DH" />
+                <ScalarProperty Name="BSCHL" ColumnName="BSCHL" />
+                <ScalarProperty Name="BSCHLL" ColumnName="BSCHLL" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="CONCEPTOes">
             <EntityTypeMapping TypeName="WFARTHAModel.CONCEPTO">
               <MappingFragment StoreEntitySet="CONCEPTO">
@@ -5142,6 +5188,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
                 <ScalarProperty Name="POS" ColumnName="POS" />
                 <ScalarProperty Name="BIMPONIBLE" ColumnName="BIMPONIBLE" />
                 <ScalarProperty Name="IMPORTE_RET" ColumnName="IMPORTE_RET" />
+                <ScalarProperty Name="VISIBLE" ColumnName="VISIBLE" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5410,6 +5457,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
                 <ScalarProperty Name="ESTATUS" ColumnName="ESTATUS" />
                 <ScalarProperty Name="WITHT_SUB" ColumnName="WITHT_SUB" />
                 <ScalarProperty Name="PORC" ColumnName="PORC" />
+                <ScalarProperty Name="WT_WITHCD_SUB" ColumnName="WT_WITHCD_SUB" />
+                <ScalarProperty Name="CAMPO" ColumnName="CAMPO" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5465,6 +5514,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
                 <ScalarProperty Name="KTOPL" ColumnName="KTOPL" />
                 <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
                 <ScalarProperty Name="REGION" ColumnName="REGION" />
+                <ScalarProperty Name="STCD1" ColumnName="STCD1" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5820,7 +5870,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
         <DesignerProperty Name="EnablePluralization" Value="true" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

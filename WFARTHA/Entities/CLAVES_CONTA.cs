@@ -12,11 +12,11 @@ namespace WFARTHA.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DET_TIPODOC
+    public partial class CLAVES_CONTA
     {
-        public string TIPO_SOL { get; set; }
-        public string BLART { get; set; }
-    
-        public virtual TSOL TSOL { get; set; }
+        public string TSOL { get; set; }
+        public string DH { get; set; }
+        public string BSCHL { get; set; }
+        public string BSCHLL { get; set; }
     }
 }

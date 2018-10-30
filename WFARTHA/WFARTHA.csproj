@@ -237,6 +237,9 @@
     <Compile Include="Entities\CECO.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CLAVES_CONTA.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CONCEPTO.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
