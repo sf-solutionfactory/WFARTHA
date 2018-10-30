@@ -203,7 +203,7 @@ function copiarTableInfoControl() {
 
         $.ajax({
             type: "POST",
-            url: 'getPartialCon',
+            url: '../getPartialCon',
             contentType: "application/json; charset=UTF-8",
             data: docsenviar,
             success: function (data) {
@@ -225,7 +225,7 @@ function copiarTableInfoControl() {
         //Ajax para las retenciones en la tabla de info
         $.ajax({
             type: "POST",
-            url: 'getPartialCon2',
+            url: '../getPartialCon2',
             contentType: "application/json; charset=UTF-8",
             data: docsenviar2,
             success: function (data) {
@@ -245,7 +245,7 @@ function copiarTableInfoControl() {
         docsenviar3 = JSON.stringify({ 'docs': jsonObjDocs3 });
         $.ajax({
             type: "POST",
-            url: 'getPartialCon3',
+            url: '../getPartialCon3',
             contentType: "application/json; charset=UTF-8",
             data: docsenviar3,
             success: function (data) {
@@ -310,6 +310,83 @@ function copiarTableSopControl() {
             async: false
         });
     }
+}
+
+function copiarTableRet() {
+
+    var lengthT = $("table#table_ret tbody tr[role='row']").length;
+    var docsenviar = {};
+    if (lengthT > 0) {
+        //Obtener los valores de la tabla para agregarlos a la tabla oculta y agregarlos al json
+        //Se tiene que jugar con los index porque las columnas (ocultas) en vista son diferentes a las del plugin
+        jsonObjDocs = [];
+        var i = 1;
+        var t = $('#table_ret').DataTable();
+
+
+        $("#table_ret > tbody  > tr[role='row']").each(function () {
+            //Obtener el row para el plugin
+            var tr = $(this);
+            var indexopc = t.row(tr).index();
+
+            //Obtener la sociedad oculta
+            var socret = t.row(indexopc).data()[0];
+            //Obtener el proveedor oculto
+            var provr = t.row(indexopc).data()[1];
+            var ret = $(this).find("td.TRET").text();
+            var descret = $(this).find("td.DESCTRET").text();
+            var indret = $(this).find("td.INDRET").text();
+            var bimp = $(this).find("td.BIMPONIBLE").text();
+            var tipoimp = $(this).find("td.IMPRET").text();
+
+            bimp = bimp.replace(/\s/g, '');
+            bimp = toNum(bimp);
+
+            var _bimp = parseFloat(toNum(bimp));
+
+            tipoimp = tipoimp.replace(/\s/g, '');
+            tipoimp = toNum(tipoimp);
+
+            var _tipoimp = parseFloat(toNum(tipoimp));
+
+            var item = {};
+
+            item["DESC"] = descret;
+            item["WITHT"] = ret;
+            item["WT_WITHCD"] = indret;
+            item["POS"] = i;
+            item["BIMPONIBLE"] = _bimp;
+            item["IMPORTE_RET"] = _tipoimp;
+            item["LIFNR"] = provr;
+            item["BUKRS"] = socret;
+            jsonObjDocs.push(item);
+            i++;
+            item = "";
+
+        });
+
+        docsenviar = JSON.stringify({ 'docs': jsonObjDocs });
+
+        $.ajax({
+            type: "POST",
+            url: '../getPartialRet',
+            contentType: "application/json; charset=UTF-8",
+            data: docsenviar,
+            success: function (data) {
+
+                if (data !== null || data !== "") {
+
+                    $("table#table_reth tbody").append(data);
+                }
+
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                M.toast({ html: httpStatusMessage });
+            },
+            async: false
+        });
+    }
+
 }
 
 function solicitarDatos() {
@@ -685,8 +762,8 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
     //Lej 13.09.2018---
     var colstoAdd = "";
     for (i = 0; i < extraCols; i++) {
-        colstoAdd += '<td class=\"BaseImp' + toShow(tRet2[i]) + '\"><input class=\"extrasC BaseImp' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[0].BIMPONIBLE) + '\"></td>';
-        colstoAdd += '<td class=\"ImpRet' + toShow(tRet2[i]) + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[0].IMPORTE_RET) + '\"></td>';
+        colstoAdd += '<td class=\"BaseImp' + tRet2[i] + '\"><input class=\"extrasC BaseImp' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[0].BIMPONIBLE) + '\"></td>';
+        colstoAdd += '<td class=\"ImpRet' + tRet2[i] + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[0].IMPORTE_RET) + '\"></td>';
 
     }
     colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"
@@ -730,6 +807,42 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
     return r;
 }
 
+function updateFooter() {
+    resetFooter();
+
+    var t = $('#table_info').DataTable();
+    var total = 0;
+
+    $("#table_info > tbody > tr[role = 'row']").each(function (index) {
+        //var col11 = $(this).find("td.TOTAL input").val();
+        var col11 = $(this).find("td.TOTAL input").val();
+
+        //Saber si el renglón se va a sumar
+        var tr = $(this);
+        var indexopc = t.row(tr).index();
+
+        //Obtener la accion
+        var ac = t.row(indexopc).data()[2];
+
+
+
+        col11 = col11.replace(/\s/g, '');
+        var val = toNum(col11);
+        val = convertI(val);
+        if ($.isNumeric(val)) {
+            if (ac != "H") {
+                total += val;
+            }
+        }
+    });
+
+    total = total.toFixed(2);
+
+    $('#total_info').text(toShow(total));
+    $('#MONTO_DOC_MD').val(toShow(total));//Lej 18.09.2018
+    $('#mtTot').val($('#MONTO_DOC_MD').val());//Lej 29.09.2018
+}
+
 function resetTabs() {
 
     var ell = document.getElementById("tabs");
@@ -740,3 +853,4 @@ function resetTabs() {
     instances.select(active);
     //instances.updateTabIndicator
 }
+
