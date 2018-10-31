@@ -1940,8 +1940,10 @@ namespace WFARTHA.Controllers
             {
                 var wtht = retlt[i].WITHT;
                 var _res = db.DOCUMENTORPs.Where(nd => nd.NUM_DOC == dOCUMENTO.NUM_DOC && nd.WITHT == wtht).FirstOrDefault();
-                retlt[i].BIMPONIBLE = _res.BIMPONIBLE;
-                retlt[i].IMPORTE_RET = _res.IMPORTE_RET;
+                if (_res != null){
+                    retlt[i].BIMPONIBLE = _res.BIMPONIBLE;
+                    retlt[i].IMPORTE_RET = _res.IMPORTE_RET;
+                }
             }
             //ViewBag.ret = retlt;
             ViewBag.ret = retlt;
@@ -2148,19 +2150,39 @@ namespace WFARTHA.Controllers
 
                     //db.DOCUMENTOes.Add(_doc);
                     db.Entry(_doc).State = EntityState.Modified;
-                    db.SaveChanges();//LEJGG 29-10-2018
+                    //db.SaveChanges();//LEJGG 29-10-2018
 
                     //Guardar número de documento creado
                     Session["NUM_DOC"] = _doc.NUM_DOC;
                     var _ndoc = _doc.NUM_DOC;//lejgg 29102018
 
+                    //---------------------------------------------------------------------------------
+                    //BORRADO
+                    //DocumentoRP
+                    //1-Primero se borra todo registro previamente entrado.
+                    var _docsrp = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc).ToList();
+                    for (int i = 0; i < _docsrp.Count; i++)
+                    {
+                        db.DOCUMENTORPs.Remove(_docsrp[i]);
+                        //db.SaveChanges();
+                    }
+
+                    //DOCUMENTOA
+                    var _docsa = db.DOCUMENTOAs.Where(x => x.NUM_DOC == _ndoc).ToList();
+                    //Borramos registros
+                    for (int i = 0; i < _docsa.Count; i++)
+                    {
+                        db.DOCUMENTOAs.Remove(_docsa[i]);
+                        //db.SaveChanges();
+                    }
+                    //---------------------------------------------------------------------------------
                     //Documentop
                     //1-Primero se borra todo registro previamente entrado.
                     var _docsp = db.DOCUMENTOPs.Where(x => x.NUM_DOC == _ndoc).ToList();
                     for (int i = 0; i < _docsp.Count; i++)
                     {
                         db.DOCUMENTOPs.Remove(_docsp[i]);
-                        db.SaveChanges();
+                        //db.SaveChanges();
                     }
                     //2- Luego se guardan las posiciones de la solicitud
                     try
@@ -2217,7 +2239,7 @@ namespace WFARTHA.Controllers
                         _dp.IVA = _iva;
                         _dp.TOTAL = _total;
                         db.DOCUMENTOPs.Add(_dp);
-                        db.SaveChanges();
+                        //db.SaveChanges();
                         //lejgg 10-10-2018-------------------------<
                     }
                     //Guardar las retenciones de la solicitud
@@ -2228,13 +2250,7 @@ namespace WFARTHA.Controllers
                     }
 
                     //DocumentoRP
-                    //1-Primero se borra todo registro previamente entrado.
-                    var _docsrp = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc).ToList();
-                    for (int i = 0; i < _docsrp.Count; i++)
-                    {
-                        db.DOCUMENTORPs.Remove(_docsrp[i]);
-                        db.SaveChanges();
-                    }
+                    //2- Luego se vuelven a guardar las posiciones de la solicitud
                     try
                     {
                         for (int i = 0; i < dOCUMENTO.DOCUMENTORP.Count; i++)
@@ -2299,7 +2315,7 @@ namespace WFARTHA.Controllers
                                     dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
                                     dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
                                     db.DOCUMENTORPs.Add(dr);
-                                    db.SaveChanges();
+                                    // db.SaveChanges();
                                 }
                             }
                             catch (Exception e)
@@ -2318,7 +2334,7 @@ namespace WFARTHA.Controllers
                     for (int i = 0; i < _docsr.Count; i++)
                     {
                         db.DOCUMENTORs.Remove(_docsr[i]);
-                        db.SaveChanges();
+                        //db.SaveChanges();
                     }
                     try//LEJ 29.10.2018
                     {
@@ -2338,7 +2354,7 @@ namespace WFARTHA.Controllers
                                     dr.BIMPONIBLE = dOCUMENTO.DOCUMENTOR[i].BIMPONIBLE;
                                     dr.IMPORTE_RET = dOCUMENTO.DOCUMENTOR[i].IMPORTE_RET;
                                     db.DOCUMENTORs.Add(dr);
-                                    db.SaveChanges();
+                                    //db.SaveChanges();
                                 }
                                 catch (Exception e)
                                 {
@@ -2437,14 +2453,9 @@ namespace WFARTHA.Controllers
                     List<string> listaDirectorios2 = listaDirectorios;
                     List<string> listaNombreArchivos2 = listaNombreArchivos;
                     List<string> listaDescArchivos2 = listaDescArchivos;
-                    //DOCUMENTOA
-                    var _docsa = db.DOCUMENTOAs.Where(x => x.NUM_DOC == _ndoc).ToList();
-                    //Borramos registros
-                    for (int i = 0; i < _docsa.Count; i++)
-                    {
-                        db.DOCUMENTOAs.Remove(_docsa[i]);
-                        db.SaveChanges();
-                    }
+
+                    //DocumentoA
+                    //2- Luego se vuelven a guardar las posiciones de la solicitud
                     //Misma cantidad de archivos y nombres, osea todo bien
                     if (listaDirectorios.Count == listaDescArchivos.Count && listaDirectorios.Count == listaNombreArchivos.Count)
                     {
@@ -2507,7 +2518,7 @@ namespace WFARTHA.Controllers
                                 try
                                 {
                                     db.DOCUMENTOAs.Add(_dA);
-                                    db.SaveChanges();
+                                    //db.SaveChanges();
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
@@ -2572,7 +2583,7 @@ namespace WFARTHA.Controllers
                                 try
                                 {
                                     db.DOCUMENTOAs.Add(_dA);
-                                    db.SaveChanges();
+                                    //db.SaveChanges();
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
@@ -2642,7 +2653,7 @@ namespace WFARTHA.Controllers
                                 try
                                 {
                                     db.DOCUMENTOAs.Add(_dA);
-                                    db.SaveChanges();
+                                    //db.SaveChanges();
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
@@ -2711,7 +2722,7 @@ namespace WFARTHA.Controllers
                                 try
                                 {
                                     db.DOCUMENTOAs.Add(_dA);
-                                    db.SaveChanges();
+                                    //db.SaveChanges();
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
@@ -2781,7 +2792,7 @@ namespace WFARTHA.Controllers
                                 try
                                 {
                                     db.DOCUMENTOAs.Add(_dA);
-                                    db.SaveChanges();
+                                    //db.SaveChanges();
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
@@ -2796,16 +2807,13 @@ namespace WFARTHA.Controllers
                         }
                     }
                     //Lej-02.10.2018------
-                    ////MGC 05-10-2018 Modificación para work flow al ser editada
-                    //Descomentar para proceso normal
-                    //db.Entry(dOCUMENTO).State = EntityState.Modified;
-                    //db.SaveChanges();
                 }
                 catch (Exception e)
                 {
 
                 }
-                if (est == "B") {
+                if (est == "B")
+                {
                     //Inicia un nuevo flujo de trabajo
                     //MATIAS CODIGO
                     //MATIAS CODIGO
