@@ -1,4 +1,6 @@
-﻿var tRet = [];//Agrego a un array los tipos de retenciones
+﻿//Variables globales
+var posinfo = 0;
+var tRet = [];//Agrego a un array los tipos de retenciones
 var tRet2 = [];
 $(document).ready(function () {
     var elem = document.querySelectorAll('select');
@@ -9,6 +11,55 @@ $(document).ready(function () {
     $('#TIPO_CAMBIO').val(toShow(_Tc));
     //Inicializar las tabs
     $('#tabs').tabs();
+
+    //Tabla de Anexos
+    $('#table_anexa').DataTable({
+        language: {
+            //"url": "../Scripts/lang/@Session["spras"].ToString()" + ".json"
+            "url": "../Scripts/lang/ES.json"
+        },
+        "paging": false,
+        "info": false,
+        "searching": false,
+        "columns": [
+            {
+                "className": 'select_row',
+                "data": null,
+                "defaultContent": '',
+                "orderable": false
+            },
+            {
+                "name": 'POS',
+                "className": 'POS',
+                "orderable": false
+            },
+            {
+                "name": 'STAT',
+                "className": 'STAT',
+                "orderable": false
+            },
+            {
+                "name": 'NAME',
+                "className": 'NAME',
+                "orderable": false
+            },
+            {
+                "name": 'TYPE',
+                "className": 'TYPE',
+                "orderable": false
+            },
+            {
+                "name": 'DESC',
+                "className": 'DESC',
+                "orderable": false
+            },
+            {
+                "name": '',
+                "className": '',
+                "orderable": false
+            }
+        ]
+    });
 
     solicitarDatos();
     $('#btn_guardarh').on("click", function (e) {
@@ -36,7 +87,605 @@ $(document).ready(function () {
         //Termina provisional
         $('#btn_guardar').click();
     });
+
+    $('#addRowInfo').on('click', function () {
+
+        var t = $('#table_info').DataTable();
+
+        var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018
+        posinfo++;
+
+        //Obtener el select de impuestos en la cabecera
+        var idselect = "infoSel" + posinfo;
+
+        //Obtener el valor 
+        var imp = $('#IMPUESTO').val();
+
+        //MGC 04092018 Conceptos
+        //Crear el nuevo select con los valores de impuestos
+        addSelectImpuesto(addedRowInfo, imp, idselect, "", "X");
+
+        updateFooter();
+        event.returnValue = false;
+        event.cancel = true;
+
+    });
+
+    $('.btnD').on("click", function (e) {
+        var val = $(this).val();
+        $('#archivo').val(val);
+        $('#btnDownload').trigger("click");
+    });
+
+    $('#file_sopAnexar').change(function () {
+        //var _rw = 0;
+        //$("#table_anexa > tbody  > tr").each(function () {
+        //    _rw++;
+        //});
+        //Validacion para saber si es sin orden de compra o reembolso
+        var val3 = $('#tsol').val();
+        val3 = "[" + val3 + "]";
+        val3 = val3.replace("{", "{ \"");
+        val3 = val3.replace("}", "\" }");
+        val3 = val3.replace(/\,/g, "\" , \"");
+        val3 = val3.replace(/\=/g, "\" : \"");
+        val3 = val3.replace(/\ /g, "");
+        var jsval = $.parseJSON(val3);
+        if (jsval[0].ID === "SSO") {
+            var length = $(this).get(0).files.length;
+            var tdata = "";
+            var _tab = $('#table_anexa').DataTable();
+            for (var i = 0; i < length; i++) {
+                var nr = _tab.rows().count();
+                //Si nr es 0 significa que la tabla esta vacia
+                if (nr === 0) {
+                    var file = $(this).get(0).files[i];
+                    var fileName = file.name;
+                    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+                    tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                    //Lejgg 22-10-2018
+                    if (fileNameExt.toLowerCase() === "xml") {
+                        var data = new FormData();
+                        var _fbool = false;
+                        var _resVu = false;
+                        data.append('file', file);
+                        $.ajax({
+                            type: "POST",
+                            url: 'procesarXML',
+                            data: data,
+                            dataType: "json",
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                if (data !== null || data !== "") {
+                                    _resVu = validarUuid(data[4]);
+                                    //si es false significa que no hay coincidencias
+                                    if (!_resVu) {
+                                        $('#Uuid').val(data[4]);
+                                        $('#FECHAD').val(data[0]);
+                                        $('#FECHADO').val(data[0]);
+                                        $("#FECHAD").trigger("change");
+                                        data[1];//Monto Total
+                                        _fbool = validarRFC(data[2]);
+                                        //data[2];//RFC
+                                    }
+                                }
+                            },
+                            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                //
+                            },
+                            async: false
+                        });
+                    }
+                    if (fileNameExt.toLowerCase() === "xml") {
+                        if (_resVu) {
+                            //Alert no se metio porque ya hay un xml en la tabla
+                            M.toast({ html: "UUID existente en BD" });
+                        }
+                        else {
+                            //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
+                            if (_fbool) {
+                                _tab.row.add(
+                                    $(tdata)
+                                ).draw(false).node();
+                            }
+                            else {
+                                //Alert no se metio porque ya hay un xml en la tabla
+                                M.toast({ html: "No Coincide el rfc" });
+                            }
+                        }
+                    }
+                    else {
+                        _tab.row.add(
+                            $(tdata)
+                        ).draw(false).node();
+                    }
+                } else {
+                    var file = $(this).get(0).files[i];
+                    var fileName = file.name;
+                    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+                    var _ban = false;
+                    //Lejgg 22-10-2018------------------------------------------------>
+                    $("#table_anexa > tbody  > tr[role='row']").each(function () {
+                        var t = $("#table_anexa").DataTable();
+                        //Obtener el row para el plugin
+                        var tr = $(this);
+                        var indexopc = t.row(tr).index();
+
+                        //Obtener valores visibles en la tabla
+                        var _tipoAr = $(this).find("td.TYPE").text();
+                        if (fileNameExt.toLowerCase() === _tipoAr.trim()) {
+                            _ban = true;
+                        }
+                        if (_ban)
+                            return;
+                    });
+                    //Si el archivo es xml entra
+                    //LEJGG23/10/18---------------------------------------------------->
+                    if (fileNameExt.toLowerCase() === "xml") {
+                        var _fbool = false;
+                        //Si ban es false, no hay ningun otro archivo xml, entonces metere el registro
+                        if (!_ban) {
+                            tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                            var data = new FormData();
+                            var _resVu = false;
+                            data.append('file', file);
+                            $.ajax({
+                                type: "POST",
+                                url: 'procesarXML',
+                                data: data,
+                                dataType: "json",
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                success: function (data) {
+                                    if (data !== null || data !== "") {
+                                        _resVu = validarUuid(data[4]);
+                                        if (!_resVu) {
+                                            $('#Uuid').val(data[4]);
+                                            $('#FECHAD').val(data[0]);
+                                            $('#FECHADO').val(data[0]);
+                                            $("#FECHAD").trigger("change");
+                                            data[1];//Monto Total
+                                            _fbool = validarRFC(data[2]);
+                                            //data[2];//RFC
+                                        }
+                                    }
+                                },
+                                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                    //
+                                },
+                                async: false
+                            });
+                            if (_resVu) {
+                                //Alert no se metio porque ya hay un xml en la tabla
+                                M.toast({ html: "UUID existente en BD" });
+                            }
+                            else {
+                                //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
+                                if (_fbool) {
+                                    _tab.row.add(
+                                        $(tdata)
+                                    ).draw(false).node();
+                                }
+                                else {
+                                    //Alert no se metio porque ya hay un xml en la tabla
+                                    M.toast({ html: "No Coincide el rfc" });
+                                }
+                            }
+                        }
+                        else {
+                            //Alert no se metio porque ya hay un xml en la tabla
+                            M.toast({ html: "Ya existe una factura" });
+                        }
+                    }
+                    //LEJGG23/10/18----------------------------------------------------<
+                    else {
+                        tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
+                        _tab.row.add(
+                            $(tdata)
+                        ).draw(false).node();
+                    }
+                    //Lejgg 22-10-2018------------------------------------------------>
+                }
+            }
+        }
+        if (jsval[0].ID === "SRE") {
+            var _length = $(this).get(0).files.length;
+            var _tab2 = $('#table_anexa').DataTable();
+            for (var i = 0; i < _length; i++) {
+                var nr = _tab2.rows().count();
+                if (nr === 0) {
+                    var file = $(this).get(0).files[i];
+                    var fileName = file.name;
+                    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+                    var nr = _tab2.rows().count();
+                    var file = $(this).get(0).files[i];
+                    var _data = new FormData();
+                    _data.append('file', file);
+                    if (fileNameExt.toLowerCase() === "xml") {
+                        //Se saca el UUID
+                        $.ajax({
+                            type: "POST",
+                            url: 'procesarXML',
+                            data: _data,
+                            dataType: "json",
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                if (data !== null || data !== "") {
+                                    data[4];//UUID
+                                }
+                            },
+                            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                //
+                            },
+                            async: false
+                        });
+                    }
+                }
+            }
+        }
+    });
+
+    $('#table_anexa tbody').on('click', 'td.select_row', function () {
+        //var t = $('#table_anexa').DataTable();
+        var tr = $(this).closest('tr');
+
+        $(tr).toggleClass('selected');
+        $(tr).css("background-color:#c4f0ff;");
+    });
+
+    $('#delRowAnex').click(function (e) {
+        var t = $('#table_anexa').DataTable();
+        t.rows('.selected').remove().draw(false);
+        event.returnValue = false;
+        event.cancel = true;
+    });
 });
+
+$('body').on('change', '.IMPUESTO_SELECT', function (event, param1) {
+
+    if (param1 != "tr") {
+        //Modificación del sub, iva y total
+
+        var t = $('#table_info').DataTable();
+        var tr = $(this).closest('tr'); //Obtener el row 
+
+        //Obtener el valor del impuesto
+        var imp = tr.find("td.IMPUESTO input").val();
+
+        //Calcular impuesto y subtotal
+        var impimp = impuestoVal(imp);
+        impimp = parseFloat(impimp);
+        var colTotal = sumarColumnasExtras(tr);//lej 19.08.18
+
+        var sub = tr.find("td.MONTO input").val().replace('$', '').replace(',', '');
+        sub = parseFloat(sub);
+
+        //rimpimp = 100 - impimp;//lej 19.08.18
+
+        var impv = (sub * impimp) / 100;
+        impv = parseFloat(impv);
+        var total = sub + impv;
+        total = parseFloat(total);
+
+        impv = toShow(impv);
+        sub = toShow(sub);
+        total = toShow(total);
+
+        //Enviar los valores a la tabla
+        //Subtotal
+        tr.find("td.MONTO input").val();
+        tr.find("td.MONTO input").val(sub);
+
+        //IVA
+        tr.find("td.IVA input").val();
+        tr.find("td.IVA input").val(impv);
+
+        //Total
+        tr.find("td.TOTAL input").val();
+        if (colTotal > 0) {
+            var sumt = parseFloat(total.replace('$', '').replace(',', '')) - parseFloat(colTotal);
+            tr.find("td.TOTAL input").val(toShow(sumt));
+        }
+        else {
+            tr.find("td.TOTAL input").val(total);
+        }
+        updateFooter();
+    }
+});
+
+$('body').on('focusout', '.OPER', function (e) {
+
+    var t = $('#table_info').DataTable();
+    var tr = $(this).closest('tr'); //Obtener el row 
+
+    //Obtener el valor del impuesto
+    var imp = tr.find("td.IMPUESTO input").val();
+
+    //Calcular impuesto y subtotal
+    var impimp = impuestoVal(imp);
+    impimp = parseFloat(impimp);
+
+    //Desde el total
+    if ($(this).hasClass("TOTAL")) {
+
+        var total = $(this).val();
+        total = parseFloat(total);
+
+        var impv = (total * impimp) / 100;
+        impv = parseFloat(impv);
+        var sub = total - impv;
+
+        impv = toShow(impv);
+        sub = toShow(sub);
+        total = toShow(total);
+
+        //Enviar los valores a la tabla
+        //Subtotal
+        tr.find("td.MONTO input").val();
+        tr.find("td.MONTO input").val(sub);
+
+        //IVA
+        tr.find("td.IVA input").val();
+        tr.find("td.IVA input").val(impv);
+
+        //Total
+        tr.find("td.TOTAL input").val();
+        tr.find("td.TOTAL input").val(total);
+
+
+    }
+    else if ($(this).hasClass("MONTO")) {
+
+        //Desde el subtotal
+        var _sub = $(this).val().replace('$', '').replace(',', '');
+        _sub = parseFloat(_sub);
+
+        //Lleno los campos de Base Imponible con el valor del monto
+        for (x = 0; x < tRet2.length; x++) {
+            var _xvalue = tr.find("td.BaseImp" + tRet2[x] + " input").val();
+            if (_xvalue === "") {
+                tr.find("td.BaseImp" + tRet2[x] + " input").val(toShow(_sub));
+                //Ejecutamos un ajax para llenar el valor de importe de retencion
+                var _res = porcentajeImpRet(tRet2[x]);
+                _res = (_sub * _res) / 100;//Saco el porcentaje
+                tr.find("td.ImpRet" + tRet2[x] + " input").val(toShow(_res));
+            }
+        }
+        //Ejecutamos el metodo para sumarizar las columnas
+        var colTotal = sumarColumnasExtras(tr);
+
+        // rimpimp = 100 - impimp;
+
+        var impv = (_sub * impimp) / 100;
+        impv = parseFloat(impv);
+        var total = _sub + impv;
+        total = parseFloat(total);
+
+        var sub = total - impv;
+
+        impv = toShow(impv);
+        sub = toShow(sub);
+        total = toShow(total);
+
+        //Enviar los valores a la tabla
+        //Subtotal
+        tr.find("td.MONTO input").val();
+        tr.find("td.MONTO input").val(sub);
+
+        //IVA
+        tr.find("td.IVA input").val();
+        tr.find("td.IVA input").val(impv);
+
+        //Total
+        tr.find("td.TOTAL input").val();
+        if (colTotal > 0) {
+            var sumt = parseFloat(total.replace('$', '').replace(',', '')) - parseFloat(colTotal);
+            tr.find("td.TOTAL input").val(toShow(sumt));
+        }
+        else {
+            tr.find("td.TOTAL input").val(total);
+        }
+    }
+    updateFooter();
+    llenarRetencionesIRet();
+    llenarRetencionesBImp();
+});
+
+$('body').on('keydown.autocomplete', '.GRUPO_INPUT', function () {
+    var tr = $(this).closest('tr'); //Obtener el row
+
+    //Obtener el id de la sociedad
+    var soc = $("#SOCIEDAD_ID").val();
+
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: '../getConceptoI',
+                dataType: "json",
+                data: { "Prefix": request.term, bukrs: soc },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+                        return { label: item.TIPO_CONCEPTO + "" + item.ID_CONCEPTO + " - " + item.DESC_CONCEPTO, value: item.TIPO_CONCEPTO + "-" + item.ID_CONCEPTO };
+                    }))
+                }
+            })
+        },
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+        change: function (e, ui) {
+            if (!(ui.item)) {
+                e.target.value = "";
+            }
+        },
+        select: function (event, ui) {
+
+            var label = ui.item.label;
+            var value = ui.item.value;
+
+            //Quitar espacios
+            value = value.replace(/\s/g, '');
+
+            //Obtener el despliegue de la llave
+            var cadena = value.split("-");
+            var tipo = cadena[0];
+            var val = cadena[1];
+
+            val = val.replace(/\s/g, '');
+
+            ui.item.value = tipo + "" + val;//MGC 22-10-2018 Etiquetas
+
+
+            selectConcepto(val, tr, tipo);
+        }
+    });
+});
+
+$('body').on('focusout', '.extrasC', function (e) {
+    //var y = parseFloat(num);
+    var total = 0;
+    var _t = $('#table_ret').DataTable();
+    var _this = $(this);
+    var tr = $(this).closest('tr'); //Obtener el row 
+    //sumarizarTodoRow(_this);
+
+    var _v2 = "";
+    //Convertir a formato monetario y numerico
+    var _nnm = $(this).val().replace("$", "");
+    if (_nnm === "") {
+        //si esta vacio le agrego un valor de 0.0
+        _nnm = parseFloat("0.0");
+    } else {
+        _nnm = parseFloat(_nnm.replace(',', ''));
+    }
+
+    if (_nnm !== "") {
+        var cl = _this.attr('class');
+        var arrcl = cl.split('p');
+        var _res = porcentajeImpRet(tRet2[arrcl[1]]);
+        _res = (_nnm * _res) / 100;//Saco el porcentaje
+        tr.find("td.ImpRet" + tRet2[arrcl[1]] + " input").val(toShow(_res));
+        //--------------------------------------LEJ18102018---------------------->
+        //hare la operacion para actualizar el total del renglon
+        var _mnt = tr.find("td.MONTO input").val().replace('$', '');
+        if (_mnt === "") {
+            //si esta vacio le agrego un valor de 0.0
+            _mnt = parseFloat("0.0");
+        }
+        else {
+            _mnt = parseFloat(_mnt.replace(',', ''));
+        }
+        var _iva = tr.find("td.IVA input").val().replace('$', '');
+        if (_iva === "") {
+            //si esta vacio le agrego un valor de 0.0
+            _iva = parseFloat("0.0");
+        } else {
+            _iva = parseFloat(_iva.replace(',', ''));
+        }
+        var _ttal = (_mnt + _iva) - sumarColumnasExtras(tr);
+        //actualizar el total
+        tr.find("td.TOTAL input").val(toShow(_ttal));
+        //--------------------------------------LEJ18102018----------------------<
+    }
+    $(this).val("$" + _nnm.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    updateFooter();
+    llenarRetencionesBImp();
+    llenarRetencionesIRet();
+});
+
+$('body').on('focusout', '.extrasC2', function (e) {
+    //var y = parseFloat(num);
+    var total = 0;
+    var _t = $('#table_ret').DataTable();
+    var centi = 999;
+    var _this = $(this);
+
+    sumarizarTodoRow(_this);
+    var _v2 = "";
+    //Convertir a formato monetario y numerico
+    var _nnm = $(this).val().replace("$", "");
+    if (_nnm === "") {
+        //si esta vacio le agrego un valor de 0.0
+        _nnm = parseFloat("0.0");
+    } else {
+        _nnm = parseFloat(_nnm.replace(',', ''));
+    }
+    $(this).val("$" + _nnm.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    $("#table_info > tbody > tr[role = 'row']").each(function (index) {
+        for (x = 0; x < tRet2.length; x++) {
+            var _var = "ImpRet" + x;
+            _v2 = "ImpRetF" + (x + 1);
+            if (_this.hasClass(_var)) {
+                centi = x;
+                break;
+            }
+        }
+        var colex = $(this).find("td." + _v2 + " input").val().replace("$", "").replace(',', '');
+        //de esta manera saco el renglon y la celad en especifico
+        var er = $('#table_ret tbody tr').eq(x).find('td').eq(3).text().replace('$', '');;
+        var txbi = $.trim(colex);
+        var sum = parseFloat(txbi);
+        // sum = parseFloat(sum + y).toFixed(2);
+        total += sum;
+
+    });
+    if (centi != 9999) {
+        $('#table_ret tbody tr').eq(centi).find('td').eq(4).text('$' + total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+        $('#table_ret tbody tr').eq(centi + 2).find('td').eq(4).text('$' + total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    }
+});
+
+function sumarColumnasExtras(tr) {
+    //Las columnsas a sumarizar
+    //Lej 19.09.18
+    //Aqui se guardara la suma de las columnas añadidas
+    var sumColAn = 0;
+    for (x = 0; x < tRet2.length; x++) {
+        var x2 = tr.find("td.ImpRet" + tRet2[x] + " input").val().replace("$", "").replace(",", "");
+        if (x2 != "") {
+            x2 = parseFloat(x2);
+        } else {
+            x2 = parseFloat("0");
+        }
+        //sumColAn = x1 + parseFloat(sumColAn);
+        sumColAn = x2 + parseFloat(sumColAn);
+    }
+    return sumColAn;
+}
+
+function addSelectImpuesto(addedRowInfo, imp, idselect, disabled, clase) {
+
+    //Obtener la celda del row agregado
+    var ar = $(addedRowInfo).find("td.IMPUESTO");
+
+
+    var sel = $("<select class = \"IMPUESTO_SELECT\" id = \"" + idselect + "\"> ").appendTo(ar);
+    $("#IMPUESTO option").each(function () {
+        var _valor = $(this).val();//lej 19.09.2018
+        var _texto = $(this).text();//lej 19.09.2018
+        sel.append($("<option>").attr('value', _valor).text(_texto));//lej 19.09.2018
+    });
+
+    //Seleccionar el valor
+    $("#" + idselect + "").val(imp);
+    $("#" + idselect + "").siblings(".select-dropdown").css("font-size", "12px");
+    if (disabled == "X") {
+
+        $("#" + idselect + "").prop('disabled', 'disabled');
+    }
+
+    //Iniciar el select agregado
+    var elem = document.getElementById(idselect);
+    var instance = M.Select.init(elem, []);
+    $(".IMPUESTO_SELECT").trigger("change");
+}
 
 function copiarTableInfoControl() {
 
@@ -197,7 +846,7 @@ function copiarTableInfoControl() {
 
         $.ajax({
             type: "POST",
-            url: 'getPartialCon',
+            url: '../getPartialCon',
             contentType: "application/json; charset=UTF-8",
             data: docsenviar,
             success: function (data) {
@@ -219,7 +868,7 @@ function copiarTableInfoControl() {
         //Ajax para las retenciones en la tabla de info
         $.ajax({
             type: "POST",
-            url: 'getPartialCon2',
+            url: '../getPartialCon2',
             contentType: "application/json; charset=UTF-8",
             data: docsenviar2,
             success: function (data) {
@@ -239,7 +888,7 @@ function copiarTableInfoControl() {
         docsenviar3 = JSON.stringify({ 'docs': jsonObjDocs3 });
         $.ajax({
             type: "POST",
-            url: 'getPartialCon3',
+            url: '../getPartialCon3',
             contentType: "application/json; charset=UTF-8",
             data: docsenviar3,
             success: function (data) {
@@ -258,6 +907,26 @@ function copiarTableInfoControl() {
 
     }
 
+}
+
+function porcentajeImpRet(val) {
+    var res = 0;
+    $.ajax({
+        type: "POST",
+        url: '../getPercentage',
+        dataType: "json",
+        data: { 'witht': val },
+        success: function (data) {
+            if (data !== null || data !== "") {
+                res = data;
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
+    return res;
 }
 
 function copiarTableSopControl() {
@@ -306,6 +975,83 @@ function copiarTableSopControl() {
     }
 }
 
+function copiarTableRet() {
+
+    var lengthT = $("table#table_ret tbody tr[role='row']").length;
+    var docsenviar = {};
+    if (lengthT > 0) {
+        //Obtener los valores de la tabla para agregarlos a la tabla oculta y agregarlos al json
+        //Se tiene que jugar con los index porque las columnas (ocultas) en vista son diferentes a las del plugin
+        jsonObjDocs = [];
+        var i = 1;
+        var t = $('#table_ret').DataTable();
+
+
+        $("#table_ret > tbody  > tr[role='row']").each(function () {
+            //Obtener el row para el plugin
+            var tr = $(this);
+            var indexopc = t.row(tr).index();
+
+            //Obtener la sociedad oculta
+            var socret = t.row(indexopc).data()[0];
+            //Obtener el proveedor oculto
+            var provr = t.row(indexopc).data()[1];
+            var ret = $(this).find("td.TRET").text();
+            var descret = $(this).find("td.DESCTRET").text();
+            var indret = $(this).find("td.INDRET").text();
+            var bimp = $(this).find("td.BIMPONIBLE").text();
+            var tipoimp = $(this).find("td.IMPRET").text();
+
+            bimp = bimp.replace(/\s/g, '');
+            bimp = toNum(bimp);
+
+            var _bimp = parseFloat(toNum(bimp));
+
+            tipoimp = tipoimp.replace(/\s/g, '');
+            tipoimp = toNum(tipoimp);
+
+            var _tipoimp = parseFloat(toNum(tipoimp));
+
+            var item = {};
+
+            item["DESC"] = descret;
+            item["WITHT"] = ret;
+            item["WT_WITHCD"] = indret;
+            item["POS"] = i;
+            item["BIMPONIBLE"] = _bimp;
+            item["IMPORTE_RET"] = _tipoimp;
+            item["LIFNR"] = provr;
+            item["BUKRS"] = socret;
+            jsonObjDocs.push(item);
+            i++;
+            item = "";
+
+        });
+
+        docsenviar = JSON.stringify({ 'docs': jsonObjDocs });
+
+        $.ajax({
+            type: "POST",
+            url: '../getPartialRet',
+            contentType: "application/json; charset=UTF-8",
+            data: docsenviar,
+            success: function (data) {
+
+                if (data !== null || data !== "") {
+
+                    $("table#table_reth tbody").append(data);
+                }
+
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                M.toast({ html: httpStatusMessage });
+            },
+            async: false
+        });
+    }
+
+}
+
 function solicitarDatos() {
     var _ref = $('#REFERENCIA').val();
     $.ajax({
@@ -329,6 +1075,56 @@ function solicitarDatos() {
         },
         async: false
     });
+}
+
+//lejgg 23/10/18
+function llenarRetencionesIRet() {
+    var _t = [];
+    var centi = 9999;
+    for (x = 0; x < tRet2.length; x++) {
+        _t.push("0");
+    }
+    $("#table_info > tbody > tr[role = 'row']").each(function (index) {
+        for (x = 0; x < tRet2.length; x++) {
+            var _var = "ImpRet" + x;
+            _v2 = "ImpRet" + tRet2[x];
+            if ($(this).find("td." + _v2 + " input").hasClass(_var)) {
+                centi = x;
+                var colex = $(this).find("td." + _v2 + " input").val().replace("$", "").replace(',', '');
+
+                var txbi = $.trim(colex);
+                var sum = parseFloat(txbi);
+                _t[x] = parseFloat(_t[x]) + sum;
+            }
+        }
+    });
+    for (x = 0; x < tRet2.length; x++) {
+        $('#table_ret tbody tr').eq(x).find('td').eq(4).text('$' + parseFloat(_t[x]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    }
+}
+
+function llenarRetencionesBImp() {
+    var _t = [];
+    var centi = 0;
+    for (x = 0; x < tRet2.length; x++) {
+        _t.push("0");
+    }
+    $("#table_info > tbody > tr[role = 'row']").each(function (index) {
+        for (x = 0; x < tRet2.length; x++) {
+            var _var = "BaseImp" + x;
+            _v2 = "BaseImp" + tRet2[x];
+            if ($(this).find("td." + _v2 + " input").hasClass(_var)) {
+                var colex = $(this).find("td." + _v2 + " input").val().replace("$", "").replace(',', '');
+                var txbi = $.trim(colex);
+                var sum = parseFloat(txbi);
+                _t[x] = parseFloat(_t[x]) + sum;
+            }
+        }
+    });
+    for (x = 0; x < tRet2.length; x++) {
+        $('#table_ret tbody tr').eq(x).find('td').eq(3).text('$' + parseFloat(_t[x]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    }
+
 }
 
 function armarTablaInfo(datos) {
@@ -569,7 +1365,7 @@ function armarTablaInfo(datos) {
         scrollX: true,
         scrollCollapse: true,
         language: {
-            "url": "../Scripts/lang/ES.json"
+            "url": "../../Scripts/lang/ES.json"
         },
         "destroy": true,
         "paging": false,
@@ -616,7 +1412,6 @@ function armarTablaInfo(datos) {
     var _infoc = _infoBIIR.length / 2;
     var arrColExTA = [];
 
-
     if (_infoc === datos.DOCUMENTOPSTR.length) {
         for (var i = 0; i < datos.DOCUMENTOPSTR.length; i++) {
             for (var x = 0; x < _infoBIIR.length; x++) {
@@ -631,12 +1426,24 @@ function armarTablaInfo(datos) {
                 datos.DOCUMENTOPSTR[i].IMPUTACION = "";
             }
             if (_infoAnex.length > 0) {
-                addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, _infoAnex[i].a1, _infoAnex[i].a2, _infoAnex[i].a3, _infoAnex[i].a4, _infoAnex[i].a5, datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, "", datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
+                var ar = addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, _infoAnex[i].a1, _infoAnex[i].a2, _infoAnex[i].a3, _infoAnex[i].a4, _infoAnex[i].a5, datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, "", datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
                     datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, "", datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
+                //Obtener el select de impuestos en la cabecera
+                var idselect = "infoSel0";
+                //Obtener el valor 
+                var imp = $('#IMPUESTO').val();
+                //Crear el nuevo select con los valores de impuestos
+                addSelectImpuesto(ar, imp, idselect, "", "X");
             }
             else {
-                addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, "", "", "", "", "", datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, "", datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
+                var ar = addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, "", "", "", "", "", datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, "", datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
                     datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, "", datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
+                //Obtener el select de impuestos en la cabecera
+                var idselect = "infoSel0";
+                //Obtener el valor 
+                var imp = $('#IMPUESTO').val();
+                //Crear el nuevo select con los valores de impuestos
+                addSelectImpuesto(ar, imp, idselect, "", "X");
             }
         }
     }
@@ -679,9 +1486,14 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
     //Lej 13.09.2018---
     var colstoAdd = "";
     for (i = 0; i < extraCols; i++) {
-        colstoAdd += '<td class=\"BaseImp' + toShow(tRet2[i]) + '\"><input class=\"extrasC BaseImp' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[0].BIMPONIBLE) + '\"></td>';
-        colstoAdd += '<td class=\"ImpRet' + toShow(tRet2[i]) + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[0].IMPORTE_RET) + '\"></td>';
-
+        if (_dExtra === "") {
+            colstoAdd += '<td class=\"BaseImp' + tRet2[i] + '\"><input class=\"extrasC BaseImp' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td>';
+            colstoAdd += '<td class=\"ImpRet' + tRet2[i] + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td>';
+        }
+        else {
+            colstoAdd += '<td class=\"BaseImp' + tRet2[i] + '\"><input class=\"extrasC BaseImp' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[0].BIMPONIBLE) + '\"></td>';
+            colstoAdd += '<td class=\"ImpRet' + tRet2[i] + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[0].IMPORTE_RET) + '\"></td>';
+        }
     }
     colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"
         + "<td><p><label><input type=\"checkbox\" checked=\"" + check + "\" /><span></span></label></p></td>";//MGC 03 - 10 - 2018 solicitud con orden de compra
@@ -724,6 +1536,42 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
     return r;
 }
 
+function updateFooter() {
+    resetFooter();
+
+    var t = $('#table_info').DataTable();
+    var total = 0;
+
+    $("#table_info > tbody > tr[role = 'row']").each(function (index) {
+        //var col11 = $(this).find("td.TOTAL input").val();
+        var col11 = $(this).find("td.TOTAL input").val();
+
+        //Saber si el renglón se va a sumar
+        var tr = $(this);
+        var indexopc = t.row(tr).index();
+
+        //Obtener la accion
+        var ac = t.row(indexopc).data()[2];
+
+
+
+        col11 = col11.replace(/\s/g, '');
+        var val = toNum(col11);
+        val = convertI(val);
+        if ($.isNumeric(val)) {
+            if (ac != "H") {
+                total += val;
+            }
+        }
+    });
+
+    total = total.toFixed(2);
+
+    $('#total_info').text(toShow(total));
+    $('#MONTO_DOC_MD').val(toShow(total));//Lej 18.09.2018
+    $('#mtTot').val($('#MONTO_DOC_MD').val());//Lej 29.09.2018
+}
+
 function resetTabs() {
 
     var ell = document.getElementById("tabs");
@@ -733,4 +1581,159 @@ function resetTabs() {
     active = active.replace("#", "");
     instances.select(active);
     //instances.updateTabIndicator
+}
+
+function impuestoVal(ti) {
+
+    var res = 0;
+
+    if (ti != "") {
+        var tsol_val = $('#impuestosval').val();
+        var jsval = $.parseJSON(tsol_val);
+        $.each(jsval, function (i, dataj) {
+            var _i = ti.split('-');
+            var _im = $.trim(_i[0]);
+            if (dataj.MWSKZ == _im) {
+                res = dataj.KBETR;
+                return false;
+            }
+        });
+    }
+
+    return res;
+}
+
+function resetFooter() {
+    $('#total_dis').text("$0");
+}
+
+function convertI(i) {
+    return typeof i === 'string' ?
+        i.replace(/[\$,]/g, '') * 1 :
+        typeof i === 'number' ?
+            i : 0;
+}
+
+function selectConcepto(val, tr, tipo) {
+    var t = $('#table_info').DataTable();
+
+    ////Add Validar que los conceptos no existan duplicados en la tabla
+    var conExist = valConcepto(val, tipo);
+
+
+    //Obtener el row para el plugin //MGC 11-10-2018 No enviar correos 
+    var trp = $(tr);
+    var indexopc = t.row(trp).index();
+
+    //Add MGC Validar que los conceptos no existan duplicados en la tabla
+    if (conExist) {
+        M.toast({ html: 'Ya hay un concepto con ese mismo identificador' });
+        tr.find("td.GRUPO input").val();
+    } else {
+        //Agregar el id
+        tr.find("td.GRUPO input").val();
+        tr.find("td.GRUPO input").val(tipo + "" + val);
+        //Obtener la sociedad
+        var soc = $("#SOCIEDAD_ID").val();
+        //Cancepto
+        var con = getConceptoC(val, tipo, soc, "");
+
+        //Asignar los valores en la tabla
+        if (con != "" & con != null) {
+
+            //Cuenta
+            t.cell(indexopc, 11).data(con.CUENTA).draw();
+
+            //Nombre de la cuenta
+            t.cell(indexopc, 12).data(con.DESC_CONCEPTO).draw();
+
+            //Tipo de imputación
+            t.cell(indexopc, 13).data(con.TIPO_IMPUTACION).draw();
+
+            //Actualizar el tipo concepto
+            var indexopc = t.row(tr).index();
+            t.cell(indexopc, 9).data("<input class=\"\" disabled style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + tipo + "\">").draw();//LEJ 01.10.2018
+
+            //ocultar o mostrar el centro de costo
+            if (con.TIPO_IMPUTACION == "P") {
+                //Armar el elemento pep
+                //Obtener los guiones
+                var p0 = val.substring(0, 3);
+                var p1 = val.substring(3, 6);
+                //var PEP = "RE-00900-I" + soc + "" + tipo + "-" + val;
+                var PEP = "RE-00900-I" + soc + "" + tipo + "-" + p0 + "-" + p1;
+
+                t.cell(indexopc, 14).data(PEP).draw();
+
+                tr.find("td.CCOSTO input").prop('disabled', true);
+            } else if (con.TIPO_IMPUTACION == "K") {
+                tr.find("td.CCOSTO input").prop('disabled', false);
+            } else {
+                tr.find("td.CCOSTO input").prop('disabled', false);
+            }
+
+        } else {
+            tr.find("td.GRUPO input").val();
+        }
+    }
+}
+
+function valConcepto(con, tipo) {
+
+    var res = false;
+
+    var lengthT = $("table#table_info tbody tr[role='row']").length;
+
+    if (lengthT > 0) {
+
+        $("#table_info > tbody  > tr[role='row']").each(function () {
+            var c = "";
+            c = $(this).find("td.GRUPO input").val();
+
+            var t = "";
+            t = $(this).find("td.CONCEPTO").text();
+
+            if (con == c && tipo == t) {
+                res = true;
+                return false;
+            }
+
+        });
+    }
+    return res;
+}
+
+//Pestaña contabilidad
+function getConceptoC(con, tipo, bukrs, message) {
+    conceptoValC = "";
+    var localval = "";
+    if (con != "") {
+        $.ajax({
+            type: "POST",
+            url: '../getConcepto',
+            dataType: "json",
+            data: { "id": con, "tipo": tipo, "bukrs": bukrs },
+
+            success: function (data) {
+
+                if (data !== null || data !== "") {
+                    asignarValConC(data);
+                }
+
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                if (message == "X") {
+                    M.toast({ html: "Valor no encontrado" });
+                }
+            },
+            async: false
+        });
+    }
+
+    localval = conceptoValC;
+    return localval;
+}
+
+function asignarValConC(val) {
+    conceptoValC = val;
 }

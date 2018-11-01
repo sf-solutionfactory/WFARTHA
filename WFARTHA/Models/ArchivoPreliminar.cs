@@ -154,12 +154,26 @@ namespace WFARTHA.Models
                                 if (lh[i].ACCION == "H")
                                 {
                                     post = "P";
-                                    postk = "31";
+                                    if (doc.TSOL_ID == "NCC" | doc.TSOL_ID == "NCS")
+                                    {
+                                        postk = "50";
+                                    }
+                                    else
+                                    {
+                                        postk = "31";
+                                    }
                                 }
                                 else if (lh[i].ACCION == "D")
                                 {
                                     post = "G";
-                                    postk = "40";
+                                    if (doc.TSOL_ID == "NCC" | doc.TSOL_ID == "NCS")
+                                    {
+                                        postk = "21";
+                                    }
+                                    else
+                                    {
+                                        postk = "40";
+                                    }
 
                                 }
 
@@ -231,12 +245,26 @@ namespace WFARTHA.Models
                                 if (ld[i].ACCION == "H")
                                 {
                                     post = "P";
-                                    postk = "31";
+                                    if (doc.TSOL_ID == "NCC" | doc.TSOL_ID == "NCS")
+                                    {
+                                        postk = "50";
+                                    }
+                                    else
+                                    {
+                                        postk = "31";
+                                    }
                                 }
                                 else if (ld[i].ACCION == "D")
                                 {
                                     post = "G";
-                                    postk = "40";
+                                    if (doc.TSOL_ID == "NCC" | doc.TSOL_ID == "NCS")
+                                    {
+                                        postk = "21";
+                                    }
+                                    else
+                                    {
+                                        postk = "40";
+                                    }
 
                                 }
 

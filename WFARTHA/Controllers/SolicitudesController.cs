@@ -161,7 +161,6 @@ namespace WFARTHA.Controllers
                 doc.DOCUMENTOPSTR = dml;
             }
             var anexos = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
-            //ViewBag.files = anexos;
             doc.DOCUMENTOAL = anexos;
             List<Anexo> lstAn = new List<Anexo>();
             var result = anexos.Select(m => m.POSD).Distinct().ToList();
@@ -492,6 +491,8 @@ namespace WFARTHA.Controllers
                 string pid = Session["id_pr"].ToString();
                 ViewBag.PrSl = p;
                 pselG = pid;//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
+
+                ViewBag.pid = pid;//MGC 29-10-2018 Guardar el proyecto en el create
             }
             catch
             {
@@ -644,7 +645,7 @@ namespace WFARTHA.Controllers
             "AGENTE_ACTUAL,FECHA_PASO_ACTUAL,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,FECHACON,FECHA_BASE,REFERENCIA," +
             "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo")] Models.DOCUMENTO_MOD doc, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc,
             //MGC 02-10-2018 Cadenas de autorización
-            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr, string FECHADO)
+            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr, string FECHADO, string Uuid)
         {
             int pagina = 202; //ID EN BASE DE DATOS
             string errorString = "";
@@ -657,6 +658,10 @@ namespace WFARTHA.Controllers
                 //Si doc.FECHAD viene vacio o nulo, le asgino la fecha que tiene fechado, su campo oculto
                 doc.FECHAD = DateTime.Parse(FECHADO);
             }
+
+            //MGC 26-10-2018 Agregar usuario solicitante a la bd
+            doc.USUARIOD_ID = DETTA_USUARIOA_ID;
+
             if (ModelState.IsValid)
             {
                 try
@@ -672,6 +677,7 @@ namespace WFARTHA.Controllers
                     dOCUMENTO.MONEDA_ID = doc.MONEDA_ID;
                     dOCUMENTO.TIPO_CAMBIO = doc.TIPO_CAMBIO;
                     dOCUMENTO.IMPUESTO = doc.IMPUESTO;
+                    dOCUMENTO.USUARIOD_ID = doc.USUARIOD_ID;//MGC 26-10-2018 Agregar usuario solicitante a la bd
                     // dOCUMENTO.MONTO_DOC_MD = doc.MONTO_DOC_MD;
                     //LEJGG 10-10-2018------------------------>
                     try
@@ -746,7 +752,7 @@ namespace WFARTHA.Controllers
                     }
 
                     //Estatus wf
-                    dOCUMENTO.ESTATUS_WF = "P";
+                    dOCUMENTO.ESTATUS_WF = "P";//MGC 26-10-2018 Si el wf es p es que no se ha creado, si es A, es que se creo el archivo, cambia al generar el preliminar
 
                     db.DOCUMENTOes.Add(dOCUMENTO);
                     db.SaveChanges();//Codigolej
@@ -808,7 +814,7 @@ namespace WFARTHA.Controllers
                         _dp.POS = j;
                         _dp.ACCION = "H";
                         _dp.CUENTA = doc.PAYER_ID;
-                        _dp.MONTO = _monto;
+                        _dp.MONTO = _monto + _iva;////MGC 29-10-2018 Obtener las retenciones relacionadas con las ya mostradas en la tabla
                         _dp.MWSKZ = _mwskz;
                         _dp.IVA = _iva;
                         _dp.TOTAL = _total;
@@ -825,6 +831,7 @@ namespace WFARTHA.Controllers
 
                     }
 
+                    //Guardar las retenciones por posición
                     //Lej14.09.2018------
                     try
                     {
@@ -904,28 +911,99 @@ namespace WFARTHA.Controllers
                     }
                     //Lej14.09.2018------
 
+                    //Guardar las retenciones en el encabezado
                     try//LEJ 05.09.2018
                     {
+                        ////MGC 29-10-2018 Obtener las retenciones relacionadas con las ya mostradas en la tabla------------------------------>
+                        List<DOCUMENTOR_MOD> docrr = new List<DOCUMENTOR_MOD>();
+
+                        List<RETENCION> retsub = new List<RETENCION>();
+
+                        retsub = (from dr in doc.DOCUMENTOR.ToList()
+                                  join ret1 in db.RETENCIONs.ToList()
+                                  on new { dr.WITHT, dr.WT_WITHCD } equals new { ret1.WITHT, ret1.WT_WITHCD }
+                                  select new RETENCION
+                                  {
+                                      WITHT = ret1.WITHT,
+                                      WT_WITHCD = ret1.WT_WITHCD,
+                                      DESCRIPCION = ret1.DESCRIPCION,
+                                      ESTATUS = ret1.ESTATUS,
+                                      WITHT_SUB = ret1.WITHT_SUB,
+                                      PORC = ret1.PORC,
+                                      WT_WITHCD_SUB = ret1.WT_WITHCD_SUB,
+                                      CAMPO = ret1.CAMPO
+                                  }
+                               ).ToList();
+
+                        //docrr = (from rs in retsub.ToList()
+                        //         join dr in db.RETENCIONs.ToList()
+                        //         on new { A = rs.WITHT_SUB, B = rs.WT_WITHCD_SUB } equals new { A = dr.WITHT, B = dr.WT_WITHCD }
+                        //         select new DOCUMENTOR_MOD
+                        //         {
+                        //             LIFNR = 
+                        //         }).ToList();
+
+                        ////MGC 29-10-2018 Obtener las retenciones relacionadas con las ya mostradas en la tabla------------------------------<
+
                         //Guardar las retenciones de la solicitud
+                        int ccr = 1;// Contador consecutivo ////MGC 29-10-2018
                         for (int i = 0; i < doc.DOCUMENTOR.Count; i++)
                         {
                             if (doc.DOCUMENTOR[i].BUKRS == doc.SOCIEDAD_ID && doc.DOCUMENTOR[i].LIFNR == doc.PAYER_ID)
                             {
+                                DOCUMENTOR dr = new DOCUMENTOR();
                                 try
                                 {
-                                    DOCUMENTOR dr = new DOCUMENTOR();
+
                                     //dr.NUM_DOC = decimal.Parse(Session["NUM_DOC"].ToString());
                                     dr.NUM_DOC = doc.NUM_DOC;
                                     dr.WITHT = doc.DOCUMENTOR[i].WITHT;
                                     dr.WT_WITHCD = doc.DOCUMENTOR[i].WT_WITHCD;
-                                    dr.POS = db.DOCUMENTORs.ToList().Count + 1;
+                                    //dr.POS = db.DOCUMENTORs.ToList().Count + 1; // Contador consecutivo ////MGC 29-10-2018                                    
+                                    dr.POS = ccr; // Contador consecutivo ////MGC 29-10-2018
                                     dr.BIMPONIBLE = doc.DOCUMENTOR[i].BIMPONIBLE;
                                     dr.IMPORTE_RET = doc.DOCUMENTOR[i].IMPORTE_RET;
+                                    dr.VISIBLE = true;
                                     db.DOCUMENTORs.Add(dr);
                                     db.SaveChanges();
+
+                                    ////MGC 29-10-2018 Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                                    ccr++;// Contador consecutivo ////MGC 29-10-2018
                                 }
                                 catch (Exception e)
                                 {
+                                }
+
+                                //Obtener la relacionada
+                                RETENCION retrel = retsub.Where(rs => rs.WITHT == doc.DOCUMENTOR[i].WITHT && rs.WT_WITHCD == doc.DOCUMENTOR[i].WT_WITHCD).FirstOrDefault();
+
+                                if (retrel != null)
+                                {
+                                    if (retrel.WITHT_SUB != null | retrel.WITHT_SUB != "")
+                                    {
+                                        DOCUMENTOR drr = new DOCUMENTOR();
+                                        try
+                                        {
+
+                                            drr.NUM_DOC = doc.NUM_DOC;
+
+                                            drr.WITHT = retrel.WITHT_SUB;
+                                            drr.WT_WITHCD = retrel.WT_WITHCD_SUB;
+                                            //dr.POS = db.DOCUMENTORs.ToList().Count + 1; // Contador consecutivo ////MGC 29-10-2018                                    
+                                            drr.POS = ccr; // Contador consecutivo ////MGC 29-10-2018
+                                            drr.BIMPONIBLE = doc.DOCUMENTOR[i].BIMPONIBLE;
+                                            drr.IMPORTE_RET = doc.DOCUMENTOR[i].IMPORTE_RET;
+                                            drr.VISIBLE = false;
+                                            db.DOCUMENTORs.Add(drr);
+                                            db.SaveChanges();
+
+                                            ////MGC 29-10-2018 Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                                            ccr++;// Contador consecutivo ////MGC 29-10-2018
+                                        }
+                                        catch (Exception e)
+                                        {
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -959,48 +1037,8 @@ namespace WFARTHA.Controllers
                         }
                         if (numFiles > 0)
                         {
-                            //-------------------------------------------------------------
-                            //Obtener las variables con los datos de sesión y ruta
-                            //string url = ConfigurationManager.AppSettings["URL_Serv"];
-                            //var bandera = false;
-                            //try
-                            //{
-                            //    //WebRequest request = WebRequest.Create(url + "Nueva Carpeta");
-                            //    FtpWebRequest requestDir = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + url));
-                            //    requestDir.Method = WebRequestMethods.Ftp.MakeDirectory;
-                            //    const string Comillas = "\"";
-                            //    string pwd = "Rumaki,2571" + Comillas + "k41";
-                            //    requestDir.Credentials = new NetworkCredential("luis.gonzalez", pwd);
-                            //    requestDir.UsePassive = true;
-                            //    requestDir.UseBinary = true;
-                            //    requestDir.KeepAlive = false;
-                            //    using (FtpWebResponse response = (FtpWebResponse)requestDir.GetResponse())
-                            //    {
-                            //        var xpr = response.StatusCode;
-                            //    }
-                            //    //Stream ftpStream = response.GetResponseStream();
-                            //    //ftpStream.Close();
-                            //    // response.Close();
-                            //    bandera = true;
-                            //}
-                            //catch (WebException ex)
-                            //{
-                            //    FtpWebResponse response = (FtpWebResponse)ex.Response;
-                            //    if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
-                            //    {
-                            //        response.Close();
-                            //        bandera = true;
-                            //    }
-                            //    else
-                            //    {
-                            //        response.Close();
-                            //        bandera = false;
-                            //    }
-                            //}
-                            //-------------------------------------------------------------
                             //Evaluar que se creo el directorio
-                            // if (bandera)
-                            if (true)
+                            try
                             {
                                 int indexlabel = 0;
                                 foreach (HttpPostedFileBase file in file_sopAnexar)
@@ -1021,7 +1059,7 @@ namespace WFARTHA.Controllers
                                     }
                                     catch (Exception ex)
                                     {
-                                        listaDescArchivos.Add("");
+                                        listaNombreArchivos.Add("");
                                     }
                                     string errorfiles = "";
                                     if (file != null)
@@ -1043,7 +1081,7 @@ namespace WFARTHA.Controllers
                                     }
                                 }
                             }
-                            else
+                            catch (Exception e)
                             {
                                 // errorMessage = dir;
                             }
@@ -1179,10 +1217,15 @@ namespace WFARTHA.Controllers
                         //MGC 02-10-2018 Cadena de autorización work flow <---
                     }
                     //Lej-02.10.2018------
+                    List<string> listaDirectorios2 = listaDirectorios;
+                    List<string> listaNombreArchivos2 = listaNombreArchivos;
+                    List<string> listaDescArchivos2 = listaDescArchivos;
                     //DOCUMENTOA
                     //Misma cantidad de archivos y nombres, osea todo bien
                     if (listaDirectorios.Count == listaDescArchivos.Count && listaDirectorios.Count == listaNombreArchivos.Count)
                     {
+                        //un contador para los archivos que se borran de las listas
+                        int arBorr = 0;
                         for (int i = 0; i < doc.Anexo.Count; i++)
                         {
                             var pos = 1;
@@ -1191,14 +1234,19 @@ namespace WFARTHA.Controllers
                             {
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
-                                _dA.POS = pos;
+                                var de = "";
+                                int a1 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a1 > 0 && doc.Anexo[i].a1 <= listaNombreArchivos.Count)
                                 {
-                                    var a1 = doc.Anexo[i].a1;
+                                    a1 = doc.Anexo[i].a1;
+                                    a1 = a1 - arBorr;
+                                    a1 = a1 - 1;
+                                    _dA.POS = doc.Anexo[i].a1;
+
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[a1 - 1]);
+                                        de = Path.GetExtension(listaNombreArchivos[a1]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1207,7 +1255,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.DESC = listaDescArchivos[a1 - 1];
+                                        _dA.DESC = listaDescArchivos[a1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1215,7 +1263,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.PATH = listaDirectorios[a1 - 1];
+                                        _dA.PATH = listaDirectorios[a1];
                                     }
                                     catch (Exception c)
                                     {
@@ -1237,6 +1285,10 @@ namespace WFARTHA.Controllers
                                     db.DOCUMENTOAs.Add(_dA);
                                     db.SaveChanges();
                                     pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a1);
+                                    arBorr++;
                                 }
                                 catch (Exception e)
                                 {
@@ -1248,14 +1300,18 @@ namespace WFARTHA.Controllers
                             {
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
-                                _dA.POS = pos;
+                                var de = "";
+                                int a2 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a2 > 0 && doc.Anexo[i].a2 <= listaNombreArchivos.Count)
                                 {
-                                    var a2 = doc.Anexo[i].a2;
+                                    a2 = doc.Anexo[i].a2;
+                                    a2 = a2 - arBorr;
+                                    a2 = a2 - 1;
+                                    _dA.POS = doc.Anexo[i].a2;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[a2 - 1]);
+                                        de = Path.GetExtension(listaNombreArchivos[a2]);
                                         _dA.TIPO = de.Replace(".", "");
                                     }
                                     catch (Exception c)
@@ -1264,7 +1320,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.DESC = listaDescArchivos[a2 - 1];
+                                        _dA.DESC = listaDescArchivos[a2];
                                     }
                                     catch (Exception c)
                                     {
@@ -1272,7 +1328,7 @@ namespace WFARTHA.Controllers
                                     }
                                     try
                                     {
-                                        _dA.PATH = listaDirectorios[a2 - 1];
+                                        _dA.PATH = listaDirectorios[a2];
                                     }
                                     catch (Exception c)
                                     {
@@ -1294,6 +1350,10 @@ namespace WFARTHA.Controllers
                                     db.DOCUMENTOAs.Add(_dA);
                                     db.SaveChanges();
                                     pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a2);
+                                    arBorr++;
                                 }
                                 catch (Exception e)
                                 {
@@ -1305,36 +1365,45 @@ namespace WFARTHA.Controllers
                             {
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
-                                _dA.POS = pos;
+                                var de = "";
+                                int a3 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a3 > 0 && doc.Anexo[i].a3 <= listaNombreArchivos.Count)
                                 {
-                                    var a3 = doc.Anexo[i].a3;
+                                    a3 = doc.Anexo[i].a3;
+                                    a3 = a3 - arBorr;
+                                    a3 = a3 - 1;
+                                    _dA.POS = doc.Anexo[i].a3;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[a3 - 1]);
-                                        _dA.TIPO = de.Replace(".", "");
+                                        try
+                                        {
+                                            de = Path.GetExtension(listaNombreArchivos[a3]);
+                                            _dA.TIPO = de.Replace(".", "");
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.TIPO = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.DESC = listaDescArchivos[a3];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.DESC = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.PATH = listaDirectorios[a3];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.PATH = "";
+                                        }
                                     }
-                                    catch (Exception c)
-                                    {
-                                        _dA.TIPO = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.DESC = listaDescArchivos[a3 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.DESC = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.PATH = listaDirectorios[a3 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.PATH = "";
-                                    }
+                                    catch (Exception e)
+                                    { }
                                 }
                                 else
                                 {
@@ -1351,6 +1420,10 @@ namespace WFARTHA.Controllers
                                     db.DOCUMENTOAs.Add(_dA);
                                     db.SaveChanges();
                                     pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a3);
+                                    arBorr++;
                                 }
                                 catch (Exception e)
                                 {
@@ -1362,36 +1435,44 @@ namespace WFARTHA.Controllers
                             {
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
-                                _dA.POS = pos;
+                                var de = "";
+                                int a4 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a4 > 0 && doc.Anexo[i].a4 <= listaNombreArchivos.Count)
                                 {
-                                    var a4 = doc.Anexo[i].a4;
+                                    a4 = doc.Anexo[i].a4;
+                                    a4 = a4 - arBorr;
+                                    a4 = a4 - 1;
+                                    _dA.POS = doc.Anexo[i].a4;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[a4 - 1]);
-                                        _dA.TIPO = de.Replace(".", "");
+                                        try
+                                        {
+                                            de = Path.GetExtension(listaNombreArchivos[a4]);
+                                            _dA.TIPO = de.Replace(".", "");
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.TIPO = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.DESC = listaDescArchivos[a4];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.DESC = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.PATH = listaDirectorios[a4];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.PATH = "";
+                                        }
                                     }
-                                    catch (Exception c)
-                                    {
-                                        _dA.TIPO = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.DESC = listaDescArchivos[a4 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.DESC = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.PATH = listaDirectorios[a4 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.PATH = "";
-                                    }
+                                    catch (Exception e) { }
                                 }
                                 else
                                 {
@@ -1408,6 +1489,10 @@ namespace WFARTHA.Controllers
                                     db.DOCUMENTOAs.Add(_dA);
                                     db.SaveChanges();
                                     pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a4);
+                                    arBorr++;
                                 }
                                 catch (Exception e)
                                 {
@@ -1420,35 +1505,44 @@ namespace WFARTHA.Controllers
                                 _dA.NUM_DOC = doc.NUM_DOC;
                                 _dA.POSD = i + 1;
                                 _dA.POS = pos;
+                                var de = "";
+                                int a5 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (doc.Anexo[i].a5 > 0 && doc.Anexo[i].a5 <= listaNombreArchivos.Count)
                                 {
-                                    var a5 = doc.Anexo[i].a5;
+                                    a5 = doc.Anexo[i].a5;
+                                    a5 = a5 - arBorr;
+                                    a5 = a5 - 1;
+                                    _dA.POS = doc.Anexo[i].a5;
                                     try
                                     {
-                                        var de = Path.GetExtension(listaNombreArchivos[a5 - 1]);
-                                        _dA.TIPO = de.Replace(".", "");
+                                        try
+                                        {
+                                            de = Path.GetExtension(listaNombreArchivos[a5]);
+                                            _dA.TIPO = de.Replace(".", "");
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.TIPO = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.DESC = listaDescArchivos[a5];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.DESC = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.PATH = listaDirectorios[a5];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.PATH = "";
+                                        }
                                     }
-                                    catch (Exception c)
-                                    {
-                                        _dA.TIPO = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.DESC = listaDescArchivos[a5 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.DESC = "";
-                                    }
-                                    try
-                                    {
-                                        _dA.PATH = listaDirectorios[a5 - 1];
-                                    }
-                                    catch (Exception c)
-                                    {
-                                        _dA.PATH = "";
-                                    }
+                                    catch (Exception e) { }
                                 }
                                 else
                                 {
@@ -1465,6 +1559,10 @@ namespace WFARTHA.Controllers
                                     db.DOCUMENTOAs.Add(_dA);
                                     db.SaveChanges();
                                     pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a5);
+                                    arBorr++;
                                 }
                                 catch (Exception e)
                                 {
@@ -1474,7 +1572,73 @@ namespace WFARTHA.Controllers
                         }
                     }
                     //Lej-02.10.2018------
-
+                    //Lejgg 26.10.2018---------------------------------------->
+                    //Los anexos que no se agreguen a documentoa se agregaran a documentoas(documentoa1), significa que estan en lista porque no se ligaron a ningun detalle
+                    if (listaDirectorios2.Count == listaDescArchivos2.Count && listaDirectorios2.Count == listaNombreArchivos2.Count)
+                    {
+                        var pos = 1;
+                        for (int i = 0; i < listaDescArchivos2.Count; i++)
+                        {
+                            DOCUMENTOA1 _dA = new DOCUMENTOA1();
+                            _dA.NUM_DOC = doc.NUM_DOC;
+                            _dA.POS = pos;
+                            var de = "";
+                            try
+                            {
+                                de = Path.GetExtension(listaNombreArchivos2[i]);
+                                _dA.TIPO = de.Replace(".", "");
+                            }
+                            catch (Exception c)
+                            {
+                                _dA.TIPO = "";
+                            }
+                            try
+                            {
+                                _dA.DESC = listaDescArchivos2[i];
+                            }
+                            catch (Exception c)
+                            {
+                                _dA.DESC = "";
+                            }
+                            try
+                            {
+                                _dA.PATH = listaDirectorios2[i];
+                            }
+                            catch (Exception c)
+                            {
+                                _dA.PATH = "";
+                            }
+                            _dA.CLASE = "OTR";
+                            _dA.STEP_WF = 1;
+                            _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                            _dA.ACTIVO = true;
+                            try
+                            {
+                                db.DOCUMENTOAS1.Add(_dA);
+                                db.SaveChanges();
+                                pos++;
+                            }
+                            catch (Exception e)
+                            {
+                                //
+                            }
+                        }
+                    }
+                    //Lejgg 26.10.2018----------------------------------------<
+                    //Lejgg 28.10.2018---------------------------------------->
+                    if (Uuid != string.Empty)
+                    {
+                        var pos = db.DOCUMENTOUUIDs.ToList();
+                        DOCUMENTOUUID duid = new DOCUMENTOUUID();
+                        duid.NUM_DOC = doc.NUM_DOC;
+                        duid.POS = pos.Count + 1;
+                        duid.DOCUMENTO_SAP = "";
+                        duid.UUID = Uuid;
+                        duid.ESTATUS = true;
+                        db.DOCUMENTOUUIDs.Add(duid);
+                        db.SaveChanges();
+                    }
+                    //Lejgg 28.10.2018----------------------------------------<
                 }
                 catch (Exception e)
                 {
@@ -1625,7 +1789,21 @@ namespace WFARTHA.Controllers
 
             ViewBag.Title += id; //MGC 05-10-2018 Modificación para work flow al ser editada
             //LEJGG19 10 2018----------------------------------------------------->
-            ViewBag.docAn = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
+            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
+            DOCUMENTOA d_a = new DOCUMENTOA();
+            var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id).ToList();
+            for (int i = 0; i < la1.Count; i++)
+            {
+                d_a = new DOCUMENTOA();
+                d_a.NUM_DOC = la1[i].NUM_DOC;
+                d_a.TIPO = la1[i].TIPO;
+                d_a.DESC = la1[i].DESC;
+                d_a.CLASE = la1[i].CLASE;
+                d_a.PATH = la1[i].PATH;
+                lst.Add(d_a);
+            }
+            ViewBag.docAn = lst;
+            //ViewBag.docAn2 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id).ToList(); //LEJGG 28-10 2018
             //LEJGG19 10 2018-----------------------------------------------------<
             //solicitud con orden de compra ------>
             //Obtener la solicitud con la configuración
@@ -1761,8 +1939,11 @@ namespace WFARTHA.Controllers
             {
                 var wtht = retlt[i].WITHT;
                 var _res = db.DOCUMENTORPs.Where(nd => nd.NUM_DOC == dOCUMENTO.NUM_DOC && nd.WITHT == wtht).FirstOrDefault();
-                retlt[i].BIMPONIBLE = _res.BIMPONIBLE;
-                retlt[i].IMPORTE_RET = _res.IMPORTE_RET;
+                if (_res != null)
+                {
+                    retlt[i].BIMPONIBLE = _res.BIMPONIBLE;
+                    retlt[i].IMPORTE_RET = _res.IMPORTE_RET;
+                }
             }
             //ViewBag.ret = retlt;
             ViewBag.ret = retlt;
@@ -1903,73 +2084,959 @@ namespace WFARTHA.Controllers
             "MONTO_BASE_GS_PCT_ML2,MONTO_BASE_NS_PCT_ML2,PORC_ADICIONAL,IMPUESTO,FECHAI_VIG,FECHAF_VIG,ESTATUS_EXT,SOLD_TO_ID,PAYER_ID,PAYER_NOMBRE,PAYER_EMAIL,GRUPO_CTE_ID," +
             "CANAL_ID,MONEDA_ID,MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIO,TIPO_CAMBIOL,TIPO_CAMBIOL2,NO_FACTURA,FECHAD_SOPORTE,METODO_PAGO,NO_PROVEEDOR,PASO_ACTUAL,AGENTE_ACTUAL," +
             "FECHA_PASO_ACTUAL,VKORG,VTWEG,SPART,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,PORC_APOYO,LIGADA,OBJETIVOQ,FRECUENCIA_LIQ,OBJQ_PORC,FECHACON,FECHA_BASE,REFERENCIA," +
-            "TEXTO_POS,ASIGNACION_POS,CLAVE_CTA,MONTO_DOC_IMP")] Models.DOCUMENTO_MOD dOCUMENTO, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc, string FECHADO)
+            "TEXTO_POS,ASIGNACION_POS,CLAVE_CTA,MONTO_DOC_IMP, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo")] Models.DOCUMENTO_MOD dOCUMENTO, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc, string FECHADO, string mtTot, string Uuid)
         {
             string errorString = "";
+            var est = "";
             if (ModelState.IsValid)
             {
                 try
                 {
-                    ////MGC 05-10-2018 Modificación para work flow al ser editada
-                    //Descomentar para proceso normal
-                    //db.Entry(dOCUMENTO).State = EntityState.Modified;
-                    //db.SaveChanges();
+                    //Traigo los datos previamente registrados
+                    var _doc = db.DOCUMENTOes.Where(n => n.NUM_DOC == dOCUMENTO.NUM_DOC).FirstOrDefault();
+                    var _ndoc = _doc.NUM_DOC;
+                    //Guardar las posiciones de la solicitud
+                    try
+                    {
+                        decimal _monto = 0;
+                        decimal _iva = 0;
+                        decimal _total = 0;
+                        var _mwskz = "";
+                        int j = 1;
+                        for (int i = 0; i < dOCUMENTO.DOCUMENTOP.Count; i++)
+                        {
+                            try
+                            {
+                                //Busco Informacion Previa del documento si es que existe.
+                                var docpPrevio = db.DOCUMENTOPs.Where(x => x.NUM_DOC == _ndoc && x.POS == j).FirstOrDefault();
+                                //Si es null signfica que no hay nada, osea se crea, si es diferente de null ya existe, osea se modifica
+                                if (docpPrevio != null)//LEJGG 31-10-2018
+                                {
+                                    DOCUMENTOP dp = docpPrevio;
+
+                                    dp.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                    dp.POS = j;
+                                    dp.ACCION = dOCUMENTO.DOCUMENTOP[i].ACCION;
+                                    dp.FACTURA = dOCUMENTO.DOCUMENTOP[i].FACTURA;
+                                    dp.TCONCEPTO = dOCUMENTO.DOCUMENTOP[i].TCONCEPTO;
+                                    dp.GRUPO = dOCUMENTO.DOCUMENTOP[i].GRUPO;
+                                    dp.CUENTA = dOCUMENTO.DOCUMENTOP[i].CUENTA;//Modificación Cuenta de PEP
+                                    dp.TIPOIMP = dOCUMENTO.DOCUMENTOP[i].TIPOIMP;
+                                    dp.IMPUTACION = dOCUMENTO.DOCUMENTOP[i].IMPUTACION;
+                                    dp.CCOSTO = dOCUMENTO.DOCUMENTOP[i].CCOSTO;
+                                    dp.MONTO = dOCUMENTO.DOCUMENTOP[i].MONTO;
+                                    _monto = _monto + dOCUMENTO.DOCUMENTOP[i].MONTO;//lejgg 10-10-2018
+                                    var sp = dOCUMENTO.DOCUMENTOP[i].MWSKZ.Split('-');
+                                    _mwskz = sp[0];//lejgg 10-10-2018
+                                    dp.MWSKZ = sp[0];
+                                    dp.IVA = dOCUMENTO.DOCUMENTOP[i].IVA;
+                                    _iva = _iva + dOCUMENTO.DOCUMENTOP[i].IVA;//lejgg 10-10-2018
+                                    dp.TOTAL = dOCUMENTO.DOCUMENTOP[i].TOTAL;
+                                    _total = dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
+                                    dp.TEXTO = dOCUMENTO.DOCUMENTOP[i].TEXTO;
+                                    db.Entry(dp).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
+                                else
+                                {
+                                    DOCUMENTOP dp = new DOCUMENTOP();
+
+                                    dp.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                    dp.POS = j;
+                                    dp.ACCION = dOCUMENTO.DOCUMENTOP[i].ACCION;
+                                    dp.FACTURA = dOCUMENTO.DOCUMENTOP[i].FACTURA;
+                                    dp.TCONCEPTO = dOCUMENTO.DOCUMENTOP[i].TCONCEPTO;
+                                    dp.GRUPO = dOCUMENTO.DOCUMENTOP[i].GRUPO;
+                                    dp.CUENTA = dOCUMENTO.DOCUMENTOP[i].CUENTA;//Modificación Cuenta de PEP
+                                    dp.TIPOIMP = dOCUMENTO.DOCUMENTOP[i].TIPOIMP;
+                                    dp.IMPUTACION = dOCUMENTO.DOCUMENTOP[i].IMPUTACION;
+                                    dp.CCOSTO = dOCUMENTO.DOCUMENTOP[i].CCOSTO;
+                                    dp.MONTO = dOCUMENTO.DOCUMENTOP[i].MONTO;
+                                    _monto = _monto + dOCUMENTO.DOCUMENTOP[i].MONTO;//lejgg 10-10-2018
+                                    var sp = dOCUMENTO.DOCUMENTOP[i].MWSKZ.Split('-');
+                                    _mwskz = sp[0];//lejgg 10-10-2018
+                                    dp.MWSKZ = sp[0];
+                                    dp.IVA = dOCUMENTO.DOCUMENTOP[i].IVA;
+                                    _iva = _iva + dOCUMENTO.DOCUMENTOP[i].IVA;//lejgg 10-10-2018
+                                    dp.TOTAL = dOCUMENTO.DOCUMENTOP[i].TOTAL;
+                                    _total = dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
+                                    dp.TEXTO = dOCUMENTO.DOCUMENTOP[i].TEXTO;
+                                    db.DOCUMENTOPs.Add(dp);
+                                    db.SaveChanges();//LEJGG 29-10-2018
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                //
+                            }
+                            j++;
+                        }
+                        //lejgg 10-10-2018-------------------->
+                        //Busco Informacion Previa del documento si es que existe.
+                        var docp2 = db.DOCUMENTOPs.Where(x => x.NUM_DOC == _ndoc && x.ACCION == "H").FirstOrDefault();
+                        //Si es diferente a null, es que ya existe, sino se crea
+                        if (docp2 != null)
+                        {
+                            DOCUMENTOP _dp = docp2;
+
+                            _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
+                            _dp.POS = j;
+                            _dp.ACCION = "H";
+                            _dp.CUENTA = dOCUMENTO.PAYER_ID;
+                            _dp.MONTO = _monto + _iva;//Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                            _dp.MWSKZ = _mwskz;
+                            _dp.IVA = _iva;
+                            _dp.TOTAL = _total;
+                            db.Entry(_dp).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            DOCUMENTOP _dp = new DOCUMENTOP();
+
+                            _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
+                            _dp.POS = j;
+                            _dp.ACCION = "H";
+                            _dp.CUENTA = dOCUMENTO.PAYER_ID;
+                            _dp.MONTO = _monto + _iva;//Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                            _dp.MWSKZ = _mwskz;
+                            _dp.IVA = _iva;
+                            _dp.TOTAL = _total;
+                            db.DOCUMENTOPs.Add(_dp);
+                            db.SaveChanges();
+                        }
+                        //lejgg 10-10-2018-------------------------<
+                    }
+                    //Guardar las retenciones de la solicitud
+
+                    catch (Exception e)
+                    {
+                        errorString = e.Message.ToString();
+                        //Guardar número de documento creado
+
+                    }
+                    //Guardar las retenciones por posición
+                    //Lej14.09.2018------
+                    try
+                    {
+                        for (int i = 0; i < dOCUMENTO.DOCUMENTORP.Count; i++)
+                        {
+                            //cantdidad de renglones añadidos y su posicion
+                            var _op = ((i + 2) / 2);
+                            var _pos = _op.ToString().Split('.');
+                            try
+                            {
+                                var _str = dOCUMENTO.DOCUMENTORP[i].WITHT;
+                                var _docrp = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.WITHT == _str).FirstOrDefault();
+                                if (_docrp != null)//para cuando es edicion
+                                {
+                                    var docr = dOCUMENTO.DOCUMENTOR;
+                                    var ret = db.RETENCIONs.Where(x => x.WITHT == _str).FirstOrDefault().WITHT_SUB;
+                                    if (ret != null)
+                                    {
+                                        bool f = false;
+                                        for (int _a = 0; _a < docr.Count; _a++)
+                                        {
+                                            //si encuentra coincidencia con una ret ligada a el
+                                            if (docr[_a].WITHT == ret)
+                                            {
+                                                //se modifica la ret
+                                                DOCUMENTORP _dr = _docrp;
+                                                _dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                                _dr.WITHT = dOCUMENTO.DOCUMENTORP[i].WITHT;
+                                                _dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                                                _dr.POS = int.Parse(_pos[0]);
+                                                _dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                                                _dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                                                db.Entry(_dr).State = EntityState.Modified;
+                                                db.SaveChanges();
+                                                //valido si existe la ligada y la modifico o la creo segun sea el caso
+                                                var _docrpl = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.WITHT == ret).FirstOrDefault();
+                                                if (_docrpl != null)
+                                                {
+                                                    //se modifica la ret ligada
+                                                    _dr = _docrpl;
+                                                    _dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                                    _dr.WITHT = docr[_a].WITHT;
+                                                    _dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                                                    _dr.POS = int.Parse(_pos[0]);
+                                                    _dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                                                    _dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                                                    db.Entry(_dr).State = EntityState.Modified;
+                                                    db.SaveChanges();
+                                                    f = true;
+                                                }
+                                                else
+                                                {
+                                                    //se crea la ret ligada
+                                                    _dr = new DOCUMENTORP();
+                                                    _dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                                    _dr.WITHT = docr[_a].WITHT;
+                                                    _dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                                                    _dr.POS = int.Parse(_pos[0]);
+                                                    _dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                                                    _dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                                                    db.DOCUMENTORPs.Add(_dr);
+                                                    db.SaveChanges();
+                                                    f = true;
+                                                }
+                                            }
+                                        }
+                                        if (!f)
+                                        {
+                                            DOCUMENTORP _dr = _docrp;
+                                            _dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                            _dr.WITHT = dOCUMENTO.DOCUMENTORP[i].WITHT;
+                                            _dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                                            _dr.POS = int.Parse(_pos[0]);
+                                            _dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                                            _dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                                            db.Entry(_dr).State = EntityState.Modified;
+                                            db.SaveChanges();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        DOCUMENTORP dr = _docrp;
+                                        dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                        dr.WITHT = dOCUMENTO.DOCUMENTORP[i].WITHT;
+                                        dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                                        dr.POS = int.Parse(_pos[0]);
+                                        dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                                        dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                                        db.Entry(dr).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
+                                }
+                                else//para cuando es nuevo
+                                {
+                                    var docr = dOCUMENTO.DOCUMENTOR;
+                                    var ret = db.RETENCIONs.Where(x => x.WITHT == _str).FirstOrDefault().WITHT_SUB;
+                                    if (ret != null)
+                                    {
+                                        bool f = false;
+                                        for (int _a = 0; _a < docr.Count; _a++)
+                                        {
+                                            //si encuentra coincidencia
+                                            if (docr[_a].WITHT == ret)
+                                            {
+                                                DOCUMENTORP _dr = new DOCUMENTORP();
+                                                _dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                                _dr.WITHT = dOCUMENTO.DOCUMENTORP[i].WITHT;
+                                                _dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                                                _dr.POS = int.Parse(_pos[0]);
+                                                _dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                                                _dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                                                db.DOCUMENTORPs.Add(_dr);
+                                                db.SaveChanges();
+                                                _dr = new DOCUMENTORP();
+                                                _dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                                _dr.WITHT = docr[_a].WITHT;
+                                                _dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                                                _dr.POS = int.Parse(_pos[0]);
+                                                _dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                                                _dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                                                db.DOCUMENTORPs.Add(_dr);
+                                                db.SaveChanges();
+                                                f = true;
+                                            }
+                                        }
+                                        if (!f)
+                                        {
+                                            DOCUMENTORP _dr = new DOCUMENTORP();
+                                            _dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                            _dr.WITHT = dOCUMENTO.DOCUMENTORP[i].WITHT;
+                                            _dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                                            _dr.POS = int.Parse(_pos[0]);
+                                            _dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                                            _dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                                            db.DOCUMENTORPs.Add(_dr);
+                                            db.SaveChanges();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        DOCUMENTORP dr = new DOCUMENTORP();
+                                        dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                        dr.WITHT = dOCUMENTO.DOCUMENTORP[i].WITHT;
+                                        dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                                        dr.POS = int.Parse(_pos[0]);
+                                        dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                                        dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                                        db.DOCUMENTORPs.Add(dr);
+                                        db.SaveChanges();
+                                    }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        //
+                    }
+                    //Lej14.09.2018------
+                    //Guardar las retenciones en el encabezado
+                   /* try
+                    {
+                        //Obtener las retenciones relacionadas con las ya mostradas en la tabla------------------------------>
+                        List<DOCUMENTOR_MOD> docrr = new List<DOCUMENTOR_MOD>();
+
+                        List<RETENCION> retsub = new List<RETENCION>();
+
+                        retsub = (from dr in dOCUMENTO.DOCUMENTOR.ToList()
+                                  join ret1 in db.RETENCIONs.ToList()
+                                  on new { dr.WITHT, dr.WT_WITHCD } equals new { ret1.WITHT, ret1.WT_WITHCD }
+                                  select new RETENCION
+                                  {
+                                      WITHT = ret1.WITHT,
+                                      WT_WITHCD = ret1.WT_WITHCD,
+                                      DESCRIPCION = ret1.DESCRIPCION,
+                                      ESTATUS = ret1.ESTATUS,
+                                      WITHT_SUB = ret1.WITHT_SUB,
+                                      PORC = ret1.PORC,
+                                      WT_WITHCD_SUB = ret1.WT_WITHCD_SUB,
+                                      CAMPO = ret1.CAMPO
+                                  }
+                               ).ToList();
+                        //Guardar las retenciones de la solicitud
+                        int ccr = 1;// Contador consecutivo ////MGC 29-10-2018
+                        for (int i = 0; i < dOCUMENTO.DOCUMENTOR.Count; i++)
+                        {
+                            if (dOCUMENTO.DOCUMENTOR[i].BUKRS == dOCUMENTO.SOCIEDAD_ID && dOCUMENTO.DOCUMENTOR[i].LIFNR == dOCUMENTO.PAYER_ID)
+                            {
+                                DOCUMENTOR dr = new DOCUMENTOR();
+                                try
+                                {
+                                    dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                    dr.WITHT = dOCUMENTO.DOCUMENTOR[i].WITHT;
+                                    dr.WT_WITHCD = dOCUMENTO.DOCUMENTOR[i].WT_WITHCD;
+                                    dr.POS = ccr; // Contador consecutivo ////MGC 29-10-2018
+                                    dr.BIMPONIBLE = dOCUMENTO.DOCUMENTOR[i].BIMPONIBLE;
+                                    dr.IMPORTE_RET = dOCUMENTO.DOCUMENTOR[i].IMPORTE_RET;
+                                    dr.VISIBLE = true;
+                                    db.DOCUMENTORs.Add(dr);
+                                    db.SaveChanges();
+
+                                    //Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                                    ccr++;// Contador consecutivo ////MGC 29-10-2018
+                                }
+                                catch (Exception e)
+                                {
+                                }
+
+                                //Obtener la relacionada
+                                RETENCION retrel = retsub.Where(rs => rs.WITHT == dOCUMENTO.DOCUMENTOR[i].WITHT && rs.WT_WITHCD == dOCUMENTO.DOCUMENTOR[i].WT_WITHCD).FirstOrDefault();
+
+                                if (retrel != null)
+                                {
+                                    if (retrel.WITHT_SUB != null | retrel.WITHT_SUB != "")
+                                    {
+                                        DOCUMENTOR drr = new DOCUMENTOR();
+                                        try
+                                        {
+
+                                            drr.NUM_DOC = dOCUMENTO.NUM_DOC;
+
+                                            drr.WITHT = retrel.WITHT_SUB;
+                                            drr.WT_WITHCD = retrel.WT_WITHCD_SUB;
+                                            drr.POS = ccr; // Contador consecutivo //
+                                            drr.BIMPONIBLE = dOCUMENTO.DOCUMENTOR[i].BIMPONIBLE;
+                                            drr.IMPORTE_RET = dOCUMENTO.DOCUMENTOR[i].IMPORTE_RET;
+                                            drr.VISIBLE = false;
+                                            db.DOCUMENTORs.Add(drr);
+                                            db.SaveChanges();
+                                            //Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                                            ccr++;// Contador consecutivo
+                                        }
+                                        catch (Exception e)
+                                        {
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        errorString = e.Message.ToString();
+                        //Guardar número de documento creado
+
+                    }*/
+                    //Lej26.09.2018------
+                    List<string> listaDirectorios = new List<string>();
+                    List<string> listaNombreArchivos = new List<string>();
+                    List<string> listaDescArchivos = new List<string>();
+                    try
+                    {
+                        //Guardar los documentos cargados en la sección de soporte
+                        var res = "";
+                        string errorMessage = "";
+                        int numFiles = 0;
+                        //Checar si hay archivos para subir
+                        foreach (HttpPostedFileBase file in file_sopAnexar)
+                        {
+                            if (file != null)
+                            {
+                                if (file.ContentLength > 0)
+                                {
+                                    numFiles++;
+                                }
+                            }
+                        }
+                        if (numFiles > 0)
+                        {
+                            //Evaluar que se creo el directorio
+                            try
+                            {
+                                int indexlabel = 0;
+                                foreach (HttpPostedFileBase file in file_sopAnexar)
+                                {
+                                    var descripcion = "";
+                                    try
+                                    {
+                                        listaDescArchivos.Add(labels_desc[indexlabel]);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        descripcion = "";
+                                        listaDescArchivos.Add(descripcion);
+                                    }
+                                    try
+                                    {
+                                        listaNombreArchivos.Add(file.FileName);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        listaNombreArchivos.Add("");
+                                    }
+                                    string errorfiles = "";
+                                    if (file != null)
+                                    {
+                                        if (file.ContentLength > 0)
+                                        {
+                                            string path = "";
+                                            string filename = file.FileName;
+                                            errorfiles = "";
+                                            //res = SaveFile(file, url);
+                                            res = SaveFile(file, _ndoc);
+                                            listaDirectorios.Add(res);
+                                        }
+                                    }
+                                    indexlabel++;
+                                    if (errorfiles != "")
+                                    {
+                                        errorMessage += "Error con el archivo " + errorfiles;
+                                    }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                // errorMessage = dir;
+                            }
+
+                            errorString = errorMessage;
+                            //Guardar número de documento creado
+                            Session["ERROR_FILES"] = errorMessage;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                    List<string> listaDirectorios2 = listaDirectorios;
+                    List<string> listaNombreArchivos2 = listaNombreArchivos;
+                    List<string> listaDescArchivos2 = listaDescArchivos;
+
+                    //DocumentoA
+                    //2- Luego se vuelven a guardar las posiciones de la solicitud
+                    //Misma cantidad de archivos y nombres, osea todo bien
+                    if (listaDirectorios.Count == listaDescArchivos.Count && listaDirectorios.Count == listaNombreArchivos.Count)
+                    {
+                        //un contador para los archivos que se borran de las listas
+                        int arBorr = 0;
+                        for (int i = 0; i < dOCUMENTO.Anexo.Count; i++)
+                        {
+                            var pos = 1;
+                            DOCUMENTOA _dA = new DOCUMENTOA();
+                            if (dOCUMENTO.Anexo[i].a1 != 0)
+                            {
+                                _dA.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                var de = "";
+                                int a1 = 0;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (dOCUMENTO.Anexo[i].a1 > 0 && dOCUMENTO.Anexo[i].a1 <= listaNombreArchivos.Count)
+                                {
+                                    a1 = dOCUMENTO.Anexo[i].a1;
+                                    a1 = a1 - arBorr;
+                                    a1 = a1 - 1;
+                                    _dA.POS = dOCUMENTO.Anexo[i].a1;
+
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a1]);
+                                        _dA.TIPO = de.Replace(".", "");
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.TIPO = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.DESC = listaDescArchivos[a1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.DESC = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.PATH = listaDirectorios[a1];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.PATH = "";
+                                    }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    //db.SaveChanges();
+                                    pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a1);
+                                    arBorr++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                            _dA = new DOCUMENTOA();
+                            if (dOCUMENTO.Anexo[i].a2 != 0)
+                            {
+                                _dA.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                var de = "";
+                                int a2 = 0;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (dOCUMENTO.Anexo[i].a2 > 0 && dOCUMENTO.Anexo[i].a2 <= listaNombreArchivos.Count)
+                                {
+                                    a2 = dOCUMENTO.Anexo[i].a2;
+                                    a2 = a2 - arBorr;
+                                    a2 = a2 - 1;
+                                    _dA.POS = dOCUMENTO.Anexo[i].a2;
+                                    try
+                                    {
+                                        de = Path.GetExtension(listaNombreArchivos[a2]);
+                                        _dA.TIPO = de.Replace(".", "");
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.TIPO = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.DESC = listaDescArchivos[a2];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.DESC = "";
+                                    }
+                                    try
+                                    {
+                                        _dA.PATH = listaDirectorios[a2];
+                                    }
+                                    catch (Exception c)
+                                    {
+                                        _dA.PATH = "";
+                                    }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    //db.SaveChanges();
+                                    pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a2);
+                                    arBorr++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                            _dA = new DOCUMENTOA();
+                            if (dOCUMENTO.Anexo[i].a3 != 0)
+                            {
+                                _dA.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                var de = "";
+                                int a3 = 0;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (dOCUMENTO.Anexo[i].a3 > 0 && dOCUMENTO.Anexo[i].a3 <= listaNombreArchivos.Count)
+                                {
+                                    a3 = dOCUMENTO.Anexo[i].a3;
+                                    a3 = a3 - arBorr;
+                                    a3 = a3 - 1;
+                                    _dA.POS = dOCUMENTO.Anexo[i].a3;
+                                    try
+                                    {
+                                        try
+                                        {
+                                            de = Path.GetExtension(listaNombreArchivos[a3]);
+                                            _dA.TIPO = de.Replace(".", "");
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.TIPO = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.DESC = listaDescArchivos[a3];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.DESC = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.PATH = listaDirectorios[a3];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.PATH = "";
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    { }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    //db.SaveChanges();
+                                    pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a3);
+                                    arBorr++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                            _dA = new DOCUMENTOA();
+                            if (dOCUMENTO.Anexo[i].a4 != 0)
+                            {
+                                _dA.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                var de = "";
+                                int a4 = 0;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (dOCUMENTO.Anexo[i].a4 > 0 && dOCUMENTO.Anexo[i].a4 <= listaNombreArchivos.Count)
+                                {
+                                    a4 = dOCUMENTO.Anexo[i].a4;
+                                    a4 = a4 - arBorr;
+                                    a4 = a4 - 1;
+                                    _dA.POS = dOCUMENTO.Anexo[i].a4;
+                                    try
+                                    {
+                                        try
+                                        {
+                                            de = Path.GetExtension(listaNombreArchivos[a4]);
+                                            _dA.TIPO = de.Replace(".", "");
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.TIPO = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.DESC = listaDescArchivos[a4];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.DESC = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.PATH = listaDirectorios[a4];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.PATH = "";
+                                        }
+                                    }
+                                    catch (Exception e) { }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    //db.SaveChanges();
+                                    pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a4);
+                                    arBorr++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                            _dA = new DOCUMENTOA();
+                            if (dOCUMENTO.Anexo[i].a5 != 0)
+                            {
+                                _dA.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                _dA.POSD = i + 1;
+                                _dA.POS = pos;
+                                var de = "";
+                                int a5 = 0;
+                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                if (dOCUMENTO.Anexo[i].a5 > 0 && dOCUMENTO.Anexo[i].a5 <= listaNombreArchivos.Count)
+                                {
+                                    a5 = dOCUMENTO.Anexo[i].a5;
+                                    a5 = a5 - arBorr;
+                                    a5 = a5 - 1;
+                                    _dA.POS = dOCUMENTO.Anexo[i].a5;
+                                    try
+                                    {
+                                        try
+                                        {
+                                            de = Path.GetExtension(listaNombreArchivos[a5]);
+                                            _dA.TIPO = de.Replace(".", "");
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.TIPO = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.DESC = listaDescArchivos[a5];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.DESC = "";
+                                        }
+                                        try
+                                        {
+                                            _dA.PATH = listaDirectorios[a5];
+                                        }
+                                        catch (Exception c)
+                                        {
+                                            _dA.PATH = "";
+                                        }
+                                    }
+                                    catch (Exception e) { }
+                                }
+                                else
+                                {
+                                    _dA.TIPO = "";
+                                    _dA.DESC = "";
+                                    _dA.PATH = "";
+                                }
+                                _dA.CLASE = "OTR";
+                                _dA.STEP_WF = 1;
+                                _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                                _dA.ACTIVO = true;
+                                try
+                                {
+                                    db.DOCUMENTOAs.Add(_dA);
+                                    //db.SaveChanges();
+                                    pos++;
+                                    listaDirectorios2.Remove(_dA.PATH);
+                                    listaDescArchivos2.Remove(_dA.DESC);
+                                    listaNombreArchivos2.RemoveAt(a5);
+                                    arBorr++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
+                            }
+                        }
+                    }
+                    //Lej-02.10.2018------
+                    //Lejgg 26.10.2018---------------------------------------->
+                    //Los anexos que no se agreguen a documentoa se agregaran a documentoas(documentoa1), significa que estan en lista porque no se ligaron a ningun detalle
+                    if (listaDirectorios2.Count == listaDescArchivos2.Count && listaDirectorios2.Count == listaNombreArchivos2.Count)
+                    {
+                        var pos = 1;
+                        for (int i = 0; i < listaDescArchivos2.Count; i++)
+                        {
+                            DOCUMENTOA1 _dA = new DOCUMENTOA1();
+                            _dA.NUM_DOC = dOCUMENTO.NUM_DOC;
+                            _dA.POS = pos;
+                            var de = "";
+                            try
+                            {
+                                de = Path.GetExtension(listaNombreArchivos2[i]);
+                                _dA.TIPO = de.Replace(".", "");
+                            }
+                            catch (Exception c)
+                            {
+                                _dA.TIPO = "";
+                            }
+                            try
+                            {
+                                _dA.DESC = listaDescArchivos2[i];
+                            }
+                            catch (Exception c)
+                            {
+                                _dA.DESC = "";
+                            }
+                            try
+                            {
+                                _dA.PATH = listaDirectorios2[i];
+                            }
+                            catch (Exception c)
+                            {
+                                _dA.PATH = "";
+                            }
+                            _dA.CLASE = "OTR";
+                            _dA.STEP_WF = 1;
+                            _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                            _dA.ACTIVO = true;
+                            try
+                            {
+                                db.DOCUMENTOAS1.Add(_dA);
+                                db.SaveChanges();
+                                pos++;
+                            }
+                            catch (Exception e)
+                            {
+                                //
+                            }
+                        }
+                    }
+                    //Lejgg 26.10.2018----------------------------------------<
+                    //Lejgg 28.10.2018---------------------------------------->
+                    if (Uuid != string.Empty)
+                    {
+                        var pos = db.DOCUMENTOUUIDs.ToList();
+                        DOCUMENTOUUID duid = new DOCUMENTOUUID();
+                        duid.NUM_DOC = dOCUMENTO.NUM_DOC;
+                        duid.POS = pos.Count + 1;
+                        duid.DOCUMENTO_SAP = "";
+                        duid.UUID = Uuid;
+                        duid.ESTATUS = true;
+                        db.DOCUMENTOUUIDs.Add(duid);
+                        db.SaveChanges();
+                    }
+                    //Lejgg 28.10.2018----------------------------------------<
                 }
                 catch (Exception e)
                 {
 
                 }
-                //MGC 05-10-2018 Modificación para work flow al ser editada -->
-                //Flujo
-                ProcesaFlujo pf = new ProcesaFlujo();
-                //Comienza el wf
-                //Se obtiene la cabecera
-                try
+                if (est == "B")
                 {
-                    //Obtener el último flujo
-                    FLUJO f = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC) & a.ESTATUS.Equals("P")).FirstOrDefault();
-
-                    DET_AGENTECC deta = new DET_AGENTECC();
-
-                    //f.ID_RUTA_A = f.ID_RUTA_A.Replace(" ", string.Empty);
-
-                    //Obtener la ruta seleccionada desde la creación (inicio)
-                    deta = db.DET_AGENTECC.Where(dcc => dcc.VERSION == f.RUTA_VERSION && dcc.USUARIOC_ID == f.USUARIOA_ID && dcc.ID_RUTA_AGENTE == f.ID_RUTA_A).FirstOrDefault();
-
-                    //Si la ruta existe
-                    if (deta != null)
+                    //Inicia un nuevo flujo de trabajo
+                    //MATIAS CODIGO
+                    //MATIAS CODIGO
+                    //----------------------29-10-2018-------------------\\
+                    //MATIAS CODIGO
+                    //MATIAS CODIGO
+                }
+                else
+                {
+                    //MGC 05-10-2018 Modificación para work flow al ser editada -->
+                    //Flujo
+                    ProcesaFlujo pf = new ProcesaFlujo();
+                    //Comienza el wf
+                    //Se obtiene la cabecera
+                    try
                     {
+                        //Obtener el último flujo
+                        FLUJO f = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC) & a.ESTATUS.Equals("P")).FirstOrDefault();
 
-                        FLUJO fe = new FLUJO();
-                        fe.WORKF_ID = f.WORKF_ID;
-                        fe.WF_VERSION = f.WF_VERSION;
-                        fe.WF_POS = f.WF_POS;
-                        fe.NUM_DOC = dOCUMENTO.NUM_DOC;
-                        fe.POS = f.POS;
-                        fe.LOOP = 1;
-                        fe.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
-                        fe.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
-                        fe.ESTATUS = "I";
-                        fe.FECHAC = DateTime.Now;
-                        fe.FECHAM = DateTime.Now;
-                        fe.STEP_AUTO = f.STEP_AUTO;
+                        DET_AGENTECC deta = new DET_AGENTECC();
 
-                        //Ruta tomada
-                        fe.ID_RUTA_A = deta.ID_RUTA_AGENTE;
-                        fe.RUTA_VERSION = deta.VERSION;
+                        //f.ID_RUTA_A = f.ID_RUTA_A.Replace(" ", string.Empty);
 
-                        string c = pf.procesa(fe, "", true, "");
+                        //Obtener la ruta seleccionada desde la creación (inicio)
+                        deta = db.DET_AGENTECC.Where(dcc => dcc.VERSION == f.RUTA_VERSION && dcc.USUARIOC_ID == f.USUARIOA_ID && dcc.ID_RUTA_AGENTE == f.ID_RUTA_A).FirstOrDefault();
+
+                        //Si la ruta existe
+                        if (deta != null)
+                        {
+
+                            FLUJO fe = new FLUJO();
+                            fe.WORKF_ID = f.WORKF_ID;
+                            fe.WF_VERSION = f.WF_VERSION;
+                            fe.WF_POS = f.WF_POS;
+                            fe.NUM_DOC = dOCUMENTO.NUM_DOC;
+                            fe.POS = f.POS;
+                            fe.LOOP = 1;
+                            fe.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
+                            fe.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
+                            fe.ESTATUS = "I";
+                            fe.FECHAC = DateTime.Now;
+                            fe.FECHAM = DateTime.Now;
+                            fe.STEP_AUTO = f.STEP_AUTO;
+
+                            //Ruta tomada
+                            fe.ID_RUTA_A = deta.ID_RUTA_AGENTE;
+                            fe.RUTA_VERSION = deta.VERSION;
+
+                            string c = pf.procesa(fe, "", true, "");
+                        }
+                    }
+                    catch (Exception ee)
+                    {
+                        if (errorString == "")
+                        {
+                            errorString = ee.Message.ToString();
+                        }
+                        ViewBag.error = errorString;
                     }
                 }
-                catch (Exception ee)
-                {
-                    if (errorString == "")
-                    {
-                        errorString = ee.Message.ToString();
-                    }
-                    ViewBag.error = errorString;
-                }
-
                 return RedirectToAction("Index");
             }
             ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", dOCUMENTO.SOCIEDAD_ID);
@@ -2867,27 +3934,39 @@ namespace WFARTHA.Controllers
         [HttpPost]
         public JsonResult procesarXML(IEnumerable<HttpPostedFileBase> file)
         {
-            var _ff = file.ToList();
-            var lines = ReadLines(() => _ff[0].InputStream, Encoding.UTF8).ToArray();
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(lines[0]);
-            var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
-            var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
+            try
+            {
+                var _ff = file.ToList();
+                var lines = ReadLines(() => _ff[0].InputStream, Encoding.UTF8).ToArray();
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(lines[0]);
+                var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
+                var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
+                var xmlnode3 = doc.GetElementsByTagName("cfdi:Emisor");
+                var xmlnode4 = doc.GetElementsByTagName("tfd:TimbreFiscalDigital");
+                //var xmlnode4_2= xmlnode4.g
+                var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
+                var _Mt = xmlnode[0].Attributes["Total"].Value;
+                var _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;
+                var _RFCReceptor = xmlnode2[0].Attributes["Rfc"].Value;
+                var _RFCEmisor = xmlnode3[0].Attributes["Rfc"].Value;
+                var _Uuid = xmlnode4[0].Attributes["UUID"].Value;
+                List<string> lstvals = new List<string>();
+                lstvals.Add(_F);//Fecha
+                lstvals.Add(_Mt);//Monto
+                lstvals.Add(_RFCReceptor);//RFCReceptor
+                lstvals.Add(_RFCEmisor);//RFCEmisor
+                lstvals.Add(_Uuid);//UUID
+                lstvals.Add(_TipoCambio);//TCambio
+                JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
 
-            var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
-            var _Mt = xmlnode[0].Attributes["Total"].Value;
-            var _RFC = xmlnode2[0].Attributes["Rfc"].Value;
-            /* List<string> childNodes = new List<string>();
-             for (int i = 0; i < xmlnode[0].ChildNodes.Count; i++)
-             {
-                 childNodes.Add(xmlnode[0].ChildNodes.Item(i).Name);
-             }*/
-            List<string> lstvals = new List<string>();
-            lstvals.Add(_F);//Fecha
-            lstvals.Add(_Mt);//Monto
-            lstvals.Add(_RFC);//RFC
-            JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
-            return jc;
+                return jc;
+            }
+            catch (Exception)
+            {
+                JsonResult jc = Json("", JsonRequestBehavior.AllowGet);
+                return jc;
+            }
         }
 
         public IEnumerable<string> ReadLines(Func<Stream> streamProvider,
@@ -3282,6 +4361,24 @@ namespace WFARTHA.Controllers
                 ret = "Null";
             }
             JsonResult jc = Json(ret, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
+        [HttpPost]
+        public JsonResult getUuid(string id)
+        {
+            var ret = db.DOCUMENTOUUIDs.Where(x => x.UUID == id).FirstOrDefault();
+            var st = "";
+            //Significa que no hay coincidencia
+            if (ret == null)
+            {
+                st = "Null";
+            }
+            else
+            {
+                st = "Match";
+            }
+            JsonResult jc = Json(st, JsonRequestBehavior.AllowGet);
             return jc;
         }
 
