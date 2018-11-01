@@ -16,8 +16,10 @@
 
 }
 
-<link type="text/css" href="~/Content/datatables.min.css" rel="stylesheet" />
-<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+<link href="~/Content/dataTable.css" rel="stylesheet" />
+<link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
 
 <script src="~/Scripts/details.js"></script>
 <script src="~/Scripts/formatos.js"></script>
@@ -659,7 +661,7 @@
                 <div class="card-panel">
                     <h5 id="head_cabecera">Detalle NT</h5>
                     <div class="row" style="margin-bottom:0">
-                        <table class="table display mdl-data-table striped estiloT" id="table_info" style="width:100%;">
+                        <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
                             <thead>
                                 <tr>
                                     <th></th>
@@ -874,54 +876,54 @@
             <div class="col s12">
                 <div class="card-panel">
                     @*<h5 id="head_cabecera">Detalle NT</h5>
-                    <div class="row" style="margin-bottom:0">
+                        <div class="row" style="margin-bottom:0">
 
-        
 
-                        <table class="table display mdl-data-table striped" id="table_sop" style="width:100%;">
-                            <thead>
-                                <tr>
-                                    <th>
 
-                                    </th>
-                                    <th class="lbl_opc">
-                                        OPC NT
-                                    </th>
-                                    <th class="lbl_pos">
-                                        Pos NT
-                                    </th>
-                                    <th class="lbl_rfc">
-                                        RFC NT
-                                    </th>
-                                    <th class="lbl_factura">
-                                        Factura NT
-                                    </th>
-                                    <th id="lbl_fecha">
-                                        Fecha NT
-                                    </th>
-                                    <th id="lbl_monto">
-                                        Monto NT
-                                    </th>
-                                    <th id="lbl_iva">
-                                        IVA NT
-                                    </th>
-                                    <th id="lbl_total">
-                                        Total NT
-                                    </th>
-                                    <th id="lbl_archivo">
-                                        Archivo NT
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                            <table class="table display mdl-data-table striped" id="table_sop" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>
 
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
-                                <input type="submit" value="Create" id="btn_guardar" style="display:none" class="btn btn-default" />
+                                        </th>
+                                        <th class="lbl_opc">
+                                            OPC NT
+                                        </th>
+                                        <th class="lbl_pos">
+                                            Pos NT
+                                        </th>
+                                        <th class="lbl_rfc">
+                                            RFC NT
+                                        </th>
+                                        <th class="lbl_factura">
+                                            Factura NT
+                                        </th>
+                                        <th id="lbl_fecha">
+                                            Fecha NT
+                                        </th>
+                                        <th id="lbl_monto">
+                                            Monto NT
+                                        </th>
+                                        <th id="lbl_iva">
+                                            IVA NT
+                                        </th>
+                                        <th id="lbl_total">
+                                            Total NT
+                                        </th>
+                                        <th id="lbl_archivo">
+                                            Archivo NT
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Create" id="btn_guardar" style="display:none" class="btn btn-default" />
+                                </div>
                             </div>
-                        </div>
-                    </div>*@
+                        </div>*@
                 </div>
             </div>
         </div>
@@ -940,7 +942,7 @@
     @*MGC 04-10-2018 Botones para acciones WF-->*@
     @if (ViewBag.acciones != null)
     {
-        using (Html.BeginForm("Procesa", "Flujos", FormMethod.Post, new { id = "form_procesa"}))
+        using (Html.BeginForm("Procesa", "Flujos", FormMethod.Post, new { id = "form_procesa" }))
         {
             <div id="modal1" class="modal  bottom-sheet">
                 @Html.AntiForgeryToken()
@@ -1050,7 +1052,7 @@
                     document.getElementById("txt_rec").style.display = 'none';
                     document.getElementById("txt_nex").style.display = 'none';
                     document.getElementById("txt_cont").style.display = 'none';
-                   //document.getElementById("txt_comentario").value = '';
+                    //document.getElementById("txt_comentario").value = '';
                     document.getElementById("txtfirma_us").value = '';
                     document.getElementById("wf_estatus").value = 'A';
                 }
@@ -1100,7 +1102,7 @@
                     }
 
                     if (!resc) {
-                        //Error 
+                        //Error
                         document.getElementById('loader').style.display = 'none';
                         M.toast({ html: 'Error con la Firma del usuario' });
                         e.preventDefault();
@@ -1112,7 +1114,7 @@
                     document.getElementById('loader').style.display = 'none';
                 });
 
-                //MGC 18-10-2018 Firma del usuario --------------------------------------------------<
+                            //MGC 18-10-2018 Firma del usuario --------------------------------------------------<
             </script>
         }
     }

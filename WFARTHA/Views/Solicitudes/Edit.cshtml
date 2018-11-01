@@ -93,12 +93,12 @@
     }
 
     td.select_row {
-        background: url('../images/playb.png') no-repeat center center;
+        background: url('../../images/playb.png') no-repeat center center;
         cursor: pointer;
     }
 
     tr.selected td.select_row {
-        background: url('../images/play.png') no-repeat center center;
+        background: url('../../images/play.png') no-repeat center center;
     }
 
     td.detail_row {
@@ -263,7 +263,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
+    <input id="Uuid" name="Uuid" type="hidden" value="">
     <div class="form-horizontal">
         @*Encabezado*@
         <div id="Encabezado_cont" class="col s12" style="font-size:12px;">
@@ -748,6 +748,7 @@
                                         <th class="">
                                             Descripcion
                                         </th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>

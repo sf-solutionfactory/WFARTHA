@@ -12,6 +12,55 @@ $(document).ready(function () {
     //Inicializar las tabs
     $('#tabs').tabs();
 
+    //Tabla de Anexos
+    $('#table_anexa').DataTable({
+        language: {
+            //"url": "../Scripts/lang/@Session["spras"].ToString()" + ".json"
+            "url": "../Scripts/lang/ES.json"
+        },
+        "paging": false,
+        "info": false,
+        "searching": false,
+        "columns": [
+            {
+                "className": 'select_row',
+                "data": null,
+                "defaultContent": '',
+                "orderable": false
+            },
+            {
+                "name": 'POS',
+                "className": 'POS',
+                "orderable": false
+            },
+            {
+                "name": 'STAT',
+                "className": 'STAT',
+                "orderable": false
+            },
+            {
+                "name": 'NAME',
+                "className": 'NAME',
+                "orderable": false
+            },
+            {
+                "name": 'TYPE',
+                "className": 'TYPE',
+                "orderable": false
+            },
+            {
+                "name": 'DESC',
+                "className": 'DESC',
+                "orderable": false
+            },
+            {
+                "name": '',
+                "className": '',
+                "orderable": false
+            }
+        ]
+    });
+
     solicitarDatos();
     $('#btn_guardarh').on("click", function (e) {
         //Guardar los valores de la tabla en el modelo para enviarlos al controlador
@@ -43,7 +92,7 @@ $(document).ready(function () {
 
         var t = $('#table_info').DataTable();
 
-        var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "","");//Lej 13.09.2018
+        var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018
         posinfo++;
 
         //Obtener el select de impuestos en la cabecera
@@ -66,6 +115,234 @@ $(document).ready(function () {
         var val = $(this).val();
         $('#archivo').val(val);
         $('#btnDownload').trigger("click");
+    });
+
+    $('#file_sopAnexar').change(function () {
+        //var _rw = 0;
+        //$("#table_anexa > tbody  > tr").each(function () {
+        //    _rw++;
+        //});
+        //Validacion para saber si es sin orden de compra o reembolso
+        var val3 = $('#tsol').val();
+        val3 = "[" + val3 + "]";
+        val3 = val3.replace("{", "{ \"");
+        val3 = val3.replace("}", "\" }");
+        val3 = val3.replace(/\,/g, "\" , \"");
+        val3 = val3.replace(/\=/g, "\" : \"");
+        val3 = val3.replace(/\ /g, "");
+        var jsval = $.parseJSON(val3);
+        if (jsval[0].ID === "SSO") {
+            var length = $(this).get(0).files.length;
+            var tdata = "";
+            var _tab = $('#table_anexa').DataTable();
+            for (var i = 0; i < length; i++) {
+                var nr = _tab.rows().count();
+                //Si nr es 0 significa que la tabla esta vacia
+                if (nr === 0) {
+                    var file = $(this).get(0).files[i];
+                    var fileName = file.name;
+                    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+                    tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                    //Lejgg 22-10-2018
+                    if (fileNameExt.toLowerCase() === "xml") {
+                        var data = new FormData();
+                        var _fbool = false;
+                        var _resVu = false;
+                        data.append('file', file);
+                        $.ajax({
+                            type: "POST",
+                            url: 'procesarXML',
+                            data: data,
+                            dataType: "json",
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                if (data !== null || data !== "") {
+                                    _resVu = validarUuid(data[4]);
+                                    //si es false significa que no hay coincidencias
+                                    if (!_resVu) {
+                                        $('#Uuid').val(data[4]);
+                                        $('#FECHAD').val(data[0]);
+                                        $('#FECHADO').val(data[0]);
+                                        $("#FECHAD").trigger("change");
+                                        data[1];//Monto Total
+                                        _fbool = validarRFC(data[2]);
+                                        //data[2];//RFC
+                                    }
+                                }
+                            },
+                            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                //
+                            },
+                            async: false
+                        });
+                    }
+                    if (fileNameExt.toLowerCase() === "xml") {
+                        if (_resVu) {
+                            //Alert no se metio porque ya hay un xml en la tabla
+                            M.toast({ html: "UUID existente en BD" });
+                        }
+                        else {
+                            //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
+                            if (_fbool) {
+                                _tab.row.add(
+                                    $(tdata)
+                                ).draw(false).node();
+                            }
+                            else {
+                                //Alert no se metio porque ya hay un xml en la tabla
+                                M.toast({ html: "No Coincide el rfc" });
+                            }
+                        }
+                    }
+                    else {
+                        _tab.row.add(
+                            $(tdata)
+                        ).draw(false).node();
+                    }
+                } else {
+                    var file = $(this).get(0).files[i];
+                    var fileName = file.name;
+                    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+                    var _ban = false;
+                    //Lejgg 22-10-2018------------------------------------------------>
+                    $("#table_anexa > tbody  > tr[role='row']").each(function () {
+                        var t = $("#table_anexa").DataTable();
+                        //Obtener el row para el plugin
+                        var tr = $(this);
+                        var indexopc = t.row(tr).index();
+
+                        //Obtener valores visibles en la tabla
+                        var _tipoAr = $(this).find("td.TYPE").text();
+                        if (fileNameExt.toLowerCase() === _tipoAr.trim()) {
+                            _ban = true;
+                        }
+                        if (_ban)
+                            return;
+                    });
+                    //Si el archivo es xml entra
+                    //LEJGG23/10/18---------------------------------------------------->
+                    if (fileNameExt.toLowerCase() === "xml") {
+                        var _fbool = false;
+                        //Si ban es false, no hay ningun otro archivo xml, entonces metere el registro
+                        if (!_ban) {
+                            tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                            var data = new FormData();
+                            var _resVu = false;
+                            data.append('file', file);
+                            $.ajax({
+                                type: "POST",
+                                url: 'procesarXML',
+                                data: data,
+                                dataType: "json",
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                success: function (data) {
+                                    if (data !== null || data !== "") {
+                                        _resVu = validarUuid(data[4]);
+                                        if (!_resVu) {
+                                            $('#Uuid').val(data[4]);
+                                            $('#FECHAD').val(data[0]);
+                                            $('#FECHADO').val(data[0]);
+                                            $("#FECHAD").trigger("change");
+                                            data[1];//Monto Total
+                                            _fbool = validarRFC(data[2]);
+                                            //data[2];//RFC
+                                        }
+                                    }
+                                },
+                                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                    //
+                                },
+                                async: false
+                            });
+                            if (_resVu) {
+                                //Alert no se metio porque ya hay un xml en la tabla
+                                M.toast({ html: "UUID existente en BD" });
+                            }
+                            else {
+                                //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
+                                if (_fbool) {
+                                    _tab.row.add(
+                                        $(tdata)
+                                    ).draw(false).node();
+                                }
+                                else {
+                                    //Alert no se metio porque ya hay un xml en la tabla
+                                    M.toast({ html: "No Coincide el rfc" });
+                                }
+                            }
+                        }
+                        else {
+                            //Alert no se metio porque ya hay un xml en la tabla
+                            M.toast({ html: "Ya existe una factura" });
+                        }
+                    }
+                    //LEJGG23/10/18----------------------------------------------------<
+                    else {
+                        tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
+                        _tab.row.add(
+                            $(tdata)
+                        ).draw(false).node();
+                    }
+                    //Lejgg 22-10-2018------------------------------------------------>
+                }
+            }
+        }
+        if (jsval[0].ID === "SRE") {
+            var _length = $(this).get(0).files.length;
+            var _tab2 = $('#table_anexa').DataTable();
+            for (var i = 0; i < _length; i++) {
+                var nr = _tab2.rows().count();
+                if (nr === 0) {
+                    var file = $(this).get(0).files[i];
+                    var fileName = file.name;
+                    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+                    var nr = _tab2.rows().count();
+                    var file = $(this).get(0).files[i];
+                    var _data = new FormData();
+                    _data.append('file', file);
+                    if (fileNameExt.toLowerCase() === "xml") {
+                        //Se saca el UUID
+                        $.ajax({
+                            type: "POST",
+                            url: 'procesarXML',
+                            data: _data,
+                            dataType: "json",
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                if (data !== null || data !== "") {
+                                    data[4];//UUID
+                                }
+                            },
+                            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                //
+                            },
+                            async: false
+                        });
+                    }
+                }
+            }
+        }
+    });
+
+    $('#table_anexa tbody').on('click', 'td.select_row', function () {
+        //var t = $('#table_anexa').DataTable();
+        var tr = $(this).closest('tr');
+
+        $(tr).toggleClass('selected');
+        $(tr).css("background-color:#c4f0ff;");
+    });
+
+    $('#delRowAnex').click(function (e) {
+        var t = $('#table_anexa').DataTable();
+        t.rows('.selected').remove().draw(false);
+        event.returnValue = false;
+        event.cancel = true;
     });
 });
 
@@ -397,8 +674,6 @@ function addSelectImpuesto(addedRowInfo, imp, idselect, disabled, clase) {
     });
 
     //Seleccionar el valor
-    //$("#" + idselect + "").val(imp).change("sel");    
-    // $("#" + idselect + "").val(imp).trigger("change", ["tr"]);
     $("#" + idselect + "").val(imp);
     $("#" + idselect + "").siblings(".select-dropdown").css("font-size", "12px");
     if (disabled == "X") {
@@ -1090,7 +1365,7 @@ function armarTablaInfo(datos) {
         scrollX: true,
         scrollCollapse: true,
         language: {
-            "url": "../Scripts/lang/ES.json"
+            "url": "../../Scripts/lang/ES.json"
         },
         "destroy": true,
         "paging": false,
@@ -1137,7 +1412,6 @@ function armarTablaInfo(datos) {
     var _infoc = _infoBIIR.length / 2;
     var arrColExTA = [];
 
-
     if (_infoc === datos.DOCUMENTOPSTR.length) {
         for (var i = 0; i < datos.DOCUMENTOPSTR.length; i++) {
             for (var x = 0; x < _infoBIIR.length; x++) {
@@ -1152,12 +1426,24 @@ function armarTablaInfo(datos) {
                 datos.DOCUMENTOPSTR[i].IMPUTACION = "";
             }
             if (_infoAnex.length > 0) {
-                addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, _infoAnex[i].a1, _infoAnex[i].a2, _infoAnex[i].a3, _infoAnex[i].a4, _infoAnex[i].a5, datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, "", datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
+                var ar = addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, _infoAnex[i].a1, _infoAnex[i].a2, _infoAnex[i].a3, _infoAnex[i].a4, _infoAnex[i].a5, datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, "", datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
                     datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, "", datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
+                //Obtener el select de impuestos en la cabecera
+                var idselect = "infoSel0";
+                //Obtener el valor 
+                var imp = $('#IMPUESTO').val();
+                //Crear el nuevo select con los valores de impuestos
+                addSelectImpuesto(ar, imp, idselect, "", "X");
             }
             else {
-                addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, "", "", "", "", "", datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, "", datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
+                var ar = addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, "", "", "", "", "", datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, "", datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
                     datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, "", datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
+                //Obtener el select de impuestos en la cabecera
+                var idselect = "infoSel0";
+                //Obtener el valor 
+                var imp = $('#IMPUESTO').val();
+                //Crear el nuevo select con los valores de impuestos
+                addSelectImpuesto(ar, imp, idselect, "", "X");
             }
         }
     }
@@ -1331,7 +1617,7 @@ function convertI(i) {
 function selectConcepto(val, tr, tipo) {
     var t = $('#table_info').DataTable();
 
-    ////Add MGC Validar que los conceptos no existan duplicados en la tabla
+    ////Add Validar que los conceptos no existan duplicados en la tabla
     var conExist = valConcepto(val, tipo);
 
 

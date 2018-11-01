@@ -980,6 +980,7 @@ function validarUuid(uuid) {
         success: function (data) {
             if (data !== null || data !== "") {
                 if (data != "Null") {
+                    //Si es diferente a null significa que si hay coincidencia
                     ban = true;
                 }
                 else {
