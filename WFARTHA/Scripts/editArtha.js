@@ -142,7 +142,7 @@ $(document).ready(function () {
                     var file = $(this).get(0).files[i];
                     var fileName = file.name;
                     var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-                    tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                    tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
                     //Lejgg 22-10-2018
                     if (fileNameExt.toLowerCase() === "xml") {
                         var data = new FormData();
@@ -227,7 +227,7 @@ $(document).ready(function () {
                         var _fbool = false;
                         //Si ban es false, no hay ningun otro archivo xml, entonces metere el registro
                         if (!_ban) {
-                            tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                            tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
                             var data = new FormData();
                             var _resVu = false;
                             data.append('file', file);
@@ -688,17 +688,19 @@ function addSelectImpuesto(addedRowInfo, imp, idselect, disabled, clase) {
 }
 
 function copiarTableInfoControl() {
-
+    var _numdoc = $("#ndoc").val();
     var lengthT = $("table#table_info tbody tr[role='row']").length;
     var docsenviar = {};
     var docsenviar2 = {};
     var docsenviar3 = {};//lej01.10.2018
+    var docsenviar4 = {};//lejgg02.11.2018
     if (lengthT > 0) {
         //Obtener los valores de la tabla para agregarlos a la tabla oculta y agregarlos al json
         //Se tiene que jugar con los index porque las columnas (ocultas) en vista son diferentes a las del plugin
         jsonObjDocs = [];
         jsonObjDocs2 = [];
         jsonObjDocs3 = [];//lej01.10.2018
+        jsonObjDocs4 = [];//lejgg02.11.2018
         var i = 1;
         var t = $('#table_info').DataTable();
         //Lej 14.09.18---------------------
@@ -852,7 +854,6 @@ function copiarTableInfoControl() {
             success: function (data) {
 
                 if (data !== null || data !== "") {
-
                     $("table#table_infoh tbody").append(data);
                 }
 
@@ -904,9 +905,46 @@ function copiarTableInfoControl() {
             },
             async: false
         });
+        //Para mandar la tabla y comparar
+        $("#table_anexa > tbody  > tr[role='row']").each(function () {
+            //Obtener el row para el plugin
+            var tr = $(this);
+            var pos = $(this).find("td.POS").text();
+            var nombre = $(this).find("td.NAME").text();
+            var tipo = $(this).find("td.TYPE").text();
+            var desc = $(this).find("td.DESC").text();
+            if (desc === "") {
+                desc = $(this).find("td.DESC input").val();
+            }
+            var item4 = {};
+            item4["TIPO"] = tipo;
+            item4["DESC"] = desc;
+            item4["NAME"] = nombre;
+            item4["PATH"] = nombre;
+            jsonObjDocs4.push(item4);
+            item4 = "";
+        });
+        docsenviar4 = JSON.stringify({ 'docs': jsonObjDocs4, 'nd': _numdoc });
 
+        $.ajax({
+            type: "POST",
+            url: '../getPartialCon4',
+            contentType: "application/json; charset=UTF-8",
+            data: docsenviar4,
+            success: function (data) {
+
+                if (data !== null || data !== "") {
+
+                    $("table#table_anexah tbody").append(data);
+                }
+
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                M.toast({ html: httpStatusMessage });
+            },
+            async: false
+        });
     }
-
 }
 
 function porcentajeImpRet(val) {
@@ -1491,8 +1529,8 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
             colstoAdd += '<td class=\"ImpRet' + tRet2[i] + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td>';
         }
         else {
-            colstoAdd += '<td class=\"BaseImp' + tRet2[i] + '\"><input class=\"extrasC BaseImp' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[0].BIMPONIBLE) + '\"></td>';
-            colstoAdd += '<td class=\"ImpRet' + tRet2[i] + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[0].IMPORTE_RET) + '\"></td>';
+            colstoAdd += '<td class=\"BaseImp' + tRet2[i] + '\"><input class=\"extrasC BaseImp' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[i].BIMPONIBLE) + '\"></td>';
+            colstoAdd += '<td class=\"ImpRet' + tRet2[i] + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[i].IMPORTE_RET) + '\"></td>';
         }
     }
     colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"

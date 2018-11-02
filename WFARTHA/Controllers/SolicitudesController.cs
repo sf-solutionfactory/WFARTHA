@@ -1748,6 +1748,7 @@ namespace WFARTHA.Controllers
             {
                 return HttpNotFound();
             }
+
             //lejgg 05 10 2018
             if (dOCUMENTO.DOCUMENTOPs != null)
             {
@@ -1788,6 +1789,7 @@ namespace WFARTHA.Controllers
             var sociedades = db.SOCIEDADs.Select(s => new { s.BUKRS, TEXT = s.BUKRS + " - " + s.BUTXT }).ToList();
 
             ViewBag.Title += id; //MGC 05-10-2018 Modificación para work flow al ser editada
+            ViewBag.ndoc = id;
             //LEJGG19 10 2018----------------------------------------------------->
             var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
             DOCUMENTOA d_a = new DOCUMENTOA();
@@ -2084,10 +2086,11 @@ namespace WFARTHA.Controllers
             "MONTO_BASE_GS_PCT_ML2,MONTO_BASE_NS_PCT_ML2,PORC_ADICIONAL,IMPUESTO,FECHAI_VIG,FECHAF_VIG,ESTATUS_EXT,SOLD_TO_ID,PAYER_ID,PAYER_NOMBRE,PAYER_EMAIL,GRUPO_CTE_ID," +
             "CANAL_ID,MONEDA_ID,MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIO,TIPO_CAMBIOL,TIPO_CAMBIOL2,NO_FACTURA,FECHAD_SOPORTE,METODO_PAGO,NO_PROVEEDOR,PASO_ACTUAL,AGENTE_ACTUAL," +
             "FECHA_PASO_ACTUAL,VKORG,VTWEG,SPART,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,PORC_APOYO,LIGADA,OBJETIVOQ,FRECUENCIA_LIQ,OBJQ_PORC,FECHACON,FECHA_BASE,REFERENCIA," +
-            "TEXTO_POS,ASIGNACION_POS,CLAVE_CTA,MONTO_DOC_IMP, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo")] Models.DOCUMENTO_MOD dOCUMENTO, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc, string FECHADO, string mtTot, string Uuid)
+            "TEXTO_POS,ASIGNACION_POS,CLAVE_CTA,MONTO_DOC_IMP, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo,DOCUMENTOA_TAB")] Models.DOCUMENTO_MOD dOCUMENTO, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc, string FECHADO, string mtTot, string Uuid)
         {
             string errorString = "";
             var est = "";
+            var xms = ModelState;
             if (ModelState.IsValid)
             {
                 try
@@ -2379,92 +2382,92 @@ namespace WFARTHA.Controllers
                     }
                     //Lej14.09.2018------
                     //Guardar las retenciones en el encabezado
-                   /* try
-                    {
-                        //Obtener las retenciones relacionadas con las ya mostradas en la tabla------------------------------>
-                        List<DOCUMENTOR_MOD> docrr = new List<DOCUMENTOR_MOD>();
+                    /* try
+                     {
+                         //Obtener las retenciones relacionadas con las ya mostradas en la tabla------------------------------>
+                         List<DOCUMENTOR_MOD> docrr = new List<DOCUMENTOR_MOD>();
 
-                        List<RETENCION> retsub = new List<RETENCION>();
+                         List<RETENCION> retsub = new List<RETENCION>();
 
-                        retsub = (from dr in dOCUMENTO.DOCUMENTOR.ToList()
-                                  join ret1 in db.RETENCIONs.ToList()
-                                  on new { dr.WITHT, dr.WT_WITHCD } equals new { ret1.WITHT, ret1.WT_WITHCD }
-                                  select new RETENCION
-                                  {
-                                      WITHT = ret1.WITHT,
-                                      WT_WITHCD = ret1.WT_WITHCD,
-                                      DESCRIPCION = ret1.DESCRIPCION,
-                                      ESTATUS = ret1.ESTATUS,
-                                      WITHT_SUB = ret1.WITHT_SUB,
-                                      PORC = ret1.PORC,
-                                      WT_WITHCD_SUB = ret1.WT_WITHCD_SUB,
-                                      CAMPO = ret1.CAMPO
-                                  }
-                               ).ToList();
-                        //Guardar las retenciones de la solicitud
-                        int ccr = 1;// Contador consecutivo ////MGC 29-10-2018
-                        for (int i = 0; i < dOCUMENTO.DOCUMENTOR.Count; i++)
-                        {
-                            if (dOCUMENTO.DOCUMENTOR[i].BUKRS == dOCUMENTO.SOCIEDAD_ID && dOCUMENTO.DOCUMENTOR[i].LIFNR == dOCUMENTO.PAYER_ID)
-                            {
-                                DOCUMENTOR dr = new DOCUMENTOR();
-                                try
-                                {
-                                    dr.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                    dr.WITHT = dOCUMENTO.DOCUMENTOR[i].WITHT;
-                                    dr.WT_WITHCD = dOCUMENTO.DOCUMENTOR[i].WT_WITHCD;
-                                    dr.POS = ccr; // Contador consecutivo ////MGC 29-10-2018
-                                    dr.BIMPONIBLE = dOCUMENTO.DOCUMENTOR[i].BIMPONIBLE;
-                                    dr.IMPORTE_RET = dOCUMENTO.DOCUMENTOR[i].IMPORTE_RET;
-                                    dr.VISIBLE = true;
-                                    db.DOCUMENTORs.Add(dr);
-                                    db.SaveChanges();
+                         retsub = (from dr in dOCUMENTO.DOCUMENTOR.ToList()
+                                   join ret1 in db.RETENCIONs.ToList()
+                                   on new { dr.WITHT, dr.WT_WITHCD } equals new { ret1.WITHT, ret1.WT_WITHCD }
+                                   select new RETENCION
+                                   {
+                                       WITHT = ret1.WITHT,
+                                       WT_WITHCD = ret1.WT_WITHCD,
+                                       DESCRIPCION = ret1.DESCRIPCION,
+                                       ESTATUS = ret1.ESTATUS,
+                                       WITHT_SUB = ret1.WITHT_SUB,
+                                       PORC = ret1.PORC,
+                                       WT_WITHCD_SUB = ret1.WT_WITHCD_SUB,
+                                       CAMPO = ret1.CAMPO
+                                   }
+                                ).ToList();
+                         //Guardar las retenciones de la solicitud
+                         int ccr = 1;// Contador consecutivo ////MGC 29-10-2018
+                         for (int i = 0; i < dOCUMENTO.DOCUMENTOR.Count; i++)
+                         {
+                             if (dOCUMENTO.DOCUMENTOR[i].BUKRS == dOCUMENTO.SOCIEDAD_ID && dOCUMENTO.DOCUMENTOR[i].LIFNR == dOCUMENTO.PAYER_ID)
+                             {
+                                 DOCUMENTOR dr = new DOCUMENTOR();
+                                 try
+                                 {
+                                     dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                     dr.WITHT = dOCUMENTO.DOCUMENTOR[i].WITHT;
+                                     dr.WT_WITHCD = dOCUMENTO.DOCUMENTOR[i].WT_WITHCD;
+                                     dr.POS = ccr; // Contador consecutivo ////MGC 29-10-2018
+                                     dr.BIMPONIBLE = dOCUMENTO.DOCUMENTOR[i].BIMPONIBLE;
+                                     dr.IMPORTE_RET = dOCUMENTO.DOCUMENTOR[i].IMPORTE_RET;
+                                     dr.VISIBLE = true;
+                                     db.DOCUMENTORs.Add(dr);
+                                     db.SaveChanges();
 
-                                    //Obtener las retenciones relacionadas con las ya mostradas en la tabla
-                                    ccr++;// Contador consecutivo ////MGC 29-10-2018
-                                }
-                                catch (Exception e)
-                                {
-                                }
+                                     //Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                                     ccr++;// Contador consecutivo ////MGC 29-10-2018
+                                 }
+                                 catch (Exception e)
+                                 {
+                                 }
 
-                                //Obtener la relacionada
-                                RETENCION retrel = retsub.Where(rs => rs.WITHT == dOCUMENTO.DOCUMENTOR[i].WITHT && rs.WT_WITHCD == dOCUMENTO.DOCUMENTOR[i].WT_WITHCD).FirstOrDefault();
+                                 //Obtener la relacionada
+                                 RETENCION retrel = retsub.Where(rs => rs.WITHT == dOCUMENTO.DOCUMENTOR[i].WITHT && rs.WT_WITHCD == dOCUMENTO.DOCUMENTOR[i].WT_WITHCD).FirstOrDefault();
 
-                                if (retrel != null)
-                                {
-                                    if (retrel.WITHT_SUB != null | retrel.WITHT_SUB != "")
-                                    {
-                                        DOCUMENTOR drr = new DOCUMENTOR();
-                                        try
-                                        {
+                                 if (retrel != null)
+                                 {
+                                     if (retrel.WITHT_SUB != null | retrel.WITHT_SUB != "")
+                                     {
+                                         DOCUMENTOR drr = new DOCUMENTOR();
+                                         try
+                                         {
 
-                                            drr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                             drr.NUM_DOC = dOCUMENTO.NUM_DOC;
 
-                                            drr.WITHT = retrel.WITHT_SUB;
-                                            drr.WT_WITHCD = retrel.WT_WITHCD_SUB;
-                                            drr.POS = ccr; // Contador consecutivo //
-                                            drr.BIMPONIBLE = dOCUMENTO.DOCUMENTOR[i].BIMPONIBLE;
-                                            drr.IMPORTE_RET = dOCUMENTO.DOCUMENTOR[i].IMPORTE_RET;
-                                            drr.VISIBLE = false;
-                                            db.DOCUMENTORs.Add(drr);
-                                            db.SaveChanges();
-                                            //Obtener las retenciones relacionadas con las ya mostradas en la tabla
-                                            ccr++;// Contador consecutivo
-                                        }
-                                        catch (Exception e)
-                                        {
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        errorString = e.Message.ToString();
-                        //Guardar número de documento creado
+                                             drr.WITHT = retrel.WITHT_SUB;
+                                             drr.WT_WITHCD = retrel.WT_WITHCD_SUB;
+                                             drr.POS = ccr; // Contador consecutivo //
+                                             drr.BIMPONIBLE = dOCUMENTO.DOCUMENTOR[i].BIMPONIBLE;
+                                             drr.IMPORTE_RET = dOCUMENTO.DOCUMENTOR[i].IMPORTE_RET;
+                                             drr.VISIBLE = false;
+                                             db.DOCUMENTORs.Add(drr);
+                                             db.SaveChanges();
+                                             //Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                                             ccr++;// Contador consecutivo
+                                         }
+                                         catch (Exception e)
+                                         {
+                                         }
+                                     }
+                                 }
+                             }
+                         }
+                     }
+                     catch (Exception e)
+                     {
+                         errorString = e.Message.ToString();
+                         //Guardar número de documento creado
 
-                    }*/
+                     }*/
                     //Lej26.09.2018------
                     List<string> listaDirectorios = new List<string>();
                     List<string> listaNombreArchivos = new List<string>();
@@ -2549,6 +2552,10 @@ namespace WFARTHA.Controllers
                     List<string> listaDirectorios2 = listaDirectorios;
                     List<string> listaNombreArchivos2 = listaNombreArchivos;
                     List<string> listaDescArchivos2 = listaDescArchivos;
+                    List<DOCUMENTOA> lsta = db.DOCUMENTOAs.Where(n => n.NUM_DOC == _ndoc).ToList();
+                    List<DOCUMENTOA1> lstas = db.DOCUMENTOAS1.Where(n => n.NUM_DOC == _ndoc).ToList();
+
+                    //se hace un for a documentoa para ver los archivos que se agregaron
 
                     //DocumentoA
                     //2- Luego se vuelven a guardar las posiciones de la solicitud
@@ -2567,14 +2574,16 @@ namespace WFARTHA.Controllers
                                 _dA.POSD = i + 1;
                                 var de = "";
                                 int a1 = 0;
-                                //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
+                                //Compruebo que el numero este dentro de los rangos de anexos que se agregaron
                                 if (dOCUMENTO.Anexo[i].a1 > 0 && dOCUMENTO.Anexo[i].a1 <= listaNombreArchivos.Count)
                                 {
                                     a1 = dOCUMENTO.Anexo[i].a1;
                                     a1 = a1 - arBorr;
                                     a1 = a1 - 1;
                                     _dA.POS = dOCUMENTO.Anexo[i].a1;
-
+                                    //AQUI COMPROBARE LOS ARCHIVOS QUE SE TIENEN AL MOMENTO
+                                    var na = Path.GetExtension(listaDirectorios[a1]);
+                                    dOCUMENTO.DOCUMENTOA_TAB.Where(x => x.PATH == na).FirstOrDefault();
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a1]);
@@ -3038,6 +3047,34 @@ namespace WFARTHA.Controllers
                     }
                 }
                 return RedirectToAction("Index");
+            }
+            int pagina = 201; //ID EN BASE DE DATOS
+            string spras = "";
+            using (WFARTHAEntities db = new WFARTHAEntities())
+            {
+                string u = User.Identity.Name;
+                //string u = "admin";
+                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+                ViewBag.usuario = user;
+                ViewBag.returnUrl = Request.Url.PathAndQuery;
+                spras = user.SPRAS_ID;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
+                try//Mensaje de documento creado
+                {
+                    string p = Session["NUM_DOC"].ToString();
+                    ViewBag.NUM_DOC = p;
+                    Session["NUM_DOC"] = null;
+                }
+                catch
+                {
+                    ViewBag.NUM_DOC = "";
+                }
             }
             ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", dOCUMENTO.SOCIEDAD_ID);
             ViewBag.TSOL_ID = new SelectList(db.TSOLs, "ID", "DESCRIPCION", dOCUMENTO.TSOL_ID);
@@ -3812,6 +3849,23 @@ namespace WFARTHA.Controllers
             DOCUMENTO_MOD doc = new DOCUMENTO_MOD();
             doc.Anexo = docs;
             return PartialView("~/Views/Solicitudes/_PartialConTr3.cshtml", doc);
+        }
+
+        [HttpPost]
+        public ActionResult getPartialCon4(List<DOCUMENTOA_TAB> docs, decimal nd)
+        {
+            var path = db.DOCUMENTOAs.Where(x => x.NUM_DOC == nd).ToList();
+            var xx = ConfigurationManager.AppSettings["URL_ATT"].ToString() + @"att";
+            if (path.Count > 0)
+            {
+                for (int i = 0; i < docs.Count; i++)
+                {
+                    docs[i].PATH = "\\" + xx + "/" + nd + "/" + docs[i].PATH;
+                }
+            }
+            DOCUMENTO_MOD doc = new DOCUMENTO_MOD();
+            doc.DOCUMENTOA_TAB = docs;
+            return PartialView("~/Views/Solicitudes/_PartialConTr4.cshtml", doc);
         }
 
         [HttpPost]
