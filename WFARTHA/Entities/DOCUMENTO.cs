@@ -88,6 +88,7 @@ namespace WFARTHA.Entities
         public string CLAVE_CTA { get; set; }
         public string SOCIEDAD_PRE { get; set; }
         public string EJERCICIO_PRE { get; set; }
+        public string ESTATUS_PRE { get; set; }
     
         public virtual SOCIEDAD SOCIEDAD { get; set; }
         public virtual TSOL TSOL { get; set; }

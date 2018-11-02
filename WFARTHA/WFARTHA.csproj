@@ -267,6 +267,9 @@
     <Compile Include="Entities\DET_APROBV.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DET_K.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DET_PEP.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
@@ -274,6 +277,12 @@
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DET_PROVEEDORV.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DET_PROYECTOV.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DET_PROYECTO_DEC_V.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DET_SOCIEDAD.cs">
@@ -285,6 +294,9 @@
     <Compile Include="Entities\DET_TIPOPRESUPUESTO.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DET_TIPOPRESUPUESTOV.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DOCUMENTO.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
@@ -292,6 +304,9 @@
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DOCUMENTOA1.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DOCUMENTOLOG.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DOCUMENTOP.cs">

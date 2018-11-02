@@ -753,7 +753,7 @@ namespace WFARTHA.Controllers
                     }
 
                     //Estatus wf
-                    dOCUMENTO.ESTATUS_WF = "P";//MGC 26-10-2018 Si el wf es p es que no se ha creado, si es A, es que se creo el archivo, cambia al generar el preliminar
+                    //dOCUMENTO.ESTATUS_WF = "P";//MGC 30-10-2018 Si el wf es p es que no se ha creado, si es A, es que se creo el archivo, cambia al generar el preliminar
 
                     db.DOCUMENTOes.Add(dOCUMENTO);
                     db.SaveChanges();//Codigolej
@@ -921,19 +921,19 @@ namespace WFARTHA.Controllers
                         List<RETENCION> retsub = new List<RETENCION>();
 
                         retsub = (from dr in doc.DOCUMENTOR.ToList()
-                               join ret1 in db.RETENCIONs.ToList()
-                               on new { dr.WITHT, dr.WT_WITHCD } equals new { ret1.WITHT, ret1.WT_WITHCD }
-                               select new RETENCION
-                               {
-                                   WITHT = ret1.WITHT,
-                                   WT_WITHCD = ret1.WT_WITHCD,
-                                   DESCRIPCION = ret1.DESCRIPCION,
-                                   ESTATUS = ret1.ESTATUS,
-                                   WITHT_SUB = ret1.WITHT_SUB,
-                                   PORC = ret1.PORC,
-                                   WT_WITHCD_SUB = ret1.WT_WITHCD_SUB,
-                                   CAMPO = ret1.CAMPO
-                               }
+                                  join ret1 in db.RETENCIONs.ToList()
+                                  on new { dr.WITHT, dr.WT_WITHCD } equals new { ret1.WITHT, ret1.WT_WITHCD }
+                                  select new RETENCION
+                                  {
+                                      WITHT = ret1.WITHT,
+                                      WT_WITHCD = ret1.WT_WITHCD,
+                                      DESCRIPCION = ret1.DESCRIPCION,
+                                      ESTATUS = ret1.ESTATUS,
+                                      WITHT_SUB = ret1.WITHT_SUB,
+                                      PORC = ret1.PORC,
+                                      WT_WITHCD_SUB = ret1.WT_WITHCD_SUB,
+                                      CAMPO = ret1.CAMPO
+                                  }
                                ).ToList();
 
                         //docrr = (from rs in retsub.ToList()
@@ -955,7 +955,7 @@ namespace WFARTHA.Controllers
                                 DOCUMENTOR dr = new DOCUMENTOR();
                                 try
                                 {
-                                    
+
                                     //dr.NUM_DOC = decimal.Parse(Session["NUM_DOC"].ToString());
                                     dr.NUM_DOC = doc.NUM_DOC;
                                     dr.WITHT = doc.DOCUMENTOR[i].WITHT;
@@ -2805,7 +2805,8 @@ namespace WFARTHA.Controllers
                 {
 
                 }
-                if (est == "B") {
+                if (est == "B")
+                {
                     //Inicia un nuevo flujo de trabajo
                     //MATIAS CODIGO
                     //MATIAS CODIGO
@@ -3852,9 +3853,32 @@ namespace WFARTHA.Controllers
                     int _n;
                     bool is_Numeric = int.TryParse(Prefix, out _n);
                     //LEJ 09102018-------------------------------------------------<
+
+                    //MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k------------------------------------------------> 
+
+                    List<CONCEPTO> listcon = new List<CONCEPTO>();
+
+                    listcon = (from f in db.DET_K.Where(k => k.BUKRS == bukrs).ToList()
+                               join c in db.CONCEPTOes.Where(co => co.TIPO_PRESUPUESTO == tp.TIPOPRE && co.TIPO_IMPUTACION == "K").ToList()
+                               on f.CUENTA equals c.CUENTA
+                               select new CONCEPTO
+                               {
+                                   ID_CONCEPTO = c.ID_CONCEPTO,
+                                   DESC_CONCEPTO = c.DESC_CONCEPTO,
+                                   TIPO_CONCEPTO = c.TIPO_CONCEPTO,
+                                   TIPO_IMPUTACION = c.TIPO_IMPUTACION,
+                                   ID_PRESUPUESTO = c.ID_PRESUPUESTO,
+                                   TIPO_PRESUPUESTO = c.TIPO_PRESUPUESTO,
+                                   CUENTA = c.CUENTA
+                               }).ToList();
+
+                    //MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k------------------------------------------------<
+
+
                     ////Obtener todos los elementos k-------------------------------------------------------------------------------------
 
-                    var lconk = (from co in db.CONCEPTOes
+                    //var lconk = (from co in db.CONCEPTOes//MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k
+                    var lconk = (from co in listcon//MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k
                                  where co.TIPO_CONCEPTO.Contains(Prefix.ToUpper()) && co.TIPO_PRESUPUESTO == tp.TIPOPRE && co.TIPO_IMPUTACION == "K"
                                  select new
                                  {
@@ -3866,7 +3890,8 @@ namespace WFARTHA.Controllers
 
                     if (lconk.Count == 0)
                     {
-                        lconk = (from co in db.CONCEPTOes
+                        //lconk = (from co in db.CONCEPTOes//MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k
+                        lconk = (from co in listcon//MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k
                                  where co.ID_CONCEPTO.Contains(Prefix) && co.TIPO_PRESUPUESTO == tp.TIPOPRE && co.TIPO_IMPUTACION == "K"
                                  select new
                                  {
@@ -3877,7 +3902,8 @@ namespace WFARTHA.Controllers
                     }
                     if (lconk.Count == 0)
                     {
-                        var lconk2 = (from co in db.CONCEPTOes.ToList()
+                        //var lconk2 = (from co in db.CONCEPTOes.ToList()//MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k
+                        var lconk2 = (from co in listcon//MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k
                                       where co.DESC_CONCEPTO.Contains(Prefix) && co.TIPO_PRESUPUESTO == tp.TIPOPRE && co.TIPO_IMPUTACION == "K"
                                       select new
                                       {
@@ -3957,8 +3983,31 @@ namespace WFARTHA.Controllers
                     bool is_Numeric = int.TryParse(Prefix, out _n);
                     //LEJ 09102018-------------------------------------------------<
                     var lcont2 = (dynamic)null;
+
+                    //MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k------------------------------------------------> 
+
+                    List<CONCEPTO> listcon = new List<CONCEPTO>();
+
+                    listcon = (from f in db.DET_K.Where(k => k.BUKRS == bukrs).ToList()
+                               join c in db.CONCEPTOes.Where(co => co.TIPO_IMPUTACION == "K").ToList()
+                               on f.CUENTA equals c.CUENTA
+                               select new CONCEPTO
+                               {
+                                   ID_CONCEPTO = c.ID_CONCEPTO,
+                                   DESC_CONCEPTO = c.DESC_CONCEPTO,
+                                   TIPO_CONCEPTO = c.TIPO_CONCEPTO,
+                                   TIPO_IMPUTACION = c.TIPO_IMPUTACION,
+                                   ID_PRESUPUESTO = c.ID_PRESUPUESTO,
+                                   TIPO_PRESUPUESTO = c.TIPO_PRESUPUESTO,
+                                   CUENTA = c.CUENTA
+                               }).ToList();
+
+                    //MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k------------------------------------------------<
+
+
                     //Obtener todos los elementos k-------------------------------------------------------------------------------------
-                    var lconk = (from co in db.CONCEPTOes
+                    //var lconk = (from co in db.CONCEPTOes//MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k
+                    var lconk = (from co in listcon//MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k
                                  where co.TIPO_CONCEPTO.Contains(Prefix.ToUpper()) && co.TIPO_IMPUTACION == "K"
                                  select new
                                  {
@@ -3971,7 +4020,8 @@ namespace WFARTHA.Controllers
                     // BUSQUEDA POR id_CONCEPTO
                     if (lconk.Count == 0)
                     {
-                        lconk = (from co in db.CONCEPTOes
+                        //lconk = (from co in db.CONCEPTOes //MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k
+                        lconk = (from co in listcon//MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k
                                  where co.ID_CONCEPTO.Contains(Prefix) && co.TIPO_IMPUTACION == "K"
                                  select new
                                  {
@@ -3983,7 +4033,8 @@ namespace WFARTHA.Controllers
                     //LEJ 09102018-------------------------------------------------<
                     if (lconk.Count == 0)
                     {
-                        var lconk2 = (from co in db.CONCEPTOes
+                        //var lconk2 = (from co in db.CONCEPTOes//MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k
+                        var lconk2 = (from co in listcon //MGC 30-10-2018 Obtener los elementos k filtrados en la tabla det_k
                                       where co.DESC_CONCEPTO.Contains(Prefix) && co.TIPO_IMPUTACION == "K"
                                       select new
                                       {
@@ -4058,6 +4109,33 @@ namespace WFARTHA.Controllers
 
             JsonResult cc = Json(lcont, JsonRequestBehavior.AllowGet);
             return cc;
+        }
+
+        [HttpPost]
+        public JsonResult getCondicion(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            WFARTHAEntities db = new WFARTHAEntities();
+
+            var cond = from con in db.CONDICIONES_PAGO where con.COND_PAGO.Contains(Prefix) select new { COND_PAGO = con.COND_PAGO.ToString(), TEXT = con.TEXT.ToString()};
+
+            JsonResult cc = Json(cond, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        [HttpPost]
+        public string getCondicionT(string cond)
+        {
+            if (cond == null)
+                cond = "";
+
+            WFARTHAEntities db = new WFARTHAEntities();
+            var text = "";
+            text = db.CONDICIONES_PAGO.Where(con => con.COND_PAGO == cond).FirstOrDefault().TEXT.ToString();
+
+            return text;
         }
 
         [HttpPost]
