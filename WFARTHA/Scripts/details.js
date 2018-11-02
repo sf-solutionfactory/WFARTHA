@@ -231,14 +231,14 @@ function showHide(tsol) {
     var jsval = $.parseJSON(val3)
 
     $.each(jsval, function (i, dataj) {
-        ocultarCampos(dataj.EDITDET, param1)
+        ocultarCampos(dataj.EDITDET, param1);
     });
 
 }
 
 function formatoMon() {
     var table = $('#table_info').DataTable();
-    $("#table_info > tbody > tr[role = 'row']").each(function (index) {
+   // $("#table_info > tbody > tr[role = 'row']").each(function (index) {
         //var col11 = $(this).find("td.TOTAL input").val();
         //var col11 = $(this).find("td.TOTAL input").val();
 
@@ -249,7 +249,7 @@ function formatoMon() {
         //if ($.isNumeric(val)) {
         //    total += val;
         //}
-    });
+  //  });
 }
 
 function updateFooter() {

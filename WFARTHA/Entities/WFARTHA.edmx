@@ -22,6 +22,7 @@
           <Property Name="VALUE" Type="nvarchar" MaxLength="255" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
+
         <EntityType Name="CAMPOS">
           <Key>
             <PropertyRef Name="PAGINA_ID" />
@@ -83,8 +84,8 @@
           <Property Name="TIPO_PRESUPUESTO" Type="nchar" MaxLength="1" />
           <Property Name="CUENTA" Type="nchar" MaxLength="10" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.CONDICIONES_PAGO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.CONDICIONES_PAGO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CONDICIONES_PAGO">
           <Key>
             <PropertyRef Name="COND_PAGO" />
@@ -148,8 +149,8 @@ warning 6002: The table/view 'PAGOS.dbo.CONDICIONES_PAGO' does not have a primar
           <Property Name="AGENTE_SIG" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="OVERRIDE" Type="bit" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.DET_AGENTECC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_AGENTECC' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DET_AGENTECC">
           <Key>
             <PropertyRef Name="VERSION" />
@@ -238,6 +239,12 @@ warning 6002: The table/view 'PAGOS.dbo.DET_AGENTECC' does not have a primary ke
           <Property Name="ID_USER" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="TIPOPRE" Type="varchar" MaxLength="1" Nullable="false" />
         </EntityType>
+        <!--Errores durante la generación:
+advertencia 6013: La tabla o vista 'PAGOS.dbo.DETK$' no tiene definida una clave principal y no es posible inferir ninguna clave principal válida. Esta tabla o vista se ha excluido. Para usar la entidad, necesitará revisar el esquema, agregar las claves correctas y quitar sus comentarios.
+        <EntityType Name="DETK$">
+          <Property Name="BUKRS" Type="nchar" MaxLength="4" />
+          <Property Name="SAKNR" Type="nchar" MaxLength="10" />
+        </EntityType>-->
         <EntityType Name="DOCUMENTO">
           <Key>
             <PropertyRef Name="NUM_DOC" />
@@ -522,8 +529,8 @@ warning 6002: The table/view 'PAGOS.dbo.DET_AGENTECC' does not have a primary ke
           <Property Name="DECIMALES" Type="nchar" MaxLength="1" Nullable="false" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.IIMPUESTO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="IIMPUESTO">
           <Key>
             <PropertyRef Name="MWSKZ" />
@@ -904,8 +911,8 @@ warning 6013: The table/view 'PAGOS.dbo.SOCIEDADRFC$' does not have a primary ke
           <Property Name="USUARIO_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="FECHAC" Type="datetime" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.ASIGN_PROY_SOC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.ASIGN_PROY_SOC' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="ASIGN_PROY_SOC">
           <Key>
             <PropertyRef Name="ID_PSPNR" />
@@ -914,8 +921,8 @@ warning 6002: The table/view 'PAGOS.dbo.ASIGN_PROY_SOC' does not have a primary 
           <Property Name="ID_PSPNR" Type="nvarchar" MaxLength="8" Nullable="false" />
           <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.CARPETAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.CARPETAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CARPETAV">
           <Key>
             <PropertyRef Name="USUARIO_ID" />
@@ -927,6 +934,7 @@ warning 6002: The table/view 'PAGOS.dbo.CARPETAV' does not have a primary key de
           <Property Name="TXT50" Type="nvarchar" MaxLength="50" />
           <Property Name="ICON" Type="nvarchar" MaxLength="20" />
         </EntityType>
+
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PAGOS.dbo.DET_APROBV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DET_APROBV">
@@ -958,6 +966,7 @@ warning 6002: The table/view 'PAGOS.dbo.DET_PROVEEDORV' does not have a primary 
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PAGOS.dbo.DET_PROYECTO_DEC_V' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+
         <EntityType Name="DET_PROYECTO_DEC_V">
           <Key>
             <PropertyRef Name="ID_PSPNR" />
@@ -970,8 +979,10 @@ warning 6002: The table/view 'PAGOS.dbo.DET_PROYECTO_DEC_V' does not have a prim
           <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
           <Property Name="BUTXT" Type="nvarchar" MaxLength="107" Nullable="false" />
         </EntityType>
+
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PAGOS.dbo.DET_PROYECTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+
         <EntityType Name="DET_PROYECTOV">
           <Key>
             <PropertyRef Name="ID_PSPNR" />
@@ -980,8 +991,10 @@ warning 6002: The table/view 'PAGOS.dbo.DET_PROYECTOV' does not have a primary k
           <Property Name="ID_PSPNR" Type="nvarchar" MaxLength="8" Nullable="false" />
           <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
         </EntityType>
+
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PAGOS.dbo.DET_TIPOPRESUPUESTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+
         <EntityType Name="DET_TIPOPRESUPUESTOV">
           <Key>
             <PropertyRef Name="BUKRS" />
@@ -997,8 +1010,10 @@ warning 6002: The table/view 'PAGOS.dbo.DET_TIPOPRESUPUESTOV' does not have a pr
           <Property Name="TIPOPRE" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="DESC" Type="nvarchar" MaxLength="30" />
         </EntityType>
+
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PAGOS.dbo.DOCUMENTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+
         <EntityType Name="DOCUMENTOV">
           <Key>
             <PropertyRef Name="POS" />
@@ -1058,8 +1073,8 @@ warning 6002: The table/view 'PAGOS.dbo.DOCUMENTOV' does not have a primary key 
           <Property Name="USUARIOA_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="EXPR2" Type="nchar" MaxLength="1" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.PAGINAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.PAGINAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="PAGINAV">
           <Key>
             <PropertyRef Name="ID" />
@@ -1079,8 +1094,8 @@ warning 6002: The table/view 'PAGOS.dbo.PAGINAV' does not have a primary key def
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="USUARIO_SPRAS" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="WARNINGV">
           <Key>
             <PropertyRef Name="PAGINA_ID" />
@@ -6068,7 +6083,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
         <DesignerProperty Name="EnablePluralization" Value="true" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

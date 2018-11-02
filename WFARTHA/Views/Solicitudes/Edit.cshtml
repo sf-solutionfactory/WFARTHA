@@ -17,8 +17,18 @@
     var montomd = formatoc.toShow(total, ViewBag.dec);
 }
 
-<link type="text/css" href="~/Content/datatables.min.css" rel="stylesheet" />
-<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+<link href="~/Content/dataTable.css" rel="stylesheet" />
+<link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+@* Para el autocomplete *@
+<link href="~/Content/autocomplete.css" rel="stylesheet" />
+<script src="~/Scripts/autocomplete1.10.2.js"></script>
+<script src="~/Scripts/autocomplete1.11.4.js"></script>
+
+<script>
+    var auto = $.noConflict(true);
+</script>
 
 <script src="~/Scripts/editArtha.js"></script>@*LEJGG-04-10-2018*@
 <script src="~/Scripts/ValidarCampos.js"></script>@*LEJGG-19-10-2018*@
@@ -83,12 +93,12 @@
     }
 
     td.select_row {
-        background: url('../images/playb.png') no-repeat center center;
+        background: url('../../images/playb.png') no-repeat center center;
         cursor: pointer;
     }
 
     tr.selected td.select_row {
-        background: url('../images/play.png') no-repeat center center;
+        background: url('../../images/play.png') no-repeat center center;
     }
 
     td.detail_row {
@@ -247,13 +257,13 @@
 @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
 {
     <input type="hidden" id="archivo" name="archivo" value="" />
-    <button id="btnDownload" class="btn" type="submit">DESCARGAR</button>
+    <button id="btnDownload" class="btn" type="submit" style="display:none">DESCARGAR</button>
 }
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
+    <input id="Uuid" name="Uuid" type="hidden" value="">
     <div class="form-horizontal">
         @*Encabezado*@
         <div id="Encabezado_cont" class="col s12" style="font-size:12px;">
@@ -611,9 +621,10 @@
                         <div class="row" style="margin-bottom:0">
 
                             @*//MGC 04092018 Conceptos*@
-                            @*@{string jval = ViewBag.TSOL_VALUES;
-                                    @Html.Hidden("impuestosval", jval)
-                                }*@
+                            @{string jval = ViewBag.TSOL_VALUES;
+                                @Html.Hidden("impuestosval", jval)
+                            }
+                            <!--ADD RSG 18.10.2018-->
 
                             <div id="div_btns_row_info">
                                 <a class="btn"><i class="material-icons left">add</i><span id="addRowInfo">Registros Add NT</span></a>
@@ -737,6 +748,7 @@
                                         <th class="">
                                             Descripcion
                                         </th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
