@@ -481,6 +481,7 @@
     <Compile Include="Models\Conmail.cs" />
     <Compile Include="Models\ConmailNuevo.cs" />
     <Compile Include="Models\Cryptography.cs" />
+    <Compile Include="Models\DOCUMENTOA_TAB.cs" />
     <Compile Include="Models\DOCUMENTOA_MOD.cs" />
     <Compile Include="Models\DocumentoComparer.cs" />
     <Compile Include="Models\DocumentoFlujo.cs" />
@@ -755,6 +756,8 @@
     <Content Include="Views\Usuarios\EditBackup.cshtml" />
     <Content Include="Views\Usuarios\Index.cshtml" />
     <Content Include="Views\Usuarios\Pass.cshtml" />
+    <Content Include="Views\Solicitudes\_PartialConTr4.cshtml" />
+
     <Content Include="Views\UsuarioC\Create.cshtml" />
     <Content Include="Views\UsuarioC\Index.cshtml" />
     <Content Include="Views\ProyectoSociedad\Index.cshtml" />
@@ -762,6 +765,7 @@
     <Content Include="Views\SociedadesUsuario\Create.cshtml" />
     <Content Include="Views\SociedadesUsuario\Edit.cshtml" />
     <Content Include="Views\ProyectoSociedad\Create.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
