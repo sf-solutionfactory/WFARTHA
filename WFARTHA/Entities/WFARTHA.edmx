@@ -23,18 +23,6 @@
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
 
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'PAGOS.dbo.'CADENAS M$'' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="'CADENAS M$'">
-          <Property Name="VERSION" Type="float" />
-          <Property Name="USUARIOC_ID" Type="nvarchar" MaxLength="255" />
-          <Property Name="ID_RUTA_AGENTE" Type="nchar" MaxLength="10" />
-          <Property Name="USUARIOA_ID" Type="nvarchar" MaxLength="255" />
-          <Property Name="A1" Type="nvarchar" MaxLength="255" />
-          <Property Name="A2" Type="nvarchar" MaxLength="255" />
-          <Property Name="F7" Type="nvarchar" MaxLength="255" />
-          <Property Name="F8" Type="nvarchar" MaxLength="255" />
-        </EntityType>-->
         <EntityType Name="CAMPOS">
           <Key>
             <PropertyRef Name="PAGINA_ID" />
@@ -976,8 +964,9 @@ warning 6002: The table/view 'PAGOS.dbo.DET_PROVEEDORV' does not have a primary 
           <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
           <Property Name="COND_PAGO" Type="nchar" MaxLength="4" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_PROYECTO_DEC_V' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.DET_PROYECTO_DEC_V' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+
         <EntityType Name="DET_PROYECTO_DEC_V">
           <Key>
             <PropertyRef Name="ID_PSPNR" />
@@ -990,8 +979,10 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_PROYECTO_DEC_V' no tiene defin
           <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
           <Property Name="BUTXT" Type="nvarchar" MaxLength="107" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_PROYECTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.DET_PROYECTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+
         <EntityType Name="DET_PROYECTOV">
           <Key>
             <PropertyRef Name="ID_PSPNR" />
@@ -1000,8 +991,10 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_PROYECTOV' no tiene definida n
           <Property Name="ID_PSPNR" Type="nvarchar" MaxLength="8" Nullable="false" />
           <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_TIPOPRESUPUESTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.DET_TIPOPRESUPUESTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+
         <EntityType Name="DET_TIPOPRESUPUESTOV">
           <Key>
             <PropertyRef Name="BUKRS" />
@@ -1017,8 +1010,10 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_TIPOPRESUPUESTOV' no tiene def
           <Property Name="TIPOPRE" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="DESC" Type="nvarchar" MaxLength="30" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.DOCUMENTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.DOCUMENTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+
         <EntityType Name="DOCUMENTOV">
           <Key>
             <PropertyRef Name="POS" />
@@ -1042,6 +1037,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.DOCUMENTOV' no tiene definida ning
           <Property Name="ESTATUS_C" Type="nchar" MaxLength="1" />
           <Property Name="ESTATUS_SAP" Type="nchar" MaxLength="1" />
           <Property Name="ESTATUS_WF" Type="nchar" MaxLength="1" />
+          <Property Name="ESTATUS_PRE" Type="nchar" MaxLength="1" />
           <Property Name="DOCUMENTO_REF" Type="decimal" Precision="10" Scale="0" />
           <Property Name="CONCEPTO" Type="nvarchar" MaxLength="100" />
           <Property Name="NOTAS" Type="nvarchar" MaxLength="255" />
@@ -2193,6 +2189,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
     [DOCUMENTOV].[ESTATUS_C] AS [ESTATUS_C], 
     [DOCUMENTOV].[ESTATUS_SAP] AS [ESTATUS_SAP], 
     [DOCUMENTOV].[ESTATUS_WF] AS [ESTATUS_WF], 
+    [DOCUMENTOV].[ESTATUS_PRE] AS [ESTATUS_PRE], 
     [DOCUMENTOV].[DOCUMENTO_REF] AS [DOCUMENTO_REF], 
     [DOCUMENTOV].[CONCEPTO] AS [CONCEPTO], 
     [DOCUMENTOV].[NOTAS] AS [NOTAS], 
@@ -3684,6 +3681,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
           <Property Name="ESTATUS_C" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
           <Property Name="ESTATUS_SAP" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
           <Property Name="ESTATUS_WF" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="ESTATUS_PRE" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
           <Property Name="DOCUMENTO_REF" Type="Decimal" Precision="10" Scale="0" />
           <Property Name="CONCEPTO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="NOTAS" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
@@ -5992,6 +5990,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
                 <ScalarProperty Name="ESTATUS_C" ColumnName="ESTATUS_C" />
                 <ScalarProperty Name="ESTATUS_SAP" ColumnName="ESTATUS_SAP" />
                 <ScalarProperty Name="ESTATUS_WF" ColumnName="ESTATUS_WF" />
+                <ScalarProperty Name="ESTATUS_PRE" ColumnName="ESTATUS_PRE" />
                 <ScalarProperty Name="DOCUMENTO_REF" ColumnName="DOCUMENTO_REF" />
                 <ScalarProperty Name="CONCEPTO" ColumnName="CONCEPTO" />
                 <ScalarProperty Name="NOTAS" ColumnName="NOTAS" />

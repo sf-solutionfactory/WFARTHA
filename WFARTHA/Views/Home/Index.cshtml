@@ -430,169 +430,269 @@
                     @*MGC Preliminar Status que hay en preliminar*@
                     @if (item.NUM_PRE != "")
                     {
-
-                        string estatus = "";
-                        if (item.ESTATUS != null) { estatus += item.ESTATUS; } else { estatus += " "; }
-                        if (item.ESTATUS_C != null) { estatus += item.ESTATUS_C; } else { estatus += " "; }
-                        if (item.ESTATUS_SAP != null) { estatus += item.ESTATUS_SAP; } else { estatus += " "; }
-                        if (item.ESTATUS_WF != null) { estatus += item.ESTATUS_WF; } else { estatus += " "; }
-
-                        if (item.FLUJOes.Count > 0)
+                        @*//MGC 30-10-2018 Modificación estatus, Label de contabilizada en SAP*@
+                        if (item.ESTATUS.Equals("A"))
                         {
-                            estatus += item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO;
+                            
+                                <td class="">
+                                    <span class="lbl_tax new badge green darken-2 white-text" data-badge-caption=" ">Contabilizado SAP</span>
+                                </td>
+                        
                         }
-                        else
+                        @*//MGC 30-10-2018 Modificación estatus, Label de generando preliminar*@
+                        else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP == null && item.ESTATUS_WF == null)
                         {
-                            estatus += " ";
-                        }
-                        if (false) { estatus += "P"; } else { estatus += " "; }
-                        if (item.FLUJOes.Where(x => x.ESTATUS == "R").ToList().Count > 0)
-                        {
-                            estatus += item.FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID;
-                        }
-                        else
-                        {
-                            estatus += " ";
-                        }
-                        // "XCXXXX" ----------->CANCELADA
-                        // "XXXPRX" ----------->PENDIENTE TS
-                        // "XXXPAX" ----------->PENDIENTE APROBADOR
-                        // "CXXAXX" ----------->PENDIENTE APROBADOR
-
-                        @*@if (item.ESTATUS_C == "C")*@
-                        if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]"))
-                        {
-                            <td class="">
-                                <span class="lbl_cancelled new badge red darken-1 white-text" data-badge-caption=" ">Cancelada</span>
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].."))
-                        {
-                            <td class="">
-                                <span class="lbl_ts yellow darken-2 white-text new badge" data-badge-caption=" ">Pendiente creación preliminar</span>@*//MGC 02-10-2018 Cadena de autorización*@
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A].."))
-                        {
-                            <td class="">
-                                <span class="new badge yellow darken-2 white-text" data-badge-caption=" "><span class="lbl_pending">Pendiente aprobador </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID*@</span>
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[A]..."))
-                        {
-                            <td class="">
-                                <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Por gen .txt</span>
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]..."))
-                        {
-                            <td class="">
-                                <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Cerrada</span>
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..."))
-                        {
-                            <td class="">
-                                <span class="lbl_contab new badge green darken-1 white-text" data-badge-caption=" ">Por contabilizar</span>
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..."))
-                        {
-                            <td class="">
-                                <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Por contabilizar</span>
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]..."))
-                        {
-                            <td class="">
-                                <span class="lbl_txt new badge red darken-1 white-text" data-badge-caption=" ">Error en contabiización</span>
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]."))
-                        {
-                            <td class="">
-                                <span class="new badge green darken-1 white-text" data-badge-caption=" ">@item.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50 <span class="lbl_approved">Abierta</span></span>
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..."))
-                        {
-                            <td class="">
-                                <span class="new badge green darken-1 white-text" data-badge-caption=" ">Registrada en SAP</span>
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]"))
-                        {
-                            <td class="">
-                                <span class="new badge red darken-1 white-text" data-badge-caption=" "><span class="lbl_rejecte">Pendiente corrección usuario TS </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID*@</span>
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..."))
-                        {
-                            <td class="">
-                                <span class="new badge red darken-1 white-text" data-badge-caption=" "><span class="lbl_rejected">Pendiente corrección usuario </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID*@</span>
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[S]..."))
-                        {
-                            <td class="">
-                                <span class="lbl_soporte new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente firma</span>
-                            </td>
-                        }
-                        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..."))
-                        {
-                            <td class="">
-                                <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente tax</span>
-                            </td>
-                        }
-                        else
-                        {
-                            if (item.DOCUMENTOPREs != null)
+                            //Se creó el archivo preliminar
+                            if (item.ESTATUS_PRE == "G")
                             {
-                                if (item.DOCUMENTOPREs.Count > 0)
-                                {
-                                    <td class="">
-                                        @foreach (WFARTHA.Entities.DOCUMENTOPRE i in item.DOCUMENTOPREs)
-                                        {
-                                            if (System.Text.RegularExpressions.Regex.IsMatch(@i.MESSAGE, "...[Error]..."))
-                                            {
-                                                <span class="lbl_tax new badge red darken-1 white-text" data-badge-caption=" ">@i.MESSAGE</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">@i.MESSAGE</span>
-                                            }
-                                        }
-                                    </td>
-                                }
+                                <td class="">
+                                    <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Generando Preliminar</span>
+                                </td>
+                            }
+                            //Error al crear el archivo preliminar
+                            else if (item.ESTATUS_PRE == "E")
+                            {
+                                <td class="">
+                                    <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error al generar Archivo Preliminar</span>
+                                </td>
+                            }
+                        }
+                        @*//MGC 30-10-2018 Modificación estatus, Label de generando preliminar RESPUESTA DESDE SAP  *@
+                        //else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP != null && item.ESTATUS_WF == null)
+                        else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP != null && item.ESTATUS_WF == null)
+                        {
+                            //Error al crear el archivo preliminar
+                            if (item.ESTATUS_PRE == "E" && item.ESTATUS_SAP == "E")
+                            {
+                                <td class="">
+                                    <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error al generar Archivo Preliminar SAP</span>
+                                </td>
+                            }
+                            //Error al crear el archivo preliminar
+                            if (item.ESTATUS_PRE == "G" && item.ESTATUS_SAP == "P")
+                            {
+                                <td class="">
+                                    <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Se generó archivo SAP</span>
+                                </td>
+                            }
+                        }
+                        @*//MGC 30-10-2018 Modificación estatus, Label Aprobadores *@
+                        else if (item.ESTATUS == "F" && (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("S")))
+                        {
+                            @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
+                            if (item.ESTATUS_PRE == "G")
+                            {
+                                <td class="">
+                                    <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente Aprobador</span>
+                                </td>
+                            }
+                        }
+                        @*//MGC 30-10-2018 Modificación estatus, Label Contabilización *@
+                        else if (item.ESTATUS == "C" && (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("A")))
+                        {
+                            @*//MGC 30-10-2018 Modificación estatus, Pendiente contabilizador  *@
+                            if (item.ESTATUS_WF.Equals("P") && item.ESTATUS_PRE == "G")
+                            {
+                                <td class="">
+                                    <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente Contabilizar</span>
+                                </td>
+                            }
+                            @*//MGC 30-10-2018 Modificación estatus  *@
+                            if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "E")
+                            {
+                                <td class="">
+                                    <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error generando archivo de contabilizacion</span>
+                                </td>
+                            }
+                            @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
+                            if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "G")
+                            {
+                                <td class="">
+                                    <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Contabilizando SAP</span>
+                                </td>
+                            }
+                            @*//MGC 30-10-2018 Modificación estatus, Error en SAP  *@
+                            if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_SAP == "E")
+                            {
+                                <td class="">
+                                    <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error contabilizando SAP</span>
+                                </td>
+                            }
+                        }
+                        else
+                        {
+
+                            string estatus = "";
+                            if (item.ESTATUS != null) { estatus += item.ESTATUS; } else { estatus += " "; }
+                            if (item.ESTATUS_C != null) { estatus += item.ESTATUS_C; } else { estatus += " "; }
+                            if (item.ESTATUS_SAP != null) { estatus += item.ESTATUS_SAP; } else { estatus += " "; }
+                            if (item.ESTATUS_WF != null) { estatus += item.ESTATUS_WF; } else { estatus += " "; }
+
+                            if (item.FLUJOes.Count > 0)
+                            {
+                                estatus += item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO;
                             }
                             else
                             {
-                                        <td>Espacio</td>
+                                estatus += " ";
                             }
-                            
+                            if (false) { estatus += "P"; } else { estatus += " "; }
+                            if (item.FLUJOes.Where(x => x.ESTATUS == "R").ToList().Count > 0)
+                            {
+                                estatus += item.FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID;
+                            }
+                            else
+                            {
+                                estatus += " ";
+                            }
+                            // "XCXXXX" ----------->CANCELADA
+                            // "XXXPRX" ----------->PENDIENTE TS
+                            // "XXXPAX" ----------->PENDIENTE APROBADOR
+                            // "CXXAXX" ----------->PENDIENTE APROBADOR
+
+                            @*@if (item.ESTATUS_C == "C")*@
+                            if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]"))
+                            {
+                                <td class="">
+                                    <span class="lbl_cancelled new badge red darken-1 white-text" data-badge-caption=" ">Cancelada</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].."))
+                            {
+                                <td class="">
+                                    <span class="lbl_ts yellow darken-2 white-text new badge" data-badge-caption=" ">Pendiente creación preliminar</span>@*//MGC 02-10-2018 Cadena de autorización*@
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A].."))
+                            {
+                                <td class="">
+                                    <span class="new badge yellow darken-2 white-text" data-badge-caption=" "><span class="lbl_pending">Pendiente aprobador </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID*@</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[A]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Por gen .txt</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Cerrada</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_contab new badge green darken-1 white-text" data-badge-caption=" ">Por contabilizar</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Por contabilizar</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_txt new badge red darken-1 white-text" data-badge-caption=" ">Error en contabiización</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]."))
+                            {
+                                <td class="">
+                                    <span class="new badge green darken-1 white-text" data-badge-caption=" ">@item.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50 <span class="lbl_approved">Abierta</span></span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..."))
+                            {
+                                <td class="">
+                                    <span class="new badge green darken-1 white-text" data-badge-caption=" ">Registrada en SAP</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]"))
+                            {
+                                <td class="">
+                                    <span class="new badge red darken-1 white-text" data-badge-caption=" "><span class="lbl_rejecte">Pendiente corrección usuario TS </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID*@</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..."))
+                            {
+                                <td class="">
+                                    <span class="new badge red darken-1 white-text" data-badge-caption=" "><span class="lbl_rejected">Pendiente corrección usuario </span> @*@item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID*@</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[S]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_soporte new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente firma</span>
+                                </td>
+                            }
+                            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..."))
+                            {
+                                <td class="">
+                                    <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente tax</span>
+                                </td>
+                            }
+                            else
+                            {
+                                if (item.DOCUMENTOPREs != null)
+                                {
+                                    if (item.DOCUMENTOPREs.Count > 0)
+                                    {
+                                        <td class="">
+                                            @foreach (WFARTHA.Entities.DOCUMENTOPRE i in item.DOCUMENTOPREs)
+                                            {
+                                                if (System.Text.RegularExpressions.Regex.IsMatch(@i.MESSAGE, "...[Error]..."))
+                                                {
+                                                    <span class="lbl_tax new badge red darken-1 white-text" data-badge-caption=" ">@i.MESSAGE</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">@i.MESSAGE</span>
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td>Espacio</td>
+                                }
+
+                            }
                         }
 
                     }
                     else
                     {
-                        if (item.DOCUMENTOPREs != null)
+                        @*//MGC 30-10-2018 Modificación estatus, Label de generando preliminar*@
+                        @*if (item.DOCUMENTOPREs != null)
+            {
+                if (item.DOCUMENTOPREs.Count > 0)
+                {
+                    <td class="">
+                        @foreach (WFARTHA.Entities.DOCUMENTOPRE i in item.DOCUMENTOPREs)
                         {
-                            if (item.DOCUMENTOPREs.Count > 0)
+                            if (System.Text.RegularExpressions.Regex.IsMatch(@i.MESSAGE, "...[Error]..."))
                             {
-                                <td class="">
-                                    @foreach (WFARTHA.Entities.DOCUMENTOPRE i in item.DOCUMENTOPREs)
-                                    {
-                                        if (System.Text.RegularExpressions.Regex.IsMatch(@i.MESSAGE, "...[Error]..."))
-                                        {
-                                            <span class="lbl_tax new badge red darken-1 white-text" data-badge-caption=" ">@i.MESSAGE</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">@i.MESSAGE</span>
-                                        }
-                                    }
-                                </td>
+                                <span class="lbl_tax new badge red darken-1 white-text" data-badge-caption=" ">@i.MESSAGE</span>
                             }
+                            else
+                            {
+                                <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">@i.MESSAGE</span>
+                            }
+                        }
+                    </td>
+                }
+            }*@
+
+                        if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP == null && item.ESTATUS_WF == null)
+                        {
+                            <td class="">
+                                <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Generando Preliminar n</span>
+                            </td>
                         }
                     }
 

@@ -92,6 +92,84 @@ $('body').on('keydown.autocomplete', '.GRUPO_INPUT', function () {
     });
 });
 
+
+//MGC 30-10-2018 Condiciones ------------------------------------------------------------------------->
+$('body').on('keydown.autocomplete', '#condiciones_prov', function () {
+
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: 'getCondicion',
+                dataType: "json",
+                data: { "Prefix": request.term },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+                        return { label: item.COND_PAGO + "-" + item.TEXT, value: item.COND_PAGO + "-" + item.TEXT };
+                    }))
+                }
+            })
+        },
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+        change: function (e, ui) {
+            if (!(ui.item)) {
+                e.target.value = "";
+                $('#condiciones_provt').val("");
+            }
+        },
+        select: function (event, ui) {
+
+            var label = ui.item.label;
+            var value = ui.item.value;
+
+            //Obtener el despliegue de la llave
+            var cadena = value.split("-");
+            var cond = cadena[0];
+            var text = cadena[1];
+
+            ui.item.value = cond;//MGC 22-10-2018 Etiquetas
+
+
+            selectCondicion(cond, text);
+        }
+    });
+});
+
+function selectCondicion(val, text) {
+
+    //Obtener las sociedad//MGC 19-10-2018 Condiciones
+    var soc = $("#SOCIEDAD_ID").val();//MGC 19-10-2018 Condiciones
+
+    $('#condiciones_prov').val(val);
+    $('#condiciones_provt').val(text);
+
+}
+
+function selectCondicionP(val) {
+
+    $.ajax({
+        type: "POST",
+        url: 'getCondicionT',
+        //contentType: "application/json; charset=UTF-8",
+        data: { "cond": val },
+        success: function (data) {
+            if (data !== null || data !== "") {
+                $('#condiciones_provt').val(data);//MGC 30-10-2018 Condiciones
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
+
+}
+
+//MGC 30-10-2018 Condiciones -------------------------------------------------------------------------<
+
 function selectProveedor(val) {
 
     //Obtener las sociedad//MGC 19-10-2018 Condiciones
@@ -103,13 +181,33 @@ function selectProveedor(val) {
     $('#rfc_proveedor').val();
     $('#nom_proveedor').val();
     $('#condiciones_prov').val();//MGC 19-10-2018.2 Condiciones
+    $('#condiciones_provt').val();//MGC 30-10-2018 Condiciones
 
     if (prov != null & prov != "") {
+
+        //MGC 30-10-2018 Quitar los espacios de las condiciones
+        var cond = "";
+        if (prov.COND_PAGO != null) {
+            cond = $.trim(prov.COND_PAGO);
+        }
+        
+
         //Asignar valores
         $('#PAYER_ID').val(prov.LIFNR);
         $('#rfc_proveedor').val(prov.STCD1);
         $('#nom_proveedor').val(prov.NAME1); 
-        $('#condiciones_prov').val(prov.COND_PAGO);//MGC 19-10-2018.2 Condiciones
+        //$('#condiciones_prov').val(prov.COND_PAGO);//MGC 19-10-2018.2 Condiciones//MGC 30-10-2018 Quitar los espacios de las condiciones
+        $('#condiciones_prov').val(cond);//MGC 19-10-2018.2 Condiciones//MGC 30-10-2018 Quitar los espacios de las condiciones
+
+        //MGC 30-10-2018 Condiciones ---------------------------------------------------->
+        //Obtener la descpción de las retenciones
+
+        if (cond != null & cond != "") {
+             selectCondicionP(cond);
+        }
+        //MGC 30-10-2018 Condiciones ----------------------------------------------------<
+
+
         if (!conOrden())
             obtenerRetenciones(false);//LEJ 05.09.2018
         else
@@ -194,9 +292,11 @@ function selectConcepto(val, tr, tipo) {
 
                 //MGC 29-10-2018 Obtener el proyecto seleccionado
 
+                var tipopre = con.TIPO_PRESUPUESTO; //MGC 30-10-2018 Tipo de presupuesto
+
                 //var PEP = "RE-00900-I" + soc + "" + tipo + "-" + val;
-                var PEP = "RE-00900-I" + soc + "" + tipo + "-" + p0 + "-" + p1; //MGC 29-10-2018 Obtener el proyecto
-                var PEP = proy + soc + "" + tipo + "-" + p0 + "-" + p1; //MGC 29-10-2018 Obtener el proyecto
+                //var PEP = "RE-00900-I" + soc + "" + tipo + "-" + p0 + "-" + p1; //MGC 29-10-2018 Obtener el proyecto
+                var PEP = proy + "-" + tipopre + soc + "" + tipo + "-" + p0 + "-" + p1; //MGC 29-10-2018 Obtener el proyecto //MGC 30-10-2018 Tipo de presupuesto
 
                 t.cell(indexopc, 14).data(PEP).draw();//MGC 11-10-2018 No enviar correos 
                 //tr.find("td.IMPUTACION").text(PEP);//MGC 11-10-2018 No enviar correos 

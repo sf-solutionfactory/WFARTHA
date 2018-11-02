@@ -22,6 +22,13 @@ $(document).ready(function () {
         "searching": false,
         "scrollX": true,
         "columns": [
+            {//MGC 30-10-2018 Tipo de presupuesto
+                "className": 'select_row',
+                "data": null,
+                "defaultContent": '',
+                "orderable": false,
+                "visible": false //MGC 30-10-2018 Tipo de presupuesto
+            },//MGC 30-10-2018 Tipo de presupuesto
             {
                 "name": 'POS',
                 "className": 'POS',

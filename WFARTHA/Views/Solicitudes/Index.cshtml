@@ -70,80 +70,126 @@
     <tbody>
         @foreach (var item in Model)
             {
-                <tr>
-                    @if (item.ESTATUS.Equals("B"))
-                    {
-                    <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-                        @item.NUM_DOC
+        <tr>
+            @if (item.ESTATUS.Equals("B"))
+            {
+                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                    @item.NUM_DOC
+                </td>
+            }
+            else
+            {
+                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                    @item.NUM_DOC
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
+            </td>
+            <td>
+                @if (item.FECHAD != null)
+                {
+                    try
+                    {@(item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year);
+                }
+                catch (Exception) { };
+            }
+            </td>
+            <td>
+                @item.HORAC.Value.ToString().Split('.')[0]
+            </td>
+            @*//MGC 26-10-2018 Modificación a borrador, Label de borrador*@
+            @if (item.ESTATUS.Equals("B"))
+            {
+                <td class="gray darken-2 white-text">
+                    <div class="lbl_pending">Borrador</div>
+                </td>
+            }
+            @*//MGC 30-10-2018 Modificación estatus, Label de generando preliminar*@
+            else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP == null && item.ESTATUS_WF == null)
+            {
+                //Se creó el archivo preliminar
+                if (item.ESTATUS_PRE == "G")
+                {
+                    <td class="yellow darken-2 white-text">
+                        <div class="lbl_pending">Generando Preliminar</div>
                     </td>
-                    }
-                    else
-                    {
-                    <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-                        @item.NUM_DOC
+                }
+                //Error al crear el archivo preliminar
+                else if (item.ESTATUS_PRE == "E")
+                {
+                    <td class="red darken-2 white-text">
+                        <div class="lbl_pending">Error al generar Archivo Preliminar</div>
                     </td>
-                    }
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
+                }
+            }
+            @*//MGC 30-10-2018 Modificación estatus, Label de generando preliminar RESPUESTA DESDE SAP  *@
+            else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP != null && item.ESTATUS_WF == null)
+            {
+                //Se creó el archivo preliminar
+                if (item.ESTATUS_PRE == "E" && item.ESTATUS_SAP == "E")
+                {
+                    <td class="red darken-1 white-text">
+                        <div class="lbl_contab">Error al generar Archivo Preliminar SAP</div>
                     </td>
-                    <td>
-                        @if (item.FECHAD != null) {
-                            try{ @(item.FECHAD.Value.Day + "/"+ item.FECHAD.Value.Month +"/"+ item.FECHAD.Value.Year); } catch (Exception) { };
-                        }
+
+                }
+                //Error al crear el archivo preliminar
+                if (item.ESTATUS_PRE == "G" && item.ESTATUS_SAP == "P")
+                {
+ 
+                    <td class="red darken-1 white-text">
+                        <div class="lbl_contab">Se generó archivo SAP</div>
                     </td>
-                    <td>
-                        @item.HORAC.Value.ToString().Split('.')[0]
+                }
+            }
+            else if (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("S"))
+            {
+                @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
+                if (item.ESTATUS == "F" && item.ESTATUS_PRE == "G")
+                {
+                    <td class="yellow darken-2 white-text">
+                        <div class="lbl_pending">Pendiente Aprobador</div>
                     </td>
-                    @*//MGC 26-10-2018 Modificación a borrador, Label de borrador*@
-                    @if (item.ESTATUS.Equals("B"))
-                    {
-                        <td class="yellow darken-2 white-text">
-                            <div class="lbl_pending">Borrador</div>
-                        </td>
-                    }
-                    else if (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("S"))
-                    {
-                        <td class="yellow darken-2 white-text">
-                            <div class="lbl_pending">Pendiente</div>
-                        </td>
-                    }
-                    else if (item.ESTATUS_WF.Equals("A"))
-                    {
-                        if (item.ESTATUS.Equals("C"))
-                        {
-                            <td class="green darken-1 white-text">
-                                <div class="lbl_contab">Por contabilizar</div>
-                            </td>
-                        }
-                        else if (item.ESTATUS.Equals("P"))
-                        {
-                            <td class="green darken-1 white-text">
-                                <div class="lbl_contab">Contabilizar SAP</div>
-                            </td>
-                        }
-                        else
-                        {
-                            <td class="green darken-1 white-text">
-                                <div class="lbl_approved">Aprobada</div>
-                            </td>
-                        }
-                    }
-                    else if (item.ESTATUS_WF.Equals("R"))
-                    {
-                        <td class="red darken-1 white-text">
-                            <div class="lbl_rejected">Rechazada</div>
-                        </td>
-                    }
-                    else if (item.ESTATUS_WF.Equals("T"))
-                    {
-                        <td class="yellow darken-2 white-text">
-                            <div class="lbl_tax">Pendiente Tax</div>
-                        </td>
-                    }
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CONCEPTO)
+                }
+            }
+            else if (item.ESTATUS_WF.Equals("A"))
+            {
+                if (item.ESTATUS.Equals("C"))
+                {
+                    <td class="green darken-1 white-text">
+                        <div class="lbl_contab">Por contabilizar</div>
                     </td>
-                </tr>
+                }
+                else if (item.ESTATUS.Equals("P"))
+                {
+                    <td class="green darken-1 white-text">
+                        <div class="lbl_contab">Contabilizar SAP</div>
+                    </td>
+                }
+                else
+                {
+                    <td class="green darken-1 white-text">
+                        <div class="lbl_approved">Aprobada</div>
+                    </td>
+                }
+            }
+            else if (item.ESTATUS_WF.Equals("R"))
+            {
+                <td class="red darken-1 white-text">
+                    <div class="lbl_rejected">Rechazada</div>
+                </td>
+            }
+            else if (item.ESTATUS_WF.Equals("T"))
+            {
+                <td class="yellow darken-2 white-text">
+                    <div class="lbl_tax">Pendiente Tax</div>
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.CONCEPTO)
+            </td>
+        </tr>
             }
     </tbody>
 </table>

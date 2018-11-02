@@ -387,20 +387,22 @@ $(document).ready(function () {
         event.cancel = true;
     });
 
-    $('#table_info tbody').on('click', 'td.select_row', function () {
-        var t = $('#table_info').DataTable();
-        var tr = $(this).closest('tr');
+    //MGC 30-10-2018 Tipo de presupuesto---------------------------------->
+    //$('#table_info tbody').on('click', '.select_row', function () {
+    //    var t = $('#table_info').DataTable();
+    //    var tr = $(this).closest('tr');
 
-        var indexopc = t.row(tr).index();
+    //    var indexopc = t.row(tr).index();
 
-        //Obtener la accion
-        var ac = t.row(indexopc).data()[2];
+    //    //Obtener la accion
+    //    var ac = t.row(indexopc).data()[2];
 
-        if (ac != "H") {
-            $(tr).toggleClass('selected');
-        }
+    //    if (ac != "H") {
+    //        $(tr).toggleClass('selected');
+    //    }
 
-    });
+    //});
+    //MGC 30-10-2018 Tipo de presupuesto----------------------------------<
 
     $('#table_anexa tbody').on('click', 'td.select_row', function () {
         var t = $('#table_info').DataTable();
@@ -937,6 +939,21 @@ $(window).on('load', function () {
     //MGC 03-10-2018 solicitud con orden de compra
     //Si load = "load" solo se ocultan o muestran campos
     $("#tsol").trigger("change", ["load"]);
+});
+
+$('body').on('click', '#table_info tbody td.select_row', function () {
+    var t = $('#table_info').DataTable();
+    var tr = $(this).closest('tr');
+
+    var indexopc = t.row(tr).index();
+
+    //Obtener la accion
+    var ac = t.row(indexopc).data()[2];
+
+    if (ac != "H") {
+        $(tr).toggleClass('selected');
+    }
+
 });
 
 //MGC 03-10-2018 solicitud con orden de compra

@@ -4,8 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-
-      <Diagram DiagramId="5d26c3c8c8d44a78b44cd31348da3ea7" Name="Diagram1">
+      <Diagram DiagramId="b0e52e7c7f384b11962e9a918d2fbe2d" Name="Diagram1">
 
         <EntityTypeShape EntityType="WFARTHAModel.ACCION" Width="1.5" PointX="13.5" PointY="25" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.APPSETTING" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
@@ -21,15 +20,19 @@
         <EntityTypeShape EntityType="WFARTHAModel.DET_AGENTECA" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.DET_APROB" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
 
-        <EntityTypeShape EntityType="WFARTHAModel.DET_PEP" Width="1.5" PointX="7.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.DET_K" Width="1.5" PointX="7.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.DET_PEP" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
+
         <EntityTypeShape EntityType="WFARTHAModel.DET_PROVEEDOR" Width="1.5" PointX="27.75" PointY="22.125" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.DET_SOCIEDAD" Width="1.5" PointX="14.25" PointY="35.75" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.DET_TIPODOC" Width="1.5" PointX="11.25" PointY="26.75" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.DET_TIPOPRESUPUESTO" Width="1.5" PointX="14.25" PointY="32.75" IsExpanded="true" />
 
-        <EntityTypeShape EntityType="WFARTHAModel.DOCUMENTO" Width="1.5" PointX="17.25" PointY="29.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.DOCUMENTO" Width="1.5" PointX="17.25" PointY="29.25" IsExpanded="true" />
+
         <EntityTypeShape EntityType="WFARTHAModel.DOCUMENTOA" Width="1.5" PointX="24.75" PointY="35.25" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.DOCUMENTOA1" Width="1.5" PointX="19.5" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.DOCUMENTOLOG" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.DOCUMENTOP" Width="1.5" PointX="22.5" PointY="34.5" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.DOCUMENTOPRE" Width="1.5" PointX="19.5" PointY="37.875" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.DOCUMENTOR" Width="1.5" PointX="19.5" PointY="40.375" IsExpanded="true" />
@@ -40,7 +43,7 @@
         <EntityTypeShape EntityType="WFARTHAModel.EKPO_DUMM" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.FLUJO" Width="1.5" PointX="22.5" PointY="28.5" IsExpanded="true" />
 
-        <EntityTypeShape EntityType="WFARTHAModel.FORMATO" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.FORMATO" Width="1.5" PointX="8.75" PointY="9.75" IsExpanded="true" />
 
         <EntityTypeShape EntityType="WFARTHAModel.IMPUESTO" Width="1.5" PointX="20.25" PointY="25.875" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.IMPUESTOT" Width="1.5" PointX="3" PointY="38.875" IsExpanded="true" />
@@ -76,16 +79,19 @@
         <EntityTypeShape EntityType="WFARTHAModel.WORKFT" Width="1.5" PointX="19.75" PointY="34.25" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.WORKFV" Width="1.5" PointX="13.5" PointY="28.375" IsExpanded="true" />
 
-        <EntityTypeShape EntityType="WFARTHAModel.CONDICIONES_PAGO" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="WFARTHAModel.DET_AGENTECC" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.CONDICIONES_PAGO" Width="1.5" PointX="0.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.DET_AGENTECC" Width="1.5" PointX="2.75" PointY="10.75" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.IIMPUESTO" Width="1.5" PointX="22.5" PointY="24.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="WFARTHAModel.ASIGN_PROY_SOC" Width="1.5" PointX="8.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="WFARTHAModel.CARPETAV" Width="1.5" PointX="0.75" PointY="10.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="WFARTHAModel.DET_APROBV" Width="1.5" PointX="2.75" PointY="10.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="WFARTHAModel.DET_PROVEEDORV" Width="1.5" PointX="4.75" PointY="10.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="WFARTHAModel.DOCUMENTOV" Width="1.5" PointX="11.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="WFARTHAModel.PAGINAV" Width="1.5" PointX="6.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="WFARTHAModel.WARNINGV" Width="1.5" PointX="8.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.ASIGN_PROY_SOC" Width="1.5" PointX="10.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.CARPETAV" Width="1.5" PointX="4.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.DET_APROBV" Width="1.5" PointX="10.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.DET_PROVEEDORV" Width="1.5" PointX="10.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.DET_PROYECTO_DEC_V" Width="1.5" PointX="11.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.DET_PROYECTOV" Width="1.5" PointX="12.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.DET_TIPOPRESUPUESTOV" Width="1.5" PointX="12.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.DOCUMENTOV" Width="1.5" PointX="6.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.PAGINAV" Width="1.5" PointX="12.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WFARTHAModel.WARNINGV" Width="1.5" PointX="0.75" PointY="13.75" IsExpanded="true" />
 
         <AssociationConnector Association="WFARTHAModel.FK_WORKFP_ACCION" ManuallyRouted="false" />
         <AssociationConnector Association="WFARTHAModel.FK_CAMPOS_PAGINA" ManuallyRouted="false" />
