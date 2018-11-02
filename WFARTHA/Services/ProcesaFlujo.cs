@@ -63,7 +63,7 @@ namespace WFARTHA.Services
             DOCUMENTO d = db.DOCUMENTOes.Find(id);
             bool ban = true;
             ArchivoContable sa = new ArchivoContable();
-            string file = sa.generarArchivo(d.NUM_DOC, 0,"A");
+            string file = sa.generarArchivo(d.NUM_DOC, 0, "A");
 
             if (file == "")
             {
@@ -78,7 +78,7 @@ namespace WFARTHA.Services
             return correcto;
         }
 
-        public string procesa(FLUJO f,string recurrente, bool edit, string email)
+        public string procesa(FLUJO f, string recurrente, bool edit, string email)
         {
 
             bool emails = false; //MGC 08-10-2018 Obtener los datos para el correo
@@ -98,7 +98,7 @@ namespace WFARTHA.Services
                 actual.NUM_DOC = f.NUM_DOC;
                 actual.POS = f.POS;
 
-                if(email == "X")
+                if (email == "X")
                 {
                     emails = true;
 
@@ -271,20 +271,44 @@ namespace WFARTHA.Services
                         {
                             db.DOCUMENTOPREs.Add(dp);
                             db.SaveChanges();
-                        }catch(Exception e)
+                        }
+                        catch (Exception e)
                         {
                             string r = "";
                         }
 
+                        //MGC 30-10-2018 Agregar mensaje a log de modificación
+                        try
+                        {
+                            DOCUMENTOLOG dl = new DOCUMENTOLOG();
+
+                            dl.NUM_DOC = d.NUM_DOC;
+                            dl.TYPE_LINE = "M";
+                            dl.TYPE = "S";
+                            dl.MESSAGE = "Se generó el Archivo Preliminar";
+                            dl.FECHA = DateTime.Now;
+
+                            db.DOCUMENTOLOGs.Add(dl);
+                            db.SaveChanges();
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                        //MGC 30-10-2018 Agregar mensaje a log de modificación
+
                         //Actualizar wf del documento
-                        d.ESTATUS_WF = "A";//MGC 26-10-2018 Modificaión para validar creación del archivo
+                        //d.ESTATUS_WF = "A";//MGC 30-10-2018 Modificaión para validar creación del archivo
+
+                        //MGC 30-10-2018 Actualizar el estatus de preliminar del doc
+                        d.ESTATUS_PRE = "G";//MGC 30-10-2018 Modificaión para validar creación del archivo
                         db.Entry(d).State = EntityState.Modified;
                     }
                     //No se genero el preliminar
                     else
                     {
                         string m;
-                        if(corr.Length > 50)
+                        if (corr.Length > 50)
                         {
                             m = corr.Substring(0, 50);
                         }
@@ -306,9 +330,34 @@ namespace WFARTHA.Services
                         {
                             string r = "";
                         }
+
+                        //MGC 30-10-2018 Agregar mensaje a log de modificación
+                        try
+                        {
+                            DOCUMENTOLOG dl = new DOCUMENTOLOG();
+
+                            dl.NUM_DOC = d.NUM_DOC;
+                            dl.TYPE_LINE = "M";
+                            dl.TYPE = "E";
+                            dl.MESSAGE = m;
+                            dl.FECHA = DateTime.Now;
+
+                            db.DOCUMENTOLOGs.Add(dl);
+                            db.SaveChanges();
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                        //MGC 30-10-2018 Agregar mensaje a log de modificación
+
+                        //MGC 30-10-2018 Actualizar el estatus de preliminar del doc
+                        d.ESTATUS_PRE = "E";//MGC 30-10-2018 Modificaión Estatus en la creación del archivo
+                        db.Entry(d).State = EntityState.Modified;
+
                     }
 
-                    d.ESTATUS_WF = "P";//MGC 26-10-2018 Modificaión para validar creación del archivo
+                    //d.ESTATUS_WF = "P";//MGC 30-10-2018 Modificaión para validar creación del archivo
                     db.Entry(d).State = EntityState.Modified;
 
                     db.SaveChanges();
@@ -351,7 +400,7 @@ namespace WFARTHA.Services
                         emailsto += "," + emailc;
 
                         //Obtener el usuario del siguiente aprobador 
-                        
+
 
                     }
 
@@ -444,10 +493,10 @@ namespace WFARTHA.Services
                                 //MGC 09-10-2018 Envío de correos
                                 if (emails)
                                 {
-                                    
+
                                     //MGC 09-10-2018 Envío de correos
                                     string emailc = "";
-                                                                      
+
                                     //Obtener el usuario del siguiente aprobador 
                                     emailc = db.USUARIOs.Where(us => us.ID == detA.USUARIOA_ID).FirstOrDefault().EMAIL;
                                     emailsto += "," + emailc;
@@ -621,23 +670,28 @@ namespace WFARTHA.Services
 
                                     }
 
-                                    //MGC 08-10-2018 Modificación para mensaje por contabilizar
-                                    //Guardar Mensaje en tabla
-                                    DOCUMENTOPRE dp = new DOCUMENTOPRE();
+                                    //MGC 29-10-2018 Cambiar estatus conforme a matriz, contabilizar
+                                    DOCUMENTO dcc = db.DOCUMENTOes.Find(f.NUM_DOC);
+                                    dcc.ESTATUS = "C";
+                                    db.Entry(dcc).State = EntityState.Modified;
 
-                                    dp.NUM_DOC = d.NUM_DOC;
-                                    dp.POS = 1;
-                                    dp.MESSAGE = "Por contabilizar";
+                                    ////MGC 08-10-2018 Modificación para mensaje por contabilizar
+                                    ////Guardar Mensaje en tabla
+                                    //DOCUMENTOPRE dp = new DOCUMENTOPRE();
 
-                                    try
-                                    {
-                                        db.DOCUMENTOPREs.Add(dp);
-                                        db.SaveChanges();
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        string r = "";
-                                    }
+                                    //dp.NUM_DOC = d.NUM_DOC;
+                                    //dp.POS = 1;
+                                    //dp.MESSAGE = "Por contabilizar";
+
+                                    //try
+                                    //{
+                                    //    db.DOCUMENTOPREs.Add(dp);
+                                    //    db.SaveChanges();
+                                    //}
+                                    //catch (Exception e)
+                                    //{
+                                    //    string r = "";
+                                    //}
 
                                 }
 
@@ -688,7 +742,15 @@ namespace WFARTHA.Services
 
 
                                     }
-                                    d.ESTATUS = "A";
+
+                                    //d.ESTATUS = "A";//MGC 29-10-2018 El nuevo estatus es C              
+
+                                    DOCUMENTO dcc = db.DOCUMENTOes.Find(d.NUM_DOC);
+
+                                    dcc.ESTATUS_WF = "A";//MGC 29-10-2018 El nuevo estatus es C
+                                    dcc.ESTATUS = "C";//MGC 29-10-2018 El nuevo estatus es C
+                                    dcc.ESTATUS_PRE = "G";//MGC 29-10-2018 El nuevo estatus es C
+                                    db.Entry(dcc).State = EntityState.Modified;
                                     correcto = file;
 
                                     db.SaveChanges();
@@ -728,6 +790,14 @@ namespace WFARTHA.Services
                                 }
                                 else
                                 {
+                                    DOCUMENTO dcc = db.DOCUMENTOes.Find(d.NUM_DOC);
+
+                                    dcc.ESTATUS_WF = "A";//MGC 29-10-2018 El nuevo estatus es C
+                                    dcc.ESTATUS = "C";//MGC 29-10-2018 El nuevo estatus es C
+                                    dcc.ESTATUS_PRE = "E";//MGC 29-10-2018 El nuevo estatus es C
+                                    db.Entry(dcc).State = EntityState.Modified;
+                                    correcto = file;
+
                                     ban = false;
                                     correcto = file;
                                 }
@@ -739,7 +809,7 @@ namespace WFARTHA.Services
                             {
                                 //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);//MGC 09-10-2018 Envío de correos
 
-                                
+
                                 next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
 
                                 FLUJO nuevo = new FLUJO();
@@ -946,7 +1016,11 @@ namespace WFARTHA.Services
                 db.FLUJOes.Add(nuevo);//MGC Cancelar Preliminar
 
                 db.Entry(actual).State = EntityState.Modified;
+                //d.ESTATUS_WF = "R";
+                //MGC 30-10-2018 Cambiar estatus en la solicitud
                 d.ESTATUS_WF = "R";
+                d.ESTATUS = "F";
+                db.Entry(d).State = EntityState.Modified;//MGC 11-10-2018 No enviar correos
                 if (next.ACCION.TIPO == "S")
                 {
                     d.ESTATUS = "R";
@@ -1012,7 +1086,8 @@ namespace WFARTHA.Services
             //}
 
             //MGC 08-10-2018 Obtener los datos para el correo
-            if (emails && (correcto == "1" | correcto == "3")) {
+            if (emails && (correcto == "1" | correcto == "3"))
+            {
 
                 //MGC 08-10-2018 Obtener los datos para el correo comentar provisional
                 Email em = new Email();
@@ -1020,10 +1095,11 @@ namespace WFARTHA.Services
                 string image = System.Web.HttpContext.Current.Server.MapPath("~/images/artha_logo.jpg");
                 string page = "";
 
-                if(f.ESTATUS.Equals("R"))
+                if (f.ESTATUS.Equals("R"))
                 {
                     page = "Details";
-                }else if(f.ESTATUS.Equals("I") | f.ESTATUS.Equals("A"))
+                }
+                else if (f.ESTATUS.Equals("I") | f.ESTATUS.Equals("A"))
                 {
                     page = "Index";
                 }
@@ -1031,7 +1107,8 @@ namespace WFARTHA.Services
                 try
                 {
                     em.enviaMailC(f.NUM_DOC, true, System.Web.HttpContext.Current.Session["spras"].ToString(), UrlDirectory, page, image, emailsto);
-                }catch(Exception e)
+                }
+                catch (Exception e)
                 {
 
                 }

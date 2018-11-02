@@ -146,36 +146,56 @@ namespace WFARTHA.Models
                             List<DOCUMENTOP> lh = doc.DOCUMENTOPs.Where(docl => docl.ACCION == "H").ToList();
                             List<DOCUMENTOP> ld = doc.DOCUMENTOPs.Where(docl => docl.ACCION == "D").ToList();
 
+                            //MGC 30-10-2018 Obtener las claves de contabilización ------------------------------------------------>
+                            List<CLAVES_CONTA> cls = new List<CLAVES_CONTA>();
+
+                            //MGC 30-10-2018 Obtener las claves a partir del tipo de solicitud
+                            cls = db.CLAVES_CONTA.Where(clsi => clsi.TSOL == doc.TSOL_ID).ToList();
+
+                            //MGC 30-10-2018 Obtener las claves de contabilización ------------------------------------------------<
+
+                            //MGC 30-10-2018 Valores en el renglón H
                             for (int i = 0; i < lh.Count; i++)
                             {
                                 string post = "";
                                 string postk = "";
 
-                                if (lh[i].ACCION == "H")
-                                {
-                                    post = "P";
-                                    if (doc.TSOL_ID == "NCC" | doc.TSOL_ID == "NCS")
-                                    {
-                                        postk = "50";
-                                    }
-                                    else
-                                    {
-                                        postk = "31";
-                                    }
-                                }
-                                else if (lh[i].ACCION == "D")
-                                {
-                                    post = "G";
-                                    if (doc.TSOL_ID == "NCC" | doc.TSOL_ID == "NCS")
-                                    {
-                                        postk = "21";
-                                    }
-                                    else
-                                    {
-                                        postk = "40";
-                                    }
+                                //MGC 30-10-2018 Obtener las claves de contabilización ------------------------------------------------>
+                                CLAVES_CONTA clsi = cls.Where(c => c.DH == lh[i].ACCION).FirstOrDefault();
 
+                                if(clsi != null)
+                                {
+                                    post = clsi.BSCHLL;
+                                    postk = clsi.BSCHL;
                                 }
+
+                                //if (lh[i].ACCION == "H")
+                                //{
+                                //    post = "P";
+                                //    if (doc.TSOL_ID == "NCC" | doc.TSOL_ID == "NCS")
+                                //    {
+                                //        postk = "50";
+                                //    }
+                                //    else
+                                //    {
+                                //        postk = "31";
+                                //    }
+                                //}
+                                //else if (lh[i].ACCION == "D")
+                                //{
+                                //    post = "G";
+                                //    if (doc.TSOL_ID == "NCC" | doc.TSOL_ID == "NCS")
+                                //    {
+                                //        postk = "21";
+                                //    }
+                                //    else
+                                //    {
+                                //        postk = "40";
+                                //    }
+
+                                //}
+
+                                //MGC 30-10-2018 Obtener las claves de contabilización ------------------------------------------------<
 
                                 string cuenta = lh[i].CUENTA + "";
                                 string ccosto = lh[i].CCOSTO + "";
@@ -237,36 +257,48 @@ namespace WFARTHA.Models
                                     );
                             }
 
+                            //MGC 30-10-2018 Valores en el renglón D
                             for (int i = 0; i < ld.Count; i++)
                             {
                                 string post = "";
                                 string postk = "";
 
-                                if (ld[i].ACCION == "H")
-                                {
-                                    post = "P";
-                                    if (doc.TSOL_ID == "NCC" | doc.TSOL_ID == "NCS")
-                                    {
-                                        postk = "50";
-                                    }
-                                    else
-                                    {
-                                        postk = "31";
-                                    }
-                                }
-                                else if (ld[i].ACCION == "D")
-                                {
-                                    post = "G";
-                                    if (doc.TSOL_ID == "NCC" | doc.TSOL_ID == "NCS")
-                                    {
-                                        postk = "21";
-                                    }
-                                    else
-                                    {
-                                        postk = "40";
-                                    }
+                                //MGC 30-10-2018 Obtener las claves de contabilización ------------------------------------------------>
+                                CLAVES_CONTA clsi = cls.Where(c => c.DH == ld[i].ACCION).FirstOrDefault();
 
+                                if (clsi != null)
+                                {
+                                    post = clsi.BSCHLL;
+                                    postk = clsi.BSCHL;
                                 }
+
+                                //if (ld[i].ACCION == "H")
+                                //{
+                                //    post = "P";
+                                //    if (doc.TSOL_ID == "NCC" | doc.TSOL_ID == "NCS")
+                                //    {
+                                //        postk = "50";
+                                //    }
+                                //    else
+                                //    {
+                                //        postk = "31";
+                                //    }
+                                //}
+                                //else if (ld[i].ACCION == "D")
+                                //{
+                                //    post = "G";
+                                //    if (doc.TSOL_ID == "NCC" | doc.TSOL_ID == "NCS")
+                                //    {
+                                //        postk = "21";
+                                //    }
+                                //    else
+                                //    {
+                                //        postk = "40";
+                                //    }
+
+                                //}
+
+                                //MGC 30-10-2018 Obtener las claves de contabilización ------------------------------------------------<
 
                                 string cuenta = ld[i].CUENTA + "";
                                 string ccosto = ld[i].CCOSTO + "";
