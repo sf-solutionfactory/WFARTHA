@@ -9,6 +9,7 @@
     WFARTHA.Services.FormatosC formatoc = new WFARTHA.Services.FormatosC();
     List<WFARTHA.Models.DOCUMENTOR_MOD> drets = ViewBag.ret as List<WFARTHA.Models.DOCUMENTOR_MOD>;
     WFARTHA.Entities.PROVEEDOR dprov = ViewBag.prov as WFARTHA.Entities.PROVEEDOR;
+    List<WFARTHA.Entities.DOCUMENTOA> lstDocsA = ViewBag.docAn as List<WFARTHA.Entities.DOCUMENTOA>;
     List<WFARTHA.Models.DOCUMENTORP_MOD> lstDrp = ViewBag.DocsRp as List<WFARTHA.Models.DOCUMENTORP_MOD>;
     List<string> colsret = ViewBag.Retenciones as List<string>;
     var total = ViewBag.total;
@@ -820,10 +821,15 @@
                             <thead>
                                 <tr>
                                     <th class="">
+                                    </th>
+                                    <th class="">
                                         Num
                                     </th>
                                     <th class="">
                                         Status
+                                    </th>
+                                    <th class="">
+                                        Nombres Archivo
                                     </th>
                                     <th class="">
                                         Tipo de Archivo
@@ -835,30 +841,29 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
+                                @*@using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
+            {*@
+                                @if (@lstDocsA != null)
                                 {
-                                    if (@Model.D.DOCUMENTOAL != null)
+                                    for (int i = 0; i < @lstDocsA.Count; i++)
                                     {
-                                        for (int i = 0; i < @Model.D.DOCUMENTOAL.Count; i++)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    @(i + 1)
-                                                </td>
-                                                <td>OK</td>
-                                                <td> @Model.D.DOCUMENTOAL[i].TIPO</td>
-                                                <td> @Model.D.DOCUMENTOAL[i].DESC</td>
-                                                @*<td> @Model.D.DOCUMENTOAL[i].PATH</td>*@
-                                                <td>
-                                                    @*<a data-form-method="post" href="#">
-                                                            <i class='material-icons grey-text'>arrow_downward</i>
-                                                        </a>*@
-                                                    <button name="archivo" class="btn" type="submit" value="@Model.D.DOCUMENTOAL[i].PATH">DESCARGAR</button>
-                                                </td>
-                                            </tr>
-                                        }
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                @(i + 1)
+                                            </td>
+                                            <td>OK</td>
+                                            @{var _xtr = lstDocsA[i].PATH.Split('\\'); var nombre = _xtr[_xtr.Length - 1];}
+                                            <td>@nombre</td>
+                                            <td> @lstDocsA[i].TIPO</td>
+                                            <td> @lstDocsA[i].DESC</td>
+                                            <td>
+                                                <button class="btn btnD" type="button" value="@lstDocsA[i].PATH">DESCARGAR</button>
+                                            </td>
+                                        </tr>
                                     }
                                 }
+                                @*}*@
                             </tbody>
                         </table>
                     </div>
