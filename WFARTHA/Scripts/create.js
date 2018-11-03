@@ -1078,7 +1078,7 @@ function ocultarCampos(opc, load) {
 
 function validarRFC(rfc_pro, rfc_soc, rfc_soc_doc) {
     var _rfc_pro = $('#rfc_proveedor').val();
-      if (_rfc_pro.trim() === rfc_pro & rfc_soc_doc.trim() === rfc_soc.trim()) {
+    if (_rfc_pro.trim() === rfc_pro & rfc_soc_doc.trim() === rfc_soc.trim()) {
         return true;
     }
     else {
@@ -1678,14 +1678,49 @@ $('body').on('focusout', '.OPER', function (e) {
 
         //Lleno los campos de Base Imponible con el valor del monto
         for (x = 0; x < tRet2.length; x++) {
-            var _xvalue = tr.find("td.BaseImp" + tRet2[x] + " input").val();
-            if (_xvalue == "") {
+            var _xvalue = tr.find("td.BaseImp" + tRet2[x] + " input").val().replace('$', '').replace(',','');
+            // if (_xvalue === "") {
+            //AJAX
+            var indret = 0;
+            $("#table_ret > tbody  > tr[role='row']").each(function () {
+                var t_ret = $(this).find("td.TRET").text();
+                if (t_ret === tRet2[x]) {
+                    indret = $(this).find("td.INDRET").text();
+                }
+            });
+            var campo = "";
+            $.ajax({
+                type: "POST",
+                url: 'getCampoMult',
+                dataType: "json",
+                data: { 'witht': tRet2[x], 'ir': indret },
+                success: function (data) {
+                    if (data !== null || data !== "") {
+                        campo = data;
+                    }
+                },
+                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                    M.toast({ html: httpStatusMessage });
+                },
+                async: false
+            });
+            if (campo == "MONTO") {
                 tr.find("td.BaseImp" + tRet2[x] + " input").val(toShow(sub));
                 //Ejecutamos un ajax para llenar el valor de importe de retencion
                 var _res = porcentajeImpRet(tRet2[x]);
                 _res = (sub * _res) / 100;//Saco el porcentaje
                 tr.find("td.ImpRet" + tRet2[x] + " input").val(toShow(_res));
             }
+            if (campo == "IVA") {
+                var xiva = (sub * impimp) / 100;
+                var _iva_ = parseFloat(xiva);
+                tr.find("td.BaseImp" + tRet2[x] + " input").val(toShow(_iva_));
+                var _resx = porcentajeImpRet(tRet2[x]);
+                var _resIva = _iva_ * _resx;
+                //Ejecutamos un ajax para llenar el valor de importe de retencion
+                tr.find("td.ImpRet" + tRet2[x] + " input").val(toShow(_resIva));
+            }
+            //}
         }
         //Ejecutamos el metodo para sumarizar las columnas
         var colTotal = sumarColumnasExtras(tr);
@@ -2211,8 +2246,37 @@ $('body').on('focusout', '.extrasC', function (e) {
         var cl = _this.attr('class');
         var arrcl = cl.split('p');
         var _res = porcentajeImpRet(tRet2[arrcl[1]]);
-        _res = (_nnm * _res) / 100;//Saco el porcentaje
-        tr.find("td.ImpRet" + tRet2[arrcl[1]] + " input").val(toShow(_res));
+        var indret = 0;
+        $("#table_ret > tbody  > tr[role='row']").each(function () {
+            var t_ret = $(this).find("td.TRET").text();
+            if (t_ret === tRet2[arrcl[1]]) {
+                indret = $(this).find("td.INDRET").text();
+            }
+        });
+        var campo = "";
+        $.ajax({
+            type: "POST",
+            url: 'getCampoMult',
+            dataType: "json",
+            data: { 'witht': tRet2[arrcl[1]], 'ir': indret },
+            success: function (data) {
+                if (data !== null || data !== "") {
+                    campo = data;
+                }
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                M.toast({ html: httpStatusMessage });
+            },
+            async: false
+        });
+        if (campo == "MONTO") {
+            _res = (_nnm * _res) / 100;//Saco el porcentaje
+        }
+        if (campo == "IVA") {
+            _res = (_nnm * _res);//Saco el porcentaje
+        }
+            tr.find("td.ImpRet" + tRet2[arrcl[1]] + " input").val(toShow(_res));
+        
         //--------------------------------------LEJ18102018---------------------->
         //hare la operacion para actualizar el total del renglon
         var _mnt = tr.find("td.MONTO input").val().replace('$', '');
@@ -2284,7 +2348,7 @@ $('body').on('focusout', '.extrasC2', function (e) {
     $("#table_info > tbody > tr[role = 'row']").each(function (index) {
         for (x = 0; x < tRet2.length; x++) {
             var _var = "ImpRet" + x;
-            _v2 = "ImpRetF" + (x + 1);
+            _v2 = "ImpRet" + tRet2[x];
             if (_this.hasClass(_var)) {
                 centi = x;
                 break;
@@ -2359,11 +2423,19 @@ function sumarizarTodoRow(_this) {
 
 function porcentajeImpRet(val) {
     var res = 0;
+    var indret = 0;
+    $("#table_ret > tbody  > tr[role='row']").each(function () {
+        var t_ret = $(this).find("td.TRET").text();
+        if (t_ret === val) {
+            indret = $(this).find("td.INDRET").text();
+        }
+    });
+
     $.ajax({
         type: "POST",
         url: 'getPercentage',
         dataType: "json",
-        data: { 'witht': val },
+        data: { 'witht': val, 'ir': indret },
         success: function (data) {
             if (data !== null || data !== "") {
                 res = data;
