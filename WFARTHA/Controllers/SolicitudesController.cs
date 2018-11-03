@@ -101,7 +101,7 @@ namespace WFARTHA.Controllers
             {
                 return HttpNotFound();
             }
-
+          
             //Obtener miles y dec
             formato = db.FORMATOes.Where(fo => fo.ACTIVO == true).FirstOrDefault();
             ViewBag.miles = formato.MILES;
@@ -1753,7 +1753,7 @@ namespace WFARTHA.Controllers
 
 
         // GET: Solicitudes/Edit/5
-        public ActionResult Edit(decimal id)
+        public ActionResult Edit(decimal id, string pacc)
         {
             int pagina = 202; //ID EN BASE DE DATOS
             FORMATO formato = new FORMATO();
@@ -1783,6 +1783,7 @@ namespace WFARTHA.Controllers
                 ViewBag.dec = formato.DECIMALES;
 
             }
+            ViewBag.pacc = pacc;
             try
             {
                 string p = Session["pr"].ToString();
