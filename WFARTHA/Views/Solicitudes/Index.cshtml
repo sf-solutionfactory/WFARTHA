@@ -71,9 +71,16 @@
         @foreach (var item in Model)
             {
         <tr>
+            @*//MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B*@
             @if (item.ESTATUS.Equals("B"))
             {
-                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
+                    @item.NUM_DOC
+                </td>
+            }
+            else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP != null && item.ESTATUS_WF == null & item.ESTATUS_PRE == "E" && item.ESTATUS_SAP == "E")
+            {
+                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "P" })'" style="cursor:pointer">
                     @item.NUM_DOC
                 </td>
             }
@@ -103,6 +110,13 @@
             {
                 <td class="gray darken-2 white-text">
                     <div class="lbl_pending">Borrador</div>
+                </td>
+            }
+            @*//MGC 30-10-2018 Modificación estatus, Label de contabilizada en SAP*@
+            else if (item.ESTATUS.Equals("A"))
+            {
+                <td class="gray darken-2 white-text">
+                    <div class="lbl_pending">Contabilizado SAP</div>
                 </td>
             }
             @*//MGC 30-10-2018 Modificación estatus, Label de generando preliminar*@
@@ -137,7 +151,7 @@
                 //Error al crear el archivo preliminar
                 if (item.ESTATUS_PRE == "G" && item.ESTATUS_SAP == "P")
                 {
- 
+
                     <td class="red darken-1 white-text">
                         <div class="lbl_contab">Se generó archivo SAP</div>
                     </td>
