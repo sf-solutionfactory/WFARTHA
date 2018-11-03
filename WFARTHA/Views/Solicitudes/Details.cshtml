@@ -9,6 +9,7 @@
     WFARTHA.Services.FormatosC formatoc = new WFARTHA.Services.FormatosC();
     List<WFARTHA.Models.DOCUMENTOR_MOD> drets = ViewBag.ret as List<WFARTHA.Models.DOCUMENTOR_MOD>;
     WFARTHA.Entities.PROVEEDOR dprov = ViewBag.prov as WFARTHA.Entities.PROVEEDOR;
+    List<WFARTHA.Entities.DOCUMENTOA> lstDocsA = ViewBag.docAn as List<WFARTHA.Entities.DOCUMENTOA>;
     List<WFARTHA.Models.DOCUMENTORP_MOD> lstDrp = ViewBag.DocsRp as List<WFARTHA.Models.DOCUMENTORP_MOD>;
     List<string> colsret = ViewBag.Retenciones as List<string>;
     var total = ViewBag.total;
@@ -819,7 +820,58 @@
                 <div class="card-panel">
                     <h5 id="head_cabecera">Anexos</h5>
                     <div class="row" style="margin-bottom:0">
+                        @*FRT 03112018 Agregar el listado de Anexos y mostrar *@
                         <table class="table display mdl-data-table striped" id="table_anexa" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th class="">
+                                    </th>
+                                    <th class="">
+                                        Num
+                                    </th>
+                                    <th class="">
+                                        Status
+                                    </th>
+                                    <th class="">
+                                        Nombres Archivo
+                                    </th>
+                                    <th class="">
+                                        Tipo de Archivo
+                                    </th>
+                                    <th class="">
+                                        Descripcion
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @if (@lstDocsA != null)
+                                {
+                                    for (int i = 0; i < @lstDocsA.Count; i++)
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                @(i + 1)
+                                            </td>
+                                            <td>OK</td>
+                                            @{var _xtr = lstDocsA[i].PATH.Split('\\'); var nombre = _xtr[_xtr.Length - 1];}
+                                            <td>@nombre</td>
+                                            <td> @lstDocsA[i].TIPO</td>
+                                            <td> @lstDocsA[i].DESC</td>
+                                            <td>
+                                                <button class="btn btnD" type="button" value="@lstDocsA[i].PATH">DESCARGAR</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+
+
+                        @*<table class="table display mdl-data-table striped" id="table_anexa" style="width:100%;">
                             <thead>
                                 <tr>
                                     <th class="">
@@ -850,20 +902,20 @@
                                                 </td>
                                                 <td>OK</td>
                                                 <td> @Model.D.DOCUMENTOAL[i].TIPO</td>
-                                                <td> @Model.D.DOCUMENTOAL[i].DESC</td>
-                                                @*<td> @Model.D.DOCUMENTOAL[i].PATH</td>*@
-                                                <td>
-                                                    @*<a data-form-method="post" href="#">
-                                                            <i class='material-icons grey-text'>arrow_downward</i>
-                                                        </a>*@
-                                                    <button name="archivo" class="btn" type="submit" value="@Model.D.DOCUMENTOAL[i].PATH">DESCARGAR</button>
-                                                </td>
-                                            </tr>
+                                                <td> @Model.D.DOCUMENTOAL[i].DESC</td>*@
+                        @*@*<td> @Model.D.DOCUMENTOAL[i].PATH</td>*@*@
+                        @*<td>*@
+                        @*<a data-form-method="post" href="#">
+                                <i class='material-icons grey-text'>arrow_downward</i>
+                            </a>*@
+                        @*<button name="archivo" class="btn" type="submit" value="@Model.D.DOCUMENTOAL[i].PATH">DESCARGAR</button>
+                                                    </td>
+                                                </tr>
+                                            }
                                         }
                                     }
-                                }
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>*@
                     </div>
                 </div>
             </div>
@@ -1162,12 +1214,12 @@
                     document.getElementById('loader').style.display = 'none';
                 });
 
-                                        //MGC 18-10-2018 Firma del usuario --------------------------------------------------<
+                                                    //MGC 18-10-2018 Firma del usuario --------------------------------------------------<
             </script>
         }
     }
 
-    
+
     @if (ViewBag.workflow.Count != 0)
     {
         <div class="row" style="font-size:12px;">
