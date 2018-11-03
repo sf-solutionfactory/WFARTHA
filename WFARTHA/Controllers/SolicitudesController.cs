@@ -18,6 +18,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using System.Web.UI;
 
 namespace WFARTHA.Controllers
 {
@@ -49,12 +50,16 @@ namespace WFARTHA.Controllers
                 try//Mensaje de documento creado
                 {
                     string p = Session["NUM_DOC"].ToString();
+                    string e = Session["ERR_CECO"].ToString();
+                    ViewBag.ERR_CECO = e;
                     ViewBag.NUM_DOC = p;
                     Session["NUM_DOC"] = null;
+                    Session["ERR_CECO"] = null;
                 }
                 catch
                 {
                     ViewBag.NUM_DOC = "";
+                    ViewBag.ERR_CECO = "";
                 }
             }
 
@@ -417,6 +422,12 @@ namespace WFARTHA.Controllers
             var vbFl = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderBy(a => a.POS).ToList();
             ViewBag.workflow = vbFl;
 
+
+            // frt obtener el flujo de SAP
+
+            var vbSap = db.DOCUMENTOLOGs.Where(s => s.NUM_DOC.Equals(id)).OrderBy(s=> s.FECHA).ToList();
+            ViewBag.LogSap = vbSap;
+
             string usuariodel = "";
             DateTime fecha = DateTime.Now.Date;
             List<WFARTHA.Entities.DELEGAR> del = db.DELEGARs.Where(a => a.USUARIOD_ID.Equals(User.Identity.Name) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).ToList();
@@ -513,6 +524,8 @@ namespace WFARTHA.Controllers
                                   soc.BUKRS,
                                   TEXT = soc.BUKRS + " - " + soc.BUTXT
                               }).ToList();
+
+            Session["SOC"] = sociedades[0].BUKRS;  //FRT 02112018
 
             //var sociedades = db.SOCIEDADs.Select(s => new { s.BUKRS, TEXT = s.BUKRS + " - " + s.BUTXT }).ToList();//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
             //MGC 16-10-2018 Obtener las sociedades asignadas al usuario <--
@@ -771,11 +784,18 @@ namespace WFARTHA.Controllers
                         decimal _iva = 0;
                         decimal _total = 0;
                         var _mwskz = "";
+                        var _pos_err_imputacion = "";
+
                         int j = 1;
                         for (int i = 0; i < doc.DOCUMENTOP.Count; i++)
                         {
+
                             try
                             {
+
+                                decimal _error_imputacion = 0;
+                                
+
                                 DOCUMENTOP dp = new DOCUMENTOP();
 
                                 dp.NUM_DOC = doc.NUM_DOC;
@@ -798,14 +818,36 @@ namespace WFARTHA.Controllers
                                 dp.TOTAL = doc.DOCUMENTOP[i].TOTAL;
                                 _total = doc.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
                                 dp.TEXTO = doc.DOCUMENTOP[i].TEXTO;
-                                db.DOCUMENTOPs.Add(dp);
-                                db.SaveChanges();
+
+
+                                //frt 03112018
+                                if (doc.DOCUMENTOP[i].TIPOIMP == "K" & (doc.DOCUMENTOP[i].CCOSTO == "" | doc.DOCUMENTOP[i].CCOSTO == null)) {
+                                    _error_imputacion = 1;
+                                }
+
+                                if (_error_imputacion != 1)
+                                {
+                                    db.DOCUMENTOPs.Add(dp);
+                                    db.SaveChanges();
+                                }
+                                else {
+                                    _pos_err_imputacion = _pos_err_imputacion + "," + j;
+                                }
+                                
+
+
                             }
                             catch (Exception e)
                             {
                                 //
                             }
                             j++;
+                        }
+
+
+                        //frt 03112018
+                        if (_pos_err_imputacion != "") {
+                            Session["ERR_CECO"] = "Documentos " + _pos_err_imputacion + " no cuentan con CECO valido";
                         }
                         //lejgg 10-10-2018-------------------->
                         DOCUMENTOP _dp = new DOCUMENTOP();
@@ -818,8 +860,11 @@ namespace WFARTHA.Controllers
                         _dp.MWSKZ = _mwskz;
                         _dp.IVA = _iva;
                         _dp.TOTAL = _total;
-                        db.DOCUMENTOPs.Add(_dp);
-                        db.SaveChanges();
+
+                       
+
+                        //db.DOCUMENTOPs.Add(_dp);
+                        //db.SaveChanges();
                         //lejgg 10-10-2018-------------------------<
                     }
                     //Guardar las retenciones de la solicitud
@@ -2069,6 +2114,10 @@ namespace WFARTHA.Controllers
 
             //MGC 04 - 10 - 2018 flujo <-- 
 
+            // frt obtener el flujo de SAP
+
+            var vbSap = db.DOCUMENTOLOGs.Where(s => s.NUM_DOC.Equals(id)).OrderBy(s => s.FECHA).ToList();
+            ViewBag.LogSap = vbSap;
 
             return View(doc);
         }
@@ -2103,10 +2152,12 @@ namespace WFARTHA.Controllers
                         decimal _total = 0;
                         var _mwskz = "";
                         int j = 1;
+                        var _pos_err_imputacion = "";
                         for (int i = 0; i < dOCUMENTO.DOCUMENTOP.Count; i++)
                         {
                             try
                             {
+                                decimal _error_imputacion = 0;
                                 //Busco Informacion Previa del documento si es que existe.
                                 var docpPrevio = db.DOCUMENTOPs.Where(x => x.NUM_DOC == _ndoc && x.POS == j).FirstOrDefault();
                                 //Si es null signfica que no hay nada, osea se crea, si es diferente de null ya existe, osea se modifica
@@ -2134,8 +2185,26 @@ namespace WFARTHA.Controllers
                                     dp.TOTAL = dOCUMENTO.DOCUMENTOP[i].TOTAL;
                                     _total = dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
                                     dp.TEXTO = dOCUMENTO.DOCUMENTOP[i].TEXTO;
-                                    db.Entry(dp).State = EntityState.Modified;
-                                    db.SaveChanges();
+
+                                    //frt 03112018
+                                    if (dOCUMENTO.DOCUMENTOP[i].TIPOIMP == "K" & (dOCUMENTO.DOCUMENTOP[i].CCOSTO == "" | dOCUMENTO.DOCUMENTOP[i].CCOSTO == null))
+                                    {
+                                        _error_imputacion = 1;
+                                    }
+
+                                    if (_error_imputacion != 1)
+                                    {
+                                        db.Entry(dp).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
+                                    else
+                                    {
+                                        _pos_err_imputacion = _pos_err_imputacion + "," + j;
+
+                                    }
+
+                                    //db.Entry(dp).State = EntityState.Modified;
+                                    //db.SaveChanges();
                                 }
                                 else
                                 {
@@ -2161,8 +2230,27 @@ namespace WFARTHA.Controllers
                                     dp.TOTAL = dOCUMENTO.DOCUMENTOP[i].TOTAL;
                                     _total = dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
                                     dp.TEXTO = dOCUMENTO.DOCUMENTOP[i].TEXTO;
-                                    db.DOCUMENTOPs.Add(dp);
-                                    db.SaveChanges();//LEJGG 29-10-2018
+
+                                    //frt 03112018
+                                    if (dOCUMENTO.DOCUMENTOP[i].TIPOIMP == "K" & (dOCUMENTO.DOCUMENTOP[i].CCOSTO == "" | dOCUMENTO.DOCUMENTOP[i].CCOSTO == null))
+                                    {
+                                        _error_imputacion = 1;
+                                    }
+
+                                    if (_error_imputacion != 1)
+                                    {
+                                        db.DOCUMENTOPs.Add(dp);
+                                        db.SaveChanges();
+                                    }
+                                    else
+                                    {
+                                        _pos_err_imputacion = _pos_err_imputacion + "," + j;
+
+                                    }
+
+
+                                    //db.DOCUMENTOPs.Add(dp);
+                                    //db.SaveChanges();//LEJGG 29-10-2018
                                 }
                             }
                             catch (Exception e)
@@ -2170,6 +2258,13 @@ namespace WFARTHA.Controllers
                                 //
                             }
                             j++;
+                        }
+
+
+
+                        if (_pos_err_imputacion != "")
+                        {
+                            Session["ERR_CECO"] = "Documentos " + _pos_err_imputacion + " no cuentan con CECO valido";
                         }
                         //lejgg 10-10-2018-------------------->
                         //Busco Informacion Previa del documento si es que existe.
@@ -3938,19 +4033,56 @@ namespace WFARTHA.Controllers
             {
                 var _ff = file.ToList();
                 var lines = ReadLines(() => _ff[0].InputStream, Encoding.UTF8).ToArray();
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(lines[0]);
-                var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
-                var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
-                var xmlnode3 = doc.GetElementsByTagName("cfdi:Emisor");
-                var xmlnode4 = doc.GetElementsByTagName("tfd:TimbreFiscalDigital");
-                //var xmlnode4_2= xmlnode4.g
-                var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
-                var _Mt = xmlnode[0].Attributes["Total"].Value;
-                var _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;
-                var _RFCReceptor = xmlnode2[0].Attributes["Rfc"].Value;
-                var _RFCEmisor = xmlnode3[0].Attributes["Rfc"].Value;
-                var _Uuid = xmlnode4[0].Attributes["UUID"].Value;
+                var _lin = lines.Count();
+                string _soc = (string)Session["SOC"];
+
+                string _rfc_soc = db.SOCIEDADs.Where(soc => soc.BUKRS == _soc).FirstOrDefault().STCD1;
+
+                //XmlDocument doc = new XmlDocument();
+                //doc.LoadXml(lines[0]);
+
+                //var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
+                //var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
+                //var xmlnode3 = doc.GetElementsByTagName("cfdi:Emisor");
+                //var xmlnode4 = doc.GetElementsByTagName("tfd:TimbreFiscalDigital");
+                ////var xmlnode4_2= xmlnode4.g
+
+
+
+                var posini = lines[1].IndexOf("Fecha=");
+                var posfin = lines[1].IndexOf(" ", posini + 1);
+                var _F = DateTime.Parse(lines[1].Substring(posini + 7, posfin - (posini + 8))).ToShortDateString();
+
+                posini = lines[1].IndexOf(" Total=");
+                posfin = lines[1].IndexOf(" ", posini + 1);
+                var _Mt = lines[1].Substring(posini + 8, posfin - (posini + 9));
+
+                posini = lines[1].IndexOf("TipoCambio=");
+                posfin = lines[1].IndexOf(" ", posini + 1);
+                var _TipoCambio = lines[1].Substring(posini + 12, posfin - (posini + 13));
+
+
+                posini = lines[2].IndexOf("Rfc=");
+                posfin = lines[2].IndexOf(" ", posini + 1);
+                var _RFCEmisor = lines[2].Substring(posini + 5, posfin - (posini + 6));
+
+                posini = lines[3].IndexOf("Rfc=");
+                posfin = lines[3].IndexOf(" ", posini + 1);
+                var _RFCReceptor = lines[3].Substring(posini + 5, posfin - (posini + 6));
+
+                posini = lines[_lin - 3].IndexOf("UUID=");
+                posfin = lines[_lin - 3].IndexOf(" ", posini + 1);
+                var _Uuid = lines[_lin - 3].Substring(posini + 6, posfin - (posini + 7));
+
+
+
+                //var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
+                //var _Mt = xmlnode[0].Attributes["Total"].Value;
+                //var _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;
+                //var _RFCReceptor = xmlnode2[0].Attributes["Rfc"].Value;
+                //var _RFCEmisor = xmlnode3[0].Attributes["Rfc"].Value;
+                //var _Uuid = xmlnode4[0].Attributes["UUID"].Value;
+
                 List<string> lstvals = new List<string>();
                 lstvals.Add(_F);//Fecha
                 lstvals.Add(_Mt);//Monto
@@ -3958,11 +4090,12 @@ namespace WFARTHA.Controllers
                 lstvals.Add(_RFCEmisor);//RFCEmisor
                 lstvals.Add(_Uuid);//UUID
                 lstvals.Add(_TipoCambio);//TCambio
+                lstvals.Add(_rfc_soc);//Sociedad
                 JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
 
                 return jc;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 JsonResult jc = Json("", JsonRequestBehavior.AllowGet);
                 return jc;

@@ -696,14 +696,20 @@ $(document).ready(function () {
                             success: function (data) {
                                 if (data !== null || data !== "") {
                                     _resVu = validarUuid(data[4]);
-                                    //si es false significa que no hay coincidencias
                                     if (!_resVu) {
-                                        $('#Uuid').val(data[4]);
-                                        $('#FECHAD').val(data[0]);
-                                        $('#FECHADO').val(data[0]);
-                                        $("#FECHAD").trigger("change");
-                                        data[1];//Monto Total
-                                        _fbool = validarRFC(data[2]);
+                                        //$('#Uuid').val(data[4]);
+                                        //$('#FECHAD').val(data[0]);
+                                        //$('#FECHADO').val(data[0]);
+                                        //$("#FECHAD").trigger("change");
+                                        //data[1];//Monto Total
+                                        _fbool = validarRFC(data[3], data[2], data[6]);
+                                        if (_fbool) {
+                                            $('#Uuid').val(data[4]);
+                                            $('#FECHAD').val(data[0]);
+                                            $('#FECHADO').val(data[0]);
+                                            $("#FECHAD").trigger("change");
+                                            data[1];//Monto Total
+                                        }
                                         //data[2];//RFC
                                     }
                                 }
@@ -779,12 +785,19 @@ $(document).ready(function () {
                                     if (data !== null || data !== "") {
                                         _resVu = validarUuid(data[4]);
                                         if (!_resVu) {
-                                            $('#Uuid').val(data[4]);
-                                            $('#FECHAD').val(data[0]);
-                                            $('#FECHADO').val(data[0]);
-                                            $("#FECHAD").trigger("change");
-                                            data[1];//Monto Total
-                                            _fbool = validarRFC(data[2]);
+                                            //$('#Uuid').val(data[4]);
+                                            //$('#FECHAD').val(data[0]);
+                                            //$('#FECHADO').val(data[0]);
+                                            //$("#FECHAD").trigger("change");
+                                            //data[1];//Monto Total
+                                            _fbool = validarRFC(data[3], data[2], data[6]);
+                                            if (_fbool) {
+                                                $('#Uuid').val(data[4]);
+                                                $('#FECHAD').val(data[0]);
+                                                $('#FECHADO').val(data[0]);
+                                                $("#FECHAD").trigger("change");
+                                                data[1];//Monto Total
+                                            }
                                             //data[2];//RFC
                                         }
                                     }
@@ -807,7 +820,7 @@ $(document).ready(function () {
                                 }
                                 else {
                                     //Alert no se metio porque ya hay un xml en la tabla
-                                    M.toast({ html: "No Coincide el rfc" });
+                                    M.toast({ html: "RFC no coincide" });
                                 }
                             }
                         }
@@ -852,7 +865,24 @@ $(document).ready(function () {
                             processData: false,
                             success: function (data) {
                                 if (data !== null || data !== "") {
-                                    data[4];//UUID
+                                    //data[4];//UUID
+                                    _resVu = validarUuid(data[4]);
+                                    if (!_resVu) {
+                                        //$('#Uuid').val(data[4]);
+                                        //$('#FECHAD').val(data[0]);
+                                        //$('#FECHADO').val(data[0]);
+                                        //$("#FECHAD").trigger("change");
+                                        //data[1];//Monto Total
+                                        _fbool = validarRFC(data[3], data[2], data[6]);
+                                        if (_fbool) {
+                                            $('#Uuid').val(data[4]);
+                                            $('#FECHAD').val(data[0]);
+                                            $('#FECHADO').val(data[0]);
+                                            $("#FECHAD").trigger("change");
+                                            data[1];//Monto Total
+                                        }
+                                        //data[2];//RFC
+                                    }
                                 }
                             },
                             error: function (xhr, httpStatusMessage, customErrorMessage) {
@@ -1029,9 +1059,9 @@ function ocultarCampos(opc, load) {
     ocultarColumnas(opc);
 }
 
-function validarRFC(rfc) {
-    var _rfc = $('#rfc_proveedor').val();
-    if (_rfc === rfc) {
+function validarRFC(rfc_pro, rfc_soc, rfc_soc_doc) {
+    var _rfc_pro = $('#rfc_proveedor').val();
+      if (_rfc_pro.trim() === rfc_pro & rfc_soc_doc.trim() === rfc_soc.trim()) {
         return true;
     }
     else {

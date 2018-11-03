@@ -123,6 +123,7 @@
         /*}*/
     </style>
     @*//B20180625 MGC 2018.06.26*@
+    
     @if (ViewBag.BORRADOR != null)
     {
         if (ViewBag.BORRADOR != "")
@@ -133,7 +134,7 @@
                 M.toast({html: '<span style="padding-right:15px;"><i class="material-icons">error</i></span>  ' + msg });
             }
 
-            var message = '@ViewBag.BORRADOR';
+            var message = '@ViewBag.BORRADOR' + " - " + '@ViewBag.ERR_CECO' ;
 
             if (message != "")
             {
@@ -155,11 +156,11 @@
                 }
 
                 var message = '@ViewBag.NUM_DOC';
-
+                var messagececo = '@ViewBag.ERR_CECO'
                 if (message != "")
                 {
                     // do drop down loic
-                    docMessage('Documento ' + message+' fue creado');
+                    docMessage('Documento ' + message + ' fue creado' + " - " + messagececo);
                 }
 
             });
