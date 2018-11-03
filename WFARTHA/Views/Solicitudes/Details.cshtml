@@ -842,11 +842,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                                @*@using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
+            {*@
                                 @if (@lstDocsA != null)
                                 {
                                     for (int i = 0; i < @lstDocsA.Count; i++)
                                     {
+
                                         <tr>
                                             <td></td>
                                             <td>
@@ -863,56 +865,10 @@
                                         </tr>
                                     }
                                 }
+                                @*}*@
                             </tbody>
                         </table>
 
-
-
-                        @*<table class="table display mdl-data-table striped" id="table_anexa" style="width:100%;">
-                            <thead>
-                                <tr>
-                                    <th class="">
-                                        Num
-                                    </th>
-                                    <th class="">
-                                        Status
-                                    </th>
-                                    <th class="">
-                                        Tipo de Archivo
-                                    </th>
-                                    <th class="">
-                                        Descripcion
-                                    </th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
-                                {
-                                    if (@Model.D.DOCUMENTOAL != null)
-                                    {
-                                        for (int i = 0; i < @Model.D.DOCUMENTOAL.Count; i++)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    @(i + 1)
-                                                </td>
-                                                <td>OK</td>
-                                                <td> @Model.D.DOCUMENTOAL[i].TIPO</td>
-                                                <td> @Model.D.DOCUMENTOAL[i].DESC</td>*@
-                        @*@*<td> @Model.D.DOCUMENTOAL[i].PATH</td>*@*@
-                        @*<td>*@
-                        @*<a data-form-method="post" href="#">
-                                <i class='material-icons grey-text'>arrow_downward</i>
-                            </a>*@
-                        @*<button name="archivo" class="btn" type="submit" value="@Model.D.DOCUMENTOAL[i].PATH">DESCARGAR</button>
-                                                    </td>
-                                                </tr>
-                                            }
-                                        }
-                                    }
-                                </tbody>
-                            </table>*@
                     </div>
                 </div>
             </div>

@@ -247,8 +247,8 @@ namespace WFARTHA.Controllers
                          }).ToList();
 
 
+            //FRT 03112018.3--------Mostrar anexos de la misma forma que en Editar >
 
-            //RFT 03 11 2018 Se agrega para poder visualizar los documentos en Detalle igual que en Edicion>
             var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
             DOCUMENTOA d_a = new DOCUMENTOA();
             var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id).ToList();
@@ -264,7 +264,8 @@ namespace WFARTHA.Controllers
             }
             ViewBag.docAn = lst;
 
-            // End FRT 03 11 2018
+            //FRT END 
+
 
 
             var monedal = db.MONEDAs.Where(m => m.ACTIVO == true).Select(m => new { m.WAERS, TEXT = m.WAERS + " - " + m.LTEXT }).ToList();
