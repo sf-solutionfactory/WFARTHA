@@ -1714,6 +1714,7 @@ namespace WFARTHA.Controllers
             FORMATO formato = new FORMATO();
             string spras = "";
             string user_id = "";//MGC 02-10-2018 Cadena de autorización
+            string pselG = "";//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
             using (WFARTHAEntities db = new WFARTHAEntities())
             {
 
@@ -1736,6 +1737,19 @@ namespace WFARTHA.Controllers
                 ViewBag.miles = formato.MILES;
                 ViewBag.dec = formato.DECIMALES;
 
+            }
+            try
+            {
+                string p = Session["pr"].ToString();
+                string pid = Session["id_pr"].ToString();
+                ViewBag.PrSl = p;
+                pselG = pid;//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
+                ViewBag.pid = pid;//MGC 29-10-2018 Guardar el proyecto en el create
+            }
+            catch
+            {
+                //ViewBag.pais = "mx.png";
+                return RedirectToAction("Proyectos", "Home", new { returnUrl = Request.Url.AbsolutePath });
             }
             if (id == null || id == 0)
             {
@@ -2090,7 +2104,6 @@ namespace WFARTHA.Controllers
         {
             string errorString = "";
             var est = "";
-            var xms = ModelState;
             if (ModelState.IsValid)
             {
                 try
@@ -2098,6 +2111,67 @@ namespace WFARTHA.Controllers
                     //Traigo los datos previamente registrados
                     var _doc = db.DOCUMENTOes.Where(n => n.NUM_DOC == dOCUMENTO.NUM_DOC).FirstOrDefault();
                     var _ndoc = _doc.NUM_DOC;
+                    //Copiar valores del post al nuevo objeto
+                    _doc.TSOL_ID = dOCUMENTO.TSOL_ID;
+                    _doc.SOCIEDAD_ID = dOCUMENTO.SOCIEDAD_ID;
+                    _doc.FECHAD = dOCUMENTO.FECHAD;
+                    _doc.FECHACON = dOCUMENTO.FECHAD;
+                    _doc.FECHA_BASE = dOCUMENTO.FECHAD;
+                    _doc.MONEDA_ID = dOCUMENTO.MONEDA_ID;
+                    _doc.TIPO_CAMBIO = dOCUMENTO.TIPO_CAMBIO;
+                    _doc.IMPUESTO = dOCUMENTO.IMPUESTO;
+                    _doc.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
+                    var _t = mtTot.Replace("$", "");
+                    _t = _t.Replace(",", "");
+                    _doc.MONTO_DOC_MD = decimal.Parse(_t);
+                    _doc.CONCEPTO = dOCUMENTO.CONCEPTO;
+                    _doc.PAYER_ID = dOCUMENTO.PAYER_ID;
+                    _doc.CONDICIONES = dOCUMENTO.CONDICIONES;
+                    _doc.TEXTO_POS = dOCUMENTO.TEXTO_POS;
+                    _doc.ASIGNACION_POS = dOCUMENTO.ASIGNACION_POS;
+                    _doc.CLAVE_CTA = dOCUMENTO.CLAVE_CTA;
+
+                    //Obtener usuarioc
+                    USUARIO us = db.USUARIOs.Find(User.Identity.Name);
+                    _doc.PUESTO_ID = us.PUESTO_ID;
+                    _doc.USUARIOC_ID = User.Identity.Name;
+
+                    //Obtener el tipo de documento
+                    var doct = db.DET_TIPODOC.Where(dt => dt.TIPO_SOL == dOCUMENTO.TSOL_ID).FirstOrDefault();
+                    _doc.DOCUMENTO_SAP = doct.BLART.ToString();
+
+                    //Fechac
+                    _doc.FECHAC = DateTime.Now;
+                    //Horac
+                    _doc.HORAC = DateTime.Now.TimeOfDay;
+                    //FECHAC_PLAN
+                    _doc.FECHAC_PLAN = DateTime.Now.Date;
+                    //FECHAC_USER
+                    _doc.FECHAC_USER = DateTime.Now.Date;
+                    //HORAC_USER
+                    _doc.HORAC_USER = DateTime.Now.TimeOfDay;
+
+                    //Si es B signfica que ya pasa a ser N
+                    est = _doc.ESTATUS;
+                    if (_doc.ESTATUS == "B")
+                    {
+                        //Estatus
+                        _doc.ESTATUS = "N";
+                    }
+                    else
+                    {
+                        //Estatus
+                    }
+                    //Estatus wf
+                    dOCUMENTO.ESTATUS_WF = "P";// Si el wf es p es que no se ha creado, si es A, es que se creo el archivo, cambia al generar el preliminar
+
+                    //db.DOCUMENTOes.Add(_doc);
+                    db.Entry(_doc).State = EntityState.Modified;
+                    //db.SaveChanges();//LEJGG 29-10-2018
+
+                    //Guardar número de documento creado
+                    Session["NUM_DOC"] = _doc.NUM_DOC;
+                    
                     //Guardar las posiciones de la solicitud
                     try
                     {
@@ -2554,11 +2628,36 @@ namespace WFARTHA.Controllers
                     List<string> listaDescArchivos2 = listaDescArchivos;
                     List<DOCUMENTOA> lsta = db.DOCUMENTOAs.Where(n => n.NUM_DOC == _ndoc).ToList();
                     List<DOCUMENTOA1> lstas = db.DOCUMENTOAS1.Where(n => n.NUM_DOC == _ndoc).ToList();
-
+                    int da = 0;
+                    int das = 0;
                     //se hace un for a documentoa para ver los archivos que se agregaron
-
+                    for (int x = 0; x < lsta.Count; x++)
+                    {
+                        for (int y = 0; y < dOCUMENTO.DOCUMENTOA_TAB.Count; y++)
+                        {
+                            if (lsta[x].PATH == dOCUMENTO.DOCUMENTOA_TAB[y].PATH)
+                            {
+                                //Significa que el archivo sigue en el proyecto actual
+                                da++;
+                            }
+                        }
+                    }
+                    //se hace un for a documentoas para ver los archivos que se agregaron
+                    for (int x = 0; x < lstas.Count; x++)
+                    {
+                        for (int y = 0; y < dOCUMENTO.DOCUMENTOA_TAB.Count; y++)
+                        {
+                            if (lstas[x].PATH == dOCUMENTO.DOCUMENTOA_TAB[y].PATH)
+                            {
+                                //Significa que el archivo sigue en el proyecto actual
+                                das++;
+                            }
+                        }
+                    }
+                    // if (da > 0)//significa que de lo que hay en archivo se puede hacer un update
+                    //{
                     //DocumentoA
-                    //2- Luego se vuelven a guardar las posiciones de la solicitud
+                    //2- Luego se a guardan/actualizan las posiciones de la solicitud
                     //Misma cantidad de archivos y nombres, osea todo bien
                     if (listaDirectorios.Count == listaDescArchivos.Count && listaDirectorios.Count == listaNombreArchivos.Count)
                     {
@@ -2581,9 +2680,7 @@ namespace WFARTHA.Controllers
                                     a1 = a1 - arBorr;
                                     a1 = a1 - 1;
                                     _dA.POS = dOCUMENTO.Anexo[i].a1;
-                                    //AQUI COMPROBARE LOS ARCHIVOS QUE SE TIENEN AL MOMENTO
                                     var na = Path.GetExtension(listaDirectorios[a1]);
-                                    dOCUMENTO.DOCUMENTOA_TAB.Where(x => x.PATH == na).FirstOrDefault();
                                     try
                                     {
                                         de = Path.GetExtension(listaNombreArchivos[a1]);
@@ -2620,20 +2717,66 @@ namespace WFARTHA.Controllers
                                 _dA.STEP_WF = 1;
                                 _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
                                 _dA.ACTIVO = true;
-                                try
+                                //LEJGG03-11-2018
+                                var bd = db.DOCUMENTOAs.Where(x => x.NUM_DOC == _ndoc && x.POSD == (i + 1)).FirstOrDefault();
+                                //si la var bd trae coincidencia, signfica que valores
+                                if (bd != null)
                                 {
-                                    db.DOCUMENTOAs.Add(_dA);
-                                    //db.SaveChanges();
+                                    //Si hay datos, hacer un update...
+                                    if (bd.PATH == listaDirectorios[a1])
+                                    {
+                                        //se compara la ruta, si coincide, no se hace nada
+                                    }
+                                    else
+                                    {
+                                        //el valor actual de bd corroboro que existe en los anexos actuales
+                                        for (int a = 0; a < dOCUMENTO.DOCUMENTOA_TAB.Count; a++)
+                                        {
+                                            if (bd.PATH == dOCUMENTO.DOCUMENTOA_TAB[a].PATH)
+                                            {
+                                                var _poss = db.DOCUMENTOAS1.Where(n => n.NUM_DOC == _ndoc).ToList().Count;
+                                                //si tiene coincidencia, lo guardo en documentoas
+                                                DOCUMENTOA1 _das = new DOCUMENTOA1();
+                                                _das.POS = _poss + 1;
+                                                _das.NUM_DOC = bd.NUM_DOC;
+                                                _das.PATH = bd.PATH;
+                                                _das.TIPO = bd.TIPO;
+                                                _das.STEP_WF = 1;
+                                                _das.USUARIO_ID = bd.USUARIO_ID;
+                                                _das.CLASE = bd.CLASE;
+                                                _das.DESC = bd.DESC;
+                                                _das.ACTIVO = true;
+                                                db.DOCUMENTOAS1.Add(_das);
+                                                db.SaveChanges();
+                                            }
+                                        }
+                                        db.Entry(_dA).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
                                     listaNombreArchivos2.RemoveAt(a1);
                                     arBorr++;
                                 }
-                                catch (Exception e)
+                                else //Si no hay coincidencia,crear...
                                 {
-                                    //
+                                    try
+                                    {
+                                        db.DOCUMENTOAs.Add(_dA);
+                                        db.SaveChanges();
+                                        pos++;
+                                        listaDirectorios2.Remove(_dA.PATH);
+                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        listaNombreArchivos2.RemoveAt(a1);
+                                        arBorr++;
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        //
+                                    }
                                 }
+
                             }
                             _dA = new DOCUMENTOA();
                             if (dOCUMENTO.Anexo[i].a2 != 0)
@@ -2685,19 +2828,64 @@ namespace WFARTHA.Controllers
                                 _dA.STEP_WF = 1;
                                 _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
                                 _dA.ACTIVO = true;
-                                try
+                                //LEJGG03-11-2018
+                                var bd = db.DOCUMENTOAs.Where(x => x.NUM_DOC == _ndoc && x.POSD == (i + 1)).FirstOrDefault();
+                                //si la var bd trae coincidencia, signfica que valores
+                                if (bd != null)
                                 {
-                                    db.DOCUMENTOAs.Add(_dA);
-                                    //db.SaveChanges();
+                                    //Si hay datos, hacer un update...
+                                    if (bd.PATH == listaDirectorios[a2])
+                                    {
+                                        //se compara la ruta, si coincide, no se hace nada
+                                    }
+                                    else
+                                    {
+                                        //el valor actual de bd corroboro que existe en los anexos actuales
+                                        for (int a = 0; a < dOCUMENTO.DOCUMENTOA_TAB.Count; a++)
+                                        {
+                                            if (bd.PATH == dOCUMENTO.DOCUMENTOA_TAB[a].PATH)
+                                            {
+                                                var _poss = db.DOCUMENTOAS1.Where(n => n.NUM_DOC == _ndoc).ToList().Count;
+                                                //si tiene coincidencia, lo guardo en documentoas
+                                                DOCUMENTOA1 _das = new DOCUMENTOA1();
+                                                _das.POS = _poss + 1;
+                                                _das.NUM_DOC = bd.NUM_DOC;
+                                                _das.PATH = bd.PATH;
+                                                _das.TIPO = bd.TIPO;
+                                                _das.STEP_WF = 1;
+                                                _das.USUARIO_ID = bd.USUARIO_ID;
+                                                _das.CLASE = bd.CLASE;
+                                                _das.DESC = bd.DESC;
+                                                _das.ACTIVO = true;
+                                                db.DOCUMENTOAS1.Add(_das);
+                                                db.SaveChanges();
+                                            }
+                                        }
+                                        db.Entry(_dA).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
                                     listaNombreArchivos2.RemoveAt(a2);
                                     arBorr++;
                                 }
-                                catch (Exception e)
+                                else //Si no hay coincidencia,crear...
                                 {
-                                    //
+                                    try
+                                    {
+                                        db.DOCUMENTOAs.Add(_dA);
+                                        db.SaveChanges();
+                                        pos++;
+                                        listaDirectorios2.Remove(_dA.PATH);
+                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        listaNombreArchivos2.RemoveAt(a2);
+                                        arBorr++;
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        //
+                                    }
                                 }
                             }
                             _dA = new DOCUMENTOA();
@@ -2755,19 +2943,64 @@ namespace WFARTHA.Controllers
                                 _dA.STEP_WF = 1;
                                 _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
                                 _dA.ACTIVO = true;
-                                try
+                                //LEJGG03-11-2018
+                                var bd = db.DOCUMENTOAs.Where(x => x.NUM_DOC == _ndoc && x.POSD == (i + 1)).FirstOrDefault();
+                                //si la var bd trae coincidencia, signfica que valores
+                                if (bd != null)
                                 {
-                                    db.DOCUMENTOAs.Add(_dA);
-                                    //db.SaveChanges();
+                                    //Si hay datos, hacer un update...
+                                    if (bd.PATH == listaDirectorios[a3])
+                                    {
+                                        //se compara la ruta, si coincide, no se hace nada
+                                    }
+                                    else
+                                    {
+                                        //el valor actual de bd corroboro que existe en los anexos actuales
+                                        for (int a = 0; a < dOCUMENTO.DOCUMENTOA_TAB.Count; a++)
+                                        {
+                                            if (bd.PATH == dOCUMENTO.DOCUMENTOA_TAB[a].PATH)
+                                            {
+                                                var _poss = db.DOCUMENTOAS1.Where(n => n.NUM_DOC == _ndoc).ToList().Count;
+                                                //si tiene coincidencia, lo guardo en documentoas
+                                                DOCUMENTOA1 _das = new DOCUMENTOA1();
+                                                _das.POS = _poss + 1;
+                                                _das.NUM_DOC = bd.NUM_DOC;
+                                                _das.PATH = bd.PATH;
+                                                _das.TIPO = bd.TIPO;
+                                                _das.STEP_WF = 1;
+                                                _das.USUARIO_ID = bd.USUARIO_ID;
+                                                _das.CLASE = bd.CLASE;
+                                                _das.DESC = bd.DESC;
+                                                _das.ACTIVO = true;
+                                                db.DOCUMENTOAS1.Add(_das);
+                                                db.SaveChanges();
+                                            }
+                                        }
+                                        db.Entry(_dA).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
                                     listaNombreArchivos2.RemoveAt(a3);
                                     arBorr++;
                                 }
-                                catch (Exception e)
+                                else //Si no hay coincidencia,crear...
                                 {
-                                    //
+                                    try
+                                    {
+                                        db.DOCUMENTOAs.Add(_dA);
+                                        db.SaveChanges();
+                                        pos++;
+                                        listaDirectorios2.Remove(_dA.PATH);
+                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        listaNombreArchivos2.RemoveAt(a3);
+                                        arBorr++;
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        //
+                                    }
                                 }
                             }
                             _dA = new DOCUMENTOA();
@@ -2824,19 +3057,64 @@ namespace WFARTHA.Controllers
                                 _dA.STEP_WF = 1;
                                 _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
                                 _dA.ACTIVO = true;
-                                try
+                                //LEJGG03-11-2018
+                                var bd = db.DOCUMENTOAs.Where(x => x.NUM_DOC == _ndoc && x.POSD == (i + 1)).FirstOrDefault();
+                                //si la var bd trae coincidencia, signfica que valores
+                                if (bd != null)
                                 {
-                                    db.DOCUMENTOAs.Add(_dA);
-                                    //db.SaveChanges();
+                                    //Si hay datos, hacer un update...
+                                    if (bd.PATH == listaDirectorios[a4])
+                                    {
+                                        //se compara la ruta, si coincide, no se hace nada
+                                    }
+                                    else
+                                    {
+                                        //el valor actual de bd corroboro que existe en los anexos actuales
+                                        for (int a = 0; a < dOCUMENTO.DOCUMENTOA_TAB.Count; a++)
+                                        {
+                                            if (bd.PATH == dOCUMENTO.DOCUMENTOA_TAB[a].PATH)
+                                            {
+                                                var _poss = db.DOCUMENTOAS1.Where(n => n.NUM_DOC == _ndoc).ToList().Count;
+                                                //si tiene coincidencia, lo guardo en documentoas
+                                                DOCUMENTOA1 _das = new DOCUMENTOA1();
+                                                _das.POS = _poss + 1;
+                                                _das.NUM_DOC = bd.NUM_DOC;
+                                                _das.PATH = bd.PATH;
+                                                _das.TIPO = bd.TIPO;
+                                                _das.STEP_WF = 1;
+                                                _das.USUARIO_ID = bd.USUARIO_ID;
+                                                _das.CLASE = bd.CLASE;
+                                                _das.DESC = bd.DESC;
+                                                _das.ACTIVO = true;
+                                                db.DOCUMENTOAS1.Add(_das);
+                                                db.SaveChanges();
+                                            }
+                                        }
+                                        db.Entry(_dA).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
                                     listaNombreArchivos2.RemoveAt(a4);
                                     arBorr++;
                                 }
-                                catch (Exception e)
+                                else //Si no hay coincidencia,crear...
                                 {
-                                    //
+                                    try
+                                    {
+                                        db.DOCUMENTOAs.Add(_dA);
+                                        db.SaveChanges();
+                                        pos++;
+                                        listaDirectorios2.Remove(_dA.PATH);
+                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        listaNombreArchivos2.RemoveAt(a4);
+                                        arBorr++;
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        //
+                                    }
                                 }
                             }
                             _dA = new DOCUMENTOA();
@@ -2894,24 +3172,68 @@ namespace WFARTHA.Controllers
                                 _dA.STEP_WF = 1;
                                 _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
                                 _dA.ACTIVO = true;
-                                try
+                                //LEJGG03-11-2018
+                                var bd = db.DOCUMENTOAs.Where(x => x.NUM_DOC == _ndoc && x.POSD == (i + 1)).FirstOrDefault();
+                                //si la var bd trae coincidencia, signfica que valores
+                                if (bd != null)
                                 {
-                                    db.DOCUMENTOAs.Add(_dA);
-                                    //db.SaveChanges();
+                                    //Si hay datos, hacer un update...
+                                    if (bd.PATH == listaDirectorios[a5])
+                                    {
+                                        //se compara la ruta, si coincide, no se hace nada
+                                    }
+                                    else
+                                    {
+                                        //el valor actual de bd corroboro que existe en los anexos actuales
+                                        for (int a = 0; a < dOCUMENTO.DOCUMENTOA_TAB.Count; a++)
+                                        {
+                                            if (bd.PATH == dOCUMENTO.DOCUMENTOA_TAB[a].PATH)
+                                            {
+                                                var _poss = db.DOCUMENTOAS1.Where(n => n.NUM_DOC == _ndoc).ToList().Count;
+                                                //si tiene coincidencia, lo guardo en documentoas
+                                                DOCUMENTOA1 _das = new DOCUMENTOA1();
+                                                _das.POS = _poss + 1;
+                                                _das.NUM_DOC = bd.NUM_DOC;
+                                                _das.PATH = bd.PATH;
+                                                _das.TIPO = bd.TIPO;
+                                                _das.STEP_WF = 1;
+                                                _das.USUARIO_ID = bd.USUARIO_ID;
+                                                _das.CLASE = bd.CLASE;
+                                                _das.DESC = bd.DESC;
+                                                _das.ACTIVO = true;
+                                                db.DOCUMENTOAS1.Add(_das);
+                                                db.SaveChanges();
+                                            }
+                                        }
+                                        db.Entry(_dA).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
                                     pos++;
                                     listaDirectorios2.Remove(_dA.PATH);
                                     listaDescArchivos2.Remove(_dA.DESC);
                                     listaNombreArchivos2.RemoveAt(a5);
                                     arBorr++;
                                 }
-                                catch (Exception e)
+                                else //Si no hay coincidencia,crear...
                                 {
-                                    //
+                                    try
+                                    {
+                                        db.DOCUMENTOAs.Add(_dA);
+                                        db.SaveChanges();
+                                        pos++;
+                                        listaDirectorios2.Remove(_dA.PATH);
+                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        listaNombreArchivos2.RemoveAt(a5);
+                                        arBorr++;
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        //
+                                    }
                                 }
                             }
                         }
                     }
-                    //Lej-02.10.2018------
                     //Lejgg 26.10.2018---------------------------------------->
                     //Los anexos que no se agreguen a documentoa se agregaran a documentoas(documentoa1), significa que estan en lista porque no se ligaron a ningun detalle
                     if (listaDirectorios2.Count == listaDescArchivos2.Count && listaDirectorios2.Count == listaNombreArchivos2.Count)
@@ -2952,16 +3274,76 @@ namespace WFARTHA.Controllers
                             _dA.STEP_WF = 1;
                             _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
                             _dA.ACTIVO = true;
-                            try
-                            {
-                                db.DOCUMENTOAS1.Add(_dA);
-                                db.SaveChanges();
-                                pos++;
+                            var lstst = listaDirectorios2[i];
+                            var lstdas = db.DOCUMENTOAS1.Where(n => n.NUM_DOC == _ndoc && n.PATH == lstst).FirstOrDefault();
+                            if (lstdas != null)
+                            {//Si encuentra info ya existe, se deja.No se hace nada
                             }
-                            catch (Exception e)
+                            else
                             {
-                                //
+                                try
+                                {
+                                    db.DOCUMENTOAS1.Add(_dA);
+                                    db.SaveChanges();
+                                    pos++;
+                                }
+                                catch (Exception e)
+                                {
+                                    //
+                                }
                             }
+                        }
+                    }
+
+                    //Lej-02.10.2018------
+                    //Eliminado de archivos DOCUMENTOA  //LEJGG 03-11-2018
+                    var lstDA = db.DOCUMENTOAs.Where(x => x.NUM_DOC == _ndoc).ToList();
+                    for (int w = 0; w < lstDA.Count; w++)
+                    {
+                        bool band = false;                       
+                        if (lstDA != null)//signficia que el valor esta
+                        {
+                            for (int j = 0; j < dOCUMENTO.DOCUMENTOA_TAB.Count; j++)
+                            {
+                                if (lstDA[w].PATH == dOCUMENTO.DOCUMENTOA_TAB[j].PATH)
+                                {
+                                    //si es igual, se queda
+                                    band = true;
+                                }
+                                if (band)
+                                { break; }
+                            }
+                        }
+                        if (!false)
+                        {
+                            lstDA[w].ACTIVO = false;
+                            db.Entry(lstDA).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
+                    //Eliminado de archivos DOCUMENTOAS //LEJGG 03-11-2018
+                    var lstDAS = db.DOCUMENTOAS1.Where(x => x.NUM_DOC == _ndoc).ToList();
+                    for (int w = 0; w < lstDAS.Count; w++)
+                    {
+                        bool band = false;
+                        if (lstDAS != null)//signficia que el valor esta
+                        {
+                            for (int j = 0; j < dOCUMENTO.DOCUMENTOA_TAB.Count; j++)
+                            {
+                                if (lstDAS[w].PATH == dOCUMENTO.DOCUMENTOA_TAB[j].PATH)
+                                {
+                                    //si es igual, se queda
+                                    band = true;
+                                }
+                                if (band)
+                                { break; }
+                            }
+                        }
+                        if (!false)
+                        {
+                            lstDAS[w].ACTIVO = false;
+                            db.Entry(lstDAS).State = EntityState.Modified;
+                            db.SaveChanges();
                         }
                     }
                     //Lejgg 26.10.2018----------------------------------------<
@@ -2979,6 +3361,8 @@ namespace WFARTHA.Controllers
                         db.SaveChanges();
                     }
                     //Lejgg 28.10.2018----------------------------------------<
+                    //}
+
                 }
                 catch (Exception e)
                 {
@@ -3855,12 +4239,14 @@ namespace WFARTHA.Controllers
         public ActionResult getPartialCon4(List<DOCUMENTOA_TAB> docs, decimal nd)
         {
             var path = db.DOCUMENTOAs.Where(x => x.NUM_DOC == nd).ToList();
-            var xx = ConfigurationManager.AppSettings["URL_ATT"].ToString() + @"att";
+            //var xx = ConfigurationManager.AppSettings["URL_ATT"].ToString() + @"att";
+            var xx = db.APPSETTINGs.Where(aps => aps.NOMBRE.Equals("URL_ATT") && aps.ACTIVO == true).FirstOrDefault().VALUE.ToString() + @"att";
+
             if (path.Count > 0)
             {
                 for (int i = 0; i < docs.Count; i++)
                 {
-                    docs[i].PATH = "\\" + xx + "/" + nd + "/" + docs[i].PATH;
+                    docs[i].PATH = xx + "\\" + nd + "\\" + docs[i].PATH;
                 }
             }
             DOCUMENTO_MOD doc = new DOCUMENTO_MOD();
@@ -4343,7 +4729,7 @@ namespace WFARTHA.Controllers
 
             WFARTHAEntities db = new WFARTHAEntities();
 
-            var cond = from con in db.CONDICIONES_PAGO where con.COND_PAGO.Contains(Prefix) select new { COND_PAGO = con.COND_PAGO.ToString(), TEXT = con.TEXT.ToString()};
+            var cond = from con in db.CONDICIONES_PAGO where con.COND_PAGO.Contains(Prefix) select new { COND_PAGO = con.COND_PAGO.ToString(), TEXT = con.TEXT.ToString() };
 
             JsonResult cc = Json(cond, JsonRequestBehavior.AllowGet);
             return cc;
