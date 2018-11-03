@@ -246,7 +246,9 @@ namespace WFARTHA.Controllers
                              TEXT = ts.ID + " - " + tt.TXT50
                          }).ToList();
 
+
             //FRT 03112018.3--------Mostrar anexos de la misma forma que en Editar >
+
             var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
             DOCUMENTOA d_a = new DOCUMENTOA();
             var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id).ToList();
@@ -261,7 +263,9 @@ namespace WFARTHA.Controllers
                 lst.Add(d_a);
             }
             ViewBag.docAn = lst;
+
             //FRT END 
+
 
 
             var monedal = db.MONEDAs.Where(m => m.ACTIVO == true).Select(m => new { m.WAERS, TEXT = m.WAERS + " - " + m.LTEXT }).ToList();

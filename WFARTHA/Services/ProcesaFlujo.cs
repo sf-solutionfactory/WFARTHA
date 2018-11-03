@@ -300,6 +300,12 @@ namespace WFARTHA.Services
                         //Actualizar wf del documento
                         //d.ESTATUS_WF = "A";//MGC 30-10-2018 Modificaión para validar creación del archivo
 
+                        if (edit)
+                        {
+                            d.ESTATUS = "N"; //MGC 02-11-2018 Regresa a estatus de crear preliminar
+                            d.ESTATUS_WF = "P"; //MGC 02-11-2018 Regresa a estatus de crear preliminar
+                        }
+
                         //MGC 30-10-2018 Actualizar el estatus de preliminar del doc
                         d.ESTATUS_PRE = "G";//MGC 30-10-2018 Modificaión para validar creación del archivo
                         db.Entry(d).State = EntityState.Modified;
@@ -354,6 +360,8 @@ namespace WFARTHA.Services
                         //MGC 30-10-2018 Actualizar el estatus de preliminar del doc
                         d.ESTATUS_PRE = "E";//MGC 30-10-2018 Modificaión Estatus en la creación del archivo
                         db.Entry(d).State = EntityState.Modified;
+
+                        //Pendiente en edit, regresar a estatus de P en la creación del flujo
 
                     }
 

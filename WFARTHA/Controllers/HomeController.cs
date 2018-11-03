@@ -102,7 +102,9 @@ namespace WFARTHA.Controllers
             //MGC Cancelar preliminar
             //MGC 26-10-2018 Modificación a borrador obtener todas las solicitudes, excepto el borrador a.ESTATUS != "B"
             //var dOCUMENTOes = db.DOCUMENTOes.Where(a => a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us)).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();
-            var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us)) & a.ESTATUS != "B").Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();
+            //var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us)) & a.ESTATUS != "B").Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();            
+            //MGC 26-10-2018 Modificación a borrador obtener todas las solicitudes, excepto las solicitudes canceladas a.estatus_c != "C"  o contabilizadas a.ESTATUS != "A"
+            var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us)) & (a.ESTATUS != "A" | a.ESTATUS_C != "C")).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();
             var dOCUMENTOVs = db.DOCUMENTOVs.Where(a => a.USUARIOA_ID.Equals(us)).ToList();
             var tsol = db.TSOLs.ToList();
             foreach (DOCUMENTOV v in dOCUMENTOVs)

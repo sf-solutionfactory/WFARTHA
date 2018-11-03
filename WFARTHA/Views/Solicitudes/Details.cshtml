@@ -817,6 +817,7 @@
                 <div class="card-panel">
                     <h5 id="head_cabecera">Anexos</h5>
                     <div class="row" style="margin-bottom:0">
+                        @*FRT 03112018 Agregar el listado de Anexos y mostrar *@
                         <table class="table display mdl-data-table striped" id="table_anexa" style="width:100%;">
                             <thead>
                                 <tr>
@@ -847,6 +848,7 @@
                                 {
                                     for (int i = 0; i < @lstDocsA.Count; i++)
                                     {
+
                                         <tr>
                                             <td></td>
                                             <td>
@@ -866,6 +868,7 @@
                                 @*}*@
                             </tbody>
                         </table>
+
                     </div>
                 </div>
             </div>
@@ -1163,11 +1166,12 @@
                     }
                     document.getElementById('loader').style.display = 'none';
                 });
+
             </script>
         }
     }
 
-    
+
     @if (ViewBag.workflow.Count != 0)
     {
         <div class="row" style="font-size:12px;">
