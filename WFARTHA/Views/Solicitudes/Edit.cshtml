@@ -180,6 +180,9 @@
     <input id="Uuid" name="Uuid" type="hidden" value="">
     <div class="form-horizontal">
         @*Encabezado*@
+        @*Estructura basica para saber que edito, si un borrador o una edicion de rechazo*@
+        @*@if (ViewBag.pacc == "B")
+            {*@
         <div id="Encabezado_cont" class="col s12" style="font-size:12px;">
             <div class="row">
                 <div class="col s12">
@@ -446,19 +449,19 @@
                                     <thead>
                                         <tr>
                                             <th class="lbl_tret">
-                                                Tipo Retención 
+                                                Tipo Retención
                                             </th>
                                             <th class="lbl_descret">
-                                                Descripción Retención 
+                                                Descripción Retención
                                             </th>
                                             <th class="lbl_indret">
-                                                Indicador de retención 
+                                                Indicador de retención
                                             </th>
                                             <th class="lbl_bimponible">
-                                                Base Imponible 
+                                                Base Imponible
                                             </th>
                                             <th id="lbl_impret">
-                                                Importe de retención 
+                                                Importe de retención
                                             </th>
                                         </tr>
                                     </thead>
@@ -497,25 +500,25 @@
                                     <thead>
                                         <tr>
                                             <th class="lbl_socret">
-                                                Sociedad Retención 
+                                                Sociedad Retención
                                             </th>
                                             <th class="lbl_provret">
-                                                Proveedor Retención 
+                                                Proveedor Retención
                                             </th>
                                             <th class="lbl_tret">
-                                                Tipo Retención 
+                                                Tipo Retención
                                             </th>
                                             <th class="lbl_descret">
-                                                Descripción Retención 
+                                                Descripción Retención
                                             </th>
                                             <th class="lbl_indret">
-                                                Indicador de retención 
+                                                Indicador de retención
                                             </th>
                                             <th class="lbl_bimponible">
-                                                Base Imponible 
+                                                Base Imponible
                                             </th>
                                             <th id="lbl_impret">
-                                                Importe de retención 
+                                                Importe de retención
                                             </th>
                                         </tr>
                                     </thead>
@@ -527,6 +530,10 @@
                 </div>
             </div>
         </div>
+        @*}
+            else
+            {
+            }*@
         @*Información Contable*@
         <div id="Contable_cont" class="col s12" style="font-size:12px;">
             <div class="row">
@@ -570,40 +577,40 @@
                                             Numero Anexo5
                                         </th>
                                         <th class="lbl_cargoAbono">
-                                            Cargo/Abono 
+                                            Cargo/Abono
                                         </th>
                                         <th class="lbl_factura">
-                                            Factura 
+                                            Factura
                                         </th>
                                         <th id="lbl_tconcepto">
-                                            TIPO CONCEPTO 
+                                            TIPO CONCEPTO
                                         </th>
                                         <th id="lbl_grupo">
-                                            Grupo 
+                                            Grupo
                                         </th>
                                         <th id="lbl_cuenta">
-                                            Cuenta 
+                                            Cuenta
                                         </th>
                                         <th id="lbl_cuentaNom">
-                                            Nombre de cuenta 
+                                            Nombre de cuenta
                                         </th>
                                         <th id="lbl_tipoimp">
-                                            Tipo Imp. 
+                                            Tipo Imp.
                                         </th>
                                         <th id="lbl_imputacion">
-                                            Imputación 
+                                            Imputación
                                         </th>
                                         <th id="lbl_ccosto">
-                                            Centro de costo 
+                                            Centro de costo
                                         </th>
                                         <th id="lbl_monto">
-                                            Monto 
+                                            Monto
                                         </th>
                                         <th id="lbl_impuesto">
-                                            Impuesto 
+                                            Impuesto
                                         </th>
                                         <th id="lbl_iva">
-                                            IVA 
+                                            IVA
                                         </th>
                                         <th id="lbl_texto">
                                             TEXTO
@@ -710,16 +717,32 @@
                     <div class="card-panel">
                         <h5 id="head_cabecera">Autorización NT</h5>
                         <div class="row" style="margin-bottom:0">
-                            <div class="form-group col s6">
-                                @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa" })
+                            @if (ViewBag.pacc == "B")@*Lejgg 03-11-18*@
+                            {
+                                <div class="form-group col s6">
+                                    @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización ", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa" })
+                                    </div>
+                                    <input id="DETTA_VERSION" name="DETTA_VERSION" value="" hidden />
+                                    <input id="DETTA_USUARIOC_ID" name="DETTA_USUARIOC_ID" value="" hidden />
+                                    <input id="DETTA_ID_RUTA_AGENTE" name="DETTA_ID_RUTA_AGENTE" value="" hidden />
+                                    <input id="DETTA_USUARIOA_ID" name="DETTA_USUARIOA_ID" value="" hidden />
                                 </div>
-                                <input id="DETTA_VERSION" name="DETTA_VERSION" value="" hidden />
-                                <input id="DETTA_USUARIOC_ID" name="DETTA_USUARIOC_ID" value="" hidden />
-                                <input id="DETTA_ID_RUTA_AGENTE" name="DETTA_ID_RUTA_AGENTE" value="" hidden />
-                                <input id="DETTA_USUARIOA_ID" name="DETTA_USUARIOA_ID" value="" hidden />
-                            </div>
+                            }
+                            else
+                            {
+                                <div class="form-group col s6">
+                                    @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización ", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa", @disabled = "disabled" })
+                                    </div>
+                                    <input id="DETTA_VERSION" name="DETTA_VERSION" value="" hidden />
+                                    <input id="DETTA_USUARIOC_ID" name="DETTA_USUARIOC_ID" value="" hidden />
+                                    <input id="DETTA_ID_RUTA_AGENTE" name="DETTA_ID_RUTA_AGENTE" value="" hidden />
+                                    <input id="DETTA_USUARIOA_ID" name="DETTA_USUARIOA_ID" value="" hidden />
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
