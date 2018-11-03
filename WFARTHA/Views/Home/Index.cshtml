@@ -441,7 +441,7 @@
                         
                         }
                         @*//MGC 30-10-2018 Modificación estatus, Label de generando preliminar*@
-                        else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP == null && item.ESTATUS_WF == null)
+                        else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP == null && (item.ESTATUS_WF == null | item.ESTATUS_WF == "P"))
                         {
                             //Se creó el archivo preliminar
                             if (item.ESTATUS_PRE == "G")
