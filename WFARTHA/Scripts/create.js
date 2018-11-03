@@ -108,7 +108,7 @@ $(document).ready(function () {
                 "visible": false//MGC 22-10-2018 Etiquetas
             },
             {
-                "name": 'GRUPO',
+                "name": 'CONCEPTO',
                 "className": 'GRUPO',
                 "orderable": false
             },
@@ -1290,7 +1290,7 @@ function obtenerRetenciones(flag) {
                 "visible": false//MGC 22-10-2018 Etiquetas
             },
             {
-                "name": 'GRUPO',
+                "name": 'CONCEPTO',
                 "className": 'GRUPO',
                 "orderable": false
             },

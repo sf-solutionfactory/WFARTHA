@@ -392,14 +392,14 @@
                     <h5 id="head_cabecera">Cabecera NT</h5>
                     <div class="row" style="margin-bottom:0">
                         <div class="form-group col s6">
-                            @Html.LabelFor(model => model.D.TSOL_ID, "Clase de documento NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.TSOL_ID, "Clase de documento", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.DropDownList("TSOL_ID", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
 
                             </div>
                         </div>
                         <div class="form-group col s6">
-                            @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Sociedad NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Sociedad", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
 
@@ -408,7 +408,7 @@
                     </div>
                     <div class="row" style="margin-bottom:0">
                         <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.FECHAD, "Fecha documento NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.FECHAD, "Fecha documento", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.EditorFor(model => model.D.FECHAD, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
 
@@ -425,8 +425,8 @@
 
                         </script>
 
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.FECHACON, "Fecha Contabilización NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="form-group col s3" style="display:none;">
+                            @Html.LabelFor(model => model.D.FECHACON, "Fecha Contabilización", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.EditorFor(model => model.D.FECHACON, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
 
@@ -442,8 +442,8 @@
 
                         </script>
 
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="form-group col s3" style="display:none;">
+                            @Html.LabelFor(model => model.D.FECHA_BASE, "Fecha Base Line", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.EditorFor(model => model.D.FECHA_BASE, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
 
@@ -459,14 +459,28 @@
                             }
 
                         </script>
+                        <div class="form-group col s3">
+                            @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @*@Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })*@
+                                <input type="text" disabled class="form-control" value="@montomd" />
+                            </div>
+                        </div>
                         <div id="div_norden_compra" class="input-field col s3" style="display:none">
                             <input type="text" id="norden_compra" value="" />@*Lejgg-09-10-2018*@
                             <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
                         </div>
+                        <div class="form-group col s6">
+                            @Html.LabelFor(model => model.D.IMPUESTO, "Impuesto", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
+
+                            </div>
+                        </div>
                     </div>
                     <div class="row" style="margin-bottom:0">
                         <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.DropDownList("MONEDA_ID", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
 
@@ -474,67 +488,24 @@
                         </div>
 
                         <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.TIPO_CAMBIO, "Cambio NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.TIPO_CAMBIO, "Cambio", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @{ decimal tc = decimal.Parse(Model.D.TIPO_CAMBIO.ToString()); var _tc = formatoc.toShow(tc, ViewBag.dec);} @*LEJGG 16102018*@
                                 @*@Html.EditorFor(model => model.D.TIPO_CAMBIO, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })*@
                                 <input type="text" disabled class="form-control" id="TIPO_CAMBIO" name="TIPO_CAMBIO" value="@_tc" />@*LEJGG 16102018*@
                             </div>
                         </div>
-
                         <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.IMPUESTO, "Impuesto NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
-
-                            </div>
-                        </div>
-
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @*@Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })*@
-                                <input type="text" disabled class="form-control" value="@montomd" />
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="row" style="margin-bottom:0">
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.REFERENCIA, "Referencia NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10col s2">
-                                @Html.EditorFor(model => model.D.REFERENCIA, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
-
-                            </div>
-                        </div>
-
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.CONCEPTO, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.D.CONCEPTO, "Concepto NT", new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
-
-                            </div>
-                        </div>
-
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.CONDICIONES, "Condiciones NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.CONDICIONES, "Condiciones", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.EditorFor(model => model.D.CONDICIONES, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
 
                             </div>
                         </div>
-
-                        <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.CLAVE_CTA, "Clave Cuenta NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.D.CLAVE_CTA, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
-
-                            </div>
-                        </div>
                     </div>
                     <div class="row" style="margin-bottom:0">
                         <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.PAYER_ID, "Proveedor NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.PAYER_ID, "Proveedor", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.EditorFor(model => model.D.PAYER_ID, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
 
@@ -559,6 +530,32 @@
                             <label class="control-label col-md-2" for="nom_proveedor">Nombre Proveedor NT</label>
                             <div class="col-md-10">
                                 <input type="text" id="nom_proveedor" disabled value="@name" />
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:0">
+                        <div class="form-group col s3" style="display:none;">
+                            @Html.LabelFor(model => model.D.REFERENCIA, "Referencia", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10col s2">
+                                @Html.EditorFor(model => model.D.REFERENCIA, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+
+                            </div>
+                        </div>
+
+                        <div class="form-group col s6">
+                            @Html.LabelFor(model => model.D.CONCEPTO, "Texto", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.D.CONCEPTO, "Concepto", new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group col s3" style="display:none;">
+                            @Html.LabelFor(model => model.D.CLAVE_CTA, "Clave Cuenta", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.D.CLAVE_CTA, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
 
                             </div>
                         </div>
@@ -667,7 +664,7 @@
                                 <tr>
                                     <th></th>
                                     <th class="lbl_pos">
-                                        Pos NT
+                                        Pos 
                                     </th>
                                     <th class="">
                                         A1
@@ -685,31 +682,31 @@
                                         A5
                                     </th>
                                     <th class="lbl_cargoAbono">
-                                        D/H NT
+                                        D/H 
                                     </th>
                                     <th class="lbl_factura">
-                                        Factura NT
+                                        Factura 
                                     </th>
                                     <th id="lbl_grupo">
-                                        Grupo NT
+                                        Concepto
                                     </th>
                                     <th id="lbl_cuenta">
-                                        Cuenta NT
+                                        Cuenta 
                                     </th>
                                     <th id="lbl_cuentaNom">
-                                        Nombre de cuenta NT
+                                        Nombre de cuenta 
                                     </th>
                                     <th id="lbl_tipoimp">
-                                        Tipo Imp. NT
+                                        Tipo Imp. 
                                     </th>
                                     <th id="lbl_imputacion">
-                                        Imputación NT
+                                        Imputación 
                                     </th>
                                     <th id="lbl_monto">
-                                        Monto NT
+                                        Monto 
                                     </th>
                                     <th id="lbl_iva">
-                                        IVA NT
+                                        IVA 
                                     </th>
                                     <th id="lbl_Texto">
                                         Texto
@@ -1214,7 +1211,6 @@
                     document.getElementById('loader').style.display = 'none';
                 });
 
-                                                    //MGC 18-10-2018 Firma del usuario --------------------------------------------------<
             </script>
         }
     }
