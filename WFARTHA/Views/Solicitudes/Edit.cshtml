@@ -848,77 +848,61 @@
             <div class="row">
                 <div class="col s12">
                     <div class="card-panel">
+                        @* FRT 02112018 agregar vista de Log de SAP *@
+                        @if (ViewBag.LogSap.Count != 0)
+                        {
+                            <div class="row" style="font-size:12px;">
+                                <div class="col s12" style="padding:0px">
+                                    <div class="card-panel">
+                                        <div class="row" style="margin-bottom:0">
+                                            <h5>Log de Mensajes SAP</h5>
+                                            <table class="table highlight responsive-table" id="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="">
+                                                            Documento
+                                                        </th>
+                                                        <th width="">
+                                                            Tipo
+                                                        </th>
+                                                        <th width="">
+                                                            Numero
+                                                        </th>
+                                                        <th width="">
+                                                            Mensaje
+                                                        </th>
+                                                        <th width="">
+                                                            Fecha
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (WFARTHA.Entities.DOCUMENTOLOG sap in ViewBag.LogSap)
+                                                    {
+                                                        <tr>
+                                                            <td width=""> @Html.DisplayFor(modelItem => sap.NUM_DOC)</td>
+                                                            <td width=""> @Html.DisplayFor(modelItem => sap.TYPE) </td>
+                                                            <td width=""> @Html.DisplayFor(modelItem => sap.NUMBER) </td>
+                                                            <td width=""> @Html.DisplayFor(modelItem => sap.MESSAGE) </td>
+                                                            <td width=""> @Html.DisplayFor(modelItem => sap.FECHA) </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input style="display:none" id="btn_guardar" type="submit" value="Guardar" class="btn btn-default" />
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
-
-        @*MGC 04-10-2018 Botones para acciones WF-->*@
-        @if (ViewBag.workflow.Count != 0)
-        {
-            <div class="row" style="font-size:12px;">
-                <div class="col s12" style="padding:0px">
-                    <div class="card-panel">
-                        <div class="row" style="margin-bottom:0">
-                            <h5>Workflow</h5>
-                            <table class="table highlight responsive-table" id="table">
-                                <thead>
-                                    <tr>
-                                        <th width="">
-                                            Usuario
-                                        </th>
-                                        <th width="">
-                                            Evento
-                                        </th>
-                                        <th width="">
-                                            Fecha inicio
-                                        </th>
-                                        <th width="">
-                                            Hora inicio
-                                        </th>
-                                        <th width="">
-                                            Fecha término
-                                        </th>
-                                        <th width="">
-                                            Hora término
-                                        </th>
-                                        <th width="">
-                                            Estatus
-                                        </th>
-                                        <th width="30%">
-                                            Comentario
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (WFARTHA.Entities.FLUJO f in ViewBag.workflow)
-                                    {
-                                        <tr>
-                                            <td width=""> @Html.DisplayFor(modelItem => f.USUARIOA_ID) - @Html.DisplayFor(modelItem => f.USUARIO.NOMBRE) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_P) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_M) </td>
-                                            <td width=""> @Html.DisplayFor(modelItem => f.WORKFP.ACCION.DESCCRIPCION) </td>
-                                            <td width=""> @f.FECHAC.Value.ToShortDateString() </td>
-                                            <td width=""> @f.FECHAC.Value.TimeOfDay.ToString().Split('.')[0] </td>
-                                            <td width=""> @f.FECHAM.Value.ToShortDateString() </td>
-                                            <td width=""> @f.FECHAM.Value.TimeOfDay.ToString().Split('.')[0] </td>
-                                            <td width=""> @Html.DisplayFor(modelItem => f.ESTATUS) </td>
-                                            <td width="30%"> @Html.DisplayFor(modelItem => f.COMENTARIO) </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input style="display:none" id="btn_guardar" type="submit" value="Guardar" class="btn btn-default" />
-                </div>
-            </div>
-
-        }
-        @*MGC 04-10-2018 WF<--*@
     </div>
 
 }

@@ -40,7 +40,9 @@
 }
 
 <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
-<input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
+<input id="dec" name="dec" type="hidden" value="@ViewBag.dec">  
+
+
 
 
 <div class="row" style="margin-bottom:0">
@@ -174,7 +176,15 @@
             //    document.getElementById("btn_guardarh").classList.add("disabled");//RSG 26.04.2018
             //}
         </script>
+        @*FRT 02112018 Agregar titulos*@
+        <div>
+            <br />
+            <h5 id="head_cabecera" style="display:inline-block">@ViewBag.pid - </h5>
+            <h5 id="head_cabecera" style="display:inline-block">@ViewBag.PrSl</h5>
+            
+        </div>
     </div>
+    
     <div class="div_bottom">
         <hr class="hr_bw" />
         <hr class="hr_color #4e342e brown darken-3" />
@@ -317,14 +327,14 @@
                             @*MGC 03-10-2018 solicitud con orden de compra -->*@
                             @*<div class="form-group col s3">*@
                             @*<div id="div_norden_compra" class="input-field col s3" style="display:none">
-                                    @Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                                        <div class="col-md-10">
-                                            @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })
-                                        </div>
+                                @Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })
+                                    </div>
 
-                                    <input type="text" id="norden_compra" value="" />
-                                    <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
-                                </div>*@
+                                <input type="text" id="norden_compra" value="" />
+                                <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
+                            </div>*@
                             @*MGC 03-10-2018 solicitud con orden de compra <--*@
 
                             @* Lejgg 26 10 2018 *@
@@ -414,8 +424,8 @@
                                 </div>
                             </div>
                             @*<div class="form-group col s3">
-                                    <a id="btn_retenciones" class="waves-effect waves-light btn">Retenciones NT</a>
-                                </div>*@
+                                <a id="btn_retenciones" class="waves-effect waves-light btn">Retenciones NT</a>
+                            </div>*@
                         </div>
                         <div class="row" style="margin-bottom:0">
                             <div class="form-group col s3" style="display:none">
@@ -553,7 +563,7 @@
 
                         @*MGC 29-10-2018 Agregar funcionalidad de proyecto ---------------------------------------------------->*@
 
-                        @{string proy =  ViewBag.pid + "";}
+                        @{string proy = ViewBag.pid + "";}
                         @Html.Hidden("PROY_SEL", proy);
                         @*MGC 29-10-2018 Agregar funcionalidad de proyecto ----------------------------------------------------<*@
 
@@ -562,9 +572,9 @@
                                 <div id="div_norden_compra" class="input-field col s12" style="display:none">
                                     <!--ADD RSG 19.10.2018-->
                                     @*@Html.LabelFor(model => model.FECHA_BASE, "Fecha Base Line NT", htmlAttributes: new { @class = "control-label col-md-2" })
-                                        <div class="col-md-10">
-                                            @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })
-                                        </div>*@
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.FECHA_BASE, new { htmlAttributes = new { @class = "form-control fechaVal", @disabled = "disabled" } })
+                                    </div>*@
 
                                     @*<input type="text" id="norden_compra" value="" />*@<!--ADD RSG 19.10.2018-->
                                     <select id="norden_compra" onchange="addPedido(this.value);"><option></option></select><!--ADD RSG 19.10.2018-->
@@ -574,29 +584,29 @@
                             <div class="col s12 m12 l9">
                                 <div class="row" style="margin-bottom:0px;">
                                     @*<div class="input-field col s12 m12 l3 offset-l3">
-                                            <input id="fondo_g" name="fondo_g" type="text" class="validate" disabled />
-                                            <label for="fondo_g">Fondo de garantía</label>
-                                        </div>
-                                        <div class="input-field col s12 m12 l3">
-                                            <input id="Rfondo_g" name="Rfondo_g" type="text" class="validate" disabled />
-                                            <label for="Rfondo_g">Retenido fondo de garantía</label>
-                                        </div>
-                                        <div class="input-field col s12 m12 l3">
-                                            <input id="Resfondo_g" name="Resfondo_g" type="text" class="validate" disabled />
-                                            <label for="Resfondo_g">Restante fondo de garantía</label>
-                                        </div>
-                                        <div class="input-field col s12 m12 l3 offset-l3">
-                                            <input id="fondo_g" name="fondo_g" type="text" class="validate" disabled />
-                                            <label for="fondo_g">Fondo de garantía</label>
-                                        </div>
-                                        <div class="input-field col s12 m12 l3">
-                                            <input id="Rfondo_g" name="Rfondo_g" type="text" class="validate" disabled />
-                                            <label for="Rfondo_g">Retenido fondo de garantía</label>
-                                        </div>
-                                        <div class="input-field col s12 m12 l3">
-                                            <input id="Resfondo_g" name="Resfondo_g" type="text" class="validate" disabled />
-                                            <label for="Resfondo_g">Restante fondo de garantía</label>
-                                        </div>*@
+                                        <input id="fondo_g" name="fondo_g" type="text" class="validate" disabled />
+                                        <label for="fondo_g">Fondo de garantía</label>
+                                    </div>
+                                    <div class="input-field col s12 m12 l3">
+                                        <input id="Rfondo_g" name="Rfondo_g" type="text" class="validate" disabled />
+                                        <label for="Rfondo_g">Retenido fondo de garantía</label>
+                                    </div>
+                                    <div class="input-field col s12 m12 l3">
+                                        <input id="Resfondo_g" name="Resfondo_g" type="text" class="validate" disabled />
+                                        <label for="Resfondo_g">Restante fondo de garantía</label>
+                                    </div>
+                                    <div class="input-field col s12 m12 l3 offset-l3">
+                                        <input id="fondo_g" name="fondo_g" type="text" class="validate" disabled />
+                                        <label for="fondo_g">Fondo de garantía</label>
+                                    </div>
+                                    <div class="input-field col s12 m12 l3">
+                                        <input id="Rfondo_g" name="Rfondo_g" type="text" class="validate" disabled />
+                                        <label for="Rfondo_g">Retenido fondo de garantía</label>
+                                    </div>
+                                    <div class="input-field col s12 m12 l3">
+                                        <input id="Resfondo_g" name="Resfondo_g" type="text" class="validate" disabled />
+                                        <label for="Resfondo_g">Restante fondo de garantía</label>
+                                    </div>*@
                                     <div class="col s12">
                                         <table class="mdl-data-table striped">
                                             <thead>
@@ -1171,17 +1181,17 @@
 
             </div>
         </div>
-
+               
 
         @*
-            <div id="Informacion_sap" class="col s12" style="font-size:12px;">
-                <div class="row">
-                    <div class="col s12">
-                        <div class="card-panel">
-                        </div>
+        <div id="Informacion_sap" class="col s12" style="font-size:12px;">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card-panel">
                     </div>
                 </div>
-            </div>*@
+            </div>
+        </div>*@
     </div>
     <input type="hidden" value=" " id="conOrden" name="conOrden" />
 
