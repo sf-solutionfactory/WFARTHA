@@ -386,7 +386,21 @@
 
                     @if (item.FLUJOes.Count > 0)
                     {
-                        if (item.ESTATUS_WF == "R" & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID)
+                        //MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B
+                        if (item.ESTATUS.Equals("B") & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
+                        {
+                            <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
+                                @item.NUM_DOC
+                            </td>
+                        }
+                        //MGC 03-11-2018.2 Se genero error en el preliminar, respuesta de SAP NOK, enviar a editar con parametro pacc P
+                        else if ((item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP != null && item.ESTATUS_WF == null & item.ESTATUS_PRE == "E" && item.ESTATUS_SAP == "E") & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
+                        {
+                            <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "P" })'" style="cursor:pointer">
+                                @item.NUM_DOC
+                            </td>
+                        }
+                        else if (item.ESTATUS_WF == "R" & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID)
                         {
                             <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
                                 @item.NUM_DOC
@@ -401,9 +415,19 @@
                     }
                     else
                     {
-                        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-                            @item.NUM_DOC
-                        </td>
+                        //MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B, solamente el usuario creador
+                        if (item.ESTATUS.Equals("B") & ViewBag.usuario.ID == item.USUARIOC_ID)
+                        {
+                            <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
+                                @item.NUM_DOC
+                            </td>
+                        }
+                        else
+                        {
+                            <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                                @item.NUM_DOC
+                            </td>
+                        }
                     }
 
                     <td style="">
@@ -431,14 +455,23 @@
                     @*MGC Preliminar Status que hay en preliminar*@
                     @if (item.NUM_PRE != "")
                     {
+                        //MGC 03-11-2018.2 La solicitud es un borrador
+                        if (item.ESTATUS.Equals("B"))
+                        {
+
+                            <td class="">
+                                <span class="lbl_tax new badge gray darken-2 white-text" data-badge-caption=" ">Borrador</span>
+                            </td>
+
+                        }
                         @*//MGC 30-10-2018 Modificación estatus, Label de contabilizada en SAP*@
                         if (item.ESTATUS.Equals("A"))
                         {
-                            
-                                <td class="">
-                                    <span class="lbl_tax new badge green darken-2 white-text" data-badge-caption=" ">Contabilizado SAP</span>
-                                </td>
-                        
+
+                            <td class="">
+                                <span class="lbl_tax new badge green darken-2 white-text" data-badge-caption=" ">Contabilizado SAP</span>
+                            </td>
+
                         }
                         @*//MGC 30-10-2018 Modificación estatus, Label de generando preliminar*@
                         else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP == null && (item.ESTATUS_WF == null | item.ESTATUS_WF == "P"))
