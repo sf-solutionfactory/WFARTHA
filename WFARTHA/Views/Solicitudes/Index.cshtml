@@ -226,10 +226,10 @@
                     </td>
                 }
             }
-            else if (item.ESTATUS_WF.Equals("R"))
+            else if (item.ESTATUS.Equals("F") && item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("R") && item.ESTATUS_PRE != null && item.ESTATUS_PRE.Equals("G"))
             {
                 <td class="red darken-1 white-text">
-                    <div class="lbl_rejected">Rechazada</div>
+                    <div class="lbl_rejected">Pendiente corrección usuario</div>
                 </td>
             }
             else if (item.ESTATUS_WF.Equals("T"))

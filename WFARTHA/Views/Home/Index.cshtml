@@ -460,16 +460,24 @@
                         {
 
                             <td class="">
-                                <span class="lbl_tax new badge gray darken-2 white-text" data-badge-caption=" ">Borrador</span>
+                                <span class="lbl_tax new badge gray darken-2 black-text" data-badge-caption=" ">Borrador</span>
                             </td>
 
                         }
                         @*//MGC 30-10-2018 Modificación estatus, Label de contabilizada en SAP*@
-                        if (item.ESTATUS.Equals("A"))
+                        else if (item.ESTATUS.Equals("A"))
                         {
 
                             <td class="">
                                 <span class="lbl_tax new badge green darken-2 white-text" data-badge-caption=" ">Contabilizado SAP</span>
+                            </td>
+
+                        }@*//MGC 30-10-2018 Modificación estatus, Label de rechazada*@
+                        else if (item.ESTATUS.Equals("F") && item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("R") && item.ESTATUS_PRE != null && item.ESTATUS_PRE.Equals("G"))
+                        {
+
+                            <td class="">
+                                <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Pendiente corrección usuario</span>
                             </td>
 
                         }
