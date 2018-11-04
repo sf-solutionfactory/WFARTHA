@@ -769,12 +769,17 @@ $('body').on('focusout', '.extrasC2', function (e) {
 });
 
 function ocultarCamposEdicion(pacc) {
+    if (pacc == "B") {
+        $('#PAYER_ID').attr("disabled", "none");
+    }
     if (pacc == "P") {
         $('#PAYER_ID').attr("disabled", "disabled");
         $('#list_detaa').attr("disabled", "disabled");
     }
     if (pacc == "R") {
         $('#PAYER_ID').attr("disabled", "disabled");
+        $('#SOCIEDAD_ID').attr("disabled", "disabled");
+        $('#FECHAD').attr("disabled", "disabled");
         $('#list_detaa').attr("disabled", "disabled");
     }
 }
