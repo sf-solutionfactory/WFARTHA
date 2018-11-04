@@ -146,7 +146,7 @@ namespace WFARTHA.Controllers
         }
         //Lej 03.09.2018
         [Authorize]
-        public ActionResult Proyectos(string returnUrl)
+        public ActionResult Proyectos(string returnUrl )
         {
             using (WFARTHAEntities db = new WFARTHAEntities())
             {

@@ -338,6 +338,18 @@ $(document).ready(function () {
         $(tr).css("background-color:#c4f0ff;");
     });
 
+    //En esta parte me encargare de bloquear o desbloquear ciertos campos
+    var pacc = $('#pacc').val();
+    ocultarCamposEdicion(pacc);
+
+    $('#delRowInfo').click(function (e) {
+        var t = $('#table_info').DataTable();
+        t.rows('.selected').remove().draw(false);
+        updateFooter();
+        event.returnValue = false;
+        event.cancel = true;
+    });
+
     $('#delRowAnex').click(function (e) {
         var t = $('#table_anexa').DataTable();
         t.rows('.selected').remove().draw(false);
@@ -492,28 +504,63 @@ $('body').on('focusout', '.OPER', function (e) {
     else if ($(this).hasClass("MONTO")) {
 
         //Desde el subtotal
-        var _sub = $(this).val().replace('$', '').replace(',', '');
-        _sub = parseFloat(_sub);
+        var sub = $(this).val().replace('$', '').replace(',', '');
+        sub = parseFloat(sub);
 
         //Lleno los campos de Base Imponible con el valor del monto
         for (x = 0; x < tRet2.length; x++) {
-            var _xvalue = tr.find("td.BaseImp" + tRet2[x] + " input").val();
-            if (_xvalue === "") {
-                tr.find("td.BaseImp" + tRet2[x] + " input").val(toShow(_sub));
+            var _xvalue = tr.find("td.BaseImp" + tRet2[x] + " input").val().replace('$', '').replace(',', '');
+            // if (_xvalue === "") {
+            //AJAX
+            var indret = 0;
+            $("#table_ret > tbody  > tr[role='row']").each(function () {
+                var t_ret = $(this).find("td.TRET").text();
+                if (t_ret === tRet2[x]) {
+                    indret = $(this).find("td.INDRET").text();
+                }
+            });
+            var campo = "";
+            $.ajax({
+                type: "POST",
+                url: 'getCampoMult',
+                dataType: "json",
+                data: { 'witht': tRet2[x], 'ir': indret },
+                success: function (data) {
+                    if (data !== null || data !== "") {
+                        campo = data;
+                    }
+                },
+                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                    M.toast({ html: httpStatusMessage });
+                },
+                async: false
+            });
+            if (campo == "MONTO") {
+                tr.find("td.BaseImp" + tRet2[x] + " input").val(toShow(sub));
                 //Ejecutamos un ajax para llenar el valor de importe de retencion
                 var _res = porcentajeImpRet(tRet2[x]);
-                _res = (_sub * _res) / 100;//Saco el porcentaje
+                _res = (sub * _res) / 100;//Saco el porcentaje
                 tr.find("td.ImpRet" + tRet2[x] + " input").val(toShow(_res));
             }
+            if (campo == "IVA") {
+                var xiva = (sub * impimp) / 100;
+                var _iva_ = parseFloat(xiva);
+                tr.find("td.BaseImp" + tRet2[x] + " input").val(toShow(_iva_));
+                var _resx = porcentajeImpRet(tRet2[x]);
+                var _resIva = _iva_ * _resx;
+                //Ejecutamos un ajax para llenar el valor de importe de retencion
+                tr.find("td.ImpRet" + tRet2[x] + " input").val(toShow(_resIva));
+            }
+            //}
         }
         //Ejecutamos el metodo para sumarizar las columnas
         var colTotal = sumarColumnasExtras(tr);
 
         // rimpimp = 100 - impimp;
 
-        var impv = (_sub * impimp) / 100;
+        var impv = (sub * impimp) / 100;
         impv = parseFloat(impv);
-        var total = _sub + impv;
+        var total = sub + impv;
         total = parseFloat(total);
 
         var sub = total - impv;
@@ -620,8 +667,37 @@ $('body').on('focusout', '.extrasC', function (e) {
         var cl = _this.attr('class');
         var arrcl = cl.split('p');
         var _res = porcentajeImpRet(tRet2[arrcl[1]]);
-        _res = (_nnm * _res) / 100;//Saco el porcentaje
+        var indret = 0;
+        $("#table_ret > tbody  > tr[role='row']").each(function () {
+            var t_ret = $(this).find("td.TRET").text();
+            if (t_ret === tRet2[arrcl[1]]) {
+                indret = $(this).find("td.INDRET").text();
+            }
+        });
+        var campo = "";
+        $.ajax({
+            type: "POST",
+            url: 'getCampoMult',
+            dataType: "json",
+            data: { 'witht': tRet2[arrcl[1]], 'ir': indret },
+            success: function (data) {
+                if (data !== null || data !== "") {
+                    campo = data;
+                }
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                M.toast({ html: httpStatusMessage });
+            },
+            async: false
+        });
+        if (campo == "MONTO") {
+            _res = (_nnm * _res) / 100;//Saco el porcentaje
+        }
+        if (campo == "IVA") {
+            _res = (_nnm * _res);//Saco el porcentaje
+        }
         tr.find("td.ImpRet" + tRet2[arrcl[1]] + " input").val(toShow(_res));
+
         //--------------------------------------LEJ18102018---------------------->
         //hare la operacion para actualizar el total del renglon
         var _mnt = tr.find("td.MONTO input").val().replace('$', '');
@@ -639,7 +715,7 @@ $('body').on('focusout', '.extrasC', function (e) {
         } else {
             _iva = parseFloat(_iva.replace(',', ''));
         }
-        var _ttal = (_mnt + _iva) - sumarColumnasExtras(tr);
+        var _ttal = (_mnt + _iva) - sumarColumnasExtras(tr);;
         //actualizar el total
         tr.find("td.TOTAL input").val(toShow(_ttal));
         //--------------------------------------LEJ18102018----------------------<
@@ -691,6 +767,13 @@ $('body').on('focusout', '.extrasC2', function (e) {
         $('#table_ret tbody tr').eq(centi + 2).find('td').eq(4).text('$' + total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     }
 });
+
+function ocultarCamposEdicion(pacc) {
+    if (pacc == "R") {
+        $('#PAYER_ID').attr("disabled", "disabled");
+        $('#list_detaa').attr("disabled", "disabled");
+    }
+}
 
 function sumarColumnasExtras(tr) {
     //Las columnsas a sumarizar

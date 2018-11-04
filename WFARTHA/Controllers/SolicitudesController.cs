@@ -155,7 +155,7 @@ namespace WFARTHA.Controllers
                         dml.Add(dm);
                     }
 
-                      
+
                     catch (Exception e) { }
                 }
 
@@ -276,7 +276,7 @@ namespace WFARTHA.Controllers
             //FRT END 
 
 
-          
+
 
 
 
@@ -858,7 +858,7 @@ namespace WFARTHA.Controllers
 
                                 //frt 03112018 se agrega validacion de Grupo K no se permita CECO vacio
 
-                                
+
 
                                 //frt 03112018
                                 if (doc.DOCUMENTOP[i].TIPOIMP == "K" & (doc.DOCUMENTOP[i].CCOSTO == "" | doc.DOCUMENTOP[i].CCOSTO == null))
@@ -1827,7 +1827,20 @@ namespace WFARTHA.Controllers
                 ViewBag.dec = formato.DECIMALES;
 
             }
-            ViewBag.pacc = pacc;
+
+            if (pacc == null)
+            {
+                if (Session["pacc"] != null)
+                {
+                    ViewBag.pacc = Session["pacc"].ToString();
+                }
+            }
+            else
+            {
+                ViewBag.pacc = pacc;
+                Session["pacc"] = pacc;
+            }
+
             try
             {
                 string p = Session["pr"].ToString();
@@ -2177,13 +2190,14 @@ namespace WFARTHA.Controllers
                     //ID = new List<string>() { da.VERSION, da.USUARIOC_ID, da.ID_RUTA_AGENTE, da.USUARIOA_ID},                    
                     ID = new { VERSION = da.VERSION.ToString().Replace(" ", ""), USUARIOC_ID = da.USUARIOC_ID.ToString().Replace(" ", ""), ID_RUTA_AGENTE = da.ID_RUTA_AGENTE.ToString().Replace(" ", ""), USUARIOA_ID = da.USUARIOA_ID.ToString().Replace(" ", "") },
                     TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
-                //}).FirstOrDefault();//MGC 03-11-2018 Posible cambio lista dtas
-            }).ToList();//MGC 03-11-2018 Posible cambio lista dtas
+                    //}).FirstOrDefault();//MGC 03-11-2018 Posible cambio lista dtas
+                }).ToList();//MGC 03-11-2018 Posible cambio lista dtas
 
                 ViewBag.DETAA = new SelectList(dtas, "ID", "TEXT");//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas)
                 //ViewBag.DETAA = new SelectList(dta, "ID", "TEXT", dtas);//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas)
             }
-            else { 
+            else
+            {
                 ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
             }
 
@@ -3807,7 +3821,7 @@ namespace WFARTHA.Controllers
                         {
                             //Obtener el último flujo
                             f = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC) & a.ESTATUS.Equals("P")).FirstOrDefault();
-                        
+
 
                             DET_AGENTECC deta = new DET_AGENTECC();
 
@@ -5505,8 +5519,21 @@ namespace WFARTHA.Controllers
                 var _res = db.DOCUMENTORPs.Where(nd => nd.NUM_DOC == dOCUMENTO.NUM_DOC && nd.WITHT == wtht).ToList();
                 for (int y = 0; y < _res.Count; y++)
                 {
-                    _bi = _bi + decimal.Parse(_res[y].BIMPONIBLE.ToString());
-                    _iret = _iret + decimal.Parse(_res[y].IMPORTE_RET.ToString());
+                    if (_res[y].BIMPONIBLE == null){
+                        _bi = _bi + 0;
+                    }
+                    else
+                    {
+                        _bi = _bi + decimal.Parse(_res[y].BIMPONIBLE.ToString());
+                    }
+                    if (_res[y].IMPORTE_RET == null)
+                    {
+                        _iret = _iret + 0;
+                    }
+                    else
+                    {
+                        _iret = _iret + decimal.Parse(_res[y].IMPORTE_RET.ToString());
+                    }
                 }
                 retlt[i].BIMPONIBLE = _bi;
                 retlt[i].IMPORTE_RET = _iret;

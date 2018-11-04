@@ -51,6 +51,7 @@
 <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
 <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
 <input id="_hd" name="_hd" type="hidden" value="@ViewBag.Retenciones" />
+<input id="pacc" name="pacc" type="hidden" value="@ViewBag.pacc" />
 <div class="row" style="margin-bottom:0">
 
     @{WFARTHA.Entities.USUARIO us = ViewBag.usuario;
@@ -181,8 +182,6 @@
     <div class="form-horizontal">
         @*Encabezado*@
         @*Estructura basica para saber que edito, si un borrador o una edicion de rechazo*@
-        @*@if (ViewBag.pacc == "B")
-            {*@
         <div id="Encabezado_cont" class="col s12" style="font-size:12px;">
             <div class="row">
                 <div class="col s12">
@@ -491,8 +490,8 @@
                                                         @ims
                                                     </td>
                                                 </tr>
-                                                                }
-                                                            }
+                                            }
+                                        }
                                     </tbody>
                                 </table>
 
@@ -530,10 +529,7 @@
                 </div>
             </div>
         </div>
-        @*}
-            else
-            {
-            }*@
+
         @*Información Contable*@
         <div id="Contable_cont" class="col s12" style="font-size:12px;">
             <div class="row">
@@ -674,7 +670,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                   
+
                                     @if (@lstDocsA != null)
                                     {
                                         for (int i = 0; i < @lstDocsA.Count; i++)
@@ -718,35 +714,16 @@
                     <div class="card-panel">
                         <h5 id="head_cabecera">Autorización</h5>
                         <div class="row" style="margin-bottom:0">
-
-                            @*Lejgg 03-11-18*@
-                            @if (ViewBag.pacc == "B")
-
-                            {
-                                <div class="form-group col s6">
-                                    @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización ", htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-10">
-                                        @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa" })
-                                    </div>
-                                    <input id="DETTA_VERSION" name="DETTA_VERSION" value="" hidden />
-                                    <input id="DETTA_USUARIOC_ID" name="DETTA_USUARIOC_ID" value="" hidden />
-                                    <input id="DETTA_ID_RUTA_AGENTE" name="DETTA_ID_RUTA_AGENTE" value="" hidden />
-                                    <input id="DETTA_USUARIOA_ID" name="DETTA_USUARIOA_ID" value="" hidden />
+                            <div class="form-group col s6">
+                                @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización ", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa" })
                                 </div>
-                            }
-                            else
-                            {
-                                <div class="form-group col s6">
-                                    @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización ", htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-10">
-                                        @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa", @disabled = "disabled" })
-                                    </div>
-                                    <input id="DETTA_VERSION" name="DETTA_VERSION" value="" hidden />
-                                    <input id="DETTA_USUARIOC_ID" name="DETTA_USUARIOC_ID" value="" hidden />
-                                    <input id="DETTA_ID_RUTA_AGENTE" name="DETTA_ID_RUTA_AGENTE" value="" hidden />
-                                    <input id="DETTA_USUARIOA_ID" name="DETTA_USUARIOA_ID" value="" hidden />
-                                </div>
-                            }
+                                <input id="DETTA_VERSION" name="DETTA_VERSION" value="" hidden />
+                                <input id="DETTA_USUARIOC_ID" name="DETTA_USUARIOC_ID" value="" hidden />
+                                <input id="DETTA_ID_RUTA_AGENTE" name="DETTA_ID_RUTA_AGENTE" value="" hidden />
+                                <input id="DETTA_USUARIOA_ID" name="DETTA_USUARIOA_ID" value="" hidden />
+                            </div>
                         </div>
                     </div>
                 </div>
