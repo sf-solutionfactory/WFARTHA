@@ -101,7 +101,7 @@ namespace WFARTHA.Controllers
             {
                 return HttpNotFound();
             }
-          
+
             //Obtener miles y dec
             formato = db.FORMATOes.Where(fo => fo.ACTIVO == true).FirstOrDefault();
             ViewBag.miles = formato.MILES;
@@ -154,8 +154,17 @@ namespace WFARTHA.Controllers
                         dm.TOTAL = fc.toShow(dps.ElementAt(i).TOTAL, formato.DECIMALES);
                         dml.Add(dm);
                     }
+
+                      
                     catch (Exception e) { }
                 }
+
+                //FRT 03112018.4--------Evitar doble encabezado de Detalles >
+
+                ViewBag.lstdet = dml;
+
+                //FRT END 
+
                 var _t = db.DOCUMENTOPs.Where(x => x.NUM_DOC == id && x.ACCION != "H").ToList();
                 decimal _total = 0;
                 for (int i = 0; i < _t.Count; i++)
@@ -265,6 +274,10 @@ namespace WFARTHA.Controllers
             ViewBag.docAn = lst;
 
             //FRT END 
+
+
+          
+
 
 
 
@@ -447,7 +460,7 @@ namespace WFARTHA.Controllers
 
             // frt obtener el flujo de SAP
 
-            var vbSap = db.DOCUMENTOLOGs.Where(s => s.NUM_DOC.Equals(id)).OrderBy(s=> s.FECHA).ToList();
+            var vbSap = db.DOCUMENTOLOGs.Where(s => s.NUM_DOC.Equals(id)).OrderBy(s => s.FECHA).ToList();
             ViewBag.LogSap = vbSap;
 
             string usuariodel = "";
@@ -816,7 +829,7 @@ namespace WFARTHA.Controllers
                             {
 
                                 decimal _error_imputacion = 0;
-                                
+
 
                                 DOCUMENTOP dp = new DOCUMENTOP();
 
@@ -842,8 +855,15 @@ namespace WFARTHA.Controllers
                                 dp.TEXTO = doc.DOCUMENTOP[i].TEXTO;
 
 
+
+                                //frt 03112018 se agrega validacion de Grupo K no se permita CECO vacio
+
+                                
+
                                 //frt 03112018
-                                if (doc.DOCUMENTOP[i].TIPOIMP == "K" & (doc.DOCUMENTOP[i].CCOSTO == "" | doc.DOCUMENTOP[i].CCOSTO == null)) {
+                                if (doc.DOCUMENTOP[i].TIPOIMP == "K" & (doc.DOCUMENTOP[i].CCOSTO == "" | doc.DOCUMENTOP[i].CCOSTO == null))
+                                {
+
                                     _error_imputacion = 1;
                                 }
 
@@ -852,10 +872,11 @@ namespace WFARTHA.Controllers
                                     db.DOCUMENTOPs.Add(dp);
                                     db.SaveChanges();
                                 }
-                                else {
+                                else
+                                {
                                     _pos_err_imputacion = _pos_err_imputacion + "," + j;
                                 }
-                                
+
 
 
                             }
@@ -868,7 +889,8 @@ namespace WFARTHA.Controllers
 
 
                         //frt 03112018
-                        if (_pos_err_imputacion != "") {
+                        if (_pos_err_imputacion != "")
+                        {
                             Session["ERR_CECO"] = "Documentos " + _pos_err_imputacion + " no cuentan con CECO valido";
                         }
                         //lejgg 10-10-2018-------------------->
@@ -883,7 +905,7 @@ namespace WFARTHA.Controllers
                         _dp.IVA = _iva;
                         _dp.TOTAL = _total;
 
-                       
+
 
                         //db.DOCUMENTOPs.Add(_dp);
                         //db.SaveChanges();
@@ -1857,6 +1879,8 @@ namespace WFARTHA.Controllers
 
                     dml.Add(dm);
                 }
+
+
                 var _t = db.DOCUMENTOPs.Where(x => x.NUM_DOC == id && x.ACCION != "H").ToList();
                 decimal _total = 0;
                 for (int i = 0; i < _t.Count; i++)
@@ -2272,7 +2296,7 @@ namespace WFARTHA.Controllers
 
                     //Guardar número de documento creado
                     Session["NUM_DOC"] = _doc.NUM_DOC;
-                    
+
                     //Guardar las posiciones de la solicitud
                     try
                     {
@@ -3447,7 +3471,7 @@ namespace WFARTHA.Controllers
                     var lstDA = db.DOCUMENTOAs.Where(x => x.NUM_DOC == _ndoc).ToList();
                     for (int w = 0; w < lstDA.Count; w++)
                     {
-                        bool band = false;                       
+                        bool band = false;
                         if (lstDA != null)//signficia que el valor esta
                         {
                             for (int j = 0; j < dOCUMENTO.DOCUMENTOA_TAB.Count; j++)
@@ -4755,14 +4779,30 @@ namespace WFARTHA.Controllers
         }
 
         [HttpPost]
-        public JsonResult getPercentage(string witht)
+        public JsonResult getPercentage(string witht, string ir)
         {
             //Obtener el concepto
             decimal? porc = 0; //MGC 16-10-2018 Convertir a decimal
 
-            porc = db.RETENCIONs.Where(co => co.WITHT == witht).FirstOrDefault().PORC;
-
+            var ret = db.RETENCIONs.Where(co => co.WITHT == witht && co.WT_WITHCD == ir).FirstOrDefault();//lejgg 03-11-18 Convertir a decimal
+            if (ret.CAMPO.Trim() == "MONTO")
+            {
+                porc = ret.PORC;
+            }
+            if (ret.CAMPO.Trim() == "IVA")
+            {
+                porc = ret.PORC;
+            }
             JsonResult jc = Json(porc, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
+        [HttpPost]//LEJGG 03-11-18
+        public JsonResult getCampoMult(string witht, string ir)
+        {
+            //Obtener el concepto           
+            var ret = db.RETENCIONs.Where(co => co.WITHT == witht && co.WT_WITHCD == ir).FirstOrDefault();//lejgg 03-11-18 Convertir a decimal
+            JsonResult jc = Json(ret.CAMPO.Trim(), JsonRequestBehavior.AllowGet);
             return jc;
         }
 
