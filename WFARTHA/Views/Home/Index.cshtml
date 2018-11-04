@@ -532,21 +532,21 @@
                                 </td>
                             }
                             @*//MGC 30-10-2018 Modificación estatus  *@
-                            if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "E")
+                            else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "E")
                             {
                                 <td class="">
                                     <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error generando archivo de contabilizacion</span>
                                 </td>
                             }
                             @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
-                            if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "G")
+                            else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "G" && item.ESTATUS_SAP != "E")
                             {
                                 <td class="">
                                     <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Contabilizando SAP</span>
                                 </td>
                             }
                             @*//MGC 30-10-2018 Modificación estatus, Error en SAP  *@
-                            if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_SAP == "E")
+                            else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_SAP == "E")
                             {
                                 <td class="">
                                     <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error contabilizando SAP</span>

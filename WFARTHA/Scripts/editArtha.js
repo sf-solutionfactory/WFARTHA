@@ -346,6 +346,56 @@ $(document).ready(function () {
     });
 });
 
+//MGC 03-11-2018 Cadena de autorización
+//Obtener los datos de la cadena seleccionada
+//Cuando se termina de cargar la página
+$(window).on('load', function () {
+
+    //$("#list_detaa").change();
+
+    //var val3 = $(this).val();
+    var val3 = $('#list_detaa').val();
+    val3 = "[" + val3 + "]";
+    val3 = val3.replace("{", "{ \"");
+    val3 = val3.replace("}", "\" }");
+    val3 = val3.replace(/\,/g, "\" , \"");
+    val3 = val3.replace(/\=/g, "\" : \"");
+    val3 = val3.replace(/\ /g, "");
+    var jsval = $.parseJSON(val3)
+
+    $.each(jsval, function (i, dataj) {
+        $("#DETTA_VERSION").val(dataj.VERSION);
+        $("#DETTA_USUARIOC_ID").val(dataj.USUARIOC_ID);
+        $("#DETTA_ID_RUTA_AGENTE").val(dataj.ID_RUTA_AGENTE);
+        $("#DETTA_USUARIOA_ID").val(dataj.USUARIOA_ID);
+
+    });
+
+});
+
+//Cadena de autorización
+//MGC 03-11-2018
+//$('#list_detaa').change(function () {
+$('body').on('change', '#list_detaa', function (e) {
+    var val3 = $(this).val();
+    val3 = "[" + val3 + "]";
+    val3 = val3.replace("{", "{ \"");
+    val3 = val3.replace("}", "\" }");
+    val3 = val3.replace(/\,/g, "\" , \"");
+    val3 = val3.replace(/\=/g, "\" : \"");
+    val3 = val3.replace(/\ /g, "");
+    var jsval = $.parseJSON(val3)
+
+    $.each(jsval, function (i, dataj) {
+        $("#DETTA_VERSION").val(dataj.VERSION);
+        $("#DETTA_USUARIOC_ID").val(dataj.USUARIOC_ID);
+        $("#DETTA_ID_RUTA_AGENTE").val(dataj.ID_RUTA_AGENTE);
+        $("#DETTA_USUARIOA_ID").val(dataj.USUARIOA_ID);
+
+    });
+
+});
+
 $('body').on('change', '.IMPUESTO_SELECT', function (event, param1) {
 
     if (param1 != "tr") {
