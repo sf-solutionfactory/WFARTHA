@@ -154,8 +154,17 @@ namespace WFARTHA.Controllers
                         dm.TOTAL = fc.toShow(dps.ElementAt(i).TOTAL, formato.DECIMALES);
                         dml.Add(dm);
                     }
+
+                      
                     catch (Exception e) { }
                 }
+
+                //FRT 03112018.4--------Evitar doble encabezado de Detalles >
+
+                ViewBag.lstdet = dml;
+
+                //FRT END 
+
                 var _t = db.DOCUMENTOPs.Where(x => x.NUM_DOC == id && x.ACCION != "H").ToList();
                 decimal _total = 0;
                 for (int i = 0; i < _t.Count; i++)
@@ -265,6 +274,10 @@ namespace WFARTHA.Controllers
             ViewBag.docAn = lst;
 
             //FRT END 
+
+
+          
+
 
 
 
@@ -842,9 +855,15 @@ namespace WFARTHA.Controllers
                                 dp.TEXTO = doc.DOCUMENTOP[i].TEXTO;
 
 
+
+                                //frt 03112018 se agrega validacion de Grupo K no se permita CECO vacio
+
+                                
+
                                 //frt 03112018
                                 if (doc.DOCUMENTOP[i].TIPOIMP == "K" & (doc.DOCUMENTOP[i].CCOSTO == "" | doc.DOCUMENTOP[i].CCOSTO == null))
                                 {
+
                                     _error_imputacion = 1;
                                 }
 
@@ -1860,6 +1879,8 @@ namespace WFARTHA.Controllers
 
                     dml.Add(dm);
                 }
+
+
                 var _t = db.DOCUMENTOPs.Where(x => x.NUM_DOC == id && x.ACCION != "H").ToList();
                 decimal _total = 0;
                 for (int i = 0; i < _t.Count; i++)
