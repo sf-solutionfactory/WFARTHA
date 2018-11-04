@@ -769,6 +769,10 @@ $('body').on('focusout', '.extrasC2', function (e) {
 });
 
 function ocultarCamposEdicion(pacc) {
+    if (pacc == "P") {
+        $('#PAYER_ID').attr("disabled", "disabled");
+        $('#list_detaa').attr("disabled", "disabled");
+    }
     if (pacc == "R") {
         $('#PAYER_ID').attr("disabled", "disabled");
         $('#list_detaa').attr("disabled", "disabled");
