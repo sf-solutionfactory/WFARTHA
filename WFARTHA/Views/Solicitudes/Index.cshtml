@@ -157,13 +157,45 @@
                     </td>
                 }
             }
-            else if (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("S"))
+            else if (item.ESTATUS == "F"  && (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("S")))
             {
                 @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
-                if (item.ESTATUS == "F" && item.ESTATUS_PRE == "G")
+                if (item.ESTATUS_PRE == "G")
                 {
                     <td class="yellow darken-2 white-text">
                         <div class="lbl_pending">Pendiente Aprobador</div>
+                    </td>
+                }
+            }
+            @*//MGC 30-10-2018 Modificación estatus, Label Contabilización *@
+            else if (item.ESTATUS == "C" && (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("A")))
+            {
+                @*//MGC 30-10-2018 Modificación estatus, Pendiente contabilizador  *@
+                if (item.ESTATUS_WF.Equals("P") && item.ESTATUS_PRE == "G")
+                {
+                    <td class="yellow darken-1 white-text">
+                        <div class="lbl_contab">Pendiente Contabilizar</div>
+                    </td>
+                }
+                @*//MGC 30-10-2018 Modificación estatus  *@
+                else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "E")
+                {
+                    <td class="red darken-1 white-text">
+                        <div class="lbl_contab">Error generando archivo de contabilizacion</div>
+                    </td>
+                }
+                @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
+                else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "G" && item.ESTATUS_SAP != "E")
+                {
+                    <td class="yellow darken-1 white-text">
+                        <div class="lbl_contab">Contabilizando SAP</div>
+                    </td>
+                }
+                @*//MGC 30-10-2018 Modificación estatus, Error en SAP  *@
+                else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_SAP == "E")
+                {
+                    <td class="red darken-1 white-text">
+                        <div class="lbl_contab">Error contabilizando SAP</div>
                     </td>
                 }
             }

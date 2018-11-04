@@ -491,8 +491,8 @@
                                                         @ims
                                                     </td>
                                                 </tr>
-                                            }
-                                        }
+                                                                }
+                                                            }
                                     </tbody>
                                 </table>
 
@@ -693,8 +693,10 @@
                                                     <button class="btn btnD" type="button" value="@lstDocsA[i].PATH">DESCARGAR</button>
                                                 </td>
                                             </tr>
+
                                         }
                                     }
+
 
                                 </tbody>
                             </table>
@@ -716,8 +718,10 @@
                     <div class="card-panel">
                         <h5 id="head_cabecera">Autorización</h5>
                         <div class="row" style="margin-bottom:0">
+
                             @*Lejgg 03-11-18*@
                             @if (ViewBag.pacc == "B")
+
                             {
                                 <div class="form-group col s6">
                                     @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización ", htmlAttributes: new { @class = "control-label col-md-2" })
