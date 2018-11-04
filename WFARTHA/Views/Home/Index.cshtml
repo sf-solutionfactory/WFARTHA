@@ -402,7 +402,7 @@
                         }
                         else if (item.ESTATUS_WF == "R" & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID)
                         {
-                            <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                            <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "R" })'" style="cursor:pointer">
                                 @item.NUM_DOC
                             </td>
                         }

@@ -84,6 +84,12 @@
                     @item.NUM_DOC
                 </td>
             }
+            else if (item.ESTATUS_WF == "R")
+            {
+                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "R" })'" style="cursor:pointer">
+                    @item.NUM_DOC
+                </td>
+            }
             else
             {
                 <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
@@ -157,7 +163,7 @@
                     </td>
                 }
             }
-            else if (item.ESTATUS == "F"  && (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("S")))
+            else if (item.ESTATUS == "F" && (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("S")))
             {
                 @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
                 if (item.ESTATUS_PRE == "G")
