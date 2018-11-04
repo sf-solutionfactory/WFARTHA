@@ -398,8 +398,22 @@ namespace WFARTHA.Controllers
                 var _res = db.DOCUMENTORPs.Where(nd => nd.NUM_DOC == dOCUMENTO.NUM_DOC && nd.WITHT == wtht).ToList();
                 for (int y = 0; y < _res.Count; y++)
                 {
-                    _bi = _bi + decimal.Parse(_res[y].BIMPONIBLE.ToString());
-                    _iret = _iret + decimal.Parse(_res[y].IMPORTE_RET.ToString());
+                    if (_res[y].BIMPONIBLE == null)
+                    {
+                        _bi = _bi + 0;
+                    }
+                    else
+                    {
+                        _bi = _bi + decimal.Parse(_res[y].BIMPONIBLE.ToString());
+                    }
+                    if (_res[y].IMPORTE_RET == null)
+                    {
+                        _iret = _iret + 0;
+                    }
+                    else
+                    {
+                        _iret = _iret + decimal.Parse(_res[y].IMPORTE_RET.ToString());
+                    }
                 }
                 retlt[i].BIMPONIBLE = _bi;
                 retlt[i].IMPORTE_RET = _iret;
