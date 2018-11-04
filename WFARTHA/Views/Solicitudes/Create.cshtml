@@ -53,14 +53,14 @@
             <div class="row" style="margin-bottom:0">
                 <div class="input-field col s12">
                     @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
-                    @Html.LabelFor(model => model.USUARIOC_ID, "Usuario NT", new { @id = "lbl_userid" })
+                    @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
                 </div>
             </div>
         </div>
         <div class="col s12 m4 l2">
             <div class="input-field col s6">
                 <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
-                <label for="txt_status" id="lbl_status">Estatus NT</label>
+                <label for="txt_status" id="lbl_status">Estatus</label>
             </div>
         </div>
     }
@@ -155,7 +155,7 @@
     </style>
 
     <div class="col s8 right-align">
-        <a id="btn_borradorh" class="btn btn-small">Guardar borrador NT</a>
+        <a id="btn_borradorh" class="btn btn-small">Guardar borrador</a>
 
         @{string b = ViewBag.borradore + "";
             string display = "none";
@@ -163,11 +163,11 @@
             {
                 display = "inline-block";
             }
-            <a id="btn_borradore" class="btn btn-small" style="display :@display">Descartar Borrador NT</a>
+            <a id="btn_borradore" class="btn btn-small" style="display :@display">Descartar Borrador</a>
             <input type="text" id="borradore" name="borradore" value="@ViewBag.borradore" hidden />
         }
-        <a href="@Url.Action("Index", "Home" )" class="btn btn-small">Cancelar NT</a>
-        <a id="btn_guardarh" class="btn btn-small">Enviar NT</a>
+        <a href="@Url.Action("Index", "Home" )" class="btn btn-small">Cancelar</a>
+        <a id="btn_guardarh" class="btn btn-small">Enviar</a>
         <script>
             //function guardah() {
             //    //alert("uno")
@@ -194,9 +194,9 @@
 <div class="row">
     <div class="col s12">
         <ul class="tabs" id="tabs">
-            <li class="tab col s2 tabs_menu"><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado NT</a></li>
-            <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Detalle NT</a></li>
-            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_cont">Información NT</a></li>
+            <li class="tab col s2 tabs_menu"><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Detalle</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_cont">Información</a></li>
             @*<li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_sap">Información SAP</a></li>*@
         </ul>
     </div>
@@ -214,7 +214,7 @@
                 <div class="col s12">
                     <div class="card-panel">
                         <div class="row">
-                            <h5 id="head_cabecera" style="display:inline-block">Cabecera NT</h5>
+                            <h5 id="head_cabecera" style="display:inline-block">Cabecera</h5>
                             <i class='material-icons green-text' style="">warning</i>
                         </div>
                         @*<h5 id="head_cabecera">Cabecera NT</h5>*@
@@ -407,7 +407,7 @@
                             <script src="~/Scripts/create_orden.js"></script>@*ADD RSG 17.10.2018*@
                             <div class="form-group col s3">
                                 @*@Html.LabelFor(model => model.PAYER_ID, "RFC Proveedor NT", htmlAttributes: new { @class = "control-label col-md-2" })*@
-                                <label class="control-label col-md-2" for="rfc_proveedor">RFC Proveedor NT</label>
+                                <label class="control-label col-md-2" for="rfc_proveedor">RFC Proveedor</label>
                                 <div class="col-md-10">
                                     <input type="text" id="rfc_proveedor" disabled />
                                     @*@Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @class = "form-control" } })*@
@@ -416,7 +416,7 @@
                             </div>
                             <div class="form-group col s6">
                                 @*@Html.LabelFor(model => model.PAYER_ID, "RFC Proveedor NT", htmlAttributes: new { @class = "control-label col-md-2" })*@
-                                <label class="control-label col-md-2" for="nom_proveedor">Nombre Proveedor NT</label>
+                                <label class="control-label col-md-2" for="nom_proveedor">Nombre Proveedor</label>
                                 <div class="col-md-10">
                                     <input type="text" id="nom_proveedor" disabled />
                                     @*@Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @class = "form-control" } })*@
@@ -438,7 +438,7 @@
                             <div class="form-group col s6">
                                 @Html.LabelFor(model => model.CONCEPTO, "TEXTO", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.CONCEPTO, "Concepto NT", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })@*LEJ 04.09.2018*@
+                                    @Html.EditorFor(model => model.CONCEPTO, "Concepto", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })@*LEJ 04.09.2018*@
                                 </div>
                             </div>
 
@@ -457,7 +457,7 @@
                 </div>
                 <div class="col s6">
                     <div class="card-panel" style="display:none">
-                        <h5 id="head_flinea">Primera Línea del Documento NT</h5>
+                        <h5 id="head_flinea">Primera Línea del Documento</h5>
                         <div class="row" style="margin-bottom:0">
                             <div class="form-group col s12">
                                 @Html.LabelFor(model => model.TEXTO_POS, "Texto Posición", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -470,7 +470,7 @@
                         </div>
                         <div class="row" style="margin-bottom:0">
                             <div class="form-group col s4">
-                                @Html.LabelFor(model => model.ASIGNACION_POS, "Asignación Posición NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                @Html.LabelFor(model => model.ASIGNACION_POS, "Asignación Posición", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
                                     @Html.EditorFor(model => model.ASIGNACION_POS, new { htmlAttributes = new { @class = "form-control", @maxlength = "18" } })@*LEJ 04.09.2018*@
                                     @*@Html.ValidationMessageFor(model => model.ASIGNACION_POS, "", new { @class = "text-danger" })*@
@@ -490,31 +490,31 @@
                                 <input class="file-path validate file_sop" type="text">
                             </div>
                         </div>
-                        <h5 id="head_flinea">Retenciones NT</h5>
+                        <h5 id="head_flinea">Retenciones</h5>
                         <div class="row" style="margin-bottom:0">
                             <table class="table display mdl-data-table striped" id="table_ret" style="width:100%;">
                                 <thead>
                                     <tr>
                                         <th class="lbl_socret">
-                                            Sociedad Retención NT
+                                            Sociedad Retención
                                         </th>
                                         <th class="lbl_provret">
-                                            Proveedor Retención NT
+                                            Proveedor Retención
                                         </th>
                                         <th class="lbl_tret">
-                                            Tipo Retención NT
+                                            Tipo Retención
                                         </th>
                                         <th class="lbl_descret">
-                                            Descripción Retención NT
+                                            Descripción Retención
                                         </th>
                                         <th class="lbl_indret">
-                                            Indicador de retención NT
+                                            Indicador de retención
                                         </th>
                                         <th class="lbl_bimponible">
-                                            Base Imponible NT
+                                            Base Imponible
                                         </th>
                                         <th id="lbl_impret">
-                                            Importe de retención NT
+                                            Importe de retención
                                         </th>
                                     </tr>
                                 </thead>
@@ -525,25 +525,25 @@
                                 <thead>
                                     <tr>
                                         <th class="lbl_socret">
-                                            Sociedad Retención NT
+                                            Sociedad Retención
                                         </th>
                                         <th class="lbl_provret">
-                                            Proveedor Retención NT
+                                            Proveedor Retención
                                         </th>
                                         <th class="lbl_tret">
-                                            Tipo Retención NT
+                                            Tipo Retención
                                         </th>
                                         <th class="lbl_descret">
-                                            Descripción Retención NT
+                                            Descripción Retención
                                         </th>
                                         <th class="lbl_indret">
-                                            Indicador de retención NT
+                                            Indicador de retención
                                         </th>
                                         <th class="lbl_bimponible">
-                                            Base Imponible NT
+                                            Base Imponible
                                         </th>
                                         <th id="lbl_impret">
-                                            Importe de retención NT
+                                            Importe de retención
                                         </th>
                                     </tr>
                                 </thead>
@@ -578,7 +578,7 @@
 
                                     @*<input type="text" id="norden_compra" value="" />*@<!--ADD RSG 19.10.2018-->
                                     <select id="norden_compra" onchange="addPedido(this.value);"><option></option></select><!--ADD RSG 19.10.2018-->
-                                    <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
+                                    <label for="norden_compra" id="lbl_norden_compra">Orden de compra</label>
                                 </div>
                             </div>
                             <div class="col s12 m12 l9">
@@ -638,7 +638,7 @@
                 </div>
                 <div class="col s12">
                     <div class="card-panel">
-                        <h5 id="head_cabecera">Detalle NT</h5>
+                        <h5 id="head_cabecera">Detalle</h5>
                         <div class="row" style="margin-bottom:0">
 
                             @*//MGC 04092018 Conceptos*@
@@ -648,8 +648,8 @@
                             <!--ADD RSG 18.10.2018-->
                             <div id="div_sinPedido" class="col s12">
                                 <div id="div_btns_row_info" class="row">
-                                    <a class="btn"><i class="material-icons left">add</i><span id="addRowInfo">Registros Add NT</span></a>
-                                    <a class="btn"><i class="material-icons left">clear</i><span id="delRowInfo">Registro Del NT</span></a>
+                                    <a class="btn"><i class="material-icons left">add</i><span id="addRowInfo">Registros Add</span></a>
+                                    <a class="btn"><i class="material-icons left">clear</i><span id="delRowInfo">Registro Del</span></a>
                                 </div>
                                 <div>
                                     <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
@@ -659,7 +659,7 @@
 
                                                 </th>
                                                 <th class="lbl_pos">
-                                                    Pos NT
+                                                    Pos
                                                 </th>
                                                 <th class="lbl_NmAnexo">
                                                     A1
@@ -677,7 +677,7 @@
                                                     A5
                                                 </th>
                                                 <th class="lbl_cargoAbono">
-                                                    D/H NT
+                                                    D/H
                                                 </th>
                                                 <th class="lbl_factura">
                                                     Factura
@@ -737,7 +737,7 @@
                                     <thead>
                                         <tr>
                                             <th class="lbl_pos">
-                                                Pos NT
+                                                Pos
                                             </th>
                                             <th class="lbl_NmAnexo">
                                                 A1
@@ -827,7 +827,7 @@
                                                     A5
                                                 </th>
                                                 <th class="lbl_pos">
-                                                    Pos NT
+                                                    Pos
                                                 </th>
                                                 <th class="lbl_cargoAbono">
                                                     D/H
@@ -917,7 +917,7 @@
                                     <thead>
                                         <tr>
                                             <th class="lbl_pos">
-                                                Pos NT
+                                                Pos
                                             </th>
                                             <th class="lbl_NmAnexo">
                                                 A1
@@ -1047,10 +1047,10 @@
                 @*MGC 02-10-2018 Cadena de autorización -->*@
                 <div class="col s12">
                     <div class="card-panel">
-                        <h5 id="head_cabecera">Autorización NT</h5>
+                        <h5 id="head_cabecera">Autorización</h5>
                         <div class="row" style="margin-bottom:0">
                             <div class="form-group col s6">
-                                @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización NT", htmlAttributes: new { @class = "control-label col-md-2" })
+                                @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
                                     @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa" })
                                 </div>
@@ -1066,7 +1066,7 @@
 
                 <div class="col s12" style="display:none">
                     <div class="card-panel">
-                        <h5 id="head_cabecera">Detalle NT</h5>
+                        <h5 id="head_cabecera">Detalle</h5>
                         <div class="row" style="margin-bottom:0">
 
                             <div class="file-field input-field" id="cargar_archivo" style="display:none">
@@ -1080,8 +1080,8 @@
                             </div>
 
                             <div id="div_btns_row_sop">
-                                <a class="btn"><i class="material-icons left">add</i><span id="addRowSop">Registros Add NT</span></a>
-                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowSop">Registro Del NT</span></a>
+                                <a class="btn"><i class="material-icons left">add</i><span id="addRowSop">Registros Add</span></a>
+                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowSop">Registro Del</span></a>
                             </div>
 
                             <table class="table display mdl-data-table striped" id="table_sop" style="width:100%;">
@@ -1091,31 +1091,31 @@
 
                                         </th>
                                         <th class="lbl_opc">
-                                            OPC NT
+                                            OPC
                                         </th>
                                         <th class="lbl_pos">
-                                            Pos NT
+                                            Pos
                                         </th>
                                         <th class="lbl_rfc">
-                                            RFC NT
+                                            RFC
                                         </th>
                                         <th class="lbl_factura">
-                                            Factura NT
+                                            Factura
                                         </th>
                                         <th id="lbl_fecha">
-                                            Fecha NT
+                                            Fecha
                                         </th>
                                         <th id="lbl_monto">
-                                            Monto NT
+                                            Monto
                                         </th>
                                         <th id="lbl_iva">
-                                            IVA NT
+                                            IVA
                                         </th>
                                         <th id="lbl_total">
-                                            Total NT
+                                            Total
                                         </th>
                                         <th id="lbl_archivo">
-                                            Archivo NT
+                                            Archivo
                                         </th>
                                     </tr>
                                 </thead>
@@ -1139,19 +1139,19 @@
                                 <thead>
                                     <tr>
                                         <th class="lbl_pos">
-                                            Pos NT
+                                            Pos
                                         </th>
                                         <th class="lbl_cargoAbono">
-                                            Cargo/Abono NT
+                                            Cargo/Abono
                                         </th>
                                         <th class="lbl_factura">
-                                            Factura NT
+                                            Factura
                                         </th>
                                         <th id="lbl_tconcepto">
-                                            TIPO CONCEPTO NT
+                                            TIPO CONCEPTO
                                         </th>
                                         <th id="lbl_grupo">
-                                            Grupo NT
+                                            Grupo
                                         </th>
                                     </tr>
                                 </thead>

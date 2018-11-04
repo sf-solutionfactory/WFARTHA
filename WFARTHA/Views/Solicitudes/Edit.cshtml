@@ -59,14 +59,14 @@
             <div class="row" style="margin-bottom:0">
                 <div class="input-field col s12">
                     @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
-                    @Html.LabelFor(model => model.USUARIOC_ID, "Usuario NT", new { @id = "lbl_userid" })
+                    @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
                 </div>
             </div>
         </div>
         <div class="col s12 m4 l2">
             <div class="input-field col s6">
                 <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
-                <label for="txt_status" id="lbl_status">Estatus NT</label>
+                <label for="txt_status" id="lbl_status">Estatus</label>
             </div>
         </div>
     }
@@ -148,8 +148,8 @@
     </style>
 
     <div class="col s8 right-align">
-        <a href="@Url.Action("Index", "Home" )" class="btn btn-small">Cancelar NT</a>
-        <a id="btn_guardarh" class="btn btn-small">Enviar NT</a>
+        <a href="@Url.Action("Index", "Home" )" class="btn btn-small">Cancelar</a>
+        <a id="btn_guardarh" class="btn btn-small">Enviar</a>
     </div>
     <div class="div_bottom">
         <hr class="hr_bw" />
@@ -160,9 +160,9 @@
 <div class="row">
     <div class="col s12">
         <ul class="tabs" id="tabs">
-            <li class="tab col s2 tabs_menu"><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado NT</a></li>
-            <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Detalle NT</a></li>
-            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_cont">Información NT</a></li>
+            <li class="tab col s2 tabs_menu"><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Detalle</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_cont">Información</a></li>
             <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_sap">Información SAP</a></li>
         </ul>
     </div>
@@ -171,7 +171,7 @@
 @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
 {
     <input type="hidden" id="archivo" name="archivo" value="" />
-    <button id="btnDownload" class="btn" type="submit" style="display:none">DESCARGAR</button>
+    <button id="btnDownload" class="btn" type="submit" style="display:none">Descargar</button>
 }
 
 @using (Html.BeginForm("Edit", "Solicitudes", FormMethod.Post, new { enctype = "multipart/form-data", id = "formCreate" }))
@@ -188,8 +188,8 @@
                 <div class="col s12">
                     <div class="card-panel">
                         <div class="row">
-                            <h5 id="head_cabecera" style="display:inline-block">Cabecera NT</h5>
-                            <i class='material-icons green-text' style="">warning</i>
+                            <h5 id="head_cabecera" style="display:inline-block">Cabecera</h5>
+                            <i class='material-icons green-text' style="">Warning</i>
                         </div>
                         @Html.HiddenFor(model => model.NUM_DOC) @*//MGC 05-10-2018 Modificación para work flow al ser editada*@
                         <div class="row" style="margin-bottom:0">
@@ -317,7 +317,7 @@
                                 @*<div class="form-group col s3">*@
                                 <div id="div_norden_compra" class="input-field col s3" style="display:none">
                                     <input type="text" id="norden_compra" value="" />
-                                    <label for="norden_compra" id="lbl_norden_compra">Orden de compra NT</label>
+                                    <label for="norden_compra" id="lbl_norden_compra">Orden de compra</label>
                                 </div>
                                 @*MGC 03-10-2018 solicitud con orden de compra <--*@
                             </div>
@@ -370,13 +370,13 @@
                                     name = dprov.NAME1.ToString();
                                 }
                                 <div class="form-group col s3">
-                                    <label class="control-label col-md-2" for="rfc_proveedor">RFC Proveedor NT</label>
+                                    <label class="control-label col-md-2" for="rfc_proveedor">RFC Proveedor</label>
                                     <div class="col-md-10">
                                         <input type="text" id="rfc_proveedor" disabled value="@rfc" />
                                     </div>
                                 </div>
                                 <div class="form-group col s6">
-                                    <label class="control-label col-md-2" for="nom_proveedor">Nombre Proveedor NT</label>
+                                    <label class="control-label col-md-2" for="nom_proveedor">Nombre Proveedo</label>
                                     <div class="col-md-10">
                                         <input type="text" id="nom_proveedor" disabled value="@name" />
                                     </div>
@@ -395,7 +395,7 @@
                                 <div class="form-group col s6">
                                     @Html.LabelFor(model => model.CONCEPTO, "Texto", htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.EditorFor(model => model.CONCEPTO, "Concepto NT", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })@*LEJ 04.09.2018*@
+                                        @Html.EditorFor(model => model.CONCEPTO, "Concepto", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })@*LEJ 04.09.2018*@
                                     </div>
                                 </div>
 
@@ -410,7 +410,7 @@
                     </div>
                     <div class="col s6">
                         <div class="card-panel" style="display:none">
-                            <h5 id="head_flinea">Primera Línea del Documento NT</h5>
+                            <h5 id="head_flinea">Primera Línea del Documento</h5>
                             <div class="row" style="margin-bottom:0">
                                 <div class="form-group col s12">
                                     @Html.LabelFor(model => model.TEXTO_POS, "Texto Posición", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -539,7 +539,7 @@
             <div class="row">
                 <div class="col s12">
                     <div class="card-panel">
-                        <h5 id="head_cabecera">Detalle NT</h5>
+                        <h5 id="head_cabecera">Detalle</h5>
                         <div class="row" style="margin-bottom:0">
 
                             @*//MGC 04092018 Conceptos*@
@@ -549,8 +549,8 @@
                             <!--ADD RSG 18.10.2018-->
 
                             <div id="div_btns_row_info">
-                                <a class="btn"><i class="material-icons left">add</i><span id="addRowInfo">Registros Add NT</span></a>
-                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowInfo">Registro Del NT</span></a>
+                                <a class="btn"><i class="material-icons left">add</i><span id="addRowInfo">Registros Add</span></a>
+                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowInfo">Registro Del</span></a>
                             </div>
                             <div>
                                 <table class="table display mdl-data-table striped" id="table_info" style="width:100%;"></table>
@@ -559,7 +559,7 @@
                                 <thead>
                                     <tr>
                                         <th class="lbl_pos">
-                                            Pos NT
+                                            Pos
                                         </th>
                                         <th class="lbl_NmAnexo">
                                             Numero Anexo1
@@ -715,7 +715,7 @@
                 @*MGC 02-10-2018 Cadena de autorización -->*@
                 <div class="col s12">
                     <div class="card-panel">
-                        <h5 id="head_cabecera">Autorización NT</h5>
+                        <h5 id="head_cabecera">Autorización</h5>
                         <div class="row" style="margin-bottom:0">
                             @if (ViewBag.pacc == "B")@*Lejgg 03-11-18*@
                             {
@@ -750,7 +750,7 @@
 
                 <div class="col s12">
                     <div class="card-panel">
-                        <h5 id="head_cabecera">Detalle NT</h5>
+                        <h5 id="head_cabecera">Detalle</h5>
                         <div class="row" style="margin-bottom:0">
 
                             <div class="file-field input-field" id="cargar_archivo" style="display:none">
@@ -764,8 +764,8 @@
                             </div>
 
                             <div id="div_btns_row_sop">
-                                <a class="btn"><i class="material-icons left">add</i><span id="addRowSop">Registros Add NT</span></a>
-                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowSop">Registro Del NT</span></a>
+                                <a class="btn"><i class="material-icons left">add</i><span id="addRowSop">Registros Add</span></a>
+                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowSop">Registro Del</span></a>
                             </div>
 
                             <table class="table display mdl-data-table striped" id="table_sop" style="width:100%;">
@@ -775,31 +775,31 @@
 
                                         </th>
                                         <th class="lbl_opc">
-                                            OPC NT
+                                            OPC
                                         </th>
                                         <th class="lbl_pos">
-                                            Pos NT
+                                            Pos
                                         </th>
                                         <th class="lbl_rfc">
-                                            RFC NT
+                                            RFC
                                         </th>
                                         <th class="lbl_factura">
-                                            Factura NT
+                                            Factura
                                         </th>
                                         <th id="lbl_fecha">
-                                            Fecha NT
+                                            Fecha
                                         </th>
                                         <th id="lbl_monto">
-                                            Monto NT
+                                            Monto
                                         </th>
                                         <th id="lbl_iva">
-                                            IVA NT
+                                            IVA
                                         </th>
                                         <th id="lbl_total">
-                                            Total NT
+                                            Total
                                         </th>
                                         <th id="lbl_archivo">
-                                            Archivo NT
+                                            Archivo
                                         </th>
                                     </tr>
                                 </thead>
@@ -823,19 +823,19 @@
                                 <thead>
                                     <tr>
                                         <th class="lbl_pos">
-                                            Pos NT
+                                            Pos
                                         </th>
                                         <th class="lbl_cargoAbono">
-                                            Cargo/Abono NT
+                                            Cargo/Abono
                                         </th>
                                         <th class="lbl_factura">
-                                            Factura NT
+                                            Factura
                                         </th>
                                         <th id="lbl_tconcepto">
-                                            TIPO CONCEPTO NT
+                                            TIPO CONCEPTO
                                         </th>
                                         <th id="lbl_grupo">
-                                            Grupo NT
+                                            Grupo
                                         </th>
                                     </tr>
                                 </thead>
