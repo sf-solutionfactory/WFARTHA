@@ -50,16 +50,13 @@ namespace WFARTHA.Controllers
                 try//Mensaje de documento creado
                 {
                     string p = Session["NUM_DOC"].ToString();
-                    string e = Session["ERR_CECO"].ToString();
-                    ViewBag.ERR_CECO = e;
                     ViewBag.NUM_DOC = p;
                     Session["NUM_DOC"] = null;
-                    Session["ERR_CECO"] = null;
+
                 }
                 catch
                 {
                     ViewBag.NUM_DOC = "";
-                    ViewBag.ERR_CECO = "";
                 }
             }
 

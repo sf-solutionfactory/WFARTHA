@@ -55,9 +55,7 @@ namespace WFARTHA.Controllers
                     string p = Session["NUM_DOC"].ToString();
                     ViewBag.NUM_DOC = p;
                     Session["NUM_DOC"] = null;
-                    string e = Session["ERR_CECO"].ToString();
-                    ViewBag.ERR_CECO = e;
-                    Session["ERR_CECO"] = null;
+                   
                 }
                 catch
                 {

@@ -134,7 +134,7 @@
                 M.toast({html: '<span style="padding-right:15px;"><i class="material-icons">error</i></span>  ' + msg });
             }
 
-            var message = '@ViewBag.BORRADOR' + " - " + '@ViewBag.ERR_CECO' ;
+            var message = '@ViewBag.BORRADOR'  ;
 
             if (message != "")
             {
@@ -156,11 +156,10 @@
                 }
 
                 var message = '@ViewBag.NUM_DOC';
-                var messagececo = '@ViewBag.ERR_CECO'
-                if (message != "")
+                       if (message != "")
                 {
                     // do drop down loic
-                    docMessage('Documento ' + message + ' fue creado' + " - " + messagececo);
+                    docMessage('Documento ' + message + ' fue creado');
                 }
 
             });
