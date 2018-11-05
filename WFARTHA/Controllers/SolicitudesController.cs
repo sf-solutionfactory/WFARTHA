@@ -867,29 +867,29 @@ namespace WFARTHA.Controllers
                                 dp.TOTAL = doc.DOCUMENTOP[i].TOTAL;
                                 _total = doc.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
                                 dp.TEXTO = doc.DOCUMENTOP[i].TEXTO;
-
-
+                                db.DOCUMENTOPs.Add(dp);
+                                db.SaveChanges();
 
                                 //frt 03112018 se agrega validacion de Grupo K no se permita CECO vacio
 
 
 
                                 //frt 03112018
-                                if (doc.DOCUMENTOP[i].TIPOIMP == "K" & (doc.DOCUMENTOP[i].CCOSTO == "" | doc.DOCUMENTOP[i].CCOSTO == null))
-                                {
+                                //if (doc.DOCUMENTOP[i].TIPOIMP == "K" & (doc.DOCUMENTOP[i].CCOSTO == "" | doc.DOCUMENTOP[i].CCOSTO == null))
+                                //{
 
-                                    _error_imputacion = 1;
-                                }
+                                //    _error_imputacion = 1;
+                                //}
 
-                                if (_error_imputacion != 1)
-                                {
-                                    db.DOCUMENTOPs.Add(dp);
-                                    db.SaveChanges();
-                                }
-                                else
-                                {
-                                    _pos_err_imputacion = _pos_err_imputacion + "," + j;
-                                }
+                                //if (_error_imputacion != 1)
+                                //{
+                                //    db.DOCUMENTOPs.Add(dp);
+                                //    db.SaveChanges();
+                                //}
+                                //else
+                                //{
+                                //    _pos_err_imputacion = _pos_err_imputacion + "," + j;
+                                //}
 
 
 
@@ -903,10 +903,10 @@ namespace WFARTHA.Controllers
 
 
                         //frt 03112018
-                        if (_pos_err_imputacion != "")
-                        {
-                            Session["ERR_CECO"] = "Documentos " + _pos_err_imputacion + " no cuentan con CECO valido";
-                        }
+                        //if (_pos_err_imputacion != "")
+                        //{
+                        //    Session["ERR_CECO"] = "Documentos " + _pos_err_imputacion + " no cuentan con CECO valido";
+                        //}
                         //lejgg 10-10-2018-------------------->
                         DOCUMENTOP _dp = new DOCUMENTOP();
 
@@ -2366,23 +2366,26 @@ namespace WFARTHA.Controllers
                                     dp.TOTAL = dOCUMENTO.DOCUMENTOP[i].TOTAL;
                                     _total = dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
                                     dp.TEXTO = dOCUMENTO.DOCUMENTOP[i].TEXTO;
+                                    db.Entry(dp).State = EntityState.Modified;
+                                    db.SaveChanges();
+
 
                                     //frt 03112018
-                                    if (dOCUMENTO.DOCUMENTOP[i].TIPOIMP == "K" & (dOCUMENTO.DOCUMENTOP[i].CCOSTO == "" | dOCUMENTO.DOCUMENTOP[i].CCOSTO == null))
-                                    {
-                                        _error_imputacion = 1;
-                                    }
+                                    //if (dOCUMENTO.DOCUMENTOP[i].TIPOIMP == "K" & (dOCUMENTO.DOCUMENTOP[i].CCOSTO == "" | dOCUMENTO.DOCUMENTOP[i].CCOSTO == null))
+                                    //{
+                                    //    _error_imputacion = 1;
+                                    //}
 
-                                    if (_error_imputacion != 1)
-                                    {
-                                        db.Entry(dp).State = EntityState.Modified;
-                                        db.SaveChanges();
-                                    }
-                                    else
-                                    {
-                                        _pos_err_imputacion = _pos_err_imputacion + "," + j;
+                                    //if (_error_imputacion != 1)
+                                    //{
+                                    //    db.Entry(dp).State = EntityState.Modified;
+                                    //    db.SaveChanges();
+                                    //}
+                                    //else
+                                    //{
+                                    //    _pos_err_imputacion = _pos_err_imputacion + "," + j;
 
-                                    }
+                                    //}
 
                                     //db.Entry(dp).State = EntityState.Modified;
                                     //db.SaveChanges();
@@ -2411,23 +2414,27 @@ namespace WFARTHA.Controllers
                                     dp.TOTAL = dOCUMENTO.DOCUMENTOP[i].TOTAL;
                                     _total = dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
                                     dp.TEXTO = dOCUMENTO.DOCUMENTOP[i].TEXTO;
+                                    db.DOCUMENTOPs.Add(dp);
+                                    db.SaveChanges();
+
+
 
                                     //frt 03112018
-                                    if (dOCUMENTO.DOCUMENTOP[i].TIPOIMP == "K" & (dOCUMENTO.DOCUMENTOP[i].CCOSTO == "" | dOCUMENTO.DOCUMENTOP[i].CCOSTO == null))
-                                    {
-                                        _error_imputacion = 1;
-                                    }
+                                    //if (dOCUMENTO.DOCUMENTOP[i].TIPOIMP == "K" & (dOCUMENTO.DOCUMENTOP[i].CCOSTO == "" | dOCUMENTO.DOCUMENTOP[i].CCOSTO == null))
+                                    //{
+                                    //    _error_imputacion = 1;
+                                    //}
 
-                                    if (_error_imputacion != 1)
-                                    {
-                                        db.DOCUMENTOPs.Add(dp);
-                                        db.SaveChanges();
-                                    }
-                                    else
-                                    {
-                                        _pos_err_imputacion = _pos_err_imputacion + "," + j;
+                                    //if (_error_imputacion != 1)
+                                    //{
+                                    //    db.DOCUMENTOPs.Add(dp);
+                                    //    db.SaveChanges();
+                                    //}
+                                    //else
+                                    //{
+                                    //    _pos_err_imputacion = _pos_err_imputacion + "," + j;
 
-                                    }
+                                    //}
 
 
                                     //db.DOCUMENTOPs.Add(dp);
@@ -2443,10 +2450,12 @@ namespace WFARTHA.Controllers
 
 
 
-                        if (_pos_err_imputacion != "")
-                        {
-                            Session["ERR_CECO"] = "Documentos " + _pos_err_imputacion + " no cuentan con CECO valido";
-                        }
+                        //if (_pos_err_imputacion != "")
+                        //{
+                        //    Session["ERR_CECO"] = "Documentos " + _pos_err_imputacion + " no cuentan con CECO valido";
+                        //}
+
+
                         //lejgg 10-10-2018-------------------->
                         //Busco Informacion Previa del documento si es que existe.
                         var docp2 = db.DOCUMENTOPs.Where(x => x.NUM_DOC == _ndoc && x.ACCION == "H").FirstOrDefault();

@@ -506,6 +506,11 @@ $(document).ready(function () {
         tcambio = parseFloat(tcambio);
         $("#TIPO_CAMBIO").val(tcambio);
 
+        //FRT 05112018
+
+      
+
+
         var _b = false;
         var _vs = [];
         var msgerror = "";
@@ -538,6 +543,7 @@ $(document).ready(function () {
 
         }
         //$("#table_info > tbody  > tr[role='row']").each(function () { //MGC 24-10-2018 Conflicto Enrique-Rogelio
+        var t = $('#table_info').DataTable();
         var tabble = "table_info";
         if ($("table#table_info tbody tr[role='row']").length === 0) { tabble = "table_infoP" }
         $("#" + tabble + " > tbody  > tr[role='row']").each(function () {
@@ -549,6 +555,24 @@ $(document).ready(function () {
             var na3 = $(this).find("td.NumAnexo3 input").val();
             var na4 = $(this).find("td.NumAnexo4 input").val();
             var na5 = $(this).find("td.NumAnexo5 input").val();
+
+            //frt05112018 validacion de CECOS vacion en Tipo Imp. "K"
+            var ceco = $(this).find("td.CCOSTO input").val();
+            var tr = $(this);
+            var indexopc = t.row(tr).index();
+         
+            var tipoimp = t.row(indexopc).data()[13];
+
+          
+
+            if (tipoimp == "K" & (ceco == "" | ceco == null)) {
+                msgerror = "Error en el renglon " + _rni + " valor: CECO invalido ";
+                _b = false;
+            }
+            if (_b === false) {
+                return false;
+            }
+
             if (_vs.length > 0) {
                 for (var i = 0; i < _vs.length; i++) {
                     if (na1 === _vs[i] || na1 === "") {
@@ -1085,6 +1109,13 @@ function validarRFC(rfc_pro, rfc_soc, rfc_soc_doc) {
         return false;
     }
 }
+
+
+
+
+
+
+
 
 //MGC 03-10-2018 solicitud con orden de compra
 function ocultarColumnas(opc) {
