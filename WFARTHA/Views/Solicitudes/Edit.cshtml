@@ -453,6 +453,12 @@
                                 <table class="table responsive-table" id="table_ret" style="width:100%;">
                                     <thead>
                                         <tr>
+                                            <th class="lbl_socret">
+                                                Sociedad Retención
+                                            </th>
+                                            <th class="lbl_provret">
+                                                Proveedor Retención
+                                            </th>
                                             <th class="lbl_tret">
                                                 Tipo Retención
                                             </th>
@@ -478,6 +484,7 @@
                                             for (var i = 0; i < drets.Count; i++)
                                             {
                                                 <tr>
+                                                    <td></td><td></td>
                                                     <td>
                                                         @Html.DisplayFor(m => drets[i].WITHT)
                                                     </td>

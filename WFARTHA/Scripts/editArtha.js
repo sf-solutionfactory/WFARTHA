@@ -61,6 +61,57 @@ $(document).ready(function () {
         ]
     });
 
+    //Tabla de Retenciones
+    $('#table_ret').DataTable({
+        scrollX: true,
+        scrollCollapse: true,
+        language: {
+            "url": "../Scripts/lang/ES.json"
+        },
+        "paging": false,
+        "info": false,
+        "searching": false,
+        "columns": [
+            {
+                "name": 'SOCRET',
+                "className": 'SOCRET',
+                "orderable": false,
+                "visible": false
+            },
+            {
+                "name": 'PROVRET',
+                "className": 'PROVRET',
+                "orderable": false,
+                "visible": false
+            },
+            {
+                "name": 'TRET',
+                "className": 'TRET',
+                "orderable": false
+            },
+            {
+                "name": 'DESCRET',
+                "className": 'DESCTRET',
+                "orderable": false
+            },
+            {
+                "name": 'INDRET',
+                "className": 'INDRET',
+                "orderable": false
+            },
+            {
+                "name": 'BIMPONIBLE',
+                "className": 'BIMPONIBLE',
+                "orderable": false
+            },
+            {
+                "name": 'IMPRET',
+                "className": 'IMPRET',
+                "orderable": false
+            }
+        ]
+    });
+
     solicitarDatos();
     $('#btn_guardarh').on("click", function (e) {
         //Guardar los valores de la tabla en el modelo para enviarlos al controlador
@@ -233,7 +284,7 @@ $(document).ready(function () {
                             data.append('file', file);
                             $.ajax({
                                 type: "POST",
-                                url: 'procesarXML',
+                                url: '../procesarXML',
                                 data: data,
                                 dataType: "json",
                                 cache: false,
@@ -308,7 +359,7 @@ $(document).ready(function () {
                         //Se saca el UUID
                         $.ajax({
                             type: "POST",
-                            url: 'procesarXML',
+                            url: '../procesarXML',
                             data: _data,
                             dataType: "json",
                             cache: false,
@@ -514,15 +565,15 @@ $('body').on('focusout', '.OPER', function (e) {
             //AJAX
             var indret = 0;
             $("#table_ret > tbody  > tr[role='row']").each(function () {
-                var t_ret = $(this).find("td.TRET").text();
+                var t_ret = $(this).find("td.TRET").text().trim();
                 if (t_ret === tRet2[x]) {
-                    indret = $(this).find("td.INDRET").text();
+                    indret = $(this).find("td.INDRET").text().trim();
                 }
             });
             var campo = "";
             $.ajax({
                 type: "POST",
-                url: 'getCampoMult',
+                url: '../getCampoMult',
                 dataType: "json",
                 data: { 'witht': tRet2[x], 'ir': indret },
                 success: function (data) {
@@ -669,15 +720,15 @@ $('body').on('focusout', '.extrasC', function (e) {
         var _res = porcentajeImpRet(tRet2[arrcl[1]]);
         var indret = 0;
         $("#table_ret > tbody  > tr[role='row']").each(function () {
-            var t_ret = $(this).find("td.TRET").text();
+            var t_ret = $(this).find("td.TRET").text().trim();
             if (t_ret === tRet2[arrcl[1]]) {
-                indret = $(this).find("td.INDRET").text();
+                indret = $(this).find("td.INDRET").text().trim();
             }
         });
         var campo = "";
         $.ajax({
             type: "POST",
-            url: 'getCampoMult',
+            url: '../getCampoMult',
             dataType: "json",
             data: { 'witht': tRet2[arrcl[1]], 'ir': indret },
             success: function (data) {
@@ -1091,11 +1142,18 @@ function copiarTableInfoControl() {
 
 function porcentajeImpRet(val) {
     var res = 0;
+    var indret = 0;
+    $("#table_ret > tbody  > tr[role='row']").each(function () {
+        var t_ret = $(this).find("td.TRET").text().trim();
+        if (t_ret === val) {
+            indret = $(this).find("td.INDRET").text().trim();
+        }
+    });
     $.ajax({
         type: "POST",
         url: '../getPercentage',
         dataType: "json",
-        data: { 'witht': val },
+        data: { 'witht': val, 'ir': indret },
         success: function (data) {
             if (data !== null || data !== "") {
                 res = data;
