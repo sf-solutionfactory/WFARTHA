@@ -881,6 +881,7 @@ namespace WFARTHA.Controllers
                                 //    _error_imputacion = 1;
                                 //}
 
+
                                 //if (_error_imputacion != 1)
                                 //{
                                 //    db.DOCUMENTOPs.Add(dp);
@@ -890,6 +891,7 @@ namespace WFARTHA.Controllers
                                 //{
                                 //    _pos_err_imputacion = _pos_err_imputacion + "," + j;
                                 //}
+
 
 
 
@@ -918,11 +920,8 @@ namespace WFARTHA.Controllers
                         _dp.MWSKZ = _mwskz;
                         _dp.IVA = _iva;
                         _dp.TOTAL = _total;
-
-
-
-                        //db.DOCUMENTOPs.Add(_dp);
-                        //db.SaveChanges();
+                        db.DOCUMENTOPs.Add(_dp);
+                        db.SaveChanges();
                         //lejgg 10-10-2018-------------------------<
                     }
                     //Guardar las retenciones de la solicitud
@@ -1842,6 +1841,13 @@ namespace WFARTHA.Controllers
 
             }
 
+            //Lejgg05-11-2018------------------
+            var soc_id = db.DOCUMENTOes.Where(n => n.NUM_DOC == id).FirstOrDefault().SOCIEDAD_ID;
+            var _proy = db.DET_PROYECTOV.Where(x => x.ID_BUKRS == soc_id).FirstOrDefault();
+            var _nameprov = db.PROYECTOes.Where(x => x.ID_PSPNR == _proy.ID_PSPNR).FirstOrDefault();
+            Session["pr"] = _nameprov.NOMBRE;
+            Session["id_pr"] = _proy.ID_PSPNR;
+            //Lejgg05-11-2018-------------------
             if (pacc == null)
             {
                 if (Session["pacc"] != null)
@@ -1866,7 +1872,7 @@ namespace WFARTHA.Controllers
             catch
             {
                 //ViewBag.pais = "mx.png";
-                return RedirectToAction("Proyectos", "Home", new { returnUrl = Request.Url.AbsolutePath });
+                //return RedirectToAction("Proyectos", "Home", new { returnUrl = Request.Url.AbsolutePath });
             }
             if (id == null || id == 0)
             {
@@ -2478,7 +2484,6 @@ namespace WFARTHA.Controllers
                         else
                         {
                             DOCUMENTOP _dp = new DOCUMENTOP();
-
                             _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
                             _dp.POS = j;
                             _dp.ACCION = "H";
@@ -5624,6 +5629,7 @@ namespace WFARTHA.Controllers
                     dm.POS = dps.ElementAt(i).POS;
                     dm.ACCION = dps.ElementAt(i).ACCION;
                     dm.FACTURA = dps.ElementAt(i).FACTURA;
+                    dm.TCONCEPTO = dps.ElementAt(i).TCONCEPTO;//LEJGG 05-11-18
                     dm.GRUPO = dps.ElementAt(i).GRUPO;
                     dm.CUENTA = dps.ElementAt(i).CUENTA;
                     string ct = dps.ElementAt(i).GRUPO;
@@ -5638,6 +5644,7 @@ namespace WFARTHA.Controllers
                     }
                     dm.TIPOIMP = dps.ElementAt(i).TIPOIMP;
                     dm.IMPUTACION = dps.ElementAt(i).IMPUTACION;
+                    dm.CCOSTO = dps.ElementAt(i).CCOSTO;//LEJGG 05-11-18
                     dm.MONTO = fc.toShow(dps.ElementAt(i).MONTO, formato.DECIMALES);
                     dm.IVA = fc.toShow(dps.ElementAt(i).IVA, formato.DECIMALES);
                     dm.TEXTO = dps.ElementAt(i).TEXTO;
