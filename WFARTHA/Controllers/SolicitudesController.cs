@@ -2853,8 +2853,6 @@ namespace WFARTHA.Controllers
                             }
                         }
                     }
-                    // if (da > 0)//significa que de lo que hay en archivo se puede hacer un update
-                    //{
                     //DocumentoA
                     //2- Luego se a guardan/actualizan las posiciones de la solicitud
                     //Misma cantidad de archivos y nombres, osea todo bien
@@ -3546,22 +3544,56 @@ namespace WFARTHA.Controllers
                         }
                     }
                     //Lejgg 26.10.2018----------------------------------------<
-                    //Lejgg 28.10.2018---------------------------------------->
+                    //Lejgg 05.11.2018---------------------------------------->
                     if (Uuid != string.Empty)
                     {
-                        var pos = db.DOCUMENTOUUIDs.ToList();
-                        DOCUMENTOUUID duid = new DOCUMENTOUUID();
-                        duid.NUM_DOC = dOCUMENTO.NUM_DOC;
-                        duid.POS = pos.Count + 1;
-                        duid.DOCUMENTO_SAP = "";
-                        duid.UUID = Uuid;
-                        duid.ESTATUS = true;
-                        db.DOCUMENTOUUIDs.Add(duid);
-                        db.SaveChanges();
+                        //reviso si existe ese uuid
+                        var _uuid = db.DOCUMENTOUUIDs.Where(u => u.UUID == Uuid).FirstOrDefault();
+                        if (_uuid == null)//si es null, no existe,osea que se crea.
+                        {
+                            //
+                            var pos = db.DOCUMENTOUUIDs.ToList();
+                            DOCUMENTOUUID duid = new DOCUMENTOUUID();
+                            duid.NUM_DOC = dOCUMENTO.NUM_DOC;
+                            duid.POS = pos.Count + 1;
+                            duid.DOCUMENTO_SAP = "";
+                            duid.UUID = Uuid;
+                            duid.ESTATUS = true;
+                            db.DOCUMENTOUUIDs.Add(duid);
+                            db.SaveChanges();
+                        }
+                        else//sino, se revisa si ese numdoc tiene ya un uuid
+                        {
+                            var _uuid2 = db.DOCUMENTOUUIDs.Where(u => u.NUM_DOC == _ndoc).FirstOrDefault();
+                            if (_uuid2 == null)//sino se crea
+                            {
+                                //
+                                var pos = db.DOCUMENTOUUIDs.ToList();
+                                DOCUMENTOUUID duid = new DOCUMENTOUUID();
+                                duid.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                duid.POS = pos.Count + 1;
+                                duid.DOCUMENTO_SAP = "";
+                                duid.UUID = Uuid;
+                                duid.ESTATUS = true;
+                                db.DOCUMENTOUUIDs.Add(duid);
+                                db.SaveChanges();
+                            }
+                            else//sino se modifica
+                            {
+                                //
+                                var pos = db.DOCUMENTOUUIDs.ToList();
+                                DOCUMENTOUUID duid = _uuid2;
+                                duid.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                duid.POS = pos.Count + 1;
+                                duid.DOCUMENTO_SAP = "";
+                                duid.UUID = Uuid;
+                                duid.ESTATUS = true;
+                                db.Entry(duid).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                        }
                     }
-                    //Lejgg 28.10.2018----------------------------------------<
-                    //}
-
+                    //Lejgg 05.11.2018----------------------------------------<
                 }
                 catch (Exception e)
                 {
@@ -5533,7 +5565,8 @@ namespace WFARTHA.Controllers
                 var _res = db.DOCUMENTORPs.Where(nd => nd.NUM_DOC == dOCUMENTO.NUM_DOC && nd.WITHT == wtht).ToList();
                 for (int y = 0; y < _res.Count; y++)
                 {
-                    if (_res[y].BIMPONIBLE == null){
+                    if (_res[y].BIMPONIBLE == null)
+                    {
                         _bi = _bi + 0;
                     }
                     else
