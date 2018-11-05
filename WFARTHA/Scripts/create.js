@@ -566,8 +566,10 @@ $(document).ready(function () {
           
 
             if (tipoimp == "K" & (ceco == "" | ceco == null)) {
-                msgerror = "Error en el renglon " + _rni + " valor: CECO invalido ";
+                msgerror = "Falta ingresar Centro de Costo";
                 _b = false;
+            } else {
+                _b = true;
             }
             if (_b === false) {
                 return false;
