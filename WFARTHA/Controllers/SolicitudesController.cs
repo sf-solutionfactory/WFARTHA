@@ -2853,8 +2853,6 @@ namespace WFARTHA.Controllers
                             }
                         }
                     }
-                    // if (da > 0)//significa que de lo que hay en archivo se puede hacer un update
-                    //{
                     //DocumentoA
                     //2- Luego se a guardan/actualizan las posiciones de la solicitud
                     //Misma cantidad de archivos y nombres, osea todo bien
@@ -3546,7 +3544,7 @@ namespace WFARTHA.Controllers
                         }
                     }
                     //Lejgg 26.10.2018----------------------------------------<
-                    //Lejgg 28.10.2018---------------------------------------->
+                    //Lejgg 05.11.2018---------------------------------------->
                     if (Uuid != string.Empty)
                     {
                         //reviso si existe ese uuid
@@ -3595,9 +3593,7 @@ namespace WFARTHA.Controllers
                             }
                         }
                     }
-                    //Lejgg 28.10.2018----------------------------------------<
-                    //}
-
+                    //Lejgg 05.11.2018----------------------------------------<
                 }
                 catch (Exception e)
                 {
