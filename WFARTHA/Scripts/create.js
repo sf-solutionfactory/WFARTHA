@@ -573,6 +573,7 @@ $(document).ready(function () {
                 return false;
             }
 
+          
             if (_vs.length > 0) {
                 for (var i = 0; i < _vs.length; i++) {
                     if (na1 === _vs[i] || na1 === "") {
