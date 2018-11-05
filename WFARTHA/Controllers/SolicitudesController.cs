@@ -890,9 +890,6 @@ namespace WFARTHA.Controllers
                                 {
                                     _pos_err_imputacion = _pos_err_imputacion + "," + j;
                                 }
-
-
-
                             }
                             catch (Exception e)
                             {
@@ -5618,6 +5615,7 @@ namespace WFARTHA.Controllers
                     dm.POS = dps.ElementAt(i).POS;
                     dm.ACCION = dps.ElementAt(i).ACCION;
                     dm.FACTURA = dps.ElementAt(i).FACTURA;
+                    dm.TCONCEPTO = dps.ElementAt(i).TCONCEPTO;//LEJGG 05-11-18
                     dm.GRUPO = dps.ElementAt(i).GRUPO;
                     dm.CUENTA = dps.ElementAt(i).CUENTA;
                     string ct = dps.ElementAt(i).GRUPO;
@@ -5632,6 +5630,7 @@ namespace WFARTHA.Controllers
                     }
                     dm.TIPOIMP = dps.ElementAt(i).TIPOIMP;
                     dm.IMPUTACION = dps.ElementAt(i).IMPUTACION;
+                    dm.CCOSTO = dps.ElementAt(i).CCOSTO;//LEJGG 05-11-18
                     dm.MONTO = fc.toShow(dps.ElementAt(i).MONTO, formato.DECIMALES);
                     dm.IVA = fc.toShow(dps.ElementAt(i).IVA, formato.DECIMALES);
                     dm.TEXTO = dps.ElementAt(i).TEXTO;
