@@ -262,7 +262,8 @@
                     </th>
                     @*MGC Preliminar Status que hay en preliminar*@
                     <th class="lbl_num_pre">
-                        @Html.DisplayNameFor(model => model.NUM_PRE)
+                        @*@Html.DisplayNameFor(model => model.NUM_PRE)*@
+                        @Html.DisplayName("Num SAP")
                     </th>
                     <th class="lblSociedad">
                         @Html.DisplayNameFor(model => model.SOCIEDAD_ID)
@@ -273,12 +274,12 @@
                     <th id="lbl_fechad">
                         @Html.DisplayNameFor(model => model.FECHAD)
                     </th>
-                    <th id="lbl_horac">
+                    @*<th id="lbl_horac">
                         @Html.DisplayNameFor(model => model.HORAC)
-                    </th>
-                    <th id="lblPC">
+                    </th>*@
+                    @*<th id="lblPC">
                         @Html.DisplayName("Periodo Contable")
-                    </th>
+                    </th>*@
                     <th id="lbl_estatus">
                         @Html.DisplayNameFor(model => model.ESTATUS)
                     </th>
@@ -288,9 +289,9 @@
                     <th id="lblCliente">
                         @Html.DisplayName("Cliente")
                     </th>
-                    <th id="lblCanal">
+                    @*<th id="lblCanal">
                         @Html.DisplayName("Canal")
-                    </th>
+                    </th>*@
                     <th id="lbl_tsol">
                         @Html.DisplayNameFor(model => model.TSOL)
                     </th>
@@ -303,9 +304,9 @@
                     <th id="lbl_concepto">
                         @Html.DisplayNameFor(model => model.CONCEPTO)
                     </th>
-                    <th id="lblMo">
+                    @*<th id="lblMo">
                         @Html.DisplayNameFor(model => model.MONTO_DOC_ML)
-                    </th>
+                    </th>*@
                     @*<th id="lblFac">
                             @Html.DisplayName("Factura")
                         </th>
@@ -315,7 +316,7 @@
                     <th id="lblUC">
                         @Html.DisplayNameFor(model => model.USUARIOC_ID)
                     </th>
-                    <th id="lblUM">
+                    @*<th id="lblUM">
                         @Html.DisplayName("Modificado por")
                     </th>
                     <th id="lblNC">
@@ -347,7 +348,7 @@
                     </th>
                     <th id="lblCCG">
                         @Html.DisplayName("Cuenta Contable Gasto")
-                    </th>
+                    </th>*@
                 </tr>
             </thead>
             <tbody>
@@ -446,12 +447,12 @@
                         catch (Exception) { };
                     }
                     </td>
-                    <td>
+                    @*<td>
                         @item.HORAC.Value.ToString().Split('.')[0]
-                    </td>
-                    <td>
+                    </td>*@
+                    @*<td>
                         @item.FECHAC.Value.Month
-                    </td>
+                    </td>*@
                     @*MGC Preliminar Status que hay en preliminar*@
                     @if (item.NUM_PRE != "")
                     {
@@ -751,7 +752,7 @@
                             }
                         }
                     </td>
-                    <td>
+                    @*<td>
                         @for (int i = 0; i < lst.Count; i++)
                         {
                             if (lst[i].LIFNR == item.PAYER_ID)
@@ -759,7 +760,7 @@
                                 @Html.Label(lst[i].STCD1)
                             }
                         }
-                    </td>
+                    </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
                     </td>
@@ -767,12 +768,13 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.CONCEPTO)
                     </td>
-                    <td class="precio">
+                    @*<td class="precio">
                         @Html.DisplayFor(modelItem => item.MONTO_DOC_ML)
-                    </td>
+                    </td>*@
                     <td>
                         @item.USUARIOC_ID
                     </td>
+                    @*<td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -782,8 +784,7 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
-                    <td></td>
+                    <td></td>*@
                 </tr>
                 }
             </tbody>

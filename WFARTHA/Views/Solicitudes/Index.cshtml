@@ -56,9 +56,9 @@
             <th id="lbl_fechad">
                 @Html.DisplayNameFor(model => model.FECHAD)
             </th>
-            <th id="lbl_horac">
+            @*<th id="lbl_horac">
                 @Html.DisplayNameFor(model => model.HORAC)
-            </th>
+            </th>*@
             <th id="lbl_estatus">
                 @Html.DisplayNameFor(model => model.ESTATUS)
             </th>
@@ -108,9 +108,9 @@
                 catch (Exception) { };
             }
             </td>
-            <td>
+            @*<td>
                 @item.HORAC.Value.ToString().Split('.')[0]
-            </td>
+            </td>*@
             @*//MGC 26-10-2018 Modificación a borrador, Label de borrador*@
             @if (item.ESTATUS.Equals("B"))
             {
