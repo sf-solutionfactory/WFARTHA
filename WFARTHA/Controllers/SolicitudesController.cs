@@ -3551,8 +3551,9 @@ namespace WFARTHA.Controllers
                     {
                         //reviso si existe ese uuid
                         var _uuid = db.DOCUMENTOUUIDs.Where(u => u.UUID == Uuid).FirstOrDefault();
-                        if (_uuid == null)//si es null, no existe, se crea.
+                        if (_uuid == null)//si es null, no existe,osea que se crea.
                         {
+                            //
                             var pos = db.DOCUMENTOUUIDs.ToList();
                             DOCUMENTOUUID duid = new DOCUMENTOUUID();
                             duid.NUM_DOC = dOCUMENTO.NUM_DOC;
@@ -3568,6 +3569,7 @@ namespace WFARTHA.Controllers
                             var _uuid2 = db.DOCUMENTOUUIDs.Where(u => u.NUM_DOC == _ndoc).FirstOrDefault();
                             if (_uuid2 == null)//sino se crea
                             {
+                                //
                                 var pos = db.DOCUMENTOUUIDs.ToList();
                                 DOCUMENTOUUID duid = new DOCUMENTOUUID();
                                 duid.NUM_DOC = dOCUMENTO.NUM_DOC;
@@ -3580,6 +3582,7 @@ namespace WFARTHA.Controllers
                             }
                             else//sino se modifica
                             {
+                                //
                                 var pos = db.DOCUMENTOUUIDs.ToList();
                                 DOCUMENTOUUID duid = _uuid2;
                                 duid.NUM_DOC = dOCUMENTO.NUM_DOC;
