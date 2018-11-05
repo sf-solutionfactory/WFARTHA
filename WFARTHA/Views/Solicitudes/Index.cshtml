@@ -114,15 +114,21 @@
             @*//MGC 26-10-2018 Modificación a borrador, Label de borrador*@
             @if (item.ESTATUS.Equals("B"))
             {
-                <td class="gray darken-2 white-text">
-                    <div class="lbl_pending">Borrador</div>
+                @*<td class="gray darken-3 white-text">
+                <div class="lbl_pending">Borrador</div>
+            </td>*@
+                <td class="">
+                    <span class="new badge gray darken-2 white-text" data-badge-caption=" ">Borrador</span>
                 </td>
             }
             @*//MGC 30-10-2018 Modificación estatus, Label de contabilizada en SAP*@
             else if (item.ESTATUS.Equals("A"))
             {
-                <td class="gray darken-2 white-text">
-                    <div class="lbl_pending">Contabilizado SAP</div>
+                @*<td class="gray darken-2 white-text">
+                <div class="lbl_pending">Contabilizado SAP</div>
+            </td>*@
+                <td class="">
+                    <span class="lbl_tax new badge green darken-2 white-text" data-badge-caption=" ">Contabilizado SAP</span>
                 </td>
             }
             @*//MGC 30-10-2018 Modificación estatus, Label de generando preliminar*@
@@ -131,15 +137,21 @@
                 //Se creó el archivo preliminar
                 if (item.ESTATUS_PRE == "G")
                 {
-                    <td class="yellow darken-2 white-text">
-                        <div class="lbl_pending">Generando Preliminar</div>
+                    @*<td class="yellow darken-2 white-text">
+                    <div class="lbl_pending">Generando Preliminar</div>
+                </td>*@
+                    <td class="">
+                        <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Generando Preliminar</span>
                     </td>
                 }
                 //Error al crear el archivo preliminar
                 else if (item.ESTATUS_PRE == "E")
                 {
-                    <td class="red darken-2 white-text">
-                        <div class="lbl_pending">Error al generar Archivo Preliminar</div>
+                    @*<td class="red darken-2 white-text">
+                    <div class="lbl_pending">Error al generar Archivo Preliminar</div>
+                </td>*@
+                    <td class="">
+                        <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error al generar Archivo Preliminar</span>
                     </td>
                 }
             }
@@ -149,8 +161,11 @@
                 //Se creó el archivo preliminar
                 if (item.ESTATUS_PRE == "E" && item.ESTATUS_SAP == "E")
                 {
-                    <td class="red darken-1 white-text">
-                        <div class="lbl_contab">Error al generar Archivo Preliminar SAP</div>
+                    @*<td class="red darken-1 white-text">
+                    <div class="lbl_contab">Error al generar Archivo Preliminar SAP</div>
+                </td>*@
+                    <td class="">
+                        <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error al generar Archivo Preliminar SAP</span>
                     </td>
 
                 }
@@ -158,8 +173,11 @@
                 if (item.ESTATUS_PRE == "G" && item.ESTATUS_SAP == "P")
                 {
 
-                    <td class="red darken-1 white-text">
-                        <div class="lbl_contab">Se generó archivo SAP</div>
+                    @*<td class="red darken-1 white-text">
+                    <div class="lbl_contab">Se generó archivo SAP</div>
+                </td>*@
+                    <td class="">
+                        <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Se generó archivo SAP</span>
                     </td>
                 }
             }
@@ -168,8 +186,11 @@
                 @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
                 if (item.ESTATUS_PRE == "G")
                 {
-                    <td class="yellow darken-2 white-text">
-                        <div class="lbl_pending">Pendiente Aprobador</div>
+                    @*<td class="yellow darken-2 white-text">
+                    <div class="lbl_pending">Pendiente Aprobador</div>
+                </td>*@
+                    <td class="">
+                        <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente Aprobador</span>
                     </td>
                 }
             }
@@ -179,29 +200,41 @@
                 @*//MGC 30-10-2018 Modificación estatus, Pendiente contabilizador  *@
                 if (item.ESTATUS_WF.Equals("P") && item.ESTATUS_PRE == "G")
                 {
-                    <td class="yellow darken-1 white-text">
-                        <div class="lbl_contab">Pendiente Contabilizar</div>
+                    @*<td class="yellow darken-1 white-text">
+                    <div class="lbl_contab">Pendiente Contabilizar</div>
+                </td>*@
+                    <td class="">
+                        <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente Contabilizar</span>
                     </td>
                 }
                 @*//MGC 30-10-2018 Modificación estatus  *@
                 else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "E")
                 {
-                    <td class="red darken-1 white-text">
-                        <div class="lbl_contab">Error generando archivo de contabilizacion</div>
+                    @*<td class="red darken-1 white-text">
+                    <div class="lbl_contab">Error generando archivo de contabilizacion</div>
+                </td>*@
+                    <td class="">
+                        <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error generando archivo de contabilizacion</span>
                     </td>
                 }
                 @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
                 else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "G" && item.ESTATUS_SAP != "E")
                 {
-                    <td class="yellow darken-1 white-text">
-                        <div class="lbl_contab">Contabilizando SAP</div>
+                    @*<td class="yellow darken-1 white-text">
+                    <div class="lbl_contab">Contabilizando SAP</div>
+                </td>*@
+                    <td class="">
+                        <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Contabilizando SAP</span>
                     </td>
                 }
                 @*//MGC 30-10-2018 Modificación estatus, Error en SAP  *@
                 else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_SAP == "E")
                 {
-                    <td class="red darken-1 white-text">
+                    @*<td class="red darken-1 white-text">
                         <div class="lbl_contab">Error contabilizando SAP</div>
+                    </td>*@
+                    <td class="">
+                        <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error contabilizando SAP</span>
                     </td>
                 }
             }
@@ -228,8 +261,11 @@
             }
             else if (item.ESTATUS.Equals("F") && item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("R") && item.ESTATUS_PRE != null && item.ESTATUS_PRE.Equals("G"))
             {
-                <td class="red darken-1 white-text">
-                    <div class="lbl_rejected">Pendiente corrección usuario</div>
+                @*<td class="red darken-1 white-text">
+                <div class="lbl_rejected">Pendiente corrección usuario</div>
+            </td>*@
+                <td class="">
+                    <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Pendiente corrección usuario</span>
                 </td>
             }
             else if (item.ESTATUS_WF.Equals("T"))
