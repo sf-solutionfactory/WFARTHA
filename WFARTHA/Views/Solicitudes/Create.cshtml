@@ -155,7 +155,7 @@
     </style>
 
     <div class="col s8 right-align">
-        <a id="btn_borradorh" class="btn btn-small">Guardar borrador</a>
+        <a id="btn_borradorh" class="btn btn-small">Guardar Borrador</a>
 
         @{string b = ViewBag.borradore + "";
             string display = "none";
@@ -196,7 +196,7 @@
         <ul class="tabs" id="tabs">
             <li class="tab col s2 tabs_menu"><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado</a></li>
             <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Detalle</a></li>
-            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_cont">Información</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_cont">Autorización</a></li>
             @*<li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_sap">Información SAP</a></li>*@
         </ul>
     </div>
@@ -220,7 +220,7 @@
                         @*<h5 id="head_cabecera">Cabecera NT</h5>*@
                         <div class="row" style="margin-bottom:0">
                             <div class="form-group col s6">
-                                @Html.LabelFor(model => model.TSOL_ID, "Clase de documento", htmlAttributes: new { @class = "control-label col-md-2" })
+                                @Html.LabelFor(model => model.TSOL_ID, "Clase de Documento", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
                                     @Html.DropDownList("TSOL_IDL", null, htmlAttributes: new { @class = "form-control dd1", @id = "tsol" }) @*LEJ 04.09.2018*@ @*MGC 03-10-2018 solicitud con orden de compra*@
                                     @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "form-control fechaVal", @hidden = "hidden", @id = "tsol_id2" } })@*MGC 03-10-2018 solicitud con orden de compra*@
@@ -235,7 +235,7 @@
                         </div>
                         <div class="row" style="margin-bottom:0">
                             <div class="form-group col s3">
-                                @Html.LabelFor(model => model.FECHAD, "Fecha documento", htmlAttributes: new { @class = "control-label col-md-2" })
+                                @Html.LabelFor(model => model.FECHAD, "Fecha Documento", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
                                     @Html.EditorFor(model => model.FECHAD, new { htmlAttributes = new { @class = "form-control fechaVal" } })@*LEJ 04.09.2018*@
                                     <input type="hidden" id="FECHADO" name="FECHADO" />
@@ -364,14 +364,14 @@
                             </div>
 
                             <div class="form-group col s3">
-                                @Html.LabelFor(model => model.TIPO_CAMBIO, "Cambio", htmlAttributes: new { @class = "control-label col-md-2" })
+                                @Html.LabelFor(model => model.TIPO_CAMBIO, "Tipo de Cambio", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
                                     @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon" } })@*LEJ 04.09.2018*@
                                 </div>
                             </div>
                             @* Lejgg 26 10 2018 *@
                             <div class="form-group col s2">
-                                @Html.LabelFor(model => model.CONDICIONES, "Condiciones", htmlAttributes: new { @class = "control-label col-md-2" })
+                                @Html.LabelFor(model => model.CONDICIONES, "Condiciones de Pago", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
                                     @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4", @id = "condiciones_prov" } })@*LEJ 04.09.2018*@ @*//MGC 19-10-2018 Condiciones*@
                                 </div>
@@ -379,7 +379,7 @@
                             @* Lejgg 26 10 2018 *@
                             @*//MGC 30-10-2018 Condiciones*@
                             <div class="form-group col s4">
-                                @Html.Label("condiciones_provt", "Condiciones Texto", htmlAttributes: new { @class = "control-label col-md-2" })
+                                @Html.Label("condiciones_provt", "Descripción de Condición", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
                                     @Html.Editor("condiciones_provt", new { htmlAttributes = new { @class = "form-control", @id = "condiciones_provt", @disabled = "disabled" } })
                                 </div>
@@ -436,7 +436,7 @@
                             </div>
 
                             <div class="form-group col s6">
-                                @Html.LabelFor(model => model.CONCEPTO, "TEXTO", htmlAttributes: new { @class = "control-label col-md-2" })
+                                @Html.LabelFor(model => model.CONCEPTO, "Explicación", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
                                     @Html.EditorFor(model => model.CONCEPTO, "Concepto", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })@*LEJ 04.09.2018*@
                                 </div>
@@ -508,13 +508,13 @@
                                             Descripción Retención
                                         </th>
                                         <th class="lbl_indret">
-                                            Indicador de retención
+                                            Indicador de Retención
                                         </th>
                                         <th class="lbl_bimponible">
                                             Base Imponible
                                         </th>
                                         <th id="lbl_impret">
-                                            Importe de retención
+                                            Importe de Retención
                                         </th>
                                     </tr>
                                 </thead>
@@ -537,13 +537,13 @@
                                             Descripción Retención
                                         </th>
                                         <th class="lbl_indret">
-                                            Indicador de retención
+                                            Indicador de Retención
                                         </th>
                                         <th class="lbl_bimponible">
                                             Base Imponible
                                         </th>
                                         <th id="lbl_impret">
-                                            Importe de retención
+                                            Importe de Retención
                                         </th>
                                     </tr>
                                 </thead>
@@ -611,12 +611,12 @@
                                         <table class="mdl-data-table striped">
                                             <thead>
                                                 <tr>
-                                                    <th>Total<br />contrato</th>
-                                                    <th>% anticipo</th>
-                                                    <th>% Fondo<br />de garantía</th>
-                                                    <th>Fondo de garantía</th>
-                                                    <th>Retenido<br />fondo de garantía</th>
-                                                    <th>Restante<br />fondo de garantía</th>
+                                                    <th>Total<br />Contrato</th>
+                                                    <th>% Anticipo</th>
+                                                    <th>% Fondo<br />de Garantía</th>
+                                                    <th>Fondo de Garantía</th>
+                                                    <th>Retenido<br />Fondo de Garantía</th>
+                                                    <th>Restante<br />Fondo de Garantía</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -683,7 +683,7 @@
                                                     Factura
                                                 </th>
                                                 <th id="lbl_tconcepto">
-                                                    TIPO CONCEPTO
+                                                    Tipo Concepto
                                                 </th>
                                                 <th id="lbl_grupo">
                                                     Concepto
@@ -692,7 +692,7 @@
                                                     Cuenta
                                                 </th>
                                                 <th id="lbl_cuentaNom">
-                                                    Nombre de cuenta
+                                                    Nombre de Cuenta
                                                 </th>
                                                 <th id="lbl_tipoimp">
                                                     Tipo Imp.
@@ -701,7 +701,7 @@
                                                     Imputación
                                                 </th>
                                                 <th id="lbl_ccosto">
-                                                    Centro de costo
+                                                    Centro de Costo
                                                 </th>
                                                 <th id="lbl_monto">
                                                     Monto
@@ -713,7 +713,7 @@
                                                     IVA
                                                 </th>
                                                 <th id="lbl_Texto">
-                                                    TEXTO
+                                                    Texto
                                                 </th>
                                                 <th id="lbl_total">
                                                     Total
@@ -761,7 +761,7 @@
                                                 Factura
                                             </th>
                                             <th id="lbl_tconcepto">
-                                                TIPO CONCEPTO
+                                                Tipo Concepto
                                             </th>
                                             <th id="lbl_grupo">
                                                 Grupo
@@ -770,7 +770,7 @@
                                                 Cuenta
                                             </th>
                                             <th id="lbl_cuentaNom">
-                                                Nombre de cuenta
+                                                Nombre de Cuenta
                                             </th>
                                             <th id="lbl_tipoimp">
                                                 Tipo Imp.
@@ -779,7 +779,7 @@
                                                 Imputación
                                             </th>
                                             <th id="lbl_ccosto">
-                                                Centro de costo
+                                                Centro de Costo
                                             </th>
                                             <th id="lbl_monto">
                                                 Monto
@@ -791,7 +791,7 @@
                                                 IVA
                                             </th>
                                             <th id="lbl_texto">
-                                                TEXTO
+                                                Texto
                                             </th>
                                             <th id="lbl_total">
                                                 Total
@@ -836,7 +836,7 @@
                                                     Factura
                                                 </th>
                                                 <th id="lbl_tconcepto">
-                                                    TIPO CONCEPTO
+                                                    Tipo Concepto
                                                 </th>
                                                 <th id="lbl_grupo">
                                                     Grupo
@@ -854,7 +854,7 @@
                                                     Imputación
                                                 </th>
                                                 <th id="lbl_ccosto">
-                                                    Centro de costo
+                                                    Centro de Costo
                                                 </th>
                                                 <th id="lbl_matnr">
                                                     Material
@@ -869,25 +869,25 @@
                                                     Cantidad
                                                 </th>
                                                 <th id="lbl_montoF">
-                                                    Monto faltante
+                                                    Monto Faltante
                                                 </th>
                                                 <th id="lbl_mengeF">
-                                                    Cantidad faltante
+                                                    Cantidad Faltante
                                                 </th>
                                                 <th id="lbl_meins">
                                                     UMedida
                                                 </th>
                                                 <th id="">
-                                                    Ant. solicitado
+                                                    Ant. Solicitado
                                                 </th>
                                                 <th id="">
-                                                    Ant. pagado
+                                                    Ant. Pagado
                                                 </th>
                                                 <th id="">
-                                                    Ant. amortizado
+                                                    Ant. Amortizado
                                                 </th>
                                                 <th id="">
-                                                    Amortización<br />estimación
+                                                    Amortización<br />Estimación
                                                 </th>
                                                 <th id="lbl_impuesto">
                                                     Impuesto
@@ -941,7 +941,7 @@
                                                 Factura
                                             </th>
                                             <th id="lbl_tconcepto">
-                                                TIPO CONCEPTO
+                                                Tipo Concepto
                                             </th>
                                             <th id="lbl_grupo">
                                                 Grupo
@@ -950,7 +950,7 @@
                                                 Cuenta
                                             </th>
                                             <th id="lbl_cuentaNom">
-                                                Nombre de cuenta
+                                                Nombre de Cuenta
                                             </th>
                                             <th id="lbl_tipoimp">
                                                 Tipo Imp.
@@ -959,7 +959,7 @@
                                                 Imputación
                                             </th>
                                             <th id="lbl_ccosto">
-                                                Centro de costo
+                                                Centro de Costo
                                             </th>
                                             <th id="lbl_monto">
                                                 Monto
@@ -971,10 +971,10 @@
                                                 IVA
                                             </th>
                                             <th id="lbl_texto">
-                                                TEXTO
+                                                Texto
                                             </th>
                                             <th id="lbl_total">
-                                                TOTAL
+                                                Total:
                                             </th>
                                         </tr>
                                     </thead>
@@ -999,7 +999,7 @@
                         <h5 id="head_cabecera">ANEXOS</h5>
                         <div class="row" style="margin-bottom:0">
                             <div>
-                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowAnex">Registro Del A</span></a>
+                                <a class="btn"><i class="material-icons left">clear</i><span id="delRowAnex">Eliminar Anexo</span></a>
                             </div>
                             <div class="file-field input-field" id="cargar_archivo">
                                 <div class="btn" style="margin-left: 2px;">
@@ -1028,7 +1028,7 @@
                                             Tipo de Archivo
                                         </th>
                                         <th class="">
-                                            Descripcion
+                                            Descripción
                                         </th>
                                     </tr>
                                 </thead>
@@ -1050,7 +1050,7 @@
                         <h5 id="head_cabecera">Autorización</h5>
                         <div class="row" style="margin-bottom:0">
                             <div class="form-group col s6">
-                                @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización", htmlAttributes: new { @class = "control-label col-md-2" })
+                                @Html.LabelFor(model => model.TSOL_ID, "Cadena de Autorización", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
                                     @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa" })
                                 </div>
@@ -1148,7 +1148,7 @@
                                             Factura
                                         </th>
                                         <th id="lbl_tconcepto">
-                                            TIPO CONCEPTO
+                                            Tipo Concepto
                                         </th>
                                         <th id="lbl_grupo">
                                             Grupo

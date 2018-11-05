@@ -282,7 +282,7 @@
                                 <div id="modal2" class="modal">
                                     <div class="modal-content">
                                         <div class="row">
-                                            <h4 id="txt_can">Cancelar solicitud</h4>
+                                            <h4 id="txt_can">Cancelar Solicitud</h4>
                                             <br />
                                         </div>
                                         <div class="row" style="">
@@ -309,7 +309,7 @@
                             <div id="modal2" class="modal">
                                 <div class="modal-content">
                                     <div class="row">
-                                        <h4 id="txt_can">Cancelar solicitud</h4>
+                                        <h4 id="txt_can">Cancelar Solicitud</h4>
                                         <br />
                                     </div>
                                     <div class="row" style="">
@@ -334,10 +334,10 @@
                         @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                         <ul id='list_carta' class='dropdown-content'>
                             @*<li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
-                            <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
+                            <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de Cartas</a></li> @*//B20180720P MGC Guardar Carta*@
                             @if (Model.D.ESTATUS_WF.Equals("S"))
                             {
-                                <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
+                                <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar Carta</a></li>
                             }
                             else
                             {
@@ -374,8 +374,8 @@
     <div class="col s12">
         <ul class="tabs" id="tabs">
             <li class="tab col s2 tabs_menu"><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado</a></li>
-            <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Info Contable</a></li>
-            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Soporte_cont">Soporte</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Detalle</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Soporte_cont">Autorización</a></li>
             <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_sap">Información SAP</a></li>
         </ul>
     </div>
@@ -393,7 +393,7 @@
                     <h5 id="head_cabecera">Cabecera</h5>
                     <div class="row" style="margin-bottom:0">
                         <div class="form-group col s6">
-                            @Html.LabelFor(model => model.D.TSOL_ID, "Clase de documento", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.TSOL_ID, "Clase de Documento", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.DropDownList("TSOL_ID", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
 
@@ -409,7 +409,7 @@
                     </div>
                     <div class="row" style="margin-bottom:0">
                         <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.FECHAD, "Fecha documento", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.FECHAD, "Fecha Documento", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.EditorFor(model => model.D.FECHAD, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
 
@@ -603,13 +603,13 @@
                                             Descripción Retención
                                         </th>
                                         <th class="lbl_indret">
-                                            Indicador de retención
+                                            Indicador de Retención
                                         </th>
                                         <th class="lbl_bimponible">
                                             Base Imponible
                                         </th>
                                         <th id="lbl_impret">
-                                            Importe de retención
+                                            Importe de Retención
                                         </th>
                                     </tr>
                                 </thead>
@@ -696,7 +696,7 @@
                                             Cuenta
                                         </th>
                                         <th class="">
-                                            Nombre de cuenta
+                                            Nombre de Cuenta
                                         </th>
                                         <th class="">
                                             Tipo Imp.
@@ -916,7 +916,7 @@
                             <div class="col s12" style="padding:0px">
                                 <div class="card-panel">
                                     <div class="row" style="margin-bottom:0">
-                                        <h5>Log de Mensajes SAP</h5>
+                                        <h5>Mensajes SAP</h5>
                                         <table class="table highlight responsive-table" id="table">
                                             <thead>
                                                 <tr>
@@ -971,9 +971,9 @@
                 @Html.AntiForgeryToken()
                 <div class="modal-content" style="padding-bottom:0px">
                     <div class="row">
-                        <h4 id="txt_app" style="display:none">Aprobar solicitud</h4>
-                        <h4 id="txt_rec" style="display:none"> Rechazar solicitud</h4>
-                        <h4 id="txt_nex" style="display:none"> Agregar comentario</h4>
+                        <h4 id="txt_app" style="display:none">Aprobar Solicitud</h4>
+                        <h4 id="txt_rec" style="display:none"> Rechazar Solicitud</h4>
+                        <h4 id="txt_nex" style="display:none"> Agregar Comentario</h4>
                         <h4 id="txt_cont" style="display:none">
                             Contabilizar
                         </h4>
@@ -1127,7 +1127,7 @@
                     if (!resc) {
                         //Error
                         document.getElementById('loader').style.display = 'none';
-                        M.toast({ html: 'Error con la Firma del usuario' });
+                        M.toast({ html: 'Error con la Firma del Usuario' });
                         e.preventDefault();
 
                     } else {
@@ -1159,16 +1159,16 @@
                                         Evento
                                     </th>
                                     <th width="">
-                                        Fecha inicio
+                                        Fecha Inicio
                                     </th>
                                     <th width="">
-                                        Hora inicio
+                                        Hora Inicio
                                     </th>
                                     <th width="">
-                                        Fecha término
+                                        Fecha Término
                                     </th>
                                     <th width="">
-                                        Hora término
+                                        Hora Término
                                     </th>
                                     <th width="">
                                         Estatus
