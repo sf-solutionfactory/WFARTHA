@@ -660,126 +660,126 @@
                 <div class="card-panel">
                     <h5 id="head_cabecera">Detalle</h5>
                     <div class="row" style="margin-bottom:0">
-                        
+
                         <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
-                                <thead>
-                                    <tr>
-                                        <th></th>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th class="">
+                                        Pos
+                                    </th>
+                                    <th class="">
+                                        A1
+                                    </th>
+                                    <th class="">
+                                        A2
+                                    </th>
+                                    <th class="">
+                                        A3
+                                    </th>
+                                    <th class="">
+                                        A4
+                                    </th>
+                                    <th class="">
+                                        A5
+                                    </th>
+                                    <th class="">
+                                        D/H
+                                    </th>
+                                    <th class="">
+                                        Factura
+                                    </th>
+                                    <th class="">
+                                        Concepto
+                                    </th>
+                                    <th class="">
+                                        Cuenta
+                                    </th>
+                                    <th class="">
+                                        Nombre de Cuenta
+                                    </th>
+                                    <th class="">
+                                        Tipo Imp.
+                                    </th>
+                                    <th class="">
+                                        Imputación
+                                    </th>
+                                    <th class="">
+                                        Monto
+                                    </th>
+                                    <th class="">
+                                        IVA
+                                    </th>
+                                    <th class="">
+                                        Texto
+                                    </th>
+                                    @for (int i = 0; i < colsret.Count; i++)
+                                    {
                                         <th class="">
-                                            Pos
+                                            @colsret[i] B.I.
                                         </th>
                                         <th class="">
-                                            A1
+                                            @colsret[i] I.R.
                                         </th>
-                                        <th class="">
-                                            A2
-                                        </th>
-                                        <th class="">
-                                            A3
-                                        </th>
-                                        <th class="">
-                                            A4
-                                        </th>
-                                        <th class="">
-                                            A5
-                                        </th>
-                                        <th class="">
-                                            D/H
-                                        </th>
-                                        <th class="">
-                                            Factura
-                                        </th>
-                                        <th class="">
-                                            Concepto
-                                        </th>
-                                        <th class="">
-                                            Cuenta
-                                        </th>
-                                        <th class="">
-                                            Nombre de Cuenta
-                                        </th>
-                                        <th class="">
-                                            Tipo Imp.
-                                        </th>
-                                        <th class="">
-                                            Imputación
-                                        </th>
-                                        <th class="">
-                                            Monto
-                                        </th>
-                                        <th class="">
-                                            IVA
-                                        </th>
-                                        <th class="">
-                                            Texto
-                                        </th>
-                                        @for (int i = 0; i < colsret.Count; i++)
+                                    }
+                                    <th class="">
+                                        Total
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    @if (@Model.D.DOCUMENTOPSTR != null)
+                                    {
+                                        for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
                                         {
-                                            <th class="">
-                                                @colsret[i] B.I.
-                                            </th>
-                                            <th class="">
-                                                @colsret[i] I.R.
-                                            </th>
-                                        }
-                                        <th class="">
-                                            Total
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        @if (@Model.D.DOCUMENTOPSTR != null)
-                                        {
-                                            for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
+                                            <td></td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
+                                            if (@Model.D.Anexo != null)
+                                            {
+                                                <td>@Model.D.Anexo[i].a1</td>
+                                                <td>@Model.D.Anexo[i].a2</td>
+                                                <td>@Model.D.Anexo[i].a3</td>
+                                                <td>@Model.D.Anexo[i].a4</td>
+                                                <td>@Model.D.Anexo[i].a5</td>
+                                            }
+                                            else
                                             {
                                                 <td></td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
-                                                if (@Model.D.Anexo != null)
-                                                {
-                                                    <td>@Model.D.Anexo[i].a1</td>
-                                                    <td>@Model.D.Anexo[i].a2</td>
-                                                    <td>@Model.D.Anexo[i].a3</td>
-                                                    <td>@Model.D.Anexo[i].a4</td>
-                                                    <td>@Model.D.Anexo[i].a5</td>
-                                                }
-                                                else
-                                                {
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                }
-                                                <td> @Model.D.DOCUMENTOPSTR[i].ACCION</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].FACTURA</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].GRUPO</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].CUENTA</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].TIPOIMP</td>
-                                                <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td>
-                                                <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td>
-                                                <td>@Model.D.DOCUMENTOPSTR[i].IVA</td>
-                                                <td>@Model.D.DOCUMENTOPSTR[i].TEXTO</td>
-                                                for (int y = 0; y < colsret.Count; y++)
-                                                {
-                                                    <td>
-                                                        @{var _v = colsret[y]; }
-                                                        @{decimal imp = 0; try { imp = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().BIMPONIBLE.ToString()); } catch (Exception e) { }; string bim = formatoc.toShow(imp, deci);}
-                                                        @bim
-                                                    </td>
-                                                    <td>
-                                                        @{decimal imp2 = 0; try { imp2 = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().IMPORTE_RET.ToString()); } catch (Exception e) { }; string bim2 = formatoc.toShow(imp2, deci);}
-                                                        @bim2
-                                                    </td>
-                                                }
-                                                <td> @Model.D.DOCUMENTOPSTR[i].TOTAL</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                             }
+                                            <td> @Model.D.DOCUMENTOPSTR[i].ACCION</td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].FACTURA</td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].GRUPO</td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].CUENTA</td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].TIPOIMP</td>
+                                            <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td>
+                                            <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td>
+                                            <td>@Model.D.DOCUMENTOPSTR[i].IVA</td>
+                                            <td>@Model.D.DOCUMENTOPSTR[i].TEXTO</td>
+                                            for (int y = 0; y < colsret.Count; y++)
+                                            {
+                                                <td>
+                                                    @{var _v = colsret[y]; }
+                                                    @{decimal imp = 0; try { imp = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().BIMPONIBLE.ToString()); } catch (Exception e) { }; string bim = formatoc.toShow(imp, deci);}
+                                                    @bim
+                                                </td>
+                                                <td>
+                                                    @{decimal imp2 = 0; try { imp2 = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().IMPORTE_RET.ToString()); } catch (Exception e) { }; string bim2 = formatoc.toShow(imp2, deci);}
+                                                    @bim2
+                                                </td>
+                                            }
+                                            <td> @Model.D.DOCUMENTOPSTR[i].TOTAL</td>
                                         }
-                                    </tr>
-                                    
-                                </tbody>
-                            </table>
+                                    }
+                                </tr>
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -814,30 +814,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @*@using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
-            {*@
-                                @if (@lstDocsA != null)
+                                @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
                                 {
-                                    for (int i = 0; i < @lstDocsA.Count; i++)
+                                    @if (@lstDocsA != null)
                                     {
+                                        for (int i = 0; i < @lstDocsA.Count; i++)
+                                        {
 
-                                        <tr>
-                                            <td></td>
-                                            <td>
-                                                @(i + 1)
-                                            </td>
-                                            <td>OK</td>
-                                            @{var _xtr = lstDocsA[i].PATH.Split('\\'); var nombre = _xtr[_xtr.Length - 1];}
-                                            <td>@nombre</td>
-                                            <td> @lstDocsA[i].TIPO</td>
-                                            <td> @lstDocsA[i].DESC</td>
-                                            <td>
-                                                <button class="btn btnD" type="button" value="@lstDocsA[i].PATH">DESCARGAR</button>
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    @(i + 1)
+                                                </td>
+                                                <td>OK</td>
+                                                @{var _xtr = lstDocsA[i].PATH.Split('\\'); var nombre = _xtr[_xtr.Length - 1];}
+                                                <td>@nombre</td>
+                                                <td> @lstDocsA[i].TIPO</td>
+                                                <td> @lstDocsA[i].DESC</td>
+                                                <td>
+                                                    <button class="btn btnD" type="button" value="@lstDocsA[i].PATH">DESCARGAR</button>
+                                                </td>
+                                            </tr>
+                                        }
                                     }
                                 }
-                                @*}*@
                             </tbody>
                         </table>
 
@@ -912,51 +912,51 @@
             <div class="col s12">
                 <div class="card-panel">
                     @* FRT 02112018 agregar vista de Log de SAP *@
-                        <div class="row" style="font-size:12px;">
-                            <div class="col s12" style="padding:0px">
-                                <div class="card-panel">
-                                    <div class="row" style="margin-bottom:0">
-                                        <h5>Mensajes SAP</h5>
-                                        <table class="table highlight responsive-table" id="table">
-                                            <thead>
-                                                <tr>
-                                                    <th width="">
-                                                        Documento
-                                                    </th>
-                                                    <th width="">
-                                                        Tipo
-                                                    </th>
-                                                    <th width="">
-                                                        Numero
-                                                    </th>
-                                                    <th width="">
-                                                        Mensaje
-                                                    </th>
-                                                    <th width="">
-                                                        Fecha
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @if (ViewBag.LogSap.Count != 0)
+                    <div class="row" style="font-size:12px;">
+                        <div class="col s12" style="padding:0px">
+                            <div class="card-panel">
+                                <div class="row" style="margin-bottom:0">
+                                    <h5>Mensajes SAP</h5>
+                                    <table class="table highlight responsive-table" id="table">
+                                        <thead>
+                                            <tr>
+                                                <th width="">
+                                                    Documento
+                                                </th>
+                                                <th width="">
+                                                    Tipo
+                                                </th>
+                                                <th width="">
+                                                    Numero
+                                                </th>
+                                                <th width="">
+                                                    Mensaje
+                                                </th>
+                                                <th width="">
+                                                    Fecha
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (ViewBag.LogSap.Count != 0)
+                                            {
+                                                foreach (WFARTHA.Entities.DOCUMENTOLOG sap in ViewBag.LogSap)
                                                 {
-                                                    foreach (WFARTHA.Entities.DOCUMENTOLOG sap in ViewBag.LogSap)
-                                                    {
-                                                        <tr>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.NUM_DOC)</td>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.TYPE) </td>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.NUMBER) </td>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.MESSAGE) </td>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.FECHA) </td>
-                                                        </tr>
-                                                    }
+                                                    <tr>
+                                                        <td width=""> @Html.DisplayFor(modelItem => sap.NUM_DOC)</td>
+                                                        <td width=""> @Html.DisplayFor(modelItem => sap.TYPE) </td>
+                                                        <td width=""> @Html.DisplayFor(modelItem => sap.NUMBER) </td>
+                                                        <td width=""> @Html.DisplayFor(modelItem => sap.MESSAGE) </td>
+                                                        <td width=""> @Html.DisplayFor(modelItem => sap.FECHA) </td>
+                                                    </tr>
                                                 }
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            }
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
