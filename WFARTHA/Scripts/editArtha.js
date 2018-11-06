@@ -113,6 +113,7 @@ $(document).ready(function () {
     });
 
     solicitarDatos();
+    insertarCondicion();
     $('#btn_guardarh').on("click", function (e) {
         //Guardar los valores de la tabla en el modelo para enviarlos al controlador
         copiarTableInfoControl(); //copiarTableInfoPControl();
@@ -695,6 +696,157 @@ $('body').on('keydown.autocomplete', '.GRUPO_INPUT', function () {
         }
     });
 });
+//LEJGG 06-11-18------------------------------------------------------------>
+$('body').on('keydown.autocomplete', '.CCOSTO', function () {
+    var tr = $(this).closest('tr'); //Obtener el row
+
+    //Obtener el id de la sociedad
+    var soc = $("#SOCIEDAD_ID").val();
+
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: '../getCcosto',
+                dataType: "json",
+                data: { "Prefix": request.term, "bukrs": soc },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+
+                        //return { label: trimStart('0', item.LIFNR) + " - " + item.NAME1, value: trimStart('0', item.LIFNR) };
+                        //return { label: trimStart('0', item.CECO1) + " - " + item.TEXT, value: item.CECO1 };
+                        return { label: (item.CECO1).toString().trim() + " - " + item.TEXT, value: item.CECO1 };
+                    }))
+                }
+            })
+        },
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+        change: function (e, ui) {
+            if (!(ui.item)) {
+                e.target.value = "";
+            }
+        },
+        select: function (event, ui) {
+
+            var label = ui.item.label;
+            var value = ui.item.value;
+            selectCeco(value, tr);
+        }
+    });
+});
+
+function selectCeco(val, tr) {
+
+    var t = $('#table_info').DataTable();
+
+    //Obtener el row para el plugin //MGC 19-10-2018 
+    var trp = $(tr);
+    var indexopc = t.row(trp).index();
+
+    tr.find("td.CCOSTO input").val();
+    if (val != null & val != "") {
+        //Asignar número de ceco a la columna
+
+        tr.find("td.CCOSTO input").val(val);
+
+    }
+}
+
+$('body').on('keydown.autocomplete', '#condiciones_prov', function () {
+
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: '../getCondicion',
+                dataType: "json",
+                data: { "Prefix": request.term },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+                        return { label: item.COND_PAGO + "-" + item.TEXT, value: item.COND_PAGO + "-" + item.TEXT };
+                    }))
+                }
+            })
+        },
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+        change: function (e, ui) {
+            if (!(ui.item)) {
+                e.target.value = "";
+                $('#condiciones_provt').val("");
+            }
+        },
+        select: function (event, ui) {
+
+            var label = ui.item.label;
+            var value = ui.item.value;
+
+            //Obtener el despliegue de la llave
+            var cadena = value.split("-");
+            var cond = cadena[0];
+            var text = cadena[1];
+
+            ui.item.value = cond;//MGC 22-10-2018 Etiquetas
+
+
+            selectCondicion(cond, text);
+        }
+    });
+});
+
+function selectCondicion(val, text) {
+
+    //Obtener las sociedad//MGC 19-10-2018 Condiciones
+    var soc = $("#SOCIEDAD_ID").val();//MGC 19-10-2018 Condiciones
+
+    $('#condiciones_prov').val(val);
+    $('#condiciones_provt').val(text);
+
+}
+
+function insertarCondicion() {
+    var val = $('#condiciones_prov').val();
+    $.ajax({
+        type: "POST",
+        url: '../getCondicionEdit',
+        data: { "id": val },
+        success: function (data) {
+            if (data !== null || data !== "") {
+                $('#condiciones_provt').val(data);//LEJGG 06-11-18 Condiciones
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
+}
+
+function selectCondicionP(val) {
+
+    $.ajax({
+        type: "POST",
+        url: 'getCondicionT',
+        //contentType: "application/json; charset=UTF-8",
+        data: { "cond": val },
+        success: function (data) {
+            if (data !== null || data !== "") {
+                $('#condiciones_provt').val(data);//MGC 30-10-2018 Condiciones
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
+
+}
+//LEJGG 06-11-18------------------------------------------------------------<
 
 $('body').on('focusout', '.extrasC', function (e) {
     //var y = parseFloat(num);
@@ -922,12 +1074,11 @@ function copiarTableInfoControl() {
             //Obtener el concepto
             var inpt = t.row(indexopc).data()[9];
             //LEJ 03-10-2018
-            if (inpt !== "") {
-                var parser = $($.parseHTML(inpt));
-                tconcepto = parser.val();
+            if (inpt == "" || inpt == null) {
+                tconcepto = "";
             }
             else {
-                tconcepto = "";
+                tconcepto = inpt;
             }
             //LEJ 03-10-2018
             //MGC 11-10-2018 Obtener valor de columnas ocultas --------------------------->
@@ -1699,7 +1850,7 @@ function armarTablaInfo(datos) {
 }
 
 function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5, CA, FACTURA, TIPO_CONCEPTO, GRUPO, CUENTA, CUENTANOM, TIPOIMP, IMPUTACION, CCOSTO, MONTO, IMPUESTO, IVA, TEXTO, TOTAL, disabled, check, colsBIIR) { //MGC 03 - 10 - 2018 solicitud con orden de compra
-
+    var _tcgp = TIPO_CONCEPTO + GRUPO;//Para que grupo se muestre correctamente //Lejgg 06-11-18
     var r = addRowl(
         t,
         POS,
@@ -1711,7 +1862,7 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
         CA,//MGC 04092018 Conceptos
         "<input " + disabled + " class=\"FACTURA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + FACTURA + "\">",
         TIPO_CONCEPTO,
-        "<input " + disabled + " class=\"GRUPO GRUPO_INPUT\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + GRUPO + "\">",
+        "<input " + disabled + " class=\"GRUPO GRUPO_INPUT\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + _tcgp + "\">",//LEJGG 06-11-18
         CUENTA,//MGC 04092018 Conceptos
         CUENTANOM,
         TIPOIMP,

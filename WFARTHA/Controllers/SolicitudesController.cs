@@ -117,21 +117,6 @@ namespace WFARTHA.Controllers
                 {
                     DOCUMENTOP_MODSTR dm = new DOCUMENTOP_MODSTR();
 
-                    //dm.NUM_DOC = dOCUMENTO.DOCUMENTOPs.ElementAt(i).NUM_DOC;
-                    //dm.POS = dOCUMENTO.DOCUMENTOPs.ElementAt(i).POS;
-                    //dm.ACCION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).ACCION;
-                    //dm.FACTURA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).FACTURA;
-                    //dm.GRUPO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
-                    //dm.CUENTA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).CUENTA;
-                    //string ct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
-                    //var tct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TCONCEPTO;
-                    //dm.NOMCUENTA = db.CONCEPTOes.Where(x => x.ID_CONCEPTO == ct && x.TIPO_CONCEPTO == tct).FirstOrDefault().DESC_CONCEPTO.Trim();
-                    //dm.TIPOIMP = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TIPOIMP;
-                    //dm.IMPUTACION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).IMPUTACION;
-                    //dm.MONTO = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).MONTO, formato.DECIMALES);
-                    //dm.IVA = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).IVA, formato.DECIMALES);
-                    //dm.TEXTO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TEXTO;
-                    //dm.TOTAL = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).TOTAL, formato.DECIMALES);
                     try
                     {
                         dm.NUM_DOC = dps.ElementAt(i).NUM_DOC;
@@ -2210,7 +2195,7 @@ namespace WFARTHA.Controllers
                     //}).FirstOrDefault();//MGC 03-11-2018 Posible cambio lista dtas
                 }).ToList();//MGC 03-11-2018 Posible cambio lista dtas
 
-                ViewBag.DETAA = new SelectList(dtas, "ID", "TEXT");//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas)
+                ViewBag.DETAA = new SelectList(dtas, "ID", "TEXT",dtas);//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas) //lejgg 06-11-2018
                 //ViewBag.DETAA = new SelectList(dta, "ID", "TEXT", dtas);//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas)
             }
             else
@@ -5278,6 +5263,17 @@ namespace WFARTHA.Controllers
             var cond = from con in db.CONDICIONES_PAGO where con.COND_PAGO.Contains(Prefix) select new { COND_PAGO = con.COND_PAGO.ToString(), TEXT = con.TEXT.ToString() };
 
             JsonResult cc = Json(cond, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        [HttpPost]//LEJGG 06-11-18
+        public JsonResult getCondicionEdit(string id)
+        {
+          
+            WFARTHAEntities db = new WFARTHAEntities();
+            var texto = db.CONDICIONES_PAGO.Where(x => x.COND_PAGO == id).FirstOrDefault().TEXT;
+
+            JsonResult cc = Json(texto, JsonRequestBehavior.AllowGet);
             return cc;
         }
 
