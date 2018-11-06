@@ -1380,27 +1380,27 @@ function armarTablaInfo(datos) {
             "visible": false //MGC 04092018 Conceptos
         },
         {
-            "name": 'NumAnexo',
+            "name": 'A1',
             "className": 'NumAnexo',
             "orderable": false
         },
         {
-            "name": 'NumAnexo2',
+            "name": 'A2',
             "className": 'NumAnexo2',
             "orderable": false
         },
         {
-            "name": 'NumAnexo3',
+            "name": 'A3',
             "className": 'NumAnexo3',
             "orderable": false
         },
         {
-            "name": 'NumAnexo4',
+            "name": 'A4',
             "className": 'NumAnexo4',
             "orderable": false
         },
         {
-            "name": 'NumAnexo5',
+            "name": 'A5',
             "className": 'NumAnexo5',
             "orderable": false
         },
@@ -1650,7 +1650,8 @@ function armarTablaInfo(datos) {
     var _infoc = _infoBIIR.length / 2;
     var arrColExTA = [];
 
-    if (_infoc === datos.DOCUMENTOPSTR.length) {
+    // if (_infoc === datos.DOCUMENTOPSTR.length) {//LEJGG-05-11-2018
+    if (datos.DOCUMENTOPSTR.length > 0) {
         for (var i = 0; i < datos.DOCUMENTOPSTR.length; i++) {
             for (var x = 0; x < _infoBIIR.length; x++) {
                 if (_infoBIIR[x].POS === (i + 1)) {
