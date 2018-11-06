@@ -343,14 +343,19 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group col s3">
+                                <div class="form-group col s2">
                                     @Html.LabelFor(model => model.CONDICIONES, "Condiciones", htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4" } })@*LEJ 04.09.2018*@
+                                        @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4", @id = "condiciones_prov" } })
+                                    </div>
+                                </div>
+                                <div class="form-group col s4">
+                                    @Html.Label("condiciones_provt", "Descripción de Condición", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.Editor("condiciones_provt", new { htmlAttributes = new { @class = "form-control", @id = "condiciones_provt", @disabled = "disabled" } })
                                     </div>
                                 </div>
                             </div>
-
 
                             <div class="row" style="margin-bottom:0">
                                 <div class="input-field col s3">
