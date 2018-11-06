@@ -486,7 +486,8 @@ $(document).ready(function () {
         var _decimales = $("#dec").val();
 
         //Guardar los valores de la tabla en el modelo para enviarlos al controlador
-        copiarTableInfoControl(); copiarTableInfoPControl();
+        copiarTableInfoControl();
+        copiarTableInfoPControl();
         //copiarTableSopControl();
         copiarTableRet();
 
@@ -570,8 +571,10 @@ $(document).ready(function () {
                 _b = false;
             } else {
                 _b = true;
+                var ceco2 = $(this).find("td.CCOSTO input").val();
             }
             if (_b === false) {
+                var ceco3 = $(this).find("td.CCOSTO input").val();
                 return false;
             }
 
@@ -644,6 +647,7 @@ $(document).ready(function () {
         if (_b) {
             $('#btn_guardar').trigger("click");
         } else {
+
             M.toast({ html: msgerror });
         }
     });
