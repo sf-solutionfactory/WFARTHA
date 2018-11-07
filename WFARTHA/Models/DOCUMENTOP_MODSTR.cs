@@ -22,5 +22,6 @@ namespace WFARTHA.Models
         public string IVA { get; set; }
         public string TEXTO { get; set; }
         public string TOTAL { get; set; }
+        public string IMPUESTOT { get; set; }  //FRT06112018 Se egreaga para mostrar en pantalla
     }
 }

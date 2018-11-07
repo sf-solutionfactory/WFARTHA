@@ -17,6 +17,7 @@ namespace WFARTHA.Entities
         public string SPRAS_ID { get; set; }
         public string MWSKZ { get; set; }
         public string TXT50 { get; set; }
+        public string TXT20 { get; set; }
     
         public virtual IMPUESTO IMPUESTO { get; set; }
         public virtual SPRA SPRA { get; set; }

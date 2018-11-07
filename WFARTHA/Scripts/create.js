@@ -485,10 +485,11 @@ $(document).ready(function () {
         var _miles = $("#miles").val();
         var _decimales = $("#dec").val();
 
-        //Guardar los valores de la tabla en el modelo para enviarlos al controlador
-        copiarTableInfoControl(); copiarTableInfoPControl();
-        //copiarTableSopControl();
-        copiarTableRet();
+        //FRT06112018.3 Se comentan las lineas se pasan a ejecucion despues de validar los valores
+        //copiarTableInfoControl();
+        //copiarTableInfoPControl();
+        //copiarTableRet();
+        //end FRT06112018.3 
 
         //CODIGO
         //dar formato al monto
@@ -574,6 +575,20 @@ $(document).ready(function () {
             if (_b === false) {
                 return false;
             }
+
+            //FRT06112018.3 Se realizara validación del monto > 0
+            var monto = $(this).find("td.MONTO input").val();
+
+            if (monto == "$ 0.00" | monto == null | monto == "") { //MGC 07-11-2018 Validación en el monto
+                msgerror = "El monto debe ser MAYOR a cero";
+                _b = false;
+            } else {
+                _b = true;
+            }
+            if (_b === false) {
+                return false;
+            }
+            //END FRT06112018.3
           
             if (_vs.length > 0) {
                 for (var i = 0; i < _vs.length; i++) {
@@ -641,6 +656,11 @@ $(document).ready(function () {
             }
         });
         if (_b) {
+            //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
+            copiarTableInfoControl();
+            copiarTableInfoPControl();
+            copiarTableRet();
+            //end FRT06112018.3 
             $('#btn_guardar').trigger("click");
         } else {
             M.toast({ html: msgerror });
