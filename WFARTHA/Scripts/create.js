@@ -482,13 +482,18 @@ $(document).ready(function () {
         //document.getElementById("loader").style.display = "flex";//RSG 26.04.2018
         //document.getElementById("btn_guardarh").classList.add("disabled");//RSG 26.04.2018
 
+
         var _miles = $("#miles").val();
         var _decimales = $("#dec").val();
 
         //Guardar los valores de la tabla en el modelo para enviarlos al controlador
-        copiarTableInfoControl(); copiarTableInfoPControl();
-        //copiarTableSopControl();
-        copiarTableRet();
+        //copiarTableInfoControl();
+        //copiarTableInfoPControl();
+        ////copiarTableSopControl();
+        //copiarTableRet();
+
+        //frt06112018 para errores de ceco
+
 
         //CODIGO
         //dar formato al monto
@@ -642,6 +647,10 @@ $(document).ready(function () {
             }
         });
         if (_b) {
+            copiarTableInfoControl();
+            copiarTableInfoPControl();
+            //copiarTableSopControl();
+            copiarTableRet();
             $('#btn_guardar').trigger("click");
         } else {
             M.toast({ html: msgerror });

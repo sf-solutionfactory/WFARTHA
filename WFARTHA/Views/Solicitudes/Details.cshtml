@@ -76,6 +76,7 @@
                     @Html.EditorFor(model => model.D.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
                     @Html.LabelFor(model => model.D.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
                 </div>
+
             </div>
         </div>
     }
@@ -160,8 +161,15 @@
         <div class="col s12 m5 l5">
             <div class="row" style="margin-bottom:0">
                 <div class="input-field col s4">
-                    @Html.EditorFor(model => model.D.USUARIOC_ID, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIOC_ID, new { @id = "lbl_userid" })
+                    @Html.EditorFor(model => model.D.USUARIOC_ID, new { htmlAttributes = new { @disabled = "disabled", style = "display:none" } })
+                    @Html.LabelFor(model => model.D.USUARIOC_ID, new { @id = "lbl_userid", style = "display:none" })
+                </div>
+                <div class="input-field col s4">
+                    @if (Model.D.ESTATUS == "N")
+                    {
+                        <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
+                        <label for="txt_status" id="lbl_status">Estatus</label>
+                    }
                 </div>
                 <div class="input-field col s4">
                     @*<input type="text" id="txt_user" value="@ViewBag.usuario.MANAGER" disabled="disabled" />
@@ -169,9 +177,11 @@
                     @*@Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
                         @Html.LabelFor(model => model.D.USUARIO.MANAGER, new { @id = "lbl_manager" })*@
                 </div>
+
+
                 <div class="input-field col s4">
-                    @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, new { @id = "lbl_backup" })
+                    @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled", style = "display:none" } })
+                    @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, new { @id = "lbl_backup", style = "display:none" })
                     @*<input type="text" id="txt_user" value="@ViewBag.usuario.BACKUP_ID" disabled="disabled" />
                         <label for="txt_user">Backup</label>*@
                 </div>
@@ -184,13 +194,13 @@
                 @*@Html.EditorFor(model => model.D.USUARIO.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @id = "lbl_bu" })*@
             </div>
-            <div class="input-field col s6">
-                @if (Model.D.ESTATUS == "N")
-                {
-                    <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
-                    <label for="txt_status" id="lbl_status">Estatus</label>
-                }
-            </div>
+            @*<div class="input-field col s6">
+                    @if (Model.D.ESTATUS == "N")
+                    {
+                        <input type="text" id="txt_status"  value="Nuevo" disabled="disabled" />
+                        <label for="txt_status" id="lbl_status">Estatus</label>
+                    }
+                </div>*@
         </div>
         <div class="col s12 m5 l5">
             <div class="row right">
@@ -377,6 +387,8 @@
             <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Detalle</a></li>
             <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Soporte_cont">Autorización</a></li>
             <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_sap">Información SAP</a></li>
+            
+            
         </ul>
     </div>
 </div>
@@ -489,7 +501,7 @@
                         </div>
 
                         <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.TIPO_CAMBIO, "Cambio", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.TIPO_CAMBIO, "Tipo de Cambio", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @{ decimal tc = decimal.Parse(Model.D.TIPO_CAMBIO.ToString()); var _tc = formatoc.toShow(tc, ViewBag.dec);} @*LEJGG 16102018*@
                                 @*@Html.EditorFor(model => model.D.TIPO_CAMBIO, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })*@
@@ -497,9 +509,16 @@
                             </div>
                         </div>
                         <div class="form-group col s3">
-                            @Html.LabelFor(model => model.D.CONDICIONES, "Condiciones", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.CONDICIONES, "Condición de Pago", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.EditorFor(model => model.D.CONDICIONES, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+
+                            </div>
+                        </div>
+                        <div class="form-group col s3">
+                            @Html.Label("condiciones_provt", "Descripción de Condición", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.D.DESC_CONDICION, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
 
                             </div>
                         </div>
@@ -545,7 +564,7 @@
                         </div>
 
                         <div class="form-group col s6">
-                            @Html.LabelFor(model => model.D.CONCEPTO, "Texto", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.CONCEPTO, "Explicación", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.EditorFor(model => model.D.CONCEPTO, "Concepto", new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
                             </div>
@@ -660,42 +679,46 @@
                 <div class="card-panel">
                     <h5 id="head_cabecera">Detalle</h5>
                     <div class="row" style="margin-bottom:0">
-                        
+
                         <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th class="">
-                                            Pos
-                                        </th>
-                                        <th class="">
-                                            A1
-                                        </th>
-                                        <th class="">
-                                            A2
-                                        </th>
-                                        <th class="">
-                                            A3
-                                        </th>
-                                        <th class="">
-                                            A4
-                                        </th>
-                                        <th class="">
-                                            A5
-                                        </th>
-                                        <th class="">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th class="">
+                                        Pos
+                                    </th>
+                                    <th class="">
+                                        A1
+                                    </th>
+                                    <th class="">
+                                        A2
+                                    </th>
+                                    <th class="">
+                                        A3
+                                    </th>
+                                    <th class="">
+                                        A4
+                                    </th>
+                                    <th class="">
+                                        A5
+                                    </th>
+                                    @*<th class="">
                                             D/H
-                                        </th>
-                                        <th class="">
-                                            Factura
-                                        </th>
-                                        <th class="">
-                                            Concepto
-                                        </th>
-                                        <th class="">
+                                        </th>*@
+                                    <th class="">
+                                        Factura
+                                    </th>
+                                    <th class="">
+                                        Concepto
+                                    </th>
+                                    @*<th class="">
                                             Cuenta
-                                        </th>
-                                        <th class="">
+                                        </th>*@
+                                    <th class="">
+                                        Centro de Costo
+                                    </th>
+
+                                    @*<th class="">
                                             Nombre de Cuenta
                                         </th>
                                         <th class="">
@@ -703,17 +726,20 @@
                                         </th>
                                         <th class="">
                                             Imputación
-                                        </th>
-                                        <th class="">
-                                            Monto
-                                        </th>
-                                        <th class="">
-                                            IVA
-                                        </th>
-                                        <th class="">
-                                            Texto
-                                        </th>
-                                        @for (int i = 0; i < colsret.Count; i++)
+                                        </th>*@
+                                    <th class="">
+                                        Monto
+                                    </th>
+                                    @*<th class="">
+                                            Impuesto
+                                        </th>*@
+                                    <th class="">
+                                        IVA
+                                    </th>
+                                    <th class="">
+                                        Texto
+                                    </th>
+                                    @*@for (int i = 0; i < colsret.Count; i++)
                                         {
                                             <th class="">
                                                 @colsret[i] B.I.
@@ -721,47 +747,50 @@
                                             <th class="">
                                                 @colsret[i] I.R.
                                             </th>
-                                        }
-                                        <th class="">
-                                            Total
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        @if (@Model.D.DOCUMENTOPSTR != null)
+                                        }*@
+                                    <th class="">
+                                        Total
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    @if (@Model.D.DOCUMENTOPSTR != null)
+                                    {
+                                        for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
                                         {
-                                            for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
+                                            <td></td>
+                                            <td></td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
+                                            if (@Model.D.Anexo != null)
+                                            {
+                                                <td>@Model.D.Anexo[i].a1</td>
+                                                <td>@Model.D.Anexo[i].a2</td>
+                                                <td>@Model.D.Anexo[i].a3</td>
+                                                <td>@Model.D.Anexo[i].a4</td>
+                                                <td>@Model.D.Anexo[i].a5</td>
+                                            }
+                                            else
                                             {
                                                 <td></td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
-                                                if (@Model.D.Anexo != null)
-                                                {
-                                                    <td>@Model.D.Anexo[i].a1</td>
-                                                    <td>@Model.D.Anexo[i].a2</td>
-                                                    <td>@Model.D.Anexo[i].a3</td>
-                                                    <td>@Model.D.Anexo[i].a4</td>
-                                                    <td>@Model.D.Anexo[i].a5</td>
-                                                }
-                                                else
-                                                {
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                }
-                                                <td> @Model.D.DOCUMENTOPSTR[i].ACCION</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].FACTURA</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].GRUPO</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            }
+                                            @*<td> @Model.D.DOCUMENTOPSTR[i].ACCION</td>*@
+                                            <td> @Model.D.DOCUMENTOPSTR[i].FACTURA</td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].TCONCEPTO</td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].CCOSTO</td>
+                                            @*<td> @Model.D.DOCUMENTOPSTR[i].GRUPO</td>
                                                 <td> @Model.D.DOCUMENTOPSTR[i].CUENTA</td>
                                                 <td> @Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td>
                                                 <td> @Model.D.DOCUMENTOPSTR[i].TIPOIMP</td>
-                                                <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td>
-                                                <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td>
-                                                <td>@Model.D.DOCUMENTOPSTR[i].IVA</td>
-                                                <td>@Model.D.DOCUMENTOPSTR[i].TEXTO</td>
-                                                for (int y = 0; y < colsret.Count; y++)
+                                                <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td>*@
+                                            <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td>
+                                            <td>@Model.D.DOCUMENTOPSTR[i].IVA</td>
+                                            <td>@Model.D.DOCUMENTOPSTR[i].TEXTO</td>
+                                            @*for (int y = 0; y < colsret.Count; y++)
                                                 {
                                                     <td>
                                                         @{var _v = colsret[y]; }
@@ -772,14 +801,14 @@
                                                         @{decimal imp2 = 0; try { imp2 = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().IMPORTE_RET.ToString()); } catch (Exception e) { }; string bim2 = formatoc.toShow(imp2, deci);}
                                                         @bim2
                                                     </td>
-                                                }
-                                                <td> @Model.D.DOCUMENTOPSTR[i].TOTAL</td>
-                                            }
+                                                }*@
+                                            <td> @Model.D.DOCUMENTOPSTR[i].TOTAL</td>
                                         }
-                                    </tr>
-                                    
-                                </tbody>
-                            </table>
+                                    }
+                                </tr>
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -814,30 +843,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @*@using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
-            {*@
-                                @if (@lstDocsA != null)
+                                @using (Html.BeginForm("DescargarDetails", "Solicitudes", FormMethod.Post))
                                 {
-                                    for (int i = 0; i < @lstDocsA.Count; i++)
-                                    {
+                                    
+                                    
 
-                                        <tr>
-                                            <td></td>
-                                            <td>
-                                                @(i + 1)
-                                            </td>
-                                            <td>OK</td>
-                                            @{var _xtr = lstDocsA[i].PATH.Split('\\'); var nombre = _xtr[_xtr.Length - 1];}
-                                            <td>@nombre</td>
-                                            <td> @lstDocsA[i].TIPO</td>
-                                            <td> @lstDocsA[i].DESC</td>
-                                            <td>
-                                                <button class="btn btnD" type="button" value="@lstDocsA[i].PATH">DESCARGAR</button>
-                                            </td>
-                                        </tr>
+                                    if (@lstDocsA != null)
+                                    {
+                                        for (int i = 0; i < @lstDocsA.Count; i++)
+                                        {
+
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    @(i + 1)
+                                                </td>
+                                                <td>OK</td>
+                                                @{var _xtr = lstDocsA[i].PATH.Split('\\'); var nombre = _xtr[_xtr.Length - 1];}
+                                                <td>@nombre</td>
+                                                <td> @lstDocsA[i].TIPO</td>
+                                                <td> @lstDocsA[i].DESC</td>
+                                                <td>
+                                                    <button class="btn btnD" name="file" id="file" type="submit" value=@lstDocsA[i].PATH>DESCARGAR</button>
+                                                </td>
+                                            </tr>
+                                        }
                                     }
                                 }
-                                @*}*@
                             </tbody>
                         </table>
 
@@ -852,6 +884,8 @@
         <div class="row">
             <div class="col s12">
                 <div class="card-panel">
+                    <h5 id="head_cabecera">Cadena de Autorización</h5>
+                    <h6 id="header_cadena" style="display:inline-block">@ViewBag.nomautoriza</h6>
                     @*<h5 id="head_cabecera">Detalle NT</h5>
                         <div class="row" style="margin-bottom:0">
 
@@ -912,51 +946,51 @@
             <div class="col s12">
                 <div class="card-panel">
                     @* FRT 02112018 agregar vista de Log de SAP *@
-                        <div class="row" style="font-size:12px;">
-                            <div class="col s12" style="padding:0px">
-                                <div class="card-panel">
-                                    <div class="row" style="margin-bottom:0">
-                                        <h5>Mensajes SAP</h5>
-                                        <table class="table highlight responsive-table" id="table">
-                                            <thead>
-                                                <tr>
-                                                    <th width="">
-                                                        Documento
-                                                    </th>
-                                                    <th width="">
-                                                        Tipo
-                                                    </th>
-                                                    <th width="">
-                                                        Numero
-                                                    </th>
-                                                    <th width="">
-                                                        Mensaje
-                                                    </th>
-                                                    <th width="">
-                                                        Fecha
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @if (ViewBag.LogSap.Count != 0)
+                    <div class="row" style="font-size:12px;">
+                        <div class="col s12" style="padding:0px">
+                            <div class="card-panel">
+                                <div class="row" style="margin-bottom:0">
+                                    <h5>Mensajes SAP</h5>
+                                    <table class="table highlight responsive-table" id="table">
+                                        <thead>
+                                            <tr>
+                                                <th width="">
+                                                    Documento
+                                                </th>
+                                                <th width="">
+                                                    Tipo
+                                                </th>
+                                                <th width="">
+                                                    Numero
+                                                </th>
+                                                <th width="">
+                                                    Mensaje
+                                                </th>
+                                                <th width="">
+                                                    Fecha
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (ViewBag.LogSap.Count != 0)
+                                            {
+                                                foreach (WFARTHA.Entities.DOCUMENTOLOG sap in ViewBag.LogSap)
                                                 {
-                                                    foreach (WFARTHA.Entities.DOCUMENTOLOG sap in ViewBag.LogSap)
-                                                    {
-                                                        <tr>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.NUM_DOC)</td>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.TYPE) </td>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.NUMBER) </td>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.MESSAGE) </td>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.FECHA) </td>
-                                                        </tr>
-                                                    }
+                                                    <tr>
+                                                        <td width=""> @Html.DisplayFor(modelItem => sap.NUM_DOC)</td>
+                                                        <td width=""> @Html.DisplayFor(modelItem => sap.TYPE) </td>
+                                                        <td width=""> @Html.DisplayFor(modelItem => sap.NUMBER) </td>
+                                                        <td width=""> @Html.DisplayFor(modelItem => sap.MESSAGE) </td>
+                                                        <td width=""> @Html.DisplayFor(modelItem => sap.FECHA) </td>
+                                                    </tr>
                                                 }
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            }
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
