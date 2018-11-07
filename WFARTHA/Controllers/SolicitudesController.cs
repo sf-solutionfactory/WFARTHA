@@ -2339,7 +2339,12 @@ namespace WFARTHA.Controllers
                     _t = _t.Replace(",", "");
                     _doc.MONTO_DOC_MD = decimal.Parse(_t);
                     _doc.CONCEPTO = dOCUMENTO.CONCEPTO;
-                    _doc.PAYER_ID = dOCUMENTO.PAYER_ID;
+                    if (_doc.ESTATUS == "B")
+                    {
+                        _doc.PAYER_ID = dOCUMENTO.PAYER_ID;
+                    }
+                    else { //se queda el que tiene
+                    }
                     _doc.CONDICIONES = dOCUMENTO.CONDICIONES;
                     _doc.TEXTO_POS = dOCUMENTO.TEXTO_POS;
                     _doc.ASIGNACION_POS = dOCUMENTO.ASIGNACION_POS;
