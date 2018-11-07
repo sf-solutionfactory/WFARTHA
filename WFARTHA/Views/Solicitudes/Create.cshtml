@@ -215,7 +215,7 @@
                     <div class="card-panel">
                         <div class="row">
                             <h5 id="head_cabecera" style="display:inline-block">Cabecera</h5>
-                            <i class='material-icons green-text' style="">warning</i>
+                            <i class='material-icons green-text' style="display:none">warning</i> @*MGC 07-11-2018 Se oculta el ícono*@
                         </div>
                         @*<h5 id="head_cabecera">Cabecera NT</h5>*@
                         <div class="row" style="margin-bottom:0">
@@ -371,7 +371,7 @@
                             </div>
                             @* Lejgg 26 10 2018 *@
                             <div class="form-group col s2">
-                                @Html.LabelFor(model => model.CONDICIONES, "Condiciones de Pago", htmlAttributes: new { @class = "control-label col-md-2" })
+                                @Html.LabelFor(model => model.CONDICIONES, "Condición de Pago", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
                                     @Html.EditorFor(model => model.CONDICIONES, new { htmlAttributes = new { @class = "form-control", @maxlength = "4", @id = "condiciones_prov" } })@*LEJ 04.09.2018*@ @*//MGC 19-10-2018 Condiciones*@
                                 </div>

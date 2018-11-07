@@ -573,6 +573,7 @@ warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key d
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="MWSKZ" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="TXT50" Type="nvarchar" MaxLength="50" />
+          <Property Name="TXT20" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="MIEMBROS">
           <Key>
@@ -3177,6 +3178,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <Property Name="TXT50" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="IMPUESTO" Relationship="Self.FK_IMPUESTOT_IMPUESTO" FromRole="IMPUESTOT" ToRole="IMPUESTO" />
           <NavigationProperty Name="SPRA" Relationship="Self.FK_IMPUESTOT_SPRAS" FromRole="IMPUESTOT" ToRole="SPRAS" />
+          <Property Name="TXT20" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="MIEMBRO">
           <Key>
@@ -5674,6 +5676,7 @@ warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key de
           <EntitySetMapping Name="IMPUESTOTs">
             <EntityTypeMapping TypeName="WFARTHAModel.IMPUESTOT">
               <MappingFragment StoreEntitySet="IMPUESTOT">
+                <ScalarProperty Name="TXT20" ColumnName="TXT20" />
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="MWSKZ" ColumnName="MWSKZ" />
                 <ScalarProperty Name="TXT50" ColumnName="TXT50" />

@@ -134,6 +134,14 @@ namespace WFARTHA.Controllers
                         dm.IVA = fc.toShow(dps.ElementAt(i).IVA, formato.DECIMALES);
                         dm.TEXTO = dps.ElementAt(i).TEXTO;
                         dm.TOTAL = fc.toShow(dps.ElementAt(i).TOTAL, formato.DECIMALES);
+                        //FRT06112018 se agrego para poder visualizar en pantalla
+                        dm.CCOSTO = dps.ElementAt(i).CCOSTO;
+                        dm.TCONCEPTO = dps.ElementAt(i).TCONCEPTO;
+                        var imp = dps.ElementAt(i).MWSKZ;
+                        //var impuestot = db.IMPUESTOTs.Where(a => a.MWSKZ.Equals(imp)).FirstOrDefault().TXT50;//MGC 07-11-2018 Descripción corta
+                        var impuestot = db.IMPUESTOTs.Where(a => a.MWSKZ.Equals(imp)).FirstOrDefault().TXT20;//MGC 07-11-2018 Descripción corta
+                        dm.IMPUESTOT = impuestot;
+                        //END FRT06112018 
                         dml.Add(dm);
                     }
 
@@ -292,11 +300,15 @@ namespace WFARTHA.Controllers
 
             //FRT06112018  Se agrega para poder mostra el nombre de la condicion de pago en pantalla
 
-            var condicion = dOCUMENTO.CONDICIONES;
-            var desccondicion = db.CONDICIONES_PAGO.Where(a => a.COND_PAGO == condicion).FirstOrDefault().TEXT;
-            doc.DESC_CONDICION = desccondicion;
+            if (dOCUMENTO.CONDICIONES != null)
+            {
+                var condicion = dOCUMENTO.CONDICIONES;
+                var desccondicion = db.CONDICIONES_PAGO.Where(a => a.COND_PAGO == condicion).FirstOrDefault().TEXT;
+                doc.DESC_CONDICION = desccondicion;
+            }
 
             // END FRT06112018
+
 
             ViewBag.SOCIEDAD_ID = new SelectList(sociedades, "BUKRS", "TEXT", doc.SOCIEDAD_ID);
             ViewBag.TSOL_ID = new SelectList(tsoll, "ID", "TEXT", doc.TSOL_ID);
@@ -341,6 +353,15 @@ namespace WFARTHA.Controllers
             //        WT_WITHCD = retp.WT_WITHCD
 
             //    }).ToList();
+
+            //FRT06112018 Se agregan las lineas para obtener nombre del proyecto
+            var id_pspnr = dOCUMENTO.ID_PSPNR;
+            var nombre = db.PROYECTOes.Where(a => a.ID_PSPNR == id_pspnr).FirstOrDefault().NOMBRE;
+
+            ViewBag.pid = id_pspnr;
+            ViewBag.PrSl = nombre;
+            //END FRT06112018
+
 
             List<listRet> lstret = new List<listRet>();
             var lifnr = dOCUMENTO.PAYER_ID;
@@ -735,6 +756,10 @@ namespace WFARTHA.Controllers
                     DOCUMENTO dOCUMENTO = new DOCUMENTO();
 
                     //Copiar valores del post al nuevo objeto
+                    // FRT06112018 Se agrega linea para obtener el ID del proyecto
+                    string pid = Session["id_pr"].ToString();
+                    dOCUMENTO.ID_PSPNR = pid;
+                    //FRT06112018
                     dOCUMENTO.TSOL_ID = doc.TSOL_ID;
                     dOCUMENTO.SOCIEDAD_ID = doc.SOCIEDAD_ID;
                     dOCUMENTO.FECHAD = doc.FECHAD;

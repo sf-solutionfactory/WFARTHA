@@ -178,10 +178,11 @@ function selectProveedor(val) {
     //Add MGC Validar que los proveedores no existan duplicados en la tabla
     var prov = getProveedorC(val, "", soc);//MGC 19-10-2018 Condiciones
 
-    $('#rfc_proveedor').val();
-    $('#nom_proveedor').val();
-    $('#condiciones_prov').val();//MGC 19-10-2018.2 Condiciones
-    $('#condiciones_provt').val();//MGC 30-10-2018 Condiciones
+    $('#rfc_proveedor').val("");
+    $('#nom_proveedor').val("");
+    $('#condiciones_prov').val("");//MGC 19-10-2018.2 Condiciones
+    $('#condiciones_provt').val("");//MGC 30-10-2018 Condiciones
+    $('#MONTO_DOC_MD').val("");//MGC 07-11-2018 Condiciones
 
     if (prov != null & prov != "") {
 
