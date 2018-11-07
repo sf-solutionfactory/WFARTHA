@@ -290,6 +290,14 @@ namespace WFARTHA.Controllers
             doc.ESTATUS_SAP = doc.ESTATUS_SAP;
             doc.ESTATUS_WF = dOCUMENTO.ESTATUS_WF;
 
+            //FRT06112018  Se agrega para poder mostra el nombre de la condicion de pago en pantalla
+
+            var condicion = dOCUMENTO.CONDICIONES;
+            var desccondicion = db.CONDICIONES_PAGO.Where(a => a.COND_PAGO == condicion).FirstOrDefault().TEXT;
+            doc.DESC_CONDICION = desccondicion;
+
+            // END FRT06112018
+
             ViewBag.SOCIEDAD_ID = new SelectList(sociedades, "BUKRS", "TEXT", doc.SOCIEDAD_ID);
             ViewBag.TSOL_ID = new SelectList(tsoll, "ID", "TEXT", doc.TSOL_ID);
             ViewBag.IMPUESTO = new SelectList(impuestol, "MWSKZ", "MWSKZ", doc.IMPUESTO);
@@ -452,6 +460,20 @@ namespace WFARTHA.Controllers
             //Obtener datos del flujo
             var vbFl = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderBy(a => a.POS).ToList();
             ViewBag.workflow = vbFl;
+
+            //FRT06112018 Se agregan las lineas para poder llevar a pantalla la Cadena de Autorización 
+
+            var _ruta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).FirstOrDefault().ID_RUTA_A;
+            int? _version = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).FirstOrDefault().RUTA_VERSION;
+            var _user = db.DET_AGENTECC.Where(a => a.ID_RUTA_AGENTE == (_ruta) && a.VERSION == (_version)).FirstOrDefault().USUARIOA_ID;
+            var _nombre = db.USUARIOs.Where(a => a.ID.Equals(_user)).ToList();
+            for (int n = 0; n < _nombre.Count; n++)
+            {
+                var _nom = _nombre[n].ID + " - " + _nombre[n].NOMBRE + " " + _nombre[n].APELLIDO_P + " " + _nombre[n].APELLIDO_M;
+                ViewBag.nomautoriza = _nom;
+
+            }
+            // END FRT06112018
 
 
             // frt obtener el flujo de SAP
@@ -5822,6 +5844,21 @@ namespace WFARTHA.Controllers
             //return File(descargarArchivo(btnArchivo, contentyp, nombre), contentyp, nombre);
             return File(archivo, contentyp, nombre);
         }
+
+        //FRT06112018 Se agrega para poder descargar archivos desde detail
+        [HttpPost]
+        public FileResult DescargarDetails()
+        {
+
+            var archivo = Request.Form["file"];
+            //LEJ 03.10.2018
+            string nombre = "", contentyp = "";
+            contDescarga(archivo, ref contentyp, ref nombre);
+            //return File(descargarArchivo(btnArchivo, contentyp, nombre), contentyp, nombre);
+            return File(archivo, contentyp, nombre);
+        }
+
+        // END FRT06112018
 
         /*  public string SaveFile(HttpPostedFileBase file, string path)
           {

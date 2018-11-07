@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="WFARTHAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="WFARTHAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ACCION">
           <Key>
             <PropertyRef Name="ID" />
@@ -22,7 +22,6 @@
           <Property Name="VALUE" Type="nvarchar" MaxLength="255" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
-
         <EntityType Name="CAMPOS">
           <Key>
             <PropertyRef Name="PAGINA_ID" />
@@ -84,8 +83,8 @@
           <Property Name="TIPO_PRESUPUESTO" Type="nchar" MaxLength="1" />
           <Property Name="CUENTA" Type="nchar" MaxLength="10" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.CONDICIONES_PAGO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.CONDICIONES_PAGO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CONDICIONES_PAGO">
           <Key>
             <PropertyRef Name="COND_PAGO" />
@@ -149,8 +148,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.CONDICIONES_PAGO' no tiene definid
           <Property Name="AGENTE_SIG" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="OVERRIDE" Type="bit" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_AGENTECC' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.DET_AGENTECC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DET_AGENTECC">
           <Key>
             <PropertyRef Name="VERSION" />
@@ -239,12 +238,6 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.DET_AGENTECC' no tiene definida ni
           <Property Name="ID_USER" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="TIPOPRE" Type="varchar" MaxLength="1" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6013: La tabla o vista 'PAGOS.dbo.DETK$' no tiene definida una clave principal y no es posible inferir ninguna clave principal válida. Esta tabla o vista se ha excluido. Para usar la entidad, necesitará revisar el esquema, agregar las claves correctas y quitar sus comentarios.
-        <EntityType Name="DETK$">
-          <Property Name="BUKRS" Type="nchar" MaxLength="4" />
-          <Property Name="SAKNR" Type="nchar" MaxLength="10" />
-        </EntityType>-->
         <EntityType Name="DOCUMENTO">
           <Key>
             <PropertyRef Name="NUM_DOC" />
@@ -313,6 +306,7 @@ advertencia 6013: La tabla o vista 'PAGOS.dbo.DETK$' no tiene definida una clave
           <Property Name="SOCIEDAD_PRE" Type="nchar" MaxLength="4" />
           <Property Name="EJERCICIO_PRE" Type="nchar" MaxLength="4" />
           <Property Name="ESTATUS_PRE" Type="nchar" MaxLength="1" />
+          <Property Name="ID_PSPNR" Type="nvarchar" MaxLength="8" />
         </EntityType>
         <EntityType Name="DOCUMENTOA">
           <Key>
@@ -529,8 +523,31 @@ advertencia 6013: La tabla o vista 'PAGOS.dbo.DETK$' no tiene definida una clave
           <Property Name="DECIMALES" Type="nchar" MaxLength="1" Nullable="false" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.IIMPUESTO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="FORO">
+          <Key>
+            <PropertyRef Name="ID_FORO" />
+          </Key>
+          <Property Name="ID_FORO" Type="tinyint" Nullable="false" />
+          <Property Name="ID_USUARIO" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="NUM_DOC" Type="numeric" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="TITULO" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="CREADO" Type="datetime" Nullable="false" />
+          <Property Name="CERRADO" Type="datetime" />
+          <Property Name="MAIL" Type="bit" />
+        </EntityType>
+        <EntityType Name="FOROD">
+          <Key>
+            <PropertyRef Name="ID_RESPUESTA" />
+          </Key>
+          <Property Name="ID_RESPUESTA" Type="tinyint" Nullable="false" />
+          <Property Name="ID_FORO" Type="tinyint" Nullable="false" />
+          <Property Name="ID_USUARIO" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="CREADO" Type="datetime" Nullable="false" />
+          <Property Name="COMENTARIO" Type="varchar" MaxLength="200" />
+          <Property Name="MAIL" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.IIMPUESTO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="IIMPUESTO">
           <Key>
             <PropertyRef Name="MWSKZ" />
@@ -738,12 +755,6 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.IIMPUESTO' no tiene definida ningu
           <Property Name="REGION" Type="nchar" MaxLength="10" />
           <Property Name="STCD1" Type="nchar" MaxLength="16" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'PAGOS.dbo.SOCIEDADRFC$' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="SOCIEDADRFC$">
-          <Property Name="BURKS" Type="nchar" MaxLength="4" />
-          <Property Name="STCD1" Type="nchar" MaxLength="16" />
-        </EntityType>-->
         <EntityType Name="SPRAS">
           <Key>
             <PropertyRef Name="ID" />
@@ -911,8 +922,8 @@ warning 6013: The table/view 'PAGOS.dbo.SOCIEDADRFC$' does not have a primary ke
           <Property Name="USUARIO_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="FECHAC" Type="datetime" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.ASIGN_PROY_SOC' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.ASIGN_PROY_SOC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ASIGN_PROY_SOC">
           <Key>
             <PropertyRef Name="ID_PSPNR" />
@@ -921,8 +932,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.ASIGN_PROY_SOC' no tiene definida 
           <Property Name="ID_PSPNR" Type="nvarchar" MaxLength="8" Nullable="false" />
           <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.CARPETAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.CARPETAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CARPETAV">
           <Key>
             <PropertyRef Name="USUARIO_ID" />
@@ -934,7 +945,6 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.CARPETAV' no tiene definida ningun
           <Property Name="TXT50" Type="nvarchar" MaxLength="50" />
           <Property Name="ICON" Type="nvarchar" MaxLength="20" />
         </EntityType>
-
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PAGOS.dbo.DET_APROBV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DET_APROBV">
@@ -966,7 +976,6 @@ warning 6002: The table/view 'PAGOS.dbo.DET_PROVEEDORV' does not have a primary 
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PAGOS.dbo.DET_PROYECTO_DEC_V' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-
         <EntityType Name="DET_PROYECTO_DEC_V">
           <Key>
             <PropertyRef Name="ID_PSPNR" />
@@ -979,10 +988,8 @@ warning 6002: The table/view 'PAGOS.dbo.DET_PROYECTO_DEC_V' does not have a prim
           <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
           <Property Name="BUTXT" Type="nvarchar" MaxLength="107" Nullable="false" />
         </EntityType>
-
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PAGOS.dbo.DET_PROYECTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-
         <EntityType Name="DET_PROYECTOV">
           <Key>
             <PropertyRef Name="ID_PSPNR" />
@@ -991,10 +998,8 @@ warning 6002: The table/view 'PAGOS.dbo.DET_PROYECTOV' does not have a primary k
           <Property Name="ID_PSPNR" Type="nvarchar" MaxLength="8" Nullable="false" />
           <Property Name="ID_BUKRS" Type="nchar" MaxLength="4" Nullable="false" />
         </EntityType>
-
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PAGOS.dbo.DET_TIPOPRESUPUESTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-
         <EntityType Name="DET_TIPOPRESUPUESTOV">
           <Key>
             <PropertyRef Name="BUKRS" />
@@ -1010,10 +1015,8 @@ warning 6002: The table/view 'PAGOS.dbo.DET_TIPOPRESUPUESTOV' does not have a pr
           <Property Name="TIPOPRE" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="DESC" Type="nvarchar" MaxLength="30" />
         </EntityType>
-
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PAGOS.dbo.DOCUMENTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-
         <EntityType Name="DOCUMENTOV">
           <Key>
             <PropertyRef Name="POS" />
@@ -1073,8 +1076,8 @@ warning 6002: The table/view 'PAGOS.dbo.DOCUMENTOV' does not have a primary key 
           <Property Name="USUARIOA_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="EXPR2" Type="nchar" MaxLength="1" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.PAGINAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.PAGINAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PAGINAV">
           <Key>
             <PropertyRef Name="ID" />
@@ -1094,8 +1097,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.PAGINAV' no tiene definida ninguna
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="USUARIO_SPRAS" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PAGOS.dbo.WARNINGV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="WARNINGV">
           <Key>
             <PropertyRef Name="PAGINA_ID" />
@@ -1562,6 +1565,54 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
               <PropertyRef Name="WORKF_ID" />
               <PropertyRef Name="WF_VERSION" />
               <PropertyRef Name="WF_POS" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FORO_DOCUMENTO">
+          <End Role="DOCUMENTO" Type="Self.DOCUMENTO" Multiplicity="1" />
+          <End Role="FORO" Type="Self.FORO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DOCUMENTO">
+              <PropertyRef Name="NUM_DOC" />
+            </Principal>
+            <Dependent Role="FORO">
+              <PropertyRef Name="NUM_DOC" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FORO_USUARIO">
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
+          <End Role="FORO" Type="Self.FORO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FORO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FOROD_FORO">
+          <End Role="FORO" Type="Self.FORO" Multiplicity="1" />
+          <End Role="FOROD" Type="Self.FOROD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FORO">
+              <PropertyRef Name="ID_FORO" />
+            </Principal>
+            <Dependent Role="FOROD">
+              <PropertyRef Name="ID_FORO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FOROD_USUARIO">
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
+          <End Role="FOROD" Type="Self.FOROD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FOROD">
+              <PropertyRef Name="ID_USUARIO" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2056,6 +2107,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
           <EntitySet Name="EKPO_DUMM" EntityType="Self.EKPO_DUMM" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FLUJO" EntityType="Self.FLUJO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FORMATO" EntityType="Self.FORMATO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FORO" EntityType="Self.FORO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FOROD" EntityType="Self.FOROD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IMPUESTO" EntityType="Self.IMPUESTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IMPUESTOT" EntityType="Self.IMPUESTOT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MIEMBROS" EntityType="Self.MIEMBROS" Schema="dbo" store:Type="Tables" />
@@ -2400,6 +2453,22 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
             <End Role="WORKFP" EntitySet="WORKFP" />
             <End Role="FLUJO" EntitySet="FLUJO" />
           </AssociationSet>
+          <AssociationSet Name="FK_FORO_DOCUMENTO" Association="Self.FK_FORO_DOCUMENTO">
+            <End Role="DOCUMENTO" EntitySet="DOCUMENTO" />
+            <End Role="FORO" EntitySet="FORO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FORO_USUARIO" Association="Self.FK_FORO_USUARIO">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="FORO" EntitySet="FORO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FOROD_FORO" Association="Self.FK_FOROD_FORO">
+            <End Role="FORO" EntitySet="FORO" />
+            <End Role="FOROD" EntitySet="FOROD" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FOROD_USUARIO" Association="Self.FK_FOROD_USUARIO">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="FOROD" EntitySet="FOROD" />
+          </AssociationSet>
           <AssociationSet Name="FK_IIMPUESTO_IMPUESTO" Association="Self.FK_IIMPUESTO_IMPUESTO">
             <End Role="IMPUESTO" EntitySet="IMPUESTO" />
             <End Role="IIMPUESTO" EntitySet="IIMPUESTO" />
@@ -2549,8 +2618,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
             <End Role="WORKFV" EntitySet="WORKFV" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="WFARTHAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -2852,6 +2920,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
           <NavigationProperty Name="DOCUMENTOSAP" Relationship="Self.FK_DOCUMENTOSAP_DOCUMENTO" FromRole="DOCUMENTO" ToRole="DOCUMENTOSAP" />
           <NavigationProperty Name="DOCUMENTOUUIDs" Relationship="Self.FK_DOCUMENTOUUID_DOCUMENTO" FromRole="DOCUMENTO" ToRole="DOCUMENTOUUID" />
           <NavigationProperty Name="FLUJOes" Relationship="Self.FK_FLUJO_DOCUMENTO" FromRole="DOCUMENTO" ToRole="FLUJO" />
+          <Property Name="ID_PSPNR" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="FOROes" Relationship="WFARTHAModel.FK_FORO_DOCUMENTO" FromRole="DOCUMENTO" ToRole="FORO" />
         </EntityType>
         <EntityType Name="DOCUMENTOA">
           <Key>
@@ -3457,6 +3527,8 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
           <NavigationProperty Name="PUESTO" Relationship="Self.FK_USUARIO_PUESTO" FromRole="USUARIO" ToRole="PUESTO" />
           <NavigationProperty Name="SPRA" Relationship="Self.FK_USUARIO_SPRAS" FromRole="USUARIO" ToRole="SPRAS" />
           <NavigationProperty Name="WORKFHs" Relationship="Self.FK_WORKFP_USUARIO" FromRole="USUARIO" ToRole="WORKFH" />
+          <NavigationProperty Name="FOROes" Relationship="WFARTHAModel.FK_FORO_USUARIO" FromRole="USUARIO" ToRole="FORO" />
+          <NavigationProperty Name="FORODs" Relationship="WFARTHAModel.FK_FOROD_USUARIO" FromRole="USUARIO" ToRole="FOROD" />
         </EntityType>
         <EntityType Name="WARNING">
           <Key>
@@ -5013,7 +5085,101 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
             <End Role="PROYECTO" EntitySet="PROYECTOes" />
             <End Role="SOCIEDAD" EntitySet="SOCIEDADs" />
           </AssociationSet>
+          <EntitySet Name="FOROes" EntityType="WFARTHAModel.FORO" />
+          <EntitySet Name="FORODs" EntityType="WFARTHAModel.FOROD" />
+          <AssociationSet Name="FK_FORO_DOCUMENTO" Association="WFARTHAModel.FK_FORO_DOCUMENTO">
+            <End Role="DOCUMENTO" EntitySet="DOCUMENTOes" />
+            <End Role="FORO" EntitySet="FOROes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FORO_USUARIO" Association="WFARTHAModel.FK_FORO_USUARIO">
+            <End Role="USUARIO" EntitySet="USUARIOs" />
+            <End Role="FORO" EntitySet="FOROes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FOROD_FORO" Association="WFARTHAModel.FK_FOROD_FORO">
+            <End Role="FORO" EntitySet="FOROes" />
+            <End Role="FOROD" EntitySet="FORODs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FOROD_USUARIO" Association="WFARTHAModel.FK_FOROD_USUARIO">
+            <End Role="USUARIO" EntitySet="USUARIOs" />
+            <End Role="FOROD" EntitySet="FORODs" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="FORO">
+          <Key>
+            <PropertyRef Name="ID_FORO" />
+          </Key>
+          <Property Name="ID_FORO" Type="Byte" Nullable="false" />
+          <Property Name="ID_USUARIO" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="NUM_DOC" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
+          <Property Name="TITULO" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CREADO" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CERRADO" Type="DateTime" Precision="3" />
+          <Property Name="MAIL" Type="Boolean" />
+          <NavigationProperty Name="DOCUMENTO" Relationship="WFARTHAModel.FK_FORO_DOCUMENTO" FromRole="FORO" ToRole="DOCUMENTO" />
+          <NavigationProperty Name="USUARIO" Relationship="WFARTHAModel.FK_FORO_USUARIO" FromRole="FORO" ToRole="USUARIO" />
+          <NavigationProperty Name="FORODs" Relationship="WFARTHAModel.FK_FOROD_FORO" FromRole="FORO" ToRole="FOROD" />
+        </EntityType>
+        <EntityType Name="FOROD">
+          <Key>
+            <PropertyRef Name="ID_RESPUESTA" />
+          </Key>
+          <Property Name="ID_RESPUESTA" Type="Byte" Nullable="false" />
+          <Property Name="ID_FORO" Type="Byte" Nullable="false" />
+          <Property Name="ID_USUARIO" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="CREADO" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="COMENTARIO" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="MAIL" Type="Boolean" />
+          <NavigationProperty Name="FORO" Relationship="WFARTHAModel.FK_FOROD_FORO" FromRole="FOROD" ToRole="FORO" />
+          <NavigationProperty Name="USUARIO" Relationship="WFARTHAModel.FK_FOROD_USUARIO" FromRole="FOROD" ToRole="USUARIO" />
+        </EntityType>
+        <Association Name="FK_FORO_DOCUMENTO">
+          <End Type="WFARTHAModel.DOCUMENTO" Role="DOCUMENTO" Multiplicity="1" />
+          <End Type="WFARTHAModel.FORO" Role="FORO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DOCUMENTO">
+              <PropertyRef Name="NUM_DOC" />
+            </Principal>
+            <Dependent Role="FORO">
+              <PropertyRef Name="NUM_DOC" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FORO_USUARIO">
+          <End Type="WFARTHAModel.USUARIO" Role="USUARIO" Multiplicity="1" />
+          <End Type="WFARTHAModel.FORO" Role="FORO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FORO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FOROD_FORO">
+          <End Type="WFARTHAModel.FORO" Role="FORO" Multiplicity="1" />
+          <End Type="WFARTHAModel.FOROD" Role="FOROD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FORO">
+              <PropertyRef Name="ID_FORO" />
+            </Principal>
+            <Dependent Role="FOROD">
+              <PropertyRef Name="ID_FORO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FOROD_USUARIO">
+          <End Type="WFARTHAModel.USUARIO" Role="USUARIO" Multiplicity="1" />
+          <End Type="WFARTHAModel.FOROD" Role="FOROD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FOROD">
+              <PropertyRef Name="ID_USUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5219,6 +5385,7 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
           <EntitySetMapping Name="DOCUMENTOes">
             <EntityTypeMapping TypeName="WFARTHAModel.DOCUMENTO">
               <MappingFragment StoreEntitySet="DOCUMENTO">
+                <ScalarProperty Name="ID_PSPNR" ColumnName="ID_PSPNR" />
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="NUM_PRE" ColumnName="NUM_PRE" />
                 <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
@@ -6066,6 +6233,31 @@ advertencia 6002: La tabla o vista 'PAGOS.dbo.WARNINGV' no tiene definida ningun
               <ScalarProperty Name="BUKRS" ColumnName="ID_BUKRS" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="FOROes">
+            <EntityTypeMapping TypeName="WFARTHAModel.FORO">
+              <MappingFragment StoreEntitySet="FORO">
+                <ScalarProperty Name="MAIL" ColumnName="MAIL" />
+                <ScalarProperty Name="CERRADO" ColumnName="CERRADO" />
+                <ScalarProperty Name="CREADO" ColumnName="CREADO" />
+                <ScalarProperty Name="TITULO" ColumnName="TITULO" />
+                <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
+                <ScalarProperty Name="ID_USUARIO" ColumnName="ID_USUARIO" />
+                <ScalarProperty Name="ID_FORO" ColumnName="ID_FORO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FORODs">
+            <EntityTypeMapping TypeName="WFARTHAModel.FOROD">
+              <MappingFragment StoreEntitySet="FOROD">
+                <ScalarProperty Name="MAIL" ColumnName="MAIL" />
+                <ScalarProperty Name="COMENTARIO" ColumnName="COMENTARIO" />
+                <ScalarProperty Name="CREADO" ColumnName="CREADO" />
+                <ScalarProperty Name="ID_USUARIO" ColumnName="ID_USUARIO" />
+                <ScalarProperty Name="ID_FORO" ColumnName="ID_FORO" />
+                <ScalarProperty Name="ID_RESPUESTA" ColumnName="ID_RESPUESTA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

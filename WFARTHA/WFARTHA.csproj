@@ -347,6 +347,12 @@
     <Compile Include="Entities\FORMATO.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\FORO.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FOROD.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\IIMPUESTO.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
@@ -757,7 +763,6 @@
     <Content Include="Views\Usuarios\Index.cshtml" />
     <Content Include="Views\Usuarios\Pass.cshtml" />
     <Content Include="Views\Solicitudes\_PartialConTr4.cshtml" />
-
     <Content Include="Views\UsuarioC\Create.cshtml" />
     <Content Include="Views\UsuarioC\Index.cshtml" />
     <Content Include="Views\ProyectoSociedad\Index.cshtml" />
@@ -765,7 +770,6 @@
     <Content Include="Views\SociedadesUsuario\Create.cshtml" />
     <Content Include="Views\SociedadesUsuario\Edit.cshtml" />
     <Content Include="Views\ProyectoSociedad\Create.cshtml" />
-
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

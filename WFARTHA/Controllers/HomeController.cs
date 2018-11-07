@@ -49,7 +49,7 @@ namespace WFARTHA.Controllers
                     //return RedirectToAction("Proyectos", "Home", new { returnUrl = Request.Url.AbsolutePath });
                 }
                 Session["spras"] = user.SPRAS_ID;
-
+                Session["pr"] = null;   //FRT06112018  Se agrega esta linea para poder ingresar nuevamente a la pantalla de proyectos
                 try//Mensaje de documento creado
                 {
                     string p = Session["NUM_DOC"].ToString();
