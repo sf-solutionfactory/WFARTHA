@@ -1816,7 +1816,15 @@ namespace WFARTHA.Controllers
         // GET: Solicitudes/Edit/5
         public ActionResult Edit(decimal id, string pacc)
         {
-            int pagina = 202; //ID EN BASE DE DATOS
+            int pagina = 202;
+            if (pacc == "B")
+            {
+                pagina = 209; //ID EN BASE DE DATOS para borrador
+            }
+            else
+            {
+               pagina = 204; //ID EN BASE DE DATOS
+            }
             FORMATO formato = new FORMATO();
             string spras = "";
             string user_id = "";//MGC 02-10-2018 Cadena de autorización
@@ -6142,8 +6150,17 @@ namespace WFARTHA.Controllers
                 case "zip":
                     contentType = "application/zip";
                     break;
-                case "jpg":
+                case "jpeg":
                     contentType = "image/jpeg";
+                    break;
+                case "ppt":
+                    contentType = "application/vnd.ms-powerpoint";
+                    break;
+                case "pptx":
+                    contentType = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+                    break;
+                case "jpg":
+                    contentType = "image/jpg";
                     break;
                 case "png":
                     contentType = "image/png";

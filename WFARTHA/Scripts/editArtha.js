@@ -1690,7 +1690,8 @@ function armarTablaInfo(datos) {
         {
             "name": 'TCONCEPTO',
             "className": 'TCONCEPTO',
-            "orderable": false
+            "orderable": false,
+             "visible": false
         },
         {
             "name": 'GRUPO',
@@ -1712,7 +1713,8 @@ function armarTablaInfo(datos) {
         {
             "name": 'TIPOIMP',
             "className": 'TIPOIMP',
-            "orderable": false
+            "orderable": false,
+            "visible": false//lej 11.09.2018
         },
         {
             "name": 'IMPUTACION',
@@ -1757,23 +1759,23 @@ function armarTablaInfo(datos) {
     //Theads
     $("#table_info>thead>tr").append("<th></th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_pos\">Pos NT</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">Anexo</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">Anexo2</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">Anexo3</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">Anexo4</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">Anexo5</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A1</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A2</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A3</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A4</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A5</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_cargoAbono\">D/H NT</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_factura\">Factura NT</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_tconcepto\">TIPO CONCEPTO NT</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_grupo\">Grupo NT</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_factura\">Factura</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_tconcepto\">TIPO CONCEPTO</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_grupo\">Grupo</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_cuenta\">Cuenta NT</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_cuentaNom\">Nombre de cuenta NT</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_tipoimp\">Tipo Imp. NT</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_imputacion\">Imputación NT</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_ccosto\">Centro de costo NT</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_monto\">Monto NT</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_impuesto\">Impuesto NT</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_iva\">IVA NT</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_ccosto\">Centro de Costo</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_monto\">Monto</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_impuesto\">Impuesto</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_iva\">IVA</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_Texto\">TEXTO</th>");
     var res = null;
     //----------------------
