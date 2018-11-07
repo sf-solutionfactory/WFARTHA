@@ -12,11 +12,16 @@ namespace WFARTHA.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DET_TIPODOC
+    public partial class FOROD
     {
-        public string TIPO_SOL { get; set; }
-        public string BLART { get; set; }
+        public byte ID_RESPUESTA { get; set; }
+        public byte ID_FORO { get; set; }
+        public string ID_USUARIO { get; set; }
+        public System.DateTime CREADO { get; set; }
+        public string COMENTARIO { get; set; }
+        public Nullable<bool> MAIL { get; set; }
     
-        public virtual TSOL TSOL { get; set; }
+        public virtual FORO FORO { get; set; }
+        public virtual USUARIO USUARIO { get; set; }
     }
 }
