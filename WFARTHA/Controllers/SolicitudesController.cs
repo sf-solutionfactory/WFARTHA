@@ -1841,15 +1841,17 @@ namespace WFARTHA.Controllers
         // GET: Solicitudes/Edit/5
         public ActionResult Edit(decimal id, string pacc)
         {
-            int pagina = 202;
+            //lEJGG 7-11-18----------------------->
+            int pagina = 204;//lEJGG 7-11-18
             if (pacc == "B")
             {
                 pagina = 209; //ID EN BASE DE DATOS para borrador
             }
             else
             {
-               pagina = 204; //ID EN BASE DE DATOS
+                pagina = 204; //ID EN BASE DE DATOS
             }
+            //lEJGG 7-11-18-----------------------<
             FORMATO formato = new FORMATO();
             string spras = "";
             string user_id = "";//MGC 02-10-2018 Cadena de autorización
@@ -1939,7 +1941,16 @@ namespace WFARTHA.Controllers
                     dm.FACTURA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).FACTURA;
                     dm.GRUPO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
                     dm.CUENTA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).CUENTA;
-                    dm.NOMCUENTA = "Transporte";
+                    string ct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
+                    var tct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TCONCEPTO;
+                    try
+                    {
+                        dm.NOMCUENTA = db.CONCEPTOes.Where(x => x.ID_CONCEPTO == ct && x.TIPO_CONCEPTO == tct).FirstOrDefault().DESC_CONCEPTO.Trim();
+                    }
+                    catch (Exception e)
+                    {
+                        dm.NOMCUENTA = "Transporte";
+                    }
                     dm.TIPOIMP = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TIPOIMP;
                     dm.IMPUTACION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).IMPUTACION;
                     dm.MONTO = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).MONTO, formato.DECIMALES);
@@ -2250,7 +2261,7 @@ namespace WFARTHA.Controllers
                     //}).FirstOrDefault();//MGC 03-11-2018 Posible cambio lista dtas
                 }).ToList();//MGC 03-11-2018 Posible cambio lista dtas
 
-                ViewBag.DETAA = new SelectList(dtas, "ID", "TEXT",dtas);//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas) //lejgg 06-11-2018
+                ViewBag.DETAA = new SelectList(dtas, "ID", "TEXT", dtas);//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas) //lejgg 06-11-2018
                 //ViewBag.DETAA = new SelectList(dta, "ID", "TEXT", dtas);//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas)
             }
             else
@@ -3964,7 +3975,25 @@ namespace WFARTHA.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            int pagina = 201; //ID EN BASE DE DATOS
+            var _numdoc = dOCUMENTO.NUM_DOC;
+            var rpb = "";
+            try
+            {
+                rpb = db.DOCUMENTOes.Where(x => x.NUM_DOC == _numdoc).FirstOrDefault().ESTATUS.Trim();
+            }
+            catch (Exception e)
+            {
+
+            }
+            int pagina = 204;//lEJGG 7-11-18
+            if (rpb == "B")
+            {
+                pagina = 209; //ID EN BASE DE DATOS
+            }
+            else
+            {
+                pagina = 204; //ID EN BASE DE DATOS
+            }
             string spras = "";
             using (WFARTHAEntities db = new WFARTHAEntities())
             {
@@ -5324,7 +5353,7 @@ namespace WFARTHA.Controllers
         [HttpPost]//LEJGG 06-11-18
         public JsonResult getCondicionEdit(string id)
         {
-          
+
             WFARTHAEntities db = new WFARTHAEntities();
             var texto = db.CONDICIONES_PAGO.Where(x => x.COND_PAGO == id).FirstOrDefault().TEXT;
 
