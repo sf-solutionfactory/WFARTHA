@@ -486,9 +486,15 @@ $(document).ready(function () {
         var _decimales = $("#dec").val();
 
         //Guardar los valores de la tabla en el modelo para enviarlos al controlador
-        copiarTableInfoControl(); copiarTableInfoPControl();
+
+        //FRT06112018.3 Se comentan las lineas se pasan a ejecucion despues de validar los valores
+        //copiarTableInfoControl();
+        //copiarTableInfoPControl();
+        //copiarTableRet();
+        //end FRT06112018.3 
+
+
         //copiarTableSopControl();
-        copiarTableRet();
 
         //CODIGO
         //dar formato al monto
@@ -506,7 +512,7 @@ $(document).ready(function () {
         tcambio = parseFloat(tcambio);
         $("#TIPO_CAMBIO").val(tcambio);
 
-        //FRT 05112018
+
 
       
 
@@ -562,9 +568,7 @@ $(document).ready(function () {
             var indexopc = t.row(tr).index();
          
             var tipoimp = t.row(indexopc).data()[13];
-
-          
-
+            
             if (tipoimp == "K" & (ceco == "" | ceco == null)) {
                 msgerror = "Falta ingresar Centro de Costo";
                 _b = false;
@@ -574,6 +578,22 @@ $(document).ready(function () {
             if (_b === false) {
                 return false;
             }
+
+
+            //FRT06112018.3 Se realizara validación del monto > 0
+            var monto = $(this).find("td.MONTO input").val();
+            
+            if (monto == "$ 0.00") {
+                msgerror = "El monto debe ser MAYOR a cero";
+                _b = false;
+            } else {
+                _b = true;
+            }
+            if (_b === false) {
+                return false;
+            }
+            //END FRT06112018.3
+
 
           
             if (_vs.length > 0) {
@@ -642,6 +662,11 @@ $(document).ready(function () {
             }
         });
         if (_b) {
+             //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
+        copiarTableInfoControl();
+        copiarTableInfoPControl();
+        copiarTableRet();
+        //end FRT06112018.3 
             $('#btn_guardar').trigger("click");
         } else {
             M.toast({ html: msgerror });
