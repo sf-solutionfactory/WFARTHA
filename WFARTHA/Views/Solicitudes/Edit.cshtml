@@ -15,6 +15,7 @@
     List<string> colsret = ViewBag.Retenciones as List<string>;
     var total = ViewBag.total;
     var montomd = formatoc.toShow(total, ViewBag.dec);
+    var pacc = (string)ViewBag.pacc;
 }
 
 <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
@@ -211,7 +212,14 @@
                                 <div class="form-group col s6">
                                     @Html.LabelFor(model => model.SOCIEDAD_ID, "Sociedad", htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control ddl ddlsc" })@*LEJ 04.09.2018*@
+                                        @if (pacc == "B")
+                                        {
+                                            @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control ddl ddlsc" })@*LEJ 04.09.2018*@
+                                        }
+                                        else if (pacc == "R" | pacc == "P")
+                                        {
+                                            @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control ddl ddlsc", @disabled = "disabled" })@*LEJ 06.11.2018*@
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -239,7 +247,7 @@
                                 </div>
                                 <script>
                                     var elemdp = document.querySelector('#FECHAD');
-                                    var optionsdp = {   
+                                    var optionsdp = {
                                         format: 'dd/mm/yyyy',
                                         onClose: function (e) {
                                         },
@@ -337,7 +345,7 @@
                                 </div>
 
                                 <div class="form-group col s3">
-                                    @Html.LabelFor(model => model.TIPO_CAMBIO, "Cambio", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    @Html.LabelFor(model => model.TIPO_CAMBIO, "Tipo de Cambio", htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
                                         @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon" } })@*LEJ 04.09.2018*@
                                     </div>
@@ -387,7 +395,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group col s6">
-                                    <label class="control-label col-md-2" for="nom_proveedor">Nombre Proveedo</label>
+                                    <label class="control-label col-md-2" for="nom_proveedor">Nombre Proveedor</label>
                                     <div class="col-md-10">
                                         <input type="text" id="nom_proveedor" disabled value="@name" />
                                     </div>
@@ -404,7 +412,7 @@
                                 </div>
 
                                 <div class="form-group col s6">
-                                    @Html.LabelFor(model => model.CONCEPTO, "Texto", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    @Html.LabelFor(model => model.CONCEPTO, "Explicacion", htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
                                         @Html.EditorFor(model => model.CONCEPTO, "Concepto", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })@*LEJ 04.09.2018*@
                                     </div>
@@ -490,7 +498,8 @@
                                             for (var i = 0; i < drets.Count; i++)
                                             {
                                                 <tr>
-                                                    <td></td><td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td>
                                                         @Html.DisplayFor(m => drets[i].WITHT)
                                                     </td>
@@ -736,7 +745,14 @@
                             <div class="form-group col s6">
                                 @Html.LabelFor(model => model.TSOL_ID, "Cadena de autorización ", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa" })
+                                    @if (pacc == "B")
+                                    {
+                                        @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa" })
+                                    }
+                                    else if (pacc == "R" | pacc == "P")
+                                    {
+                                        @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa", @disabled = "disabled" })
+                                    }
                                 </div>
                                 <input id="DETTA_VERSION" name="DETTA_VERSION" value="" hidden />
                                 <input id="DETTA_USUARIOC_ID" name="DETTA_USUARIOC_ID" value="" hidden />
