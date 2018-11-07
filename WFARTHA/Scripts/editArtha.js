@@ -2125,6 +2125,26 @@ function impuestoVal(ti) {
     return res;
 }
 
+//lEJGG 07-11-2018
+function validarFacs() {
+    var _ban = false;
+    $("#table_anexa > tbody  > tr[role='row']").each(function () {
+        var t = $("#table_anexa").DataTable();
+        //Obtener el row para el plugin
+        var tr = $(this);
+        var indexopc = t.row(tr).index();
+
+        //Obtener valores visibles en la tabla
+        var _tipoAr = $(this).find("td.TYPE").text();
+        if ("xml" === _tipoAr) {
+            _ban = true;
+        }
+        if (_ban)
+            return;
+    });
+    return _ban;
+}
+
 function resetFooter() {
     $('#total_dis').text("$0");
 }

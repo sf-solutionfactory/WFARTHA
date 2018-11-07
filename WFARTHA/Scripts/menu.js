@@ -38,7 +38,7 @@ function cerrar() {
     var details = "Solicitudes/Details";
 
     var pathname = window.location.pathname;
-    if (pathname.indexOf(creates) != -1 | pathname.indexOf(details) != -1) {
+    if (pathname.indexOf(creates) != -1 | pathname.indexOf(details) != -1 | pathname.indexOf(edit) != -1) {
 
         resetTabs();
     }
