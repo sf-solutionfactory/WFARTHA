@@ -545,7 +545,7 @@ $(document).ready(function () {
         //$("#table_info > tbody  > tr[role='row']").each(function () { //MGC 24-10-2018 Conflicto Enrique-Rogelio
         var t = $('#table_info').DataTable();
         var tabble = "table_info";
-        if ($("table#table_info tbody tr[role='row']").length === 0) { tabble = "table_infoP" }
+        if ($("table#table_info tbody tr[role='row']").length === 0) { tabble = "table_infoP"; }
         $("#" + tabble + " > tbody  > tr[role='row']").each(function () {
 
             _rni++;
@@ -574,7 +574,6 @@ $(document).ready(function () {
             if (_b === false) {
                 return false;
             }
-
           
             if (_vs.length > 0) {
                 for (var i = 0; i < _vs.length; i++) {

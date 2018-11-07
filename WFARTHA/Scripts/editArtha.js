@@ -115,12 +115,28 @@ $(document).ready(function () {
     solicitarDatos();
     insertarCondicion();
     $('#btn_guardarh').on("click", function (e) {
-        //Guardar los valores de la tabla en el modelo para enviarlos al controlador
-        copiarTableInfoControl(); //copiarTableInfoPControl();
-        //copiarTableSopControl();
-        copiarTableRet();
+        //LEJGG 06-11-18
+        //Aqui verificare si es invoice o factura
+        var val3 = $('#tsol').val();
+        val3 = "[" + val3 + "]";
+        val3 = val3.replace("{", "{ \"");
+        val3 = val3.replace("}", "\" }");
+        val3 = val3.replace(/\,/g, "\" , \"");
+        val3 = val3.replace(/\=/g, "\" : \"");
+        val3 = val3.replace(/\ /g, "");
+        var jsval = $.parseJSON(val3);
+        if (jsval[0].ID === "SSO") {
+            var res = validarFacs();//Lejgg 23-10-2018
+            if (res) {//si es true signfica que si hay factura
+                //Fechade la factura
+                var _fdo = $("#FECHADO").val();
+            } else {
+                //si es false signfica que es invoice(fecha de la creacion)
+                var fdo = $("#FECHADO").val();
+            }
 
-        //CODIGO
+        }
+                //CODIGO
         //dar formato al monto
         var enca_monto = $("#MONTO_DOC_MD").val();
         enca_monto = enca_monto.replace(/\s/g, '');
@@ -135,9 +151,114 @@ $(document).ready(function () {
         tcambio = toNum(tcambio);
         tcambio = parseFloat(tcambio);
         $("#TIPO_CAMBIO").val(tcambio);
+        var t = $('#table_info').DataTable();
+        var tabble = "table_info";
+        if ($("table#table_info tbody tr[role='row']").length === 0) { tabble = "table_infoP"; }
+        $("#" + tabble + " > tbody  > tr[role='row']").each(function () {
 
+            _rni++;
+            //Obtener valores visibles en la tabla
+            var na1 = $(this).find("td.NumAnexo input").val();
+            var na2 = $(this).find("td.NumAnexo2 input").val();
+            var na3 = $(this).find("td.NumAnexo3 input").val();
+            var na4 = $(this).find("td.NumAnexo4 input").val();
+            var na5 = $(this).find("td.NumAnexo5 input").val();
+
+            //frt05112018 validacion de CECOS vacion en Tipo Imp. "K"
+            var ceco = $(this).find("td.CCOSTO input").val();
+            var tr = $(this);
+            var indexopc = t.row(tr).index();
+
+            var tipoimp = t.row(indexopc).data()[13];
+
+
+
+            if (tipoimp == "K" & (ceco == "" | ceco == null)) {
+                msgerror = "Falta ingresar Centro de Costo";
+                _b = false;
+            } else {
+                _b = true;
+            }
+            if (_b === false) {
+                return false;
+            }
+
+            if (_vs.length > 0) {
+                for (var i = 0; i < _vs.length; i++) {
+                    if (na1 === _vs[i] || na1 === "") {
+                        _b = true;
+                        break;
+                    } else {
+                        _b = false;
+                        msgerror = "Error en el renglon " + _rni + " valor: " + na1 + " Columna 2";
+                    }
+                }
+                if (_b === false) {
+                    return false;
+                }
+                for (var i2 = 0; i2 < _vs.length; i2++) {
+                    if (na2 === _vs[i2] || na2 === "") {
+                        _b = true;
+                        break;
+                    } else {
+                        _b = false;
+                        msgerror = "Error en el renglon " + _rni + " valor: " + na2 + " Columna 3";
+                    }
+                }
+                if (_b === false) {
+                    return false;
+                }
+                for (var i3 = 0; i3 < _vs.length; i3++) {
+                    if (na3 === _vs[i3] || na3 === "") {
+                        _b = true;
+                        break;
+                    } else {
+                        _b = false;
+                        msgerror = "Error en el renglon " + _rni + " valor: " + na3 + " Columna 4";
+                    }
+                }
+                if (_b === false) {
+                    return false;
+                }
+                for (var i4 = 0; i4 < _vs.length; i4++) {
+                    if (na4 === _vs[i4] || na4 === "") {
+                        _b = true;
+                        break;
+                    } else {
+                        _b = false;
+                        msgerror = "Error en el renglon " + _rni + " valor: " + na4 + " Columna 5";
+                    }
+                }
+                if (_b === false) {
+                    return false;
+                }
+                for (var i5 = 0; i5 < _vs.length; i5++) {
+                    if (na5 === _vs[i5] || na5 === "") {
+                        _b = true;
+                        break;
+                    } else {
+                        _b = false;
+                        msgerror = "Error en el renglon " + _rni + " valor: " + na5 + " Columna 6";
+                    }
+                }
+                if (_b === false) {
+                    return false;
+                }
+            } else {
+                _b = true;
+            }
+        });
+        if (_b) {
+            //Guardar los valores de la tabla en el modelo para enviarlos al controlador
+            copiarTableInfoControl(); //copiarTableInfoPControl();
+            //copiarTableSopControl();
+            copiarTableRet();
+            $('#btn_guardar').trigger("click");
+        } else {
+            M.toast({ html: msgerror });
+        }
         //Termina provisional
-        $('#btn_guardar').click();
+       // $('#btn_guardar').click();
     });
 
     $('#addRowInfo').on('click', function () {
