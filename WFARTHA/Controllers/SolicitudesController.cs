@@ -298,6 +298,13 @@ namespace WFARTHA.Controllers
             doc.ESTATUS_SAP = doc.ESTATUS_SAP;
             doc.ESTATUS_WF = dOCUMENTO.ESTATUS_WF;
 
+            //FRT07112018 Se agrega el nombre del impueto en la cabecera
+            var impcab = dOCUMENTO.IMPUESTO;
+            var impuestotcab = db.IMPUESTOTs.Where(a => a.MWSKZ.Equals(impcab)).FirstOrDefault().TXT50;//MGC 07-11-2018 Descripción corta
+            doc.IMPUESTO = doc.IMPUESTO + " - " + impuestotcab;
+
+            //FRT07112018 END
+
             //FRT06112018  Se agrega para poder mostra el nombre de la condicion de pago en pantalla
 
             if (dOCUMENTO.CONDICIONES != null)
