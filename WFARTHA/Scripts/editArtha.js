@@ -1,5 +1,6 @@
 ﻿//Variables globales
 var posinfo = 0;
+var posrows = 0;
 var tRet = [];//Agrego a un array los tipos de retenciones
 var tRet2 = [];
 $(document).ready(function () {
@@ -277,8 +278,15 @@ $(document).ready(function () {
         var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018
         posinfo++;
 
+
+        //FRT08112018 AGREGAR Y QUE SE MIREN LAS 
+        posinfot = posrows + posinfo++;
+
         //Obtener el select de impuestos en la cabecera
-        var idselect = "infoSel" + posinfo;
+        var idselect = "infoSel" + posinfot;
+
+        //Obtener el select de impuestos en la cabecera
+        //var idselect = "infoSel" + posinfo;
 
         //Obtener el valor 
         var imp = $('#IMPUESTO').val();
@@ -1212,7 +1220,8 @@ function copiarTableInfoControl() {
             var inpt = t.row(indexopc).data()[9];
             var x_inpt = inpt.split('');
             if (x_inpt.length > 3) {
-                inpt = "";
+                var itag = $(inpt);
+                inpt = itag.val();
             }
             //LEJ 03-10-2018
             if (inpt == "" || inpt == null) {
@@ -1956,6 +1965,7 @@ function armarTablaInfo(datos) {
     // if (_infoc === datos.DOCUMENTOPSTR.length) {//LEJGG-05-11-2018
     if (datos.DOCUMENTOPSTR.length > 0) {
         for (var i = 0; i < datos.DOCUMENTOPSTR.length; i++) {
+            posrows = i;
             for (var x = 0; x < _infoBIIR.length; x++) {
                 if (_infoBIIR[x].POS === (i + 1)) {
                     arrColExTA.push(_infoBIIR[x]);
@@ -1980,7 +1990,7 @@ function armarTablaInfo(datos) {
                 var ar = addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, _infoAnex[i].a1, _infoAnex[i].a2, _infoAnex[i].a3, _infoAnex[i].a4, _infoAnex[i].a5, datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, datos.DOCUMENTOPSTR[i].TCONCEPTO, datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
                     datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, datos.DOCUMENTOPSTR[i].CCOSTO, datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
                 //Obtener el select de impuestos en la cabecera
-                var idselect = "infoSel0";
+                var idselect = "infoSel" + i;
                 //Obtener el valor 
                 var imp = $('#IMPUESTO').val();
                 //Crear el nuevo select con los valores de impuestos
@@ -1990,7 +2000,7 @@ function armarTablaInfo(datos) {
                 var ar = addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, "", "", "", "", "", datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, datos.DOCUMENTOPSTR[i].TCONCEPTO/*Tipo Concepto*/, datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
                     datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, datos.DOCUMENTOPSTR[i].CCOSTO/*Centro de costo*/, datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
                 //Obtener el select de impuestos en la cabecera
-                var idselect = "infoSel0";
+                var idselect = "infoSel" + i;
                 //Obtener el valor 
                 var imp = $('#IMPUESTO').val();
                 //Crear el nuevo select con los valores de impuestos
