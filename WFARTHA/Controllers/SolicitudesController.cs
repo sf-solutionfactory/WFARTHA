@@ -4999,7 +4999,6 @@ namespace WFARTHA.Controllers
                     _xml += lines[i];
                 }
                 XmlDocument doc = new XmlDocument();
-                //doc.LoadXml(lines[0]);
                 doc.LoadXml(_xml);
 
                 var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");

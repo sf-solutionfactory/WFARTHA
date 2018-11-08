@@ -660,17 +660,16 @@ $(document).ready(function () {
             }
         });
 
-        //FRT04112018.2 Se realizara validación del monto > 0
-
+        //FRT04112018.2 Se realizara validación del monto > 0s
         var proveedor = $("#PAYER_ID").val();
-
         if (proveedor == "" | proveedor == null) {
+            //mensaje de error
             msgerror = "No se ha seleccionado proveedor";
             _b = false;
         } else {
             _b = true;
         }
-
+        //update codigo fer
         //END FRT04112018.2
 
         if (_b) {

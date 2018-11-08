@@ -861,6 +861,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @*@using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))*@
                                 @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
                                 {
                                     if (@lstDocsA != null)
