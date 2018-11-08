@@ -861,11 +861,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @using (Html.BeginForm("DescargarDetails", "Solicitudes", FormMethod.Post))
+                                @*@using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))*@
+                                @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
                                 {
-
-
-
                                     if (@lstDocsA != null)
                                     {
                                         for (int i = 0; i < @lstDocsA.Count; i++)

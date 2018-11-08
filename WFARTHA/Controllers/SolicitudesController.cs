@@ -2355,7 +2355,8 @@ namespace WFARTHA.Controllers
                     {
                         _doc.PAYER_ID = dOCUMENTO.PAYER_ID;
                     }
-                    else { //se queda el que tiene
+                    else
+                    { //se queda el que tiene
                     }
                     if (dOCUMENTO.CONDICIONES != null)
                     {
@@ -4983,57 +4984,34 @@ namespace WFARTHA.Controllers
         {
             try
             {
+
+                //FRT07112018.2  Lectura de XML
                 var _ff = file.ToList();
                 var lines = ReadLines(() => _ff[0].InputStream, Encoding.UTF8).ToArray();
                 var _lin = lines.Count();
                 string _soc = (string)Session["SOC"];
 
                 string _rfc_soc = db.SOCIEDADs.Where(soc => soc.BUKRS == _soc).FirstOrDefault().STCD1;
+                var _xml = "";
+                //Proceso a realizar si el xml viene estructurado en varios renglones, se concatena en 1 solo //FRT Y LEJGG 07-11-18
+                for (int i = 0; i < _lin; i++)
+                {
+                    _xml += lines[i];
+                }
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(_xml);
 
-                //XmlDocument doc = new XmlDocument();
-                //doc.LoadXml(lines[0]);
+                var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
+                var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
+                var xmlnode3 = doc.GetElementsByTagName("cfdi:Emisor");
+                var xmlnode4 = doc.GetElementsByTagName("tfd:TimbreFiscalDigital");
 
-                //var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
-                //var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
-                //var xmlnode3 = doc.GetElementsByTagName("cfdi:Emisor");
-                //var xmlnode4 = doc.GetElementsByTagName("tfd:TimbreFiscalDigital");
-                ////var xmlnode4_2= xmlnode4.g
-
-
-
-                var posini = lines[1].IndexOf("Fecha=");
-                var posfin = lines[1].IndexOf(" ", posini + 1);
-                var _F = DateTime.Parse(lines[1].Substring(posini + 7, posfin - (posini + 8))).ToShortDateString();
-
-                posini = lines[1].IndexOf(" Total=");
-                posfin = lines[1].IndexOf(" ", posini + 1);
-                var _Mt = lines[1].Substring(posini + 8, posfin - (posini + 9));
-
-                posini = lines[1].IndexOf("TipoCambio=");
-                posfin = lines[1].IndexOf(" ", posini + 1);
-                var _TipoCambio = lines[1].Substring(posini + 12, posfin - (posini + 13));
-
-
-                posini = lines[2].IndexOf("Rfc=");
-                posfin = lines[2].IndexOf(" ", posini + 1);
-                var _RFCEmisor = lines[2].Substring(posini + 5, posfin - (posini + 6));
-
-                posini = lines[3].IndexOf("Rfc=");
-                posfin = lines[3].IndexOf(" ", posini + 1);
-                var _RFCReceptor = lines[3].Substring(posini + 5, posfin - (posini + 6));
-
-                posini = lines[_lin - 3].IndexOf("UUID=");
-                posfin = lines[_lin - 3].IndexOf(" ", posini + 1);
-                var _Uuid = lines[_lin - 3].Substring(posini + 6, posfin - (posini + 7));
-
-
-
-                //var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
-                //var _Mt = xmlnode[0].Attributes["Total"].Value;
-                //var _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;
-                //var _RFCReceptor = xmlnode2[0].Attributes["Rfc"].Value;
-                //var _RFCEmisor = xmlnode3[0].Attributes["Rfc"].Value;
-                //var _Uuid = xmlnode4[0].Attributes["UUID"].Value;
+                var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
+                var _Mt = xmlnode[0].Attributes["Total"].Value;
+                var _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;
+                var _RFCReceptor = xmlnode2[0].Attributes["Rfc"].Value;
+                var _RFCEmisor = xmlnode3[0].Attributes["Rfc"].Value;
+                var _Uuid = xmlnode4[0].Attributes["UUID"].Value;
 
                 List<string> lstvals = new List<string>();
                 lstvals.Add(_F);//Fecha
@@ -5044,7 +5022,7 @@ namespace WFARTHA.Controllers
                 lstvals.Add(_TipoCambio);//TCambio
                 lstvals.Add(_rfc_soc);//Sociedad
                 JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
-
+                //FRT 07112018 
                 return jc;
             }
             catch (Exception e)

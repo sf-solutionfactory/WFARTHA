@@ -509,9 +509,6 @@ $(document).ready(function () {
 
         //FRT 05112018
 
-      
-
-
         var _b = false;
         var _vs = [];
         var msgerror = "";
@@ -543,6 +540,10 @@ $(document).ready(function () {
             }
 
         }
+
+
+
+
         //$("#table_info > tbody  > tr[role='row']").each(function () { //MGC 24-10-2018 Conflicto Enrique-Rogelio
         var t = $('#table_info').DataTable();
         var tabble = "table_info";
@@ -561,10 +562,10 @@ $(document).ready(function () {
             var ceco = $(this).find("td.CCOSTO input").val();
             var tr = $(this);
             var indexopc = t.row(tr).index();
-         
+
             var tipoimp = t.row(indexopc).data()[13];
 
-          
+
 
             if (tipoimp == "K" & (ceco == "" | ceco == null)) {
                 msgerror = "Falta ingresar Centro de Costo";
@@ -589,7 +590,10 @@ $(document).ready(function () {
                 return false;
             }
             //END FRT06112018.3
-          
+
+
+
+
             if (_vs.length > 0) {
                 for (var i = 0; i < _vs.length; i++) {
                     if (na1 === _vs[i] || na1 === "") {
@@ -655,6 +659,19 @@ $(document).ready(function () {
                 _b = true;
             }
         });
+
+        //FRT04112018.2 Se realizara validación del monto > 0s
+        var proveedor = $("#PAYER_ID").val();
+        if (proveedor == "" | proveedor == null) {
+            //mensaje de error
+            msgerror = "No se ha seleccionado proveedor";
+            _b = false;
+        } else {
+            _b = true;
+        }
+        //update codigo fer
+        //END FRT04112018.2
+
         if (_b) {
             //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
             copiarTableInfoControl();
@@ -706,6 +723,7 @@ $(document).ready(function () {
     });
 
     $('#file_sopAnexar').change(function () {
+
         //Validacion para saber si es sin orden de compra o reembolso
         var val3 = $('#tsol').val();
         val3 = "[" + val3 + "]";
@@ -742,7 +760,7 @@ $(document).ready(function () {
                             contentType: false,
                             processData: false,
                             success: function (data) {
-                                if (data !== null || data !== "") {
+                                if (data != null | data != "") {
                                     _resVu = validarUuid(data[4]);
                                     if (!_resVu) {
                                         //$('#Uuid').val(data[4]);
@@ -1731,7 +1749,7 @@ $('body').on('focusout', '.OPER', function (e) {
 
         //Lleno los campos de Base Imponible con el valor del monto
         for (x = 0; x < tRet2.length; x++) {
-            var _xvalue = tr.find("td.BaseImp" + tRet2[x] + " input").val().replace('$', '').replace(',','');
+            var _xvalue = tr.find("td.BaseImp" + tRet2[x] + " input").val().replace('$', '').replace(',', '');
             // if (_xvalue === "") {
             //AJAX
             var indret = 0;
@@ -2328,8 +2346,8 @@ $('body').on('focusout', '.extrasC', function (e) {
         if (campo == "IVA") {
             _res = (_nnm * _res);//Saco el porcentaje
         }
-            tr.find("td.ImpRet" + tRet2[arrcl[1]] + " input").val(toShow(_res));
-        
+        tr.find("td.ImpRet" + tRet2[arrcl[1]] + " input").val(toShow(_res));
+
         //--------------------------------------LEJ18102018---------------------->
         //hare la operacion para actualizar el total del renglon
         var _mnt = tr.find("td.MONTO input").val().replace('$', '');
