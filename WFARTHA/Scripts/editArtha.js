@@ -520,6 +520,13 @@ $(document).ready(function () {
         $(tr).css("background-color:#c4f0ff;");
     });
 
+    $('#table_info tbody').on('click', 'td.select_row', function () {
+        //var t = $('#table_anexa').DataTable();
+        var tr = $(this).closest('tr');
+
+        $(tr).toggleClass('selected');
+        $(tr).css("background-color:#c4f0ff;");
+    });
     //En esta parte me encargare de bloquear o desbloquear ciertos campos
     var pacc = $('#pacc').val();
     ocultarCamposEdicion(pacc);
@@ -1896,7 +1903,16 @@ function armarTablaInfo(datos) {
         "paging": false,
         "info": false,
         "searching": false,
-        "columns": arrCols
+        "columns": arrCols,
+        columnDefs: [
+            { targets: 2, width: '580px' },
+            { targets: 3, width: '40px' },
+            { targets: 4, width: '580px' },
+            { targets: 5, width: '580px' },
+            { targets: 6, width: '580px' },
+            { targets: 19, width: '580px' }
+
+        ]
     });
 
     //LEJ16102018

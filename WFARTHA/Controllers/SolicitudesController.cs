@@ -2323,6 +2323,7 @@ namespace WFARTHA.Controllers
                 {
                     //Traigo los datos previamente registrados
                     var _doc = db.DOCUMENTOes.Where(n => n.NUM_DOC == dOCUMENTO.NUM_DOC).FirstOrDefault();
+                    var _payid = _doc.PAYER_ID;
                     var _ndoc = _doc.NUM_DOC;
                     //Copiar valores del post al nuevo objeto
                     _doc.TSOL_ID = dOCUMENTO.TSOL_ID;
@@ -2379,15 +2380,15 @@ namespace WFARTHA.Controllers
                     _doc.DOCUMENTO_SAP = doct.BLART.ToString();
 
                     //Fechac
-                    _doc.FECHAC = DateTime.Now;
+                   // _doc.FECHAC = DateTime.Now;
                     //Horac
-                    _doc.HORAC = DateTime.Now.TimeOfDay;
+                   // _doc.HORAC = DateTime.Now.TimeOfDay;
                     //FECHAC_PLAN
-                    _doc.FECHAC_PLAN = DateTime.Now.Date;
+                    //_doc.FECHAC_PLAN = DateTime.Now.Date;
                     //FECHAC_USER
-                    _doc.FECHAC_USER = DateTime.Now.Date;
+                    //_doc.FECHAC_USER = DateTime.Now.Date;
                     //HORAC_USER
-                    _doc.HORAC_USER = DateTime.Now.TimeOfDay;
+                    //_doc.HORAC_USER = DateTime.Now.TimeOfDay;
 
                     //Si es B signfica que ya pasa a ser N
                     est = _doc.ESTATUS;
@@ -2454,26 +2455,6 @@ namespace WFARTHA.Controllers
                                     db.Entry(dp).State = EntityState.Modified;
                                     db.SaveChanges();
 
-
-                                    //frt 03112018
-                                    //if (dOCUMENTO.DOCUMENTOP[i].TIPOIMP == "K" & (dOCUMENTO.DOCUMENTOP[i].CCOSTO == "" | dOCUMENTO.DOCUMENTOP[i].CCOSTO == null))
-                                    //{
-                                    //    _error_imputacion = 1;
-                                    //}
-
-                                    //if (_error_imputacion != 1)
-                                    //{
-                                    //    db.Entry(dp).State = EntityState.Modified;
-                                    //    db.SaveChanges();
-                                    //}
-                                    //else
-                                    //{
-                                    //    _pos_err_imputacion = _pos_err_imputacion + "," + j;
-
-                                    //}
-
-                                    //db.Entry(dp).State = EntityState.Modified;
-                                    //db.SaveChanges();
                                 }
                                 else
                                 {
@@ -2497,33 +2478,10 @@ namespace WFARTHA.Controllers
                                     dp.IVA = dOCUMENTO.DOCUMENTOP[i].IVA;
                                     _iva = _iva + dOCUMENTO.DOCUMENTOP[i].IVA;//lejgg 10-10-2018
                                     dp.TOTAL = dOCUMENTO.DOCUMENTOP[i].TOTAL;
-                                    _total = dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
+                                    _total = _total + dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
                                     dp.TEXTO = dOCUMENTO.DOCUMENTOP[i].TEXTO;
                                     db.DOCUMENTOPs.Add(dp);
                                     db.SaveChanges();
-
-
-
-                                    //frt 03112018
-                                    //if (dOCUMENTO.DOCUMENTOP[i].TIPOIMP == "K" & (dOCUMENTO.DOCUMENTOP[i].CCOSTO == "" | dOCUMENTO.DOCUMENTOP[i].CCOSTO == null))
-                                    //{
-                                    //    _error_imputacion = 1;
-                                    //}
-
-                                    //if (_error_imputacion != 1)
-                                    //{
-                                    //    db.DOCUMENTOPs.Add(dp);
-                                    //    db.SaveChanges();
-                                    //}
-                                    //else
-                                    //{
-                                    //    _pos_err_imputacion = _pos_err_imputacion + "," + j;
-
-                                    //}
-
-
-                                    //db.DOCUMENTOPs.Add(dp);
-                                    //db.SaveChanges();//LEJGG 29-10-2018
                                 }
                             }
                             catch (Exception e)
@@ -2532,14 +2490,6 @@ namespace WFARTHA.Controllers
                             }
                             j++;
                         }
-
-
-
-                        //if (_pos_err_imputacion != "")
-                        //{
-                        //    Session["ERR_CECO"] = "Documentos " + _pos_err_imputacion + " no cuentan con CECO valido";
-                        //}
-
 
                         //lejgg 10-10-2018-------------------->
                         //Busco Informacion Previa del documento si es que existe.
@@ -2552,7 +2502,7 @@ namespace WFARTHA.Controllers
                             _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
                             _dp.POS = j;
                             _dp.ACCION = "H";
-                            _dp.CUENTA = dOCUMENTO.PAYER_ID;
+                            _dp.CUENTA = _doc.PAYER_ID;
                             _dp.MONTO = _monto + _iva;//Obtener las retenciones relacionadas con las ya mostradas en la tabla
                             _dp.MWSKZ = _mwskz;
                             _dp.IVA = _iva;
@@ -2566,7 +2516,7 @@ namespace WFARTHA.Controllers
                             _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
                             _dp.POS = j;
                             _dp.ACCION = "H";
-                            _dp.CUENTA = dOCUMENTO.PAYER_ID;
+                            _dp.CUENTA = _doc.PAYER_ID;
                             _dp.MONTO = _monto + _iva;//Obtener las retenciones relacionadas con las ya mostradas en la tabla
                             _dp.MWSKZ = _mwskz;
                             _dp.IVA = _iva;
