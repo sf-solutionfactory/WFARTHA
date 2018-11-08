@@ -2326,10 +2326,22 @@ namespace WFARTHA.Controllers
                     var _ndoc = _doc.NUM_DOC;
                     //Copiar valores del post al nuevo objeto
                     _doc.TSOL_ID = dOCUMENTO.TSOL_ID;
-                    _doc.SOCIEDAD_ID = dOCUMENTO.SOCIEDAD_ID;
-                    _doc.FECHAD = dOCUMENTO.FECHAD;
-                    _doc.FECHACON = dOCUMENTO.FECHAD;
-                    _doc.FECHA_BASE = dOCUMENTO.FECHAD;
+                    if (dOCUMENTO.SOCIEDAD_ID != null)
+                    {
+                        _doc.SOCIEDAD_ID = dOCUMENTO.SOCIEDAD_ID;
+                    }
+                    else
+                    {//se queda el de la bd
+                    }
+                    if (dOCUMENTO.FECHAD.ToString() != null)
+                    {
+                        _doc.FECHAD = dOCUMENTO.FECHAD;
+                        _doc.FECHACON = dOCUMENTO.FECHAD;
+                        _doc.FECHA_BASE = dOCUMENTO.FECHAD;
+                    }
+                    else
+                    {//se queda el de la bd
+                    }
                     _doc.MONEDA_ID = dOCUMENTO.MONEDA_ID;
                     _doc.TIPO_CAMBIO = dOCUMENTO.TIPO_CAMBIO;
                     _doc.IMPUESTO = dOCUMENTO.IMPUESTO;
@@ -2345,7 +2357,13 @@ namespace WFARTHA.Controllers
                     }
                     else { //se queda el que tiene
                     }
-                    _doc.CONDICIONES = dOCUMENTO.CONDICIONES;
+                    if (dOCUMENTO.CONDICIONES != null)
+                    {
+                        _doc.CONDICIONES = dOCUMENTO.CONDICIONES;
+                    }
+                    else
+                    { //se queda el que tiene
+                    }
                     _doc.TEXTO_POS = dOCUMENTO.TEXTO_POS;
                     _doc.ASIGNACION_POS = dOCUMENTO.ASIGNACION_POS;
                     _doc.CLAVE_CTA = dOCUMENTO.CLAVE_CTA;
@@ -2386,7 +2404,7 @@ namespace WFARTHA.Controllers
 
                     //db.DOCUMENTOes.Add(_doc);
                     db.Entry(_doc).State = EntityState.Modified;
-                    //db.SaveChanges();//LEJGG 29-10-2018
+                    db.SaveChanges();//LEJGG 29-10-2018
 
                     //Guardar número de documento creado
                     Session["NUM_DOC"] = _doc.NUM_DOC;
