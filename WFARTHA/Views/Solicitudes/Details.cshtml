@@ -25,6 +25,16 @@
 
 <script src="~/Scripts/details.js"></script>
 <script src="~/Scripts/formatos.js"></script>
+
+@*FRT07112018 Se agregan para el modal*@
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+@*FRT07112018 fin de agregar*@
+
+
 @if (ViewBag.error != "")
 {
     <script>
@@ -173,9 +183,9 @@
                 </div>
                 <div class="input-field col s4">
                     @*<input type="text" id="txt_user" value="@ViewBag.usuario.MANAGER" disabled="disabled" />
-                        <label for="txt_user">Manager</label>*@
+                    <label for="txt_user">Manager</label>*@
                     @*@Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
-                        @Html.LabelFor(model => model.D.USUARIO.MANAGER, new { @id = "lbl_manager" })*@
+                    @Html.LabelFor(model => model.D.USUARIO.MANAGER, new { @id = "lbl_manager" })*@
                 </div>
 
 
@@ -183,24 +193,24 @@
                     @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled", style = "display:none" } })
                     @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, new { @id = "lbl_backup", style = "display:none" })
                     @*<input type="text" id="txt_user" value="@ViewBag.usuario.BACKUP_ID" disabled="disabled" />
-                        <label for="txt_user">Backup</label>*@
+                    <label for="txt_user">Backup</label>*@
                 </div>
             </div>
         </div>
         <div class="col s6 m2 l2">
             <div class="input-field col s6">
                 @*<input type="text" id="txt_user" value="PRGA" disabled="disabled" />
-                    <label for="txt_user">BU</label>*@
+                <label for="txt_user">BU</label>*@
                 @*@Html.EditorFor(model => model.D.USUARIO.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @id = "lbl_bu" })*@
+                @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @id = "lbl_bu" })*@
             </div>
             @*<div class="input-field col s6">
-                    @if (Model.D.ESTATUS == "N")
-                    {
-                        <input type="text" id="txt_status"  value="Nuevo" disabled="disabled" />
-                        <label for="txt_status" id="lbl_status">Estatus</label>
-                    }
-                </div>*@
+                @if (Model.D.ESTATUS == "N")
+                {
+                    <input type="text" id="txt_status"  value="Nuevo" disabled="disabled" />
+                    <label for="txt_status" id="lbl_status">Estatus</label>
+                }
+            </div>*@
         </div>
         <div class="col s12 m5 l5">
             <div class="row right">
@@ -231,7 +241,7 @@
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
                             @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                                <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                            <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                         }
@@ -376,6 +386,52 @@
             <h5 id="head_cabecera" style="display:inline-block">@ViewBag.PrSl</h5>
 
         </div>
+
+
+
+        @*FRT07112018 Modal para el Foro*@
+        <div>
+            <br />
+            <a class="waves-effect waves-light btn pink darken-1 modal-trigger" href="#demo-modal-custom">FORO</a>
+
+        </div>
+
+        @*FRT07112018 Modal para el Foro*@
+        <!-- Modal Structure -->
+        <div id="demo-modal-custom" class="modal">
+            <div class="modal-content">
+                <div class="row">
+                    <h4 id="txt_cont">Foro de Proyecto</h4>
+                    <br />
+                </div>
+                <div class="row" style="">
+                    <div class="col s12 m12 l12">
+                        <div class="row" style="margin-bottom:0">
+                            @Html.HiddenFor(model => model.F.WORKF_ID)
+                            <div class="input-field col s10 offset-s1">
+                                @Html.TextAreaFor(model => model.F.COMENTARIO, new { @class = "materialize-textarea", @id = "txt_comentario" })
+                                @Html.LabelFor(model => model.F.COMENTARIO, new { @id = "lbl_userid" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-red btn orange darken-3">OK</a>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $('.modal').modal({
+                    dismissible: false, // Modal cannot be closed by clicking anywhere outside
+                }
+                );
+            })
+        </script>
+
+        @*Fin del Modal*@
+
     </div>
 
     @*MGC 04-10-2018 Botones para acciones <--*@
@@ -489,10 +545,17 @@
                             <input type="text" id="norden_compra" value="" />@*Lejgg-09-10-2018*@
                             <label for="norden_compra" id="lbl_norden_compra">Orden de compra</label>
                         </div>
+                        @*<div class="form-group col s6">
+                                @Html.LabelFor(model => model.D.IMPUESTO, "Impuesto", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
+
+                                </div>
+                            </div>*@
                         <div class="form-group col s6">
-                            @Html.LabelFor(model => model.D.IMPUESTO, "Impuesto", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.Label("impuesto", "Impuesto", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
-                                @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
+                                @Html.EditorFor(model => model.D.IMPUESTO, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
 
                             </div>
                         </div>
@@ -760,18 +823,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    @if (@Model.D.DOCUMENTOPSTR != null)
+
+                                @if (@Model.D.DOCUMENTOPSTR != null)
+                                {
+                                    for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
                                     {
-                                        for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
-                                        {
-                                            if (colsret.Count == 0)
+                                        <tr>
+                                            @if (colsret.Count == 0)
                                             {
                                                 <td></td>
                                             }
                                             <td></td>
                                             <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
-                                            if (@Model.D.Anexo != null)
+                                            @if (@Model.D.Anexo != null)
                                             {
                                                 <td>@Model.D.Anexo[i].a1</td>
                                                 <td>@Model.D.Anexo[i].a2</td>
@@ -800,7 +864,7 @@
                                             <td>@Model.D.DOCUMENTOPSTR[i].IMPUESTOT</td>
                                             <td>@Model.D.DOCUMENTOPSTR[i].IVA</td>
                                             <td>@Model.D.DOCUMENTOPSTR[i].TEXTO</td>
-                                            for (int y = 0; y < colsret.Count; y++)
+                                            @for (int y = 0; y < colsret.Count; y++)
                                             {
                                                 <td>
                                                     @{var _v = colsret[y]; }
@@ -813,10 +877,10 @@
                                                 </td>
                                             }
                                             <td> @Model.D.DOCUMENTOPSTR[i].TOTAL</td>
-                                        }
-                                    }
-                                </tr>
 
+                                        </tr>
+                                    }
+                                }
                             </tbody>
                         </table>
                     </div>

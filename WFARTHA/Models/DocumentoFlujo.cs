@@ -10,5 +10,7 @@ namespace WFARTHA.Models
     {
         public DOCUMENTO_MOD D { get; set; }
         public FLUJO F { get; set; }
+        public FORO FQ { get; set; }
+        public FOROD FA { get; set; }
     }
 }

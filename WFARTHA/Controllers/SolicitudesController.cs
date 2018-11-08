@@ -298,6 +298,16 @@ namespace WFARTHA.Controllers
             doc.ESTATUS_SAP = doc.ESTATUS_SAP;
             doc.ESTATUS_WF = dOCUMENTO.ESTATUS_WF;
 
+
+            //FRT07112018 Se agrega el nombre del impueto en la cabecera
+            var impcab = dOCUMENTO.IMPUESTO;
+            var impuestotcab = db.IMPUESTOTs.Where(a => a.MWSKZ.Equals(impcab)).FirstOrDefault().TXT50;//MGC 07-11-2018 Descripción corta
+            doc.IMPUESTO = doc.IMPUESTO + " - " + impuestotcab;
+
+            //FRT07112018 END
+
+
+
             //FRT06112018  Se agrega para poder mostra el nombre de la condicion de pago en pantalla
 
             if (dOCUMENTO.CONDICIONES != null)
@@ -308,6 +318,9 @@ namespace WFARTHA.Controllers
             }
 
             // END FRT06112018
+
+
+
 
 
             ViewBag.SOCIEDAD_ID = new SelectList(sociedades, "BUKRS", "TEXT", doc.SOCIEDAD_ID);
@@ -534,6 +547,8 @@ namespace WFARTHA.Controllers
             DocumentoFlujo DF = new DocumentoFlujo();
             DF.D = doc;
             DF.F = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderByDescending(a => a.POS).FirstOrDefault();
+            DF.FQ = db.FOROes.Where(a => a.NUM_DOC.Equals(id) && a.CERRADO != null).FirstOrDefault();
+
 
             //MGC 04 - 10 - 2018 Botones para acciones y flujo <--
 
@@ -695,6 +710,7 @@ namespace WFARTHA.Controllers
             d.FECHAD = theTime;
             d.FECHACON = theTime;
             d.FECHA_BASE = theTime;
+
 
             //MGC 02-10-2018 Cadena de autorización
             //List<DET_AGENTECC> dta = new List<DET_AGENTECC>();
@@ -4942,28 +4958,28 @@ namespace WFARTHA.Controllers
 
 
 
-                var posini = lines[1].IndexOf("Fecha=");
-                var posfin = lines[1].IndexOf(" ", posini + 1);
-                var _F = DateTime.Parse(lines[1].Substring(posini + 7, posfin - (posini + 8))).ToShortDateString();
+                var posini = lines[0].IndexOf("Fecha=");
+                var posfin = lines[0].IndexOf(" ", posini + 1);
+                var _F = DateTime.Parse(lines[0].Substring(posini + 7, posfin - (posini + 8))).ToShortDateString();
 
-                posini = lines[1].IndexOf(" Total=");
-                posfin = lines[1].IndexOf(" ", posini + 1);
-                var _Mt = lines[1].Substring(posini + 8, posfin - (posini + 9));
+                posini = lines[0].IndexOf(" Total=");
+                posfin = lines[0].IndexOf(" ", posini + 1);
+                var _Mt = lines[0].Substring(posini + 8, posfin - (posini + 9));
 
-                posini = lines[1].IndexOf("TipoCambio=");
-                posfin = lines[1].IndexOf(" ", posini + 1);
-                var _TipoCambio = lines[1].Substring(posini + 12, posfin - (posini + 13));
+                posini = lines[0].IndexOf("TipoCambio=");
+                posfin = lines[0].IndexOf(" ", posini + 1);
+                var _TipoCambio = lines[0].Substring(posini + 12, posfin - (posini + 13));
 
+
+                posini = lines[1].IndexOf("Rfc=");
+                posfin = lines[1].IndexOf("", posini + 1);
+                var _RFCEmisor = lines[1].Substring(posini + 5, posfin - (posini + 5));
 
                 posini = lines[2].IndexOf("Rfc=");
                 posfin = lines[2].IndexOf(" ", posini + 1);
-                var _RFCEmisor = lines[2].Substring(posini + 5, posfin - (posini + 6));
+                var _RFCReceptor = lines[0].Substring(posini + 5, posfin - (posini + 5));
 
-                posini = lines[3].IndexOf("Rfc=");
-                posfin = lines[3].IndexOf(" ", posini + 1);
-                var _RFCReceptor = lines[3].Substring(posini + 5, posfin - (posini + 6));
-
-                posini = lines[_lin - 3].IndexOf("UUID=");
+                posini = lines[_lin-3].IndexOf("UUID=");
                 posfin = lines[_lin - 3].IndexOf(" ", posini + 1);
                 var _Uuid = lines[_lin - 3].Substring(posini + 6, posfin - (posini + 7));
 
