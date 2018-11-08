@@ -298,13 +298,6 @@ namespace WFARTHA.Controllers
             doc.ESTATUS_SAP = doc.ESTATUS_SAP;
             doc.ESTATUS_WF = dOCUMENTO.ESTATUS_WF;
 
-            //FRT07112018 Se agrega el nombre del impueto en la cabecera
-            var impcab = dOCUMENTO.IMPUESTO;
-            var impuestotcab = db.IMPUESTOTs.Where(a => a.MWSKZ.Equals(impcab)).FirstOrDefault().TXT50;//MGC 07-11-2018 Descripción corta
-            doc.IMPUESTO = doc.IMPUESTO + " - " + impuestotcab;
-
-            //FRT07112018 END
-
             //FRT06112018  Se agrega para poder mostra el nombre de la condicion de pago en pantalla
 
             if (dOCUMENTO.CONDICIONES != null)
@@ -1848,17 +1841,15 @@ namespace WFARTHA.Controllers
         // GET: Solicitudes/Edit/5
         public ActionResult Edit(decimal id, string pacc)
         {
-            //lEJGG 7-11-18----------------------->
-            int pagina = 204;//lEJGG 7-11-18
+            int pagina = 202;
             if (pacc == "B")
             {
                 pagina = 209; //ID EN BASE DE DATOS para borrador
             }
             else
             {
-                pagina = 204; //ID EN BASE DE DATOS
+               pagina = 204; //ID EN BASE DE DATOS
             }
-            //lEJGG 7-11-18-----------------------<
             FORMATO formato = new FORMATO();
             string spras = "";
             string user_id = "";//MGC 02-10-2018 Cadena de autorización
@@ -1948,16 +1939,7 @@ namespace WFARTHA.Controllers
                     dm.FACTURA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).FACTURA;
                     dm.GRUPO = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
                     dm.CUENTA = dOCUMENTO.DOCUMENTOPs.ElementAt(i).CUENTA;
-                    string ct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).GRUPO;
-                    var tct = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TCONCEPTO;
-                    try
-                    {
-                        dm.NOMCUENTA = db.CONCEPTOes.Where(x => x.ID_CONCEPTO == ct && x.TIPO_CONCEPTO == tct).FirstOrDefault().DESC_CONCEPTO.Trim();
-                    }
-                    catch (Exception e)
-                    {
-                        dm.NOMCUENTA = "Transporte";
-                    }
+                    dm.NOMCUENTA = "Transporte";
                     dm.TIPOIMP = dOCUMENTO.DOCUMENTOPs.ElementAt(i).TIPOIMP;
                     dm.IMPUTACION = dOCUMENTO.DOCUMENTOPs.ElementAt(i).IMPUTACION;
                     dm.MONTO = fc.toShow(dOCUMENTO.DOCUMENTOPs.ElementAt(i).MONTO, formato.DECIMALES);
@@ -2268,7 +2250,7 @@ namespace WFARTHA.Controllers
                     //}).FirstOrDefault();//MGC 03-11-2018 Posible cambio lista dtas
                 }).ToList();//MGC 03-11-2018 Posible cambio lista dtas
 
-                ViewBag.DETAA = new SelectList(dtas, "ID", "TEXT", dtas);//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas) //lejgg 06-11-2018
+                ViewBag.DETAA = new SelectList(dtas, "ID", "TEXT",dtas);//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas) //lejgg 06-11-2018
                 //ViewBag.DETAA = new SelectList(dta, "ID", "TEXT", dtas);//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas)
             }
             else
@@ -2339,12 +2321,7 @@ namespace WFARTHA.Controllers
                     _t = _t.Replace(",", "");
                     _doc.MONTO_DOC_MD = decimal.Parse(_t);
                     _doc.CONCEPTO = dOCUMENTO.CONCEPTO;
-                    if (_doc.ESTATUS == "B")
-                    {
-                        _doc.PAYER_ID = dOCUMENTO.PAYER_ID;
-                    }
-                    else { //se queda el que tiene
-                    }
+                    _doc.PAYER_ID = dOCUMENTO.PAYER_ID;
                     _doc.CONDICIONES = dOCUMENTO.CONDICIONES;
                     _doc.TEXTO_POS = dOCUMENTO.TEXTO_POS;
                     _doc.ASIGNACION_POS = dOCUMENTO.ASIGNACION_POS;
@@ -3987,25 +3964,7 @@ namespace WFARTHA.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            var _numdoc = dOCUMENTO.NUM_DOC;
-            var rpb = "";
-            try
-            {
-                rpb = db.DOCUMENTOes.Where(x => x.NUM_DOC == _numdoc).FirstOrDefault().ESTATUS.Trim();
-            }
-            catch (Exception e)
-            {
-
-            }
-            int pagina = 204;//lEJGG 7-11-18
-            if (rpb == "B")
-            {
-                pagina = 209; //ID EN BASE DE DATOS
-            }
-            else
-            {
-                pagina = 204; //ID EN BASE DE DATOS
-            }
+            int pagina = 201; //ID EN BASE DE DATOS
             string spras = "";
             using (WFARTHAEntities db = new WFARTHAEntities())
             {
@@ -4965,57 +4924,63 @@ namespace WFARTHA.Controllers
         {
             try
             {
+
+                //FRT07112018.2  Lectura de XML
                 var _ff = file.ToList();
                 var lines = ReadLines(() => _ff[0].InputStream, Encoding.UTF8).ToArray();
                 var _lin = lines.Count();
                 string _soc = (string)Session["SOC"];
 
                 string _rfc_soc = db.SOCIEDADs.Where(soc => soc.BUKRS == _soc).FirstOrDefault().STCD1;
-
-                //XmlDocument doc = new XmlDocument();
+                var _xml = "";
+                for (int i = 0; i < _lin; i++)
+                {
+                    _xml += lines[i];
+                }
+                XmlDocument doc = new XmlDocument();
                 //doc.LoadXml(lines[0]);
+                doc.LoadXml(_xml);
 
-                //var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
-                //var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
-                //var xmlnode3 = doc.GetElementsByTagName("cfdi:Emisor");
-                //var xmlnode4 = doc.GetElementsByTagName("tfd:TimbreFiscalDigital");
-                ////var xmlnode4_2= xmlnode4.g
-
-
-
-                var posini = lines[1].IndexOf("Fecha=");
-                var posfin = lines[1].IndexOf(" ", posini + 1);
-                var _F = DateTime.Parse(lines[1].Substring(posini + 7, posfin - (posini + 8))).ToShortDateString();
-
-                posini = lines[1].IndexOf(" Total=");
-                posfin = lines[1].IndexOf(" ", posini + 1);
-                var _Mt = lines[1].Substring(posini + 8, posfin - (posini + 9));
-
-                posini = lines[1].IndexOf("TipoCambio=");
-                posfin = lines[1].IndexOf(" ", posini + 1);
-                var _TipoCambio = lines[1].Substring(posini + 12, posfin - (posini + 13));
-
-
-                posini = lines[2].IndexOf("Rfc=");
-                posfin = lines[2].IndexOf(" ", posini + 1);
-                var _RFCEmisor = lines[2].Substring(posini + 5, posfin - (posini + 6));
-
-                posini = lines[3].IndexOf("Rfc=");
-                posfin = lines[3].IndexOf(" ", posini + 1);
-                var _RFCReceptor = lines[3].Substring(posini + 5, posfin - (posini + 6));
-
-                posini = lines[_lin - 3].IndexOf("UUID=");
-                posfin = lines[_lin - 3].IndexOf(" ", posini + 1);
-                var _Uuid = lines[_lin - 3].Substring(posini + 6, posfin - (posini + 7));
+                var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
+                var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
+                var xmlnode3 = doc.GetElementsByTagName("cfdi:Emisor");
+                var xmlnode4 = doc.GetElementsByTagName("tfd:TimbreFiscalDigital");
 
 
 
-                //var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
-                //var _Mt = xmlnode[0].Attributes["Total"].Value;
-                //var _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;
-                //var _RFCReceptor = xmlnode2[0].Attributes["Rfc"].Value;
-                //var _RFCEmisor = xmlnode3[0].Attributes["Rfc"].Value;
-                //var _Uuid = xmlnode4[0].Attributes["UUID"].Value;
+                //var xmlnode4_2= xmlnode4.g
+                //var posini = lines[1].IndexOf("Fecha=");
+                //var posfin = lines[1].IndexOf(" ", posini + 1);
+                //var _F = DateTime.Parse(lines[1].Substring(posini + 7, posfin - (posini + 8))).ToShortDateString();
+
+                //posini = lines[1].IndexOf(" Total=");
+                //posfin = lines[1].IndexOf(" ", posini + 1);
+                //var _Mt = lines[1].Substring(posini + 8, posfin - (posini + 9));
+
+                //posini = lines[1].IndexOf("TipoCambio=");
+                //posfin = lines[1].IndexOf(" ", posini + 1);
+                //var _TipoCambio = lines[1].Substring(posini + 12, posfin - (posini + 13));
+
+
+                //posini = lines[2].IndexOf("Rfc=");
+                //posfin = lines[2].IndexOf("/", posini + 1);
+                //var _RFCEmisor = lines[2].Substring(posini + 5, posfin - (posini + 6));
+                //posini = lines[3].IndexOf("Rfc=");
+                //posfin = lines[3].IndexOf("/", posini + 1);
+                //var _RFCReceptor = lines[3].Substring(posini + 5, posfin - (posini + 6));
+
+                //posini = lines[_lin - 3].IndexOf("UUID=");
+                //posfin = lines[_lin - 3].IndexOf(" ", posini + 1);
+                //var _Uuid = lines[_lin - 3].Substring(posini + 6, posfin - (posini + 7));
+
+
+
+                var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
+                var _Mt = xmlnode[0].Attributes["Total"].Value;
+                var _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;
+                var _RFCReceptor = xmlnode2[0].Attributes["Rfc"].Value;
+                var _RFCEmisor = xmlnode3[0].Attributes["Rfc"].Value;
+                var _Uuid = xmlnode4[0].Attributes["UUID"].Value;
 
                 List<string> lstvals = new List<string>();
                 lstvals.Add(_F);//Fecha
@@ -5026,7 +4991,7 @@ namespace WFARTHA.Controllers
                 lstvals.Add(_TipoCambio);//TCambio
                 lstvals.Add(_rfc_soc);//Sociedad
                 JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
-
+                //FRT 07112018 
                 return jc;
             }
             catch (Exception e)
@@ -5365,7 +5330,7 @@ namespace WFARTHA.Controllers
         [HttpPost]//LEJGG 06-11-18
         public JsonResult getCondicionEdit(string id)
         {
-
+          
             WFARTHAEntities db = new WFARTHAEntities();
             var texto = db.CONDICIONES_PAGO.Where(x => x.COND_PAGO == id).FirstOrDefault().TEXT;
 

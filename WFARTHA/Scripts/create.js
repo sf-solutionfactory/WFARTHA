@@ -509,10 +509,7 @@ $(document).ready(function () {
 
         //FRT 05112018
 
-      
-
-
-        var _b = false;
+                var _b = false;
         var _vs = [];
         var msgerror = "";
         var _rni = 0;
@@ -543,6 +540,10 @@ $(document).ready(function () {
             }
 
         }
+
+
+
+
         //$("#table_info > tbody  > tr[role='row']").each(function () { //MGC 24-10-2018 Conflicto Enrique-Rogelio
         var t = $('#table_info').DataTable();
         var tabble = "table_info";
@@ -589,6 +590,9 @@ $(document).ready(function () {
                 return false;
             }
             //END FRT06112018.3
+
+
+            
           
             if (_vs.length > 0) {
                 for (var i = 0; i < _vs.length; i++) {
@@ -655,6 +659,20 @@ $(document).ready(function () {
                 _b = true;
             }
         });
+
+        //FRT04112018.2 Se realizara validación del monto > 0
+       
+        var proveedor = $("#PAYER_ID").val();
+
+        if (proveedor == "" | proveedor == null) { 
+            msgerror = "No se ha seleccionado proveedor";
+            _b = false;
+        } else {
+            _b = true;
+        }
+
+       //END FRT04112018.2
+
         if (_b) {
             //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
             copiarTableInfoControl();
@@ -706,6 +724,7 @@ $(document).ready(function () {
     });
 
     $('#file_sopAnexar').change(function () {
+
         //Validacion para saber si es sin orden de compra o reembolso
         var val3 = $('#tsol').val();
         val3 = "[" + val3 + "]";
@@ -742,7 +761,7 @@ $(document).ready(function () {
                             contentType: false,
                             processData: false,
                             success: function (data) {
-                                if (data !== null || data !== "") {
+                                if (data != null | data != "") {
                                     _resVu = validarUuid(data[4]);
                                     if (!_resVu) {
                                         //$('#Uuid').val(data[4]);

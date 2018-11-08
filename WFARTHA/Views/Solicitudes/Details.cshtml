@@ -489,17 +489,10 @@
                             <input type="text" id="norden_compra" value="" />@*Lejgg-09-10-2018*@
                             <label for="norden_compra" id="lbl_norden_compra">Orden de compra</label>
                         </div>
-                        @*<div class="form-group col s6">
-                                @Html.LabelFor(model => model.D.IMPUESTO, "Impuesto", htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
-
-                                </div>
-                            </div>*@
                         <div class="form-group col s6">
-                            @Html.Label("impuesto", "Impuesto", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.D.IMPUESTO, "Impuesto", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
-                                @Html.EditorFor(model => model.D.IMPUESTO, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
+                                @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
 
                             </div>
                         </div>
@@ -767,19 +760,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-
-                                @if (@Model.D.DOCUMENTOPSTR != null)
-                                {
-                                    for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
+                                <tr>
+                                    @if (@Model.D.DOCUMENTOPSTR != null)
                                     {
-                                        <tr>
-                                            @if (colsret.Count == 0)
+                                        for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
+                                        {
+                                            if (colsret.Count == 0)
                                             {
                                                 <td></td>
                                             }
                                             <td></td>
                                             <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
-                                            @if (@Model.D.Anexo != null)
+                                            if (@Model.D.Anexo != null)
                                             {
                                                 <td>@Model.D.Anexo[i].a1</td>
                                                 <td>@Model.D.Anexo[i].a2</td>
@@ -808,7 +800,7 @@
                                             <td>@Model.D.DOCUMENTOPSTR[i].IMPUESTOT</td>
                                             <td>@Model.D.DOCUMENTOPSTR[i].IVA</td>
                                             <td>@Model.D.DOCUMENTOPSTR[i].TEXTO</td>
-                                            @for (int y = 0; y < colsret.Count; y++)
+                                            for (int y = 0; y < colsret.Count; y++)
                                             {
                                                 <td>
                                                     @{var _v = colsret[y]; }
@@ -821,10 +813,10 @@
                                                 </td>
                                             }
                                             <td> @Model.D.DOCUMENTOPSTR[i].TOTAL</td>
-
-                                        </tr>
+                                        }
                                     }
-                                }
+                                </tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -861,11 +853,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @using (Html.BeginForm("DescargarDetails", "Solicitudes", FormMethod.Post))
+                                @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
                                 {
-
-
-
                                     if (@lstDocsA != null)
                                     {
                                         for (int i = 0; i < @lstDocsA.Count; i++)
@@ -882,7 +871,7 @@
                                                 <td> @lstDocsA[i].TIPO</td>
                                                 <td> @lstDocsA[i].DESC</td>
                                                 <td>
-                                                    <button class="btn btnD" name="file" id="file" type="submit" value=@lstDocsA[i].PATH>DESCARGAR</button>
+                                                    <button class="btn btnD" name="archivo" id="archivo" type="submit" value=@lstDocsA[i].PATH>DESCARGAR</button>
                                                 </td>
                                             </tr>
                                         }

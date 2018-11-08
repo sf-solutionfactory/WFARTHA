@@ -136,22 +136,13 @@ $(document).ready(function () {
             }
 
         }
-        //CODIGO
+                //CODIGO
         //dar formato al monto
         var enca_monto = $("#MONTO_DOC_MD").val();
         enca_monto = enca_monto.replace(/\s/g, '');
         //enca_monto = toNum(enca_monto);
         //enca_monto = parseFloat(enca_monto);
         $("#MONTO_DOC_MD").val(enca_monto);
-        var _b = false;
-        var _vs = [];
-        var msgerror = "";
-        var _rni = 0;
-        //Validar que los anexos existan
-        $("#table_anexa > tbody  > tr[role='row']").each(function () {
-            var pos = $(this).find("td.POS").text();
-            _vs.push(pos);
-        });
 
         //LEJ 11.09.2018
         //dar formato al T CAMBIO
@@ -267,7 +258,7 @@ $(document).ready(function () {
             M.toast({ html: msgerror });
         }
         //Termina provisional
-        // $('#btn_guardar').click();
+       // $('#btn_guardar').click();
     });
 
     $('#addRowInfo').on('click', function () {
@@ -1203,10 +1194,6 @@ function copiarTableInfoControl() {
             var tconcepto = "";
             //Obtener el concepto
             var inpt = t.row(indexopc).data()[9];
-            var x_inpt = inpt.split('');
-            if (x_inpt.length > 3) {
-                inpt = "";
-            }
             //LEJ 03-10-2018
             if (inpt == "" || inpt == null) {
                 tconcepto = "";
@@ -1704,7 +1691,7 @@ function armarTablaInfo(datos) {
             "name": 'TCONCEPTO',
             "className": 'TCONCEPTO',
             "orderable": false,
-            "visible": false
+             "visible": false
         },
         {
             "name": 'GRUPO',
