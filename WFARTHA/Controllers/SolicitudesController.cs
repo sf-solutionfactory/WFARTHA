@@ -2349,7 +2349,10 @@ namespace WFARTHA.Controllers
                     else
                     {//se queda el de la bd
                     }
-                    _doc.MONEDA_ID = dOCUMENTO.MONEDA_ID;
+                    if (_doc.ESTATUS == "B")
+                    {
+                        _doc.MONEDA_ID = dOCUMENTO.MONEDA_ID;
+                    }
                     if (_doc.ESTATUS == "B")
                     {
                         _doc.TIPO_CAMBIO = dOCUMENTO.TIPO_CAMBIO;
