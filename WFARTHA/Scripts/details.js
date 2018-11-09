@@ -113,6 +113,13 @@ $(document).ready(function () {
         ]
     });
 
+    $('.btnD').on("click", function (e) {
+        var val = $(this).val();
+        $('#archivo').val(val);
+        $('#btnDownload').trigger("click");
+    });
+
+
     $('#table_sop').DataTable({
 
         language: {

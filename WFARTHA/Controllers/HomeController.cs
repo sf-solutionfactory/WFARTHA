@@ -106,7 +106,10 @@ namespace WFARTHA.Controllers
             //var dOCUMENTOes = db.DOCUMENTOes.Where(a => a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us)).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();
             //var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us)) & a.ESTATUS != "B").Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();            
             //MGC 26-10-2018 Modificación a borrador obtener todas las solicitudes, excepto las solicitudes canceladas a.estatus_c != "C"  o contabilizadas a.ESTATUS != "A"
-            var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us)) & (a.ESTATUS != "A" & a.ESTATUS_C != "C")).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();
+            var dOCUMENTOes = db.DOCUMENTOes.Where( a => (a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us))  &  (a.ESTATUS != "A" & a.ESTATUS_C != "C")).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();
+            //FRT quitar aqui
+            
+            
             //var dOCUMENTOVs = db.DOCUMENTOVs.Where(a => a.USUARIOA_ID.Equals(us)).ToList();
             var dOCUMENTOVs = db.DOCUMENTOVs.Where(a => a.USUARIOA_ID.Equals(us)).ToList();
             var tsol = db.TSOLs.ToList();
@@ -143,7 +146,7 @@ namespace WFARTHA.Controllers
             //jemo inicio 4/07/2018
             //ViewBag.imgnoticia = db.NOTICIAs.Where(x => x.FECHAI <= DateTime.Now && x.FECHAF >= DateTime.Now && x.ACTIVO == true).Select(x => x.PATH).FirstOrDefault();//MGC 12092018
 
-
+            var dOCUMENTOes2 = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us)) & (a.ESTATUS != "A" & a.ESTATUS_C != "C") & (a.NUM_DOC == 0)).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();
             return View(dOCUMENTOes);
 
         }

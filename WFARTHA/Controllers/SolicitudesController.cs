@@ -375,8 +375,8 @@ namespace WFARTHA.Controllers
             var id_pspnr = dOCUMENTO.ID_PSPNR;
             var nombre = db.PROYECTOes.Where(a => a.ID_PSPNR == id_pspnr).FirstOrDefault().NOMBRE;
 
-            ViewBag.pid = id_pspnr;
-            ViewBag.PrSl = nombre;
+            ViewBag.pid = id_pspnr.ToUpper();
+            ViewBag.PrSl = nombre.ToUpper();
             //END FRT06112018
 
 
@@ -601,10 +601,10 @@ namespace WFARTHA.Controllers
                 {
                     string p = Session["pr"].ToString();
                     string pid = Session["id_pr"].ToString();
-                    ViewBag.PrSl = p;
+                    ViewBag.PrSl = p.ToUpper();
                     pselG = pid;//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
 
-                    ViewBag.pid = pid;//MGC 29-10-2018 Guardar el proyecto en el create
+                    ViewBag.pid = pid.ToUpper();//MGC 29-10-2018 Guardar el proyecto en el create
                 }
 
             }
@@ -1902,9 +1902,9 @@ namespace WFARTHA.Controllers
             {
                 string p = Session["pr"].ToString();
                 string pid = Session["id_pr"].ToString();
-                ViewBag.PrSl = p;
+                ViewBag.PrSl = p.ToUpper();
                 pselG = pid;//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
-                ViewBag.pid = pid;//MGC 29-10-2018 Guardar el proyecto en el create
+                ViewBag.pid = pid.ToUpper();//MGC 29-10-2018 Guardar el proyecto en el create
             }
             catch
             {

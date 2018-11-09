@@ -177,9 +177,9 @@
                 </div>
                 <div class="input-field col s4">
                     @*<input type="text" id="txt_user" value="@ViewBag.usuario.MANAGER" disabled="disabled" />
-                        <label for="txt_user">Manager</label>*@
+                    <label for="txt_user">Manager</label>*@
                     @*@Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
-                        @Html.LabelFor(model => model.D.USUARIO.MANAGER, new { @id = "lbl_manager" })*@
+                    @Html.LabelFor(model => model.D.USUARIO.MANAGER, new { @id = "lbl_manager" })*@
                 </div>
 
 
@@ -187,24 +187,24 @@
                     @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled", style = "display:none" } })
                     @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, new { @id = "lbl_backup", style = "display:none" })
                     @*<input type="text" id="txt_user" value="@ViewBag.usuario.BACKUP_ID" disabled="disabled" />
-                        <label for="txt_user">Backup</label>*@
+                    <label for="txt_user">Backup</label>*@
                 </div>
             </div>
         </div>
         <div class="col s6 m2 l2">
             <div class="input-field col s6">
                 @*<input type="text" id="txt_user" value="PRGA" disabled="disabled" />
-                    <label for="txt_user">BU</label>*@
+                <label for="txt_user">BU</label>*@
                 @*@Html.EditorFor(model => model.D.USUARIO.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @id = "lbl_bu" })*@
+                @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @id = "lbl_bu" })*@
             </div>
             @*<div class="input-field col s6">
-                    @if (Model.D.ESTATUS == "N")
-                    {
-                        <input type="text" id="txt_status"  value="Nuevo" disabled="disabled" />
-                        <label for="txt_status" id="lbl_status">Estatus</label>
-                    }
-                </div>*@
+                @if (Model.D.ESTATUS == "N")
+                {
+                    <input type="text" id="txt_status"  value="Nuevo" disabled="disabled" />
+                    <label for="txt_status" id="lbl_status">Estatus</label>
+                }
+            </div>*@
         </div>
         <div class="col s12 m5 l5">
             <div class="row right">
@@ -235,7 +235,7 @@
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
                             @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                                <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                            <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                         }
@@ -374,21 +374,24 @@
 
             </div>
         </div>
-        <div>
-            <br />
-            <h5 id="head_cabecera" style="display:inline-block">@ViewBag.pid - </h5>
-            <h5 id="head_cabecera" style="display:inline-block">@ViewBag.PrSl</h5>
+        <div class="col s12 right-align">
+            <div>
+                <br />
+                <h5 id="head_cabecera" style="display:inline-block">@ViewBag.pid - </h5>
+                <h5 id="head_cabecera" style="display:inline-block">@ViewBag.PrSl</h5>
 
+            </div>
+        </div>
+            
+        </div>
+
+        @*MGC 04-10-2018 Botones para acciones <--*@
+
+        <div class="div_bottom">
+            <hr class="hr_bw" />
+            <hr class="hr_color #4e342e brown darken-3" />
         </div>
     </div>
-
-    @*MGC 04-10-2018 Botones para acciones <--*@
-
-    <div class="div_bottom">
-        <hr class="hr_bw" />
-        <hr class="hr_color #4e342e brown darken-3" />
-    </div>
-</div>
 
 <div class="row">
     <div class="col s12">
@@ -870,6 +873,8 @@
                                 </tr>
                             </thead>
                             <tbody>
+
+
                                 @*@using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))*@
                                 @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
                                 {
@@ -895,6 +900,7 @@
                                         }
                                     }
                                 }
+
                             </tbody>
                         </table>
 

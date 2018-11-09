@@ -123,7 +123,7 @@
         /*}*/
     </style>
     @*//B20180625 MGC 2018.06.26*@
-    
+
     @if (ViewBag.BORRADOR != null)
     {
         if (ViewBag.BORRADOR != "")
@@ -252,7 +252,8 @@
         @*<link href="~/Content/dataTables.material.min.css" rel="stylesheet" />*@
         <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
 
-        <table class="table mdl-data-table striped" id="table" style="width:100%;">
+        @* <table class="table mdl-data-table striped" id="table" style="width:100%;">*@
+         <table class="table display mdl-data-table striped" id="table" style="width:100%;">
             <thead>
                 <tr>
                     @*<th></th>*@
@@ -270,17 +271,17 @@
                         @*@Html.DisplayNameFor(model => model.SOCIEDAD_ID)*@
                         @Html.DisplayName("Tipo Solicitud")
                     </th>
-                                @*<th class="lblPais">
+                    @*<th class="lblPais">
                         @Html.DisplayNameFor(model => model.PAIS_ID)
                     </th>*@
                     <th id="lbl_fechad">
                         @*@Html.DisplayNameFor(model => model.FECHAD)*@
                         @Html.DisplayName("Fecha")
                     </th>
-                                @*<th id="lbl_horac">
+                    @*<th id="lbl_horac">
                         @Html.DisplayNameFor(model => model.HORAC)
                     </th>*@
-                                @*<th id="lblPC">
+                    @*<th id="lblPC">
                         @Html.DisplayName("Periodo Contable")
                     </th>*@
                     <th id="lbl_estatus">
@@ -292,28 +293,28 @@
                         @*@Html.DisplayNameFor(model => model.PAYER_ID)*@
                         @Html.DisplayName("Nombre Sociedad")
                     </th>
-                                @*<th id="lblCliente">
+                    @*<th id="lblCliente">
                         @Html.DisplayName("CLIENTE")
                     </th>*@
-                                @*<th id="lblCanal">
+                    @*<th id="lblCanal">
                         @Html.DisplayName("Canal")
                     </th>*@
-                                @*<th id="lbl_tsol">
+                    @*<th id="lbl_tsol">
                         @Html.DisplayNameFor(model => model.TSOL)
                     </th>*@
-                                @*<th id="lbl_tall">
+                    @*<th id="lbl_tall">
                         @Html.DisplayNameFor(model => model.TALL)
                     </th>
                     <th id="lblCuentas">
                         @Html.DisplayName("Cuentas")
                     </th>*@
-                                @*<th id="lbl_concepto">
+                    @*<th id="lbl_concepto">
                         @Html.DisplayNameFor(model => model.CONCEPTO)
                     </th>*@
-                                @*<th id="lblMo">
+                    @*<th id="lblMo">
                         @Html.DisplayNameFor(model => model.MONTO_DOC_ML)
                     </th>*@
-                                @*<th id="lblFac">
+                    @*<th id="lblFac">
                         @Html.DisplayName("Factura")
                     </th>
                     <th id="lblFack">
@@ -327,7 +328,7 @@
                         @*@Html.DisplayNameFor(model => model.USUARIOC_ID)*@
                         @Html.DisplayName("Solicitante")
                     </th>
-                                @*<th id="lblUM">
+                    @*<th id="lblUM">
                         @Html.DisplayName("Modificado por")
                     </th>
                     <th id="lblNC">
@@ -379,18 +380,20 @@
                         @*<td class="gray darken-3 white-text">
                             <div class="lbl_pending">Borrador</div>
                         </td>*@
-                                @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                                @*<td class="">
+                        @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                        @*<td class="">
                             <span class="new badge gray darken-2 white-text" data-badge-caption=" ">Borrador</span>
                         </td>*@
 
                         //El borrador solo lo puede observar el creador
-                        if(ViewBag.usuario.ID == item.USUARIOC_ID){
+                        if (ViewBag.usuario.ID == item.USUARIOC_ID)
+                        {
                             estatus = "Borrador";
                             visible = true;
                             color = "gray darken-2";
                         }
-                        else {
+                        else
+                        {
                             visible = false;
                         }
                     }
@@ -400,8 +403,8 @@
                         @*<td class="gray darken-2 white-text">
                             <div class="lbl_pending">Contabilizado SAP</div>
                         </td>*@
-                                @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                                @*<td class="">
+                        @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                        @*<td class="">
                             <span class="lbl_tax new badge green darken-2 white-text" data-badge-caption=" ">Contabilizado SAP</span>
                         </td>*@
                         estatus = "Contabilizado SAP";
@@ -417,8 +420,8 @@
                             @*<td class="yellow darken-2 white-text">
                                 <div class="lbl_pending">Generando Preliminar</div>
                             </td>*@
-                                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                                    @*<td class="">
+                            @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                            @*<td class="">
                                 <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Generando Preliminar</span>
                             </td>*@
                             estatus = "Generando Preliminar";
@@ -431,8 +434,8 @@
                             @*<td class="red darken-2 white-text">
                                 <div class="lbl_pending">Error al generar Archivo Preliminar</div>
                             </td>*@
-                                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                                    @*<td class="">
+                            @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                            @*<td class="">
                                 <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error al generar Archivo Preliminar</span>
                             </td>*@
                             if (ViewBag.usuario.ID == item.USUARIOC_ID)
@@ -445,7 +448,7 @@
                             {
                                 visible = false;
                             }
-                        }   
+                        }
                     }
                     @*//MGC 30-10-2018 Modificación estatus, Label de generando preliminar RESPUESTA DESDE SAP  *@
                     else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP != null && item.ESTATUS_WF == null)
@@ -456,8 +459,8 @@
                             @*<td class="red darken-1 white-text">
                                 <div class="lbl_contab">Error al generar Archivo Preliminar SAP</div>
                             </td>*@
-                                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                                    @*<td class="">
+                            @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                            @*<td class="">
                                 <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error al generar Archivo Preliminar SAP</span>
                             </td>*@
                             if (ViewBag.usuario.ID == item.USUARIOC_ID)
@@ -476,16 +479,47 @@
                         if (item.ESTATUS_PRE == "G" && item.ESTATUS_SAP == "P")
                         {
 
-                                    @*<td class="red darken-1 white-text">
-                                        <div class="lbl_contab">Se generó archivo SAP</div>
-                                    </td>*@
-                                            @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                                            @*<td class="">
-                                        <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Se generó archivo SAP</span>
-                                    </td>*@
-                                    if (ViewBag.usuario.ID == item.USUARIOC_ID)
+                            @*<td class="red darken-1 white-text">
+                                <div class="lbl_contab">Se generó archivo SAP</div>
+                            </td>*@
+                            @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                            @*<td class="">
+                                <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Se generó archivo SAP</span>
+                            </td>*@
+                            if (ViewBag.usuario.ID == item.USUARIOC_ID)
+                            {
+                                estatus = "Se generó Preliminar SAP";
+                                visible = true;
+                                color = "yellow darken-2";
+                            }
+                            else
+                            {
+                                visible = false;
+                            }
+                        }
+                    }
+                    else if (item.ESTATUS == "F" && (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("S")))
+                    {
+                        @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
+                        if (item.ESTATUS_PRE == "G")
+                        {
+                            @*<td class="yellow darken-2 white-text">
+                                <div class="lbl_pending">Pendiente Aprobador</div>
+                            </td>*@
+                            @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                            @*<td class="">
+                                <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente Aprobador</span>
+                            </td>*@
+                            //Solamente lo ve el usuario aprobador
+                            //El usuario no es el usuario creador, pero el usuario si es el usuario aprobador
+                            if (ViewBag.usuario.ID != item.USUARIOC_ID)
+                            {
+                                if (item.FLUJOes.Count > 0)
+                                {
+
+                                    if (ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
                                     {
-                                        estatus = "Se generó Preliminar SAP";
+                                        estatus = "Pendiente Aprobador";
                                         visible = true;
                                         color = "yellow darken-2";
                                     }
@@ -493,111 +527,85 @@
                                     {
                                         visible = false;
                                     }
-                        }
-                }
-                else if (item.ESTATUS == "F" && (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("S")))
-                {
-                        @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
-                        if (item.ESTATUS_PRE == "G")
-                        {
-                            @*<td class="yellow darken-2 white-text">
-                                <div class="lbl_pending">Pendiente Aprobador</div>
-                            </td>*@
-                                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                                    @*<td class="">
-                                <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente Aprobador</span>
-                            </td>*@
-                        //Solamente lo ve el usuario aprobador
-                        //El usuario no es el usuario creador, pero el usuario si es el usuario aprobador
-                        if (ViewBag.usuario.ID != item.USUARIOC_ID)
-                        {
-                            if(item.FLUJOes.Count > 0){
 
-                                if (ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
-                                {
-                                    estatus = "Pendiente Aprobador";
-                                    visible = true;
-                                    color = "yellow darken-2";
+
                                 }
                                 else
                                 {
                                     visible = false;
                                 }
-
-
                             }
-                            else {
+                            else
+                            {
                                 visible = false;
                             }
-                        }
-                        else
-                        {
-                            visible = false;
-                        }
 
+                        }
                     }
-                }
-                        @*//MGC 30-10-2018 Modificación estatus, Label Contabilización *@
-                        else if (item.ESTATUS == "C" && (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("A")))
+                    @*//MGC 30-10-2018 Modificación estatus, Label Contabilización *@
+                    else if (item.ESTATUS == "C" && (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("A")))
+                    {
+                        @*//MGC 30-10-2018 Modificación estatus, Pendiente contabilizador  *@
+                        if (item.ESTATUS_WF.Equals("P") && item.ESTATUS_PRE == "G")
                         {
-                            @*//MGC 30-10-2018 Modificación estatus, Pendiente contabilizador  *@
-                            if (item.ESTATUS_WF.Equals("P") && item.ESTATUS_PRE == "G")
+                            @*<td class="yellow darken-1 white-text">
+                                <div class="lbl_contab">Pendiente Contabilizar</div>
+                            </td>*@
+                            @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                            @*<td class="">
+                                <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente Contabilizar</span>
+                            </td>*@
+
+
+                            //Solamente lo ve el usuario contabilizador
+                            //El usuario no es el usuario creador, pero el usuario si es el usuario contabilizador
+                            if (ViewBag.usuario.ID != item.USUARIOC_ID)
                             {
-                                @*<td class="yellow darken-1 white-text">
-                                    <div class="lbl_contab">Pendiente Contabilizar</div>
-                                </td>*@
-                                        @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                                        @*<td class="">
-                                    <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente Contabilizar</span>
-                                </td>*@
-                                
-                                    
-                                //Solamente lo ve el usuario contabilizador
-                                //El usuario no es el usuario creador, pero el usuario si es el usuario contabilizador
-                                if (ViewBag.usuario.ID != item.USUARIOC_ID)
+                                if (item.FLUJOes.Count > 0)
                                 {
-                                    if(item.FLUJOes.Count > 0){
 
-                                        if (ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
-                                        {
-                                            estatus = "Pendiente Contabilizar";
-                                            visible = true;
-                                            color = "yellow darken-2";
-                                        }
-                                        else
-                                        {
-                                            visible = false;
-                                        }
-
-
+                                    if (ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
+                                    {
+                                        estatus = "Pendiente Contabilizar";
+                                        visible = true;
+                                        color = "yellow darken-2";
                                     }
-                                    else {
+                                    else
+                                    {
                                         visible = false;
                                     }
+
+
                                 }
                                 else
                                 {
                                     visible = false;
-                                }         
-
+                                }
                             }
+                            else
+                            {
+                                visible = false;
+                            }
+
+                        }
                         @*//MGC 30-10-2018 Modificación estatus  *@
                         else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "E")
                         {
                             @*<td class="red darken-1 white-text">
                                 <div class="lbl_contab">Error generando archivo de contabilizacion</div>
                             </td>*@
-                                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                                    @*<td class="">
+                            @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                            @*<td class="">
                                 <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error generando archivo de contabilizacion</span>
                             </td>*@
-                            
+
 
                             //Solamente lo ve el usuario contabilizador
                             //El usuario no es el usuario creador, pero el usuario si es el usuario contabilizador
                             if (ViewBag.usuario.ID != item.USUARIOC_ID)
                             {
-                                if(item.FLUJOes.Count > 0){
+                                if (item.FLUJOes.Count > 0)
+                                {
 
                                     if (ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
                                     {
@@ -612,14 +620,15 @@
 
 
                                 }
-                                else {
+                                else
+                                {
                                     visible = false;
                                 }
                             }
                             else
                             {
                                 visible = false;
-                            }   
+                            }
 
                         }
                         @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
@@ -628,8 +637,8 @@
                             @*<td class="yellow darken-1 white-text">
                                 <div class="lbl_contab">Contabilizando SAP</div>
                             </td>*@
-                                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                                    @*<td class="">
+                            @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                            @*<td class="">
                                 <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Contabilizando SAP</span>
                             </td>*@
                             estatus = "Contabilizando SAP";
@@ -642,46 +651,46 @@
                             @*<td class="red darken-1 white-text">
                                 <div class="lbl_contab">Error contabilizando SAP</div>
                             </td>*@
-                                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                                    @*<td class="">
+                            @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                            @*<td class="">
                                 <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error contabilizando SAP</span>
                             </td>*@
 
-                        //Solamente lo ve el usuario contabilizador
-                        //El usuario no es el usuario creador, pero el usuario si es el usuario contabilizador
-                        if (ViewBag.usuario.ID != item.USUARIOC_ID)
-                        {
-                            if (item.FLUJOes.Count > 0)
+                            //Solamente lo ve el usuario contabilizador
+                            //El usuario no es el usuario creador, pero el usuario si es el usuario contabilizador
+                            if (ViewBag.usuario.ID != item.USUARIOC_ID)
                             {
-
-                                if (ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
+                                if (item.FLUJOes.Count > 0)
                                 {
-                                    estatus = "Error contabilizando SAP";
-                                    visible = true;
-                                    color = "red darken-2";
+
+                                    if (ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
+                                    {
+                                        estatus = "Error contabilizando SAP";
+                                        visible = true;
+                                        color = "red darken-2";
+                                    }
+                                    else
+                                    {
+                                        visible = false;
+                                    }
+
+
                                 }
                                 else
                                 {
                                     visible = false;
                                 }
-
-
                             }
                             else
                             {
                                 visible = false;
                             }
                         }
-                        else
-                        {
-                            visible = false;
-                        }
                     }
-                }
-                else if (item.ESTATUS_WF.Equals("A"))
-                {
-                    if (item.ESTATUS.Equals("C"))
+                    else if (item.ESTATUS_WF.Equals("A"))
                     {
+                        if (item.ESTATUS.Equals("C"))
+                        {
                             @*MGC 07-11-2018 Área de trabajo y solicitudes*@
                             @*<td class="green darken-1 white-text">
                                 <div class="lbl_contab">Por contabilizar</div>
@@ -716,12 +725,12 @@
                         @*<td class="red darken-1 white-text">
                             <div class="lbl_rejected">Pendiente corrección usuario</div>
                         </td>*@
-                                @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                                @*<td class="">
+                        @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                        @*<td class="">
                             <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Pendiente corrección usuario</span>
                         </td>*@
-                        
-                       //Nada más la ve el usuario creador
+
+                        //Nada más la ve el usuario creador
                         if (ViewBag.usuario.ID == item.USUARIOC_ID)
                         {
                             estatus = "Pendiente Corrección Usuario";
@@ -749,105 +758,105 @@
                         @*<td class="yellow darken-2 white-text">
                             <div class="lbl_tax">ttt</div>
                         </td>*@
-                    estatus = "Estatus desconocido";
-                    visible = true;
-                    color = "brown darken-2";
-                }
+                        estatus = "Estatus desconocido";
+                        visible = true;
+                        color = "brown darken-2";
+                    }
 
 
 
-                //-------------------------------------------------------------------------------------------------------------------------Status-----------<<<<<*@
+                    //-------------------------------------------------------------------------------------------------------------------------Status-----------<<<<<*@
 
 
-                if (visible)
-                {
+                    if (visible)
+                    {
 
-                    <tr>
-                        @*MGC 07-11-2018 Área de trabajo y solicitudes, Descartar el borrador*@
-                        @if (item.FLUJOes.Count > 0)
-                        {
-                            //MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B
-                            if (item.ESTATUS.Equals("B") & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
+                        <tr>
+                            @*MGC 07-11-2018 Área de trabajo y solicitudes, Descartar el borrador*@
+                            @if (item.FLUJOes.Count > 0)
                             {
-                                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
-                                    @item.NUM_DOC
-                                </td>
-                            }
-                            //MGC 03-11-2018.2 Se genero error en el preliminar, respuesta de SAP NOK, enviar a editar con parametro pacc P
-                            else if ((item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP != null && item.ESTATUS_WF == null & item.ESTATUS_PRE == "E" && item.ESTATUS_SAP == "E") & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
-                            {
-                                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "P" })'" style="cursor:pointer">
-                                    @item.NUM_DOC
-                                </td>
-                            }
-                            else if (item.ESTATUS_WF == "R" & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID)
-                            {
-                                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "R" })'" style="cursor:pointer">
-                                    @item.NUM_DOC
-                                </td>
-                            }
-                            else
-                            {
-                                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-                                    @item.NUM_DOC
-                                </td>
-                            }
-                        }
-                        else
-                        {
-                            //MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B, solamente el usuario creador
-                            if (item.ESTATUS.Equals("B") & ViewBag.usuario.ID == item.USUARIOC_ID)
-                            {
-                                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
-                                    @item.NUM_DOC
-                                </td>
+                                //MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B
+                                if (item.ESTATUS.Equals("B") & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
+                                {
+                                    <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
+                                        @item.NUM_DOC
+                                    </td>
+                                }
+                                //MGC 03-11-2018.2 Se genero error en el preliminar, respuesta de SAP NOK, enviar a editar con parametro pacc P
+                                else if ((item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP != null && item.ESTATUS_WF == null & item.ESTATUS_PRE == "E" && item.ESTATUS_SAP == "E") & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
+                                {
+                                    <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "P" })'" style="cursor:pointer">
+                                        @item.NUM_DOC
+                                    </td>
+                                }
+                                else if (item.ESTATUS_WF == "R" & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID)
+                                {
+                                    <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "R" })'" style="cursor:pointer">
+                                        @item.NUM_DOC
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                                        @item.NUM_DOC
+                                    </td>
+                                }
                             }
                             else
                             {
-                                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-                                    @item.NUM_DOC
-                                </td>
+                                //MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B, solamente el usuario creador
+                                if (item.ESTATUS.Equals("B") & ViewBag.usuario.ID == item.USUARIOC_ID)
+                                {
+                                    <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
+                                        @item.NUM_DOC
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                                        @item.NUM_DOC
+                                    </td>
+                                }
                             }
-                        }
 
-                        <td style="">
-                            @item.NUM_PRE
-                        </td>
+                            <td style="">
+                                @item.NUM_PRE
+                            </td>
 
-                        @*Tipo sol*@
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
-                        </td>
-                        <td>
-                            @if (item.FECHAD != null)
-                            {
-                                try
-                                {@(item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year);
+                            @*Tipo sol*@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
+                            </td>
+                            <td>
+                                @if (item.FECHAD != null)
+                                {
+                                    try
+                                    {@(item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year);
+                                }
+                                catch (Exception) { };
                             }
-                            catch (Exception) { };
-                        }
-                        </td>
+                            </td>
 
 
-                        @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@
-                        @*MGC 07-11-2018 Solicitudes y estatus*@
-                        <td class="">
-                            <span class="new badge @color white-text" data-badge-caption=" ">@estatus</span>
-                        </td>
-                       
-                        @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@
+                            @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@
+                            @*MGC 07-11-2018 Solicitudes y estatus*@
+                            <td class="">
+                                <span class="new badge @color white-text" data-badge-caption=" ">@estatus</span>
+                            </td>
 
-                        <td>
-                            @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
-                        </td>
-                        <td>
-                            @item.USUARIOC_ID
-                        </td>
-                        <td>
-                            @item.USUARIOD_ID
-                        </td>
+                            @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@
 
-                    </tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
+                            </td>
+                            <td>
+                                @item.USUARIOC_ID
+                            </td>
+                            <td>
+                                @item.USUARIOD_ID
+                            </td>
+
+                        </tr>
 
                     }
                 }
