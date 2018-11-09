@@ -2,6 +2,7 @@
 var posinfo = 0;
 var posrows = 0;  //FRT08112018
 var inicio = 0;   //FRT08112018  
+
 var tRet = [];//Agrego a un array los tipos de retenciones
 var tRet2 = [];
 $(document).ready(function () {
@@ -282,9 +283,13 @@ $(document).ready(function () {
 
         //FRT08112018 AGREGAR Y QUE SE MIREN LAS 
         posinfot = posrows + posinfo++;
-      
+
         //Obtener el select de impuestos en la cabecera
         var idselect = "infoSel" + posinfot;
+
+        //Obtener el select de impuestos en la cabecera
+        //var idselect = "infoSel" + posinfo;
+
 
         //Obtener el valor 
         var imp = $('#IMPUESTO').val();
@@ -526,6 +531,13 @@ $(document).ready(function () {
         $(tr).css("background-color:#c4f0ff;");
     });
 
+    $('#table_info tbody').on('click', 'td.select_row', function () {
+        //var t = $('#table_anexa').DataTable();
+        var tr = $(this).closest('tr');
+
+        $(tr).toggleClass('selected');
+        $(tr).css("background-color:#c4f0ff;");
+    });
     //En esta parte me encargare de bloquear o desbloquear ciertos campos
     var pacc = $('#pacc').val();
     ocultarCamposEdicion(pacc);
@@ -1211,7 +1223,8 @@ function copiarTableInfoControl() {
             var inpt = t.row(indexopc).data()[9];
             var x_inpt = inpt.split('');
             if (x_inpt.length > 3) {
-                inpt = "";
+                var itag = $(inpt);
+                inpt = itag.val();
             }
             //LEJ 03-10-2018
             if (inpt == "" || inpt == null) {
@@ -1904,7 +1917,16 @@ function armarTablaInfo(datos) {
         "paging": false,
         "info": false,
         "searching": false,
-        "columns": arrCols
+        "columns": arrCols,
+        columnDefs: [
+            { targets: 2, width: '580px' },
+            { targets: 3, width: '40px' },
+            { targets: 4, width: '580px' },
+            { targets: 5, width: '580px' },
+            { targets: 6, width: '580px' },
+            { targets: 19, width: '580px' }
+
+        ]
     });
 
     //LEJ16102018
@@ -1948,7 +1970,9 @@ function armarTablaInfo(datos) {
     // if (_infoc === datos.DOCUMENTOPSTR.length) {//LEJGG-05-11-2018
     if (datos.DOCUMENTOPSTR.length > 0) {
         for (var i = 0; i < datos.DOCUMENTOPSTR.length; i++) {
+
             posrows = i;  //FRT08112018
+
             for (var x = 0; x < _infoBIIR.length; x++) {
                 if (_infoBIIR[x].POS === (i + 1)) {
                     arrColExTA.push(_infoBIIR[x]);
@@ -1974,8 +1998,10 @@ function armarTablaInfo(datos) {
                     datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, datos.DOCUMENTOPSTR[i].CCOSTO, datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
 
                 //Obtener el select de impuestos en la cabecera
+
                 //var idselect = "infoSel0";
                 var idselect = "infoSel" + i;  //FRT08112018 Para mostrar todos los impuestos
+
                 //Obtener el valor 
                 var imp = $('#IMPUESTO').val();
                 //var imp = datos.DOCUMENTOPSTR[i].MWSKZ; //FRT08112018 para traerlo directo de registro
@@ -1983,18 +2009,16 @@ function armarTablaInfo(datos) {
                 addSelectImpuesto(ar, imp, idselect, "", "X");
             }
             else {
-                 var ar = addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, "", "", "", "", "", datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, datos.DOCUMENTOPSTR[i].TCONCEPTO/*Tipo Concepto*/, datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
-                        datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, datos.DOCUMENTOPSTR[i].CCOSTO/*Centro de costo*/, datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
 
-                
-                    //Obtener el select de impuestos en la cabecera
-                    //var idselect = "infoSel0";
-                    var idselect = "infoSel" + i;  //FRT08112018 Para mostrar todos los impuestos
-                    //Obtener el valor 
-                    var imp = $('#IMPUESTO').val();
-                    // var imp = datos.DOCUMENTOPSTR[i].MWSKZ; //FRT08112018 para traerlo directo de registro
-                    //Crear el nuevo select con los valores de impuestos
-                    addSelectImpuesto(ar, imp, idselect, "", "X");
+                var ar = addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, "", "", "", "", "", datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, datos.DOCUMENTOPSTR[i].TCONCEPTO/*Tipo Concepto*/, datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
+                    datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, datos.DOCUMENTOPSTR[i].CCOSTO/*Centro de costo*/, datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
+                //Obtener el select de impuestos en la cabecera
+                var idselect = "infoSel" + i;
+                //Obtener el valor 
+                var imp = $('#IMPUESTO').val();
+                //Crear el nuevo select con los valores de impuestos
+                addSelectImpuesto(ar, imp, idselect, "", "X");
+
             }
         }
     }
