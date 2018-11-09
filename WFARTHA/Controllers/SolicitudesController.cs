@@ -63,7 +63,7 @@ namespace WFARTHA.Controllers
             //Modificación de consulta para mostrar solamente las solicitudes en la sección Solicitude, dependiendo del estatus en el que estan
             //var dOCUMENTOes = db.DOCUMENTOes.Where(a => a.USUARIOC_ID.Equals(User.Identity.Name) | a.USUARIOD_ID.Equals(User.Identity.Name)).ToList();  
             //Descartar el borrador
-            var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(User.Identity.Name) | a.USUARIOD_ID.Equals(User.Identity.Name)) && a.ESTATUS != "B" ).Include(a => a.SOCIEDAD).ToList();
+            var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(User.Identity.Name) | a.USUARIOD_ID.Equals(User.Identity.Name)) && a.ESTATUS != "B").Include(a => a.SOCIEDAD).ToList();
 
             dOCUMENTOes = dOCUMENTOes.Distinct(new DocumentoComparer()).ToList();
             return View(dOCUMENTOes);
@@ -1976,7 +1976,7 @@ namespace WFARTHA.Controllers
             ViewBag.Title += id; //MGC 05-10-2018 Modificación para work flow al ser editada
             ViewBag.ndoc = id;
             //LEJGG19 10 2018----------------------------------------------------->
-            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id&&a.PATH!="").ToList();
+            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "").ToList();
             DOCUMENTOA d_a = new DOCUMENTOA();
             var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id && a.PATH != "").ToList();
             for (int i = 0; i < la1.Count; i++)
@@ -2368,7 +2368,7 @@ namespace WFARTHA.Controllers
                     USUARIO us = db.USUARIOs.Find(User.Identity.Name);
                     _doc.PUESTO_ID = us.PUESTO_ID;
                     _doc.USUARIOC_ID = User.Identity.Name;
-
+                    var _usC= User.Identity.Name;
                     //Obtener el tipo de documento
                     var doct = db.DET_TIPODOC.Where(dt => dt.TIPO_SOL == dOCUMENTO.TSOL_ID).FirstOrDefault();
                     _doc.DOCUMENTO_SAP = doct.BLART.ToString();
@@ -2485,7 +2485,7 @@ namespace WFARTHA.Controllers
                             _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
                             _dp.POS = j;
                             _dp.ACCION = "H";
-                            _dp.CUENTA = _payerid_ ;
+                            _dp.CUENTA = _payerid_;
                             _dp.MONTO = _monto + _iva;//Obtener las retenciones relacionadas con las ya mostradas en la tabla
                             _dp.MWSKZ = _mwskz;
                             _dp.IVA = _iva;
@@ -3455,9 +3455,10 @@ namespace WFARTHA.Controllers
                         var pos = 1;
                         for (int i = 0; i < listaDescArchivos2.Count; i++)
                         {
+                            var _posdas = db.DOCUMENTOAS1.Where(x => x.NUM_DOC == _ndoc).ToList().Count;
                             DOCUMENTOA1 _dA = new DOCUMENTOA1();
                             _dA.NUM_DOC = dOCUMENTO.NUM_DOC;
-                            _dA.POS = pos;
+                            _dA.POS = _posdas + 1;
                             var de = "";
                             try
                             {
@@ -3486,7 +3487,7 @@ namespace WFARTHA.Controllers
                             }
                             _dA.CLASE = "OTR";
                             _dA.STEP_WF = 1;
-                            _dA.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
+                            _dA.USUARIO_ID = _usC;
                             _dA.ACTIVO = true;
                             var lstst = listaDirectorios2[i];
                             var lstdas = db.DOCUMENTOAS1.Where(n => n.NUM_DOC == _ndoc && n.PATH == lstst).FirstOrDefault();
