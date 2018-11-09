@@ -22,7 +22,11 @@
 <script src="~/Scripts/ValidarCampos.js"></script>
 <script src="~/Scripts/ValidarNumero.js"></script>
 @*<script src="~/Scripts/validarColsExtras.js"></script>*@
-
+<style>
+    .leftAlignement {
+        text-align: left;
+    }
+</style>
 @if (ViewBag.error != "")
 {
     <script>
@@ -492,7 +496,7 @@
                             </div>
                         </div>
                         <h5 id="head_flinea">Retenciones</h5>
-                        <div class="row" style="margin-bottom:0">
+                        <div class="row leftAlignement" style="margin-bottom:0">
                             <table class="table display mdl-data-table striped" id="table_ret" style="width:100%;">
                                 <thead>
                                     <tr>

@@ -198,39 +198,39 @@ $(document).ready(function () {
         "columns": [
             {
                 "name": 'SOCRET',
-                "className": 'SOCRET',
+                "className": 'SOCRET leftAlignement',
                 "orderable": false,
                 "visible": false
             },
             {
                 "name": 'PROVRET',
-                "className": 'PROVRET',
+                "className": 'PROVRET leftAlignement',
                 "orderable": false,
                 "visible": false
             },
             {
                 "name": 'TRET',
-                "className": 'TRET',
+                "className": 'TRET leftAlignement',
                 "orderable": false
             },
             {
                 "name": 'DESCRET',
-                "className": 'DESCTRET',
+                "className": 'DESCTRET leftAlignement',
                 "orderable": false
             },
             {
                 "name": 'INDRET',
-                "className": 'INDRET',
+                "className": 'INDRET leftAlignement',
                 "orderable": false
             },
             {
                 "name": 'BIMPONIBLE',
-                "className": 'BIMPONIBLE',
+                "className": 'BIMPONIBLE leftAlignement',
                 "orderable": false
             },
             {
                 "name": 'IMPRET',
-                "className": 'IMPRET',
+                "className": 'IMPRET leftAlignement',
                 "orderable": false
             }
         ]

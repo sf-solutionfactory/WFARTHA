@@ -41,7 +41,11 @@
     });
     </script>
 }
-
+<style>
+    .leftAlignement {
+        text-align: left;
+    }
+</style>
 
 @if (TempData["error"] != null)
 {
@@ -628,19 +632,19 @@
                             <table class="table display mdl-data-table striped" id="table_ret" style="width:100%;">
                                 <thead>
                                     <tr>
-                                        <th class="lbl_tret">
+                                        <th class="lbl_tret leftAlignement">
                                             Tipo Retención
                                         </th>
-                                        <th class="lbl_descret">
+                                        <th class="lbl_descret leftAlignement">
                                             Descripción Retención
                                         </th>
-                                        <th class="lbl_indret">
+                                        <th class="lbl_indret leftAlignement">
                                             Indicador de Retención
                                         </th>
-                                        <th class="lbl_bimponible">
+                                        <th class="lbl_bimponible leftAlignement">
                                             Base Imponible
                                         </th>
-                                        <th id="lbl_impret">
+                                        <th id="lbl_impret leftAlignement">
                                             Importe de Retención
                                         </th>
                                     </tr>
@@ -653,21 +657,20 @@
                                         for (var i = 0; i < drets.Count; i++)
                                         {
                                             <tr>
-                                                <td>
-
+                                                <td class="leftAlignement">
                                                     @Html.DisplayFor(m => drets[i].WITHT)
                                                 </td>
-                                                <td>
+                                                <td class="leftAlignement">
                                                     @Html.DisplayFor(m => drets[i].DESC)
                                                 </td>
-                                                <td>
+                                                <td class="leftAlignement">
                                                     @Html.DisplayFor(m => drets[i].WT_WITHCD)
                                                 </td>
-                                                <td>
+                                                <td class="leftAlignement">
                                                     @{ decimal bi = 0; try { bi = Convert.ToDecimal(drets[i].BIMPONIBLE); } catch (Exception) { }; string bim = formatoc.toShow(bi, deci);}
                                                     @bim
                                                 </td>
-                                                <td>
+                                                <td class="leftAlignement">
                                                     @{ decimal im = 0; try { im = Convert.ToDecimal(drets[i].IMPORTE_RET); } catch (Exception) { }; string ims = formatoc.toShow(im, deci);}
                                                     @ims
                                                 </td>
@@ -716,8 +719,8 @@
                                         A5
                                     </th>
                                     @*<th class="">
-                    D/H
-                </th>*@
+                                            D/H
+                                        </th>*@
                                     <th class="">
                                         Factura
                                     </th>
@@ -725,21 +728,21 @@
                                         Concepto
                                     </th>
                                     @*<th class="">
-                    Cuenta
-                </th>*@
+                                            Cuenta
+                                        </th>*@
                                     <th class="">
                                         Centro de Costo
                                     </th>
 
                                     @*<th class="">
-                    Nombre de Cuenta
-                </th>
-                <th class="">
-                    Tipo Imp.
-                </th>
-                <th class="">
-                    Imputación
-                </th>*@
+                                            Nombre de Cuenta
+                                        </th>
+                                        <th class="">
+                                            Tipo Imp.
+                                        </th>
+                                        <th class="">
+                                            Imputación
+                                        </th>*@
                                     <th class="">
                                         Monto
                                     </th>
@@ -800,10 +803,10 @@
                                             <td> @Model.D.DOCUMENTOPSTR[i].TCONCEPTO@Model.D.DOCUMENTOPSTR[i].GRUPO</td>
                                             <td> @Model.D.DOCUMENTOPSTR[i].CCOSTO</td>
                                             @*<td> @Model.D.DOCUMENTOPSTR[i].GRUPO</td>
-                        <td> @Model.D.DOCUMENTOPSTR[i].CUENTA</td>
-                        <td> @Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td>
-                        <td> @Model.D.DOCUMENTOPSTR[i].TIPOIMP</td>
-                        <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td>*@
+                                                <td> @Model.D.DOCUMENTOPSTR[i].CUENTA</td>
+                                                <td> @Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td>
+                                                <td> @Model.D.DOCUMENTOPSTR[i].TIPOIMP</td>
+                                                <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td>*@
                                             <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td>
                                             <td>@Model.D.DOCUMENTOPSTR[i].IMPUESTOT</td>
                                             <td>@Model.D.DOCUMENTOPSTR[i].IVA</td>
