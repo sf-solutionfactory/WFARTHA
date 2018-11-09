@@ -49,11 +49,11 @@
         <tr>
             <th class="lbl_num">
                 @*@Html.DisplayNameFor(model => model.NUM_DOC)*@ @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                @Html.DisplayName("Doc. Portal")
+                @Html.DisplayName("No Portal")
             </th>
             <th id="lbl_numSap">
                 @*@Html.DisplayNameFor(model => model.TSOL)*@ @*MGC 07-11-2018 Área de trabajo y solicitudes*@
-                @Html.DisplayName("Doc. SAP")
+                @Html.DisplayName("No. SAP")
             </th>
             <th id="lbl_tiposol">
                 @*@Html.DisplayNameFor(model => model.FECHAD)*@ @*MGC 07-11-2018 Área de trabajo y solicitudes*@
@@ -215,11 +215,44 @@
                     @*<td class="">
                         <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente Aprobador</span>
                     </td>*@
-                    estatus = "Pendiente Aprobador";
-                    visible = true;
-                    color = "yellow darken-2";
-                }
+                //Checar pendiente cuando el usuario aprobador, es el mismo que el usuario solicitante------------------------------------------------------------------------------------
+
+
+                    //estatus = "Pendiente Aprobador";
+                    //visible = true;
+                    //color = "yellow darken-2";
+
+                    //Solamente lo ve el usuario aprobador
+                        //El usuario no es el usuario creador, pero el usuario si es el usuario aprobador
+                        if (ViewBag.usuario.ID != item.USUARIOC_ID)
+                        {
+                            if(item.FLUJOes.Count > 0){
+
+                                if (ViewBag.usuario.ID != item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
+                                {
+                                    estatus = "Pendiente Aprobador";
+                                    visible = true;
+                                    color = "yellow darken-2";
+                                }
+                                else
+                                {
+                                    visible = false;
+                                }
+
+
+                            }
+                            else {
+                                visible = false;
+                            }
+                        }
+                        else
+                        {
+                            visible = false;
+                        }
+
+                //Checar pendiente cuando el usuario aprobador, es el mismo que el usuario solicitante------------------------------------------------------------------------------------
             }
+        }
             @*//MGC 30-10-2018 Modificación estatus, Label Contabilización *@
             else if (item.ESTATUS == "C" && (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("A")))
             {

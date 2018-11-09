@@ -364,6 +364,17 @@ namespace WFARTHA.Services
                         }
                         //MGC 30-10-2018 Agregar mensaje a log de modificación
 
+                        //MGC 09-11-2018 Modificaión Estatus en la creación del archivo cuando la acción fue borrar-crear
+                        //Si es edit, cambiar a P el flujo
+                        //Y el estaus a N
+                        if (edit)
+                        {
+                            d.ESTATUS = "N"; //MGC 02-11-2018 Regresa a estatus de crear preliminar
+                            d.ESTATUS_WF = "P"; //MGC 02-11-2018 Regresa a estatus de crear preliminar
+                        }
+                        
+
+
                         //MGC 30-10-2018 Actualizar el estatus de preliminar del doc
                         d.ESTATUS_PRE = "E";//MGC 30-10-2018 Modificaión Estatus en la creación del archivo
                         db.Entry(d).State = EntityState.Modified;
