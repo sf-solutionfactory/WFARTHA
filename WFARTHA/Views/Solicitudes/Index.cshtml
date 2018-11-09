@@ -48,88 +48,93 @@
     <thead>
         <tr>
             <th class="lbl_num">
-                @Html.DisplayNameFor(model => model.NUM_DOC)
+                @*@Html.DisplayNameFor(model => model.NUM_DOC)*@ @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                @Html.DisplayName("Doc. Portal")
             </th>
-            <th id="lbl_tsol">
-                @Html.DisplayNameFor(model => model.TSOL)
+            <th id="lbl_numSap">
+                @*@Html.DisplayNameFor(model => model.TSOL)*@ @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                @Html.DisplayName("Doc. SAP")
             </th>
-            <th id="lbl_fechad">
-                @Html.DisplayNameFor(model => model.FECHAD)
+            <th id="lbl_tiposol">
+                @*@Html.DisplayNameFor(model => model.FECHAD)*@ @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                @Html.DisplayName("Tipo Solicitud")
             </th>
-            @*<th id="lbl_horac">
-                @Html.DisplayNameFor(model => model.HORAC)
-            </th>*@
-            <th id="lbl_estatus">
-                @Html.DisplayNameFor(model => model.ESTATUS)
+            <th id="">
+                @Html.DisplayName("Fecha") @*MGC 07-11-2018 Área de trabajo y solicitudes*@
             </th>
-            <th id="lbl_concepto">
+            <th id="">
+                @*@Html.DisplayNameFor(model => model.ESTATUS)*@ @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                @Html.DisplayName("Estatus")
+            </th>
+            @*<th id="">
                 @Html.DisplayNameFor(model => model.CONCEPTO)
+                @Html.DisplayName("No. Sociedad")
+            </th>*@
+            <th id="">
+                @*@Html.DisplayNameFor(model => model.CONCEPTO)*@ @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                @Html.DisplayName("Nombre Sociedad")
+            </th>
+            @*<th id="">
+                @Html.DisplayNameFor(model => model.CONCEPTO)
+                @Html.DisplayName("No. Proveedor")
+            </th>
+            <th id="">
+                @Html.DisplayNameFor(model => model.CONCEPTO)
+                @Html.DisplayName("Nombre Proveedor")
+            </th>*@
+            <th id="">
+                @*@Html.DisplayNameFor(model => model.CONCEPTO)*@ @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                @Html.DisplayName("Creador")
+            </th>
+            <th id="">
+                @*@Html.DisplayNameFor(model => model.CONCEPTO)*@ @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                @Html.DisplayName("Solicitante")
             </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
-            {
-        <tr>
-            @*//MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B*@
-            @if (item.ESTATUS.Equals("B"))
-            {
-                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
-                    @item.NUM_DOC
-                </td>
-            }
-            else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP != null && item.ESTATUS_WF == null & item.ESTATUS_PRE == "E" && item.ESTATUS_SAP == "E")
-            {
-                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "P" })'" style="cursor:pointer">
-                    @item.NUM_DOC
-                </td>
-            }
-            else if (item.ESTATUS_WF == "R")
-            {
-                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "R" })'" style="cursor:pointer">
-                    @item.NUM_DOC
-                </td>
-            }
-            else
-            {
-                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-                    @item.NUM_DOC
-                </td>
-            }
-            <td>
-                @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
-            </td>
-            <td>
-                @if (item.FECHAD != null)
-                {
-                    try
-                    {@(item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year);
-                }
-                catch (Exception) { };
-            }
-            </td>
+        {
+
+
+
+
+            @*-------------------------------------------------------------------------------------------------------------------------Status----------->>>>>*@
+
+            bool visible = false;
+            string estatus = "";
+            string color = "";
+
             @*<td>
                 @item.HORAC.Value.ToString().Split('.')[0]
             </td>*@
             @*//MGC 26-10-2018 Modificación a borrador, Label de borrador*@
-            @if (item.ESTATUS.Equals("B"))
+            if (item.ESTATUS.Equals("B"))
             {
                 @*<td class="gray darken-3 white-text">
-                <div class="lbl_pending">Borrador</div>
-            </td>*@
-                <td class="">
+                    <div class="lbl_pending">Borrador</div>
+                </td>*@
+                @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                @*<td class="">
                     <span class="new badge gray darken-2 white-text" data-badge-caption=" ">Borrador</span>
-                </td>
+                </td>*@
+                estatus = "Borrador";
+                visible = false;
+                color = "gray darken-2";
             }
             @*//MGC 30-10-2018 Modificación estatus, Label de contabilizada en SAP*@
             else if (item.ESTATUS.Equals("A"))
             {
                 @*<td class="gray darken-2 white-text">
-                <div class="lbl_pending">Contabilizado SAP</div>
-            </td>*@
-                <td class="">
+                    <div class="lbl_pending">Contabilizado SAP</div>
+                </td>*@
+                @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                @*<td class="">
                     <span class="lbl_tax new badge green darken-2 white-text" data-badge-caption=" ">Contabilizado SAP</span>
-                </td>
+                </td>*@
+                estatus = "Contabilizado SAP";
+                visible = true;
+                color = "green darken-2";
             }
             @*//MGC 30-10-2018 Modificación estatus, Label de generando preliminar*@
             else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP == null && (item.ESTATUS_WF == null | item.ESTATUS_WF == "P"))
@@ -138,21 +143,29 @@
                 if (item.ESTATUS_PRE == "G")
                 {
                     @*<td class="yellow darken-2 white-text">
-                    <div class="lbl_pending">Generando Preliminar</div>
-                </td>*@
-                    <td class="">
+                        <div class="lbl_pending">Generando Preliminar</div>
+                    </td>*@
+                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                    @*<td class="">
                         <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Generando Preliminar</span>
-                    </td>
+                    </td>*@
+                    estatus = "Generando Preliminar";
+                    visible = true;
+                    color = "yellow darken-2";
                 }
                 //Error al crear el archivo preliminar
                 else if (item.ESTATUS_PRE == "E")
                 {
                     @*<td class="red darken-2 white-text">
-                    <div class="lbl_pending">Error al generar Archivo Preliminar</div>
-                </td>*@
-                    <td class="">
+                        <div class="lbl_pending">Error al generar Archivo Preliminar</div>
+                    </td>*@
+                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                    @*<td class="">
                         <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error al generar Archivo Preliminar</span>
-                    </td>
+                    </td>*@
+                    estatus = "Error Archivo Preliminar Portal";
+                    visible = false;
+                    color = "red darken-2";
                 }
             }
             @*//MGC 30-10-2018 Modificación estatus, Label de generando preliminar RESPUESTA DESDE SAP  *@
@@ -162,11 +175,15 @@
                 if (item.ESTATUS_PRE == "E" && item.ESTATUS_SAP == "E")
                 {
                     @*<td class="red darken-1 white-text">
-                    <div class="lbl_contab">Error al generar Archivo Preliminar SAP</div>
-                </td>*@
-                    <td class="">
+                        <div class="lbl_contab">Error al generar Archivo Preliminar SAP</div>
+                    </td>*@
+                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                    @*<td class="">
                         <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error al generar Archivo Preliminar SAP</span>
-                    </td>
+                    </td>*@
+                    estatus = "Error Preliminar SAP";
+                    visible = false;
+                    color = "red darken-2";
 
                 }
                 //Error al crear el archivo preliminar
@@ -174,11 +191,16 @@
                 {
 
                     @*<td class="red darken-1 white-text">
-                    <div class="lbl_contab">Se generó archivo SAP</div>
-                </td>*@
-                    <td class="">
+                        <div class="lbl_contab">Se generó archivo SAP</div>
+                    </td>*@
+                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                    @*<td class="">
                         <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Se generó archivo SAP</span>
-                    </td>
+                    </td>*@
+                    estatus = "Se generó Preliminar SAP";
+                    visible = false;
+                    color = "yellow darken-2";
+
                 }
             }
             else if (item.ESTATUS == "F" && (item.ESTATUS_WF.Equals("P") | item.ESTATUS_WF.Equals("S")))
@@ -187,11 +209,15 @@
                 if (item.ESTATUS_PRE == "G")
                 {
                     @*<td class="yellow darken-2 white-text">
-                    <div class="lbl_pending">Pendiente Aprobador</div>
-                </td>*@
-                    <td class="">
+                        <div class="lbl_pending">Pendiente Aprobador</div>
+                    </td>*@
+                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                    @*<td class="">
                         <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente Aprobador</span>
-                    </td>
+                    </td>*@
+                    estatus = "Pendiente Aprobador";
+                    visible = true;
+                    color = "yellow darken-2";
                 }
             }
             @*//MGC 30-10-2018 Modificación estatus, Label Contabilización *@
@@ -201,31 +227,45 @@
                 if (item.ESTATUS_WF.Equals("P") && item.ESTATUS_PRE == "G")
                 {
                     @*<td class="yellow darken-1 white-text">
-                    <div class="lbl_contab">Pendiente Contabilizar</div>
-                </td>*@
-                    <td class="">
+                        <div class="lbl_contab">Pendiente Contabilizar</div>
+                    </td>*@
+                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                    @*<td class="">
                         <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente Contabilizar</span>
-                    </td>
+                    </td>*@
+                    estatus = "Pendiente Contabilizar";
+                    visible = true;
+                    color = "yellow darken-2";
+
                 }
                 @*//MGC 30-10-2018 Modificación estatus  *@
                 else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "E")
                 {
                     @*<td class="red darken-1 white-text">
-                    <div class="lbl_contab">Error generando archivo de contabilizacion</div>
-                </td>*@
-                    <td class="">
+                        <div class="lbl_contab">Error generando archivo de contabilizacion</div>
+                    </td>*@
+                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                    @*<td class="">
                         <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error generando archivo de contabilizacion</span>
-                    </td>
+                    </td>*@
+                    estatus = "Error Archivo Contabilización Portal";
+                    visible = true;
+                    color = "red darken-2";
+
                 }
                 @*//MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
                 else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_PRE == "G" && item.ESTATUS_SAP != "E")
                 {
                     @*<td class="yellow darken-1 white-text">
-                    <div class="lbl_contab">Contabilizando SAP</div>
-                </td>*@
-                    <td class="">
+                        <div class="lbl_contab">Contabilizando SAP</div>
+                    </td>*@
+                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                    @*<td class="">
                         <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Contabilizando SAP</span>
-                    </td>
+                    </td>*@
+                    estatus = "Contabilizando SAP";
+                    visible = true;
+                    color = "yellow darken-2";
                 }
                 @*//MGC 30-10-2018 Modificación estatus, Error en SAP  *@
                 else if (item.ESTATUS_WF.Equals("A") && item.ESTATUS_SAP == "E")
@@ -233,52 +273,176 @@
                     @*<td class="red darken-1 white-text">
                         <div class="lbl_contab">Error contabilizando SAP</div>
                     </td>*@
-                    <td class="">
+                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                    @*<td class="">
                         <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error contabilizando SAP</span>
-                    </td>
+                    </td>*@
+                    estatus = "Error contabilizando SAP";
+                    visible = true;
+                    color = "red darken-2";
                 }
             }
             else if (item.ESTATUS_WF.Equals("A"))
             {
                 if (item.ESTATUS.Equals("C"))
                 {
-                    <td class="green darken-1 white-text">
+                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                    @*<td class="green darken-1 white-text">
                         <div class="lbl_contab">Por contabilizar</div>
-                    </td>
+                    </td>*@
+                    estatus = "Por contabilizar";
+                    visible = false;
+                    color = "green darken-1";
                 }
                 else if (item.ESTATUS.Equals("P"))
                 {
-                    <td class="green darken-1 white-text">
+                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                    @*<td class="green darken-1 white-text">
                         <div class="lbl_contab">Contabilizar SAP</div>
-                    </td>
+                    </td>*@
+                    estatus = "Contabilizar SAP";
+                    visible = false;
+                    color = "green darken-1";
                 }
                 else
                 {
-                    <td class="green darken-1 white-text">
+                    @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                    @*<td class="green darken-1 white-text">
                         <div class="lbl_approved">Aprobada</div>
-                    </td>
+                    </td>*@
+                    estatus = "Aprobada";
+                    visible = false;
+                    color = "green darken-1";
                 }
             }
             else if (item.ESTATUS.Equals("F") && item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("R") && item.ESTATUS_PRE != null && item.ESTATUS_PRE.Equals("G"))
             {
                 @*<td class="red darken-1 white-text">
-                <div class="lbl_rejected">Pendiente corrección usuario</div>
-            </td>*@
-                <td class="">
+                    <div class="lbl_rejected">Pendiente corrección usuario</div>
+                </td>*@
+                @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                @*<td class="">
                     <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Pendiente corrección usuario</span>
-                </td>
+                </td>*@
+                estatus = "Pendiente Corrección Usuario";
+                visible = false;
+                color = "red darken-2";
             }
             else if (item.ESTATUS_WF.Equals("T"))
             {
-                <td class="yellow darken-2 white-text">
+                @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                @*<td class="yellow darken-2 white-text">
                     <div class="lbl_tax">Pendiente Tax</div>
+                </td>*@
+                estatus = "Pendiente Tax";
+                visible = false;
+                color = "yellow darken-2";
+            }
+            else
+            {
+                @*MGC 07-11-2018 Área de trabajo y solicitudes*@
+                @*<td class="yellow darken-2 white-text">
+                    <div class="lbl_tax">ttt</div>
+                </td>*@
+                estatus = "Estatus desconocido";
+                visible = false;
+                color = "brown darken-2";
+            }
+
+
+            @*-------------------------------------------------------------------------------------------------------------------------Status-----------<<<<<<*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        if (visible)
+        {
+
+            <tr>
+                @*//MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B*@
+                @if (item.ESTATUS.Equals("B"))
+                {
+                    <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
+                        @item.NUM_DOC
+                    </td>
+                }
+                else if (item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP != null && item.ESTATUS_WF == null & item.ESTATUS_PRE == "E" && item.ESTATUS_SAP == "E")
+                {
+                    <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "P" })'" style="cursor:pointer">
+                        @item.NUM_DOC
+                    </td>
+                }
+                else if (item.ESTATUS_WF == "R")
+                {
+                    <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "R" })'" style="cursor:pointer">
+                        @item.NUM_DOC
+                    </td>
+                }
+                else
+                {
+                    <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                        @item.NUM_DOC
+                    </td>
+                }
+                <td>
+                    @item.NUM_PRE @*MGC 07-11-2018 Área de trabajo y solicitudes*@
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
+                </td>
+                <td>
+                    @if (item.FECHAD != null)
+                    {
+                        try
+                        {@(item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year);
+                        }
+                        catch (Exception) { };
+                    }
+                </td>
+
+
+                @*MGC 07-11-2018 Solicitudes y estatus*@
+                <td class="">
+                    <span class="new badge @color white-text" data-badge-caption=" ">@estatus</span>
+                </td>
+
+
+
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.USUARIOC_ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.USUARIOD_ID)
+                </td>
+            </tr>
             }
-            <td>
-                @Html.DisplayFor(modelItem => item.CONCEPTO)
-            </td>
-        </tr>
-            }
+        }
     </tbody>
 </table>
 

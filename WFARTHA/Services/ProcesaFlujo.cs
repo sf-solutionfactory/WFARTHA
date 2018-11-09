@@ -812,6 +812,7 @@ namespace WFARTHA.Services
                                     dcc.ESTATUS_PRE = "E";//MGC 29-10-2018 El nuevo estatus es C
                                     db.Entry(dcc).State = EntityState.Modified;
                                     correcto = file;
+                                    db.SaveChanges();
 
                                     ban = false;
                                     correcto = file;
