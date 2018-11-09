@@ -247,7 +247,11 @@
                         }
                         else
                         {
-                            visible = false;
+                            //MGC 09-11-2018 Cambio para que lo vea el creador
+                            //visible = false;
+                            estatus = "Pendiente Aprobador";
+                            visible = true;
+                            color = "yellow darken-2";
                         }
 
                 //Checar pendiente cuando el usuario aprobador, es el mismo que el usuario solicitante------------------------------------------------------------------------------------
