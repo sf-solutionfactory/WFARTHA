@@ -1,6 +1,8 @@
 ﻿//Variables globales
 var posinfo = 0;
-var posrows = 0;
+var posrows = 0;  //FRT08112018
+var inicio = 0;   //FRT08112018  
+
 var tRet = [];//Agrego a un array los tipos de retenciones
 var tRet2 = [];
 $(document).ready(function () {
@@ -276,8 +278,8 @@ $(document).ready(function () {
         var t = $('#table_info').DataTable();
 
         var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018
+        
         posinfo++;
-
 
         //FRT08112018 AGREGAR Y QUE SE MIREN LAS 
         posinfot = posrows + posinfo++;
@@ -287,6 +289,7 @@ $(document).ready(function () {
 
         //Obtener el select de impuestos en la cabecera
         //var idselect = "infoSel" + posinfo;
+
 
         //Obtener el valor 
         var imp = $('#IMPUESTO').val();
@@ -1602,6 +1605,7 @@ function solicitarDatos() {
             if (data !== null || data !== "") {
                 if (data !== "Null") {
                     //
+                    inicio = 0;   //FRT08112018
                     armarTablaInfo(data);
                 }
                 else {
@@ -1796,7 +1800,7 @@ function armarTablaInfo(datos) {
     $("#table_info>thead>tr").append("<th class=\"lbl_cargoAbono\">D/H NT</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_factura\">Factura</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_tconcepto\">TIPO CONCEPTO</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_grupo\">Grupo</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_grupo\">Concepto</th>"); //FRT08112018
     $("#table_info>thead>tr").append("<th class=\"lbl_cuenta\">Cuenta NT</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_cuentaNom\">Nombre de cuenta NT</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_tipoimp\">Tipo Imp. NT</th>");
@@ -1805,7 +1809,7 @@ function armarTablaInfo(datos) {
     $("#table_info>thead>tr").append("<th class=\"lbl_monto\">Monto</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_impuesto\">Impuesto</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_iva\">IVA</th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_Texto\">TEXTO</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_Texto\">Texto</th>");//FRT08112018
     var res = null;
     //----------------------
     //Hare un ajax para traer las columnas extras
@@ -1874,8 +1878,9 @@ function armarTablaInfo(datos) {
     //Tfoot       
     var tfoot = $("#table_info tfoot");
     tfoot.append($("<tr />"));
-    $("#table_info>tfoot>tr").append("<th colspan=\"" + colspan + "\" style=\"text-align:right\">Total:</th>");
-    $("#table_info>tfoot>tr").append("<th id=\"total_info\"></th>");
+    $("#table_info>tfoot>tr").append("<th colspan=\"" + colspan + "\" style=\"text-align:right\"></th>");
+    //$("#table_info>tfoot>tr").append("<th colspan=\"" + colspan + "\" style=\"text-align:right\">Total:</th>");  FRT08112018 footer
+      $("#table_info>tfoot>tr").append("<th id=\"total_info\"></th>");  
     //Se hara un push al arreglo de columnas original
     for (i = 0; i < tRet2.length; i++) {
         arrCols.push({
@@ -1965,7 +1970,9 @@ function armarTablaInfo(datos) {
     // if (_infoc === datos.DOCUMENTOPSTR.length) {//LEJGG-05-11-2018
     if (datos.DOCUMENTOPSTR.length > 0) {
         for (var i = 0; i < datos.DOCUMENTOPSTR.length; i++) {
-            posrows = i;
+
+            posrows = i;  //FRT08112018
+
             for (var x = 0; x < _infoBIIR.length; x++) {
                 if (_infoBIIR[x].POS === (i + 1)) {
                     arrColExTA.push(_infoBIIR[x]);
@@ -1989,14 +1996,20 @@ function armarTablaInfo(datos) {
             if (_infoAnex.length > 0) {
                 var ar = addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, _infoAnex[i].a1, _infoAnex[i].a2, _infoAnex[i].a3, _infoAnex[i].a4, _infoAnex[i].a5, datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, datos.DOCUMENTOPSTR[i].TCONCEPTO, datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
                     datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, datos.DOCUMENTOPSTR[i].CCOSTO, datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
+
                 //Obtener el select de impuestos en la cabecera
-                var idselect = "infoSel" + i;
+
+                //var idselect = "infoSel0";
+                var idselect = "infoSel" + i;  //FRT08112018 Para mostrar todos los impuestos
+
                 //Obtener el valor 
                 var imp = $('#IMPUESTO').val();
+                //var imp = datos.DOCUMENTOPSTR[i].MWSKZ; //FRT08112018 para traerlo directo de registro
                 //Crear el nuevo select con los valores de impuestos
                 addSelectImpuesto(ar, imp, idselect, "", "X");
             }
             else {
+
                 var ar = addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, "", "", "", "", "", datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, datos.DOCUMENTOPSTR[i].TCONCEPTO/*Tipo Concepto*/, datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
                     datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, datos.DOCUMENTOPSTR[i].CCOSTO/*Centro de costo*/, datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
                 //Obtener el select de impuestos en la cabecera
@@ -2005,6 +2018,7 @@ function armarTablaInfo(datos) {
                 var imp = $('#IMPUESTO').val();
                 //Crear el nuevo select con los valores de impuestos
                 addSelectImpuesto(ar, imp, idselect, "", "X");
+
             }
         }
     }
@@ -2130,7 +2144,18 @@ function updateFooter() {
 
     total = total.toFixed(2);
 
-    $('#total_info').text(toShow(total));
+
+    //FRT08112018 Para eliminar el Total
+    if (inicio == 0) {
+        totalinicio = "";
+        $('#total_info').text((totalinicio));
+        inicio = 1;
+    }else {
+        $('#total_info').text(toShow(total));
+    }
+    //$('#total_info').text(toShow(total));  
+    //FRT08112018 Para eliminar el Total
+
     $('#MONTO_DOC_MD').val(toShow(total));//Lej 18.09.2018
     $('#mtTot').val($('#MONTO_DOC_MD').val());//Lej 29.09.2018
 }

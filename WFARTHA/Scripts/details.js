@@ -12,7 +12,8 @@ $(document).ready(function () {
 
     //Tabla de Información
     $('#table_info').DataTable({
-
+        scrollX: true,
+        scrollCollapse: true,
         language: {
             //"url": "../Scripts/lang/@Session["spras"].ToString()" + ".json"
             "url": "../../Scripts/lang/ES.json"
@@ -20,7 +21,6 @@ $(document).ready(function () {
         "paging": false,
         "info": false,
         "searching": false,
-        "scrollX": true,
         "columns": [
             {//MGC 30-10-2018 Tipo de presupuesto
                 "className": 'select_row',
