@@ -660,28 +660,36 @@ $(document).ready(function () {
             }
         });
 
+
+        //FRT08112018 Valida con otra letra para evitar error
         //FRT04112018.2 Se realizara validación del monto > 0s
         var proveedor = $("#PAYER_ID").val();
         if (proveedor == "" | proveedor == null) {
             //mensaje de error
             msgerror = "No se ha seleccionado proveedor";
-            _b = false;
+            _p = false;
         } else {
-            _b = true;
+            _p = true;
         }
         //update codigo fer
         //END FRT04112018.2
-
-        if (_b) {
-            //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
-            copiarTableInfoControl();
-            copiarTableInfoPControl();
-            copiarTableRet();
-            //end FRT06112018.3 
-            $('#btn_guardar').trigger("click");
+               
+        if (_p) {
+            if (_b) {
+                //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
+                copiarTableInfoControl();
+                copiarTableInfoPControl();
+                copiarTableRet();
+                //end FRT06112018.3 
+                $('#btn_guardar').trigger("click");
+            } else {
+                M.toast({ html: msgerror });
+            }
         } else {
             M.toast({ html: msgerror });
         }
+        ///FRT08112018
+        
     });
 
     $('#btn_borradorh').on("click", function (e) {
@@ -1435,16 +1443,16 @@ function obtenerRetenciones(flag) {
         $("#table_info>thead>tr").append("<th class=\"lbl_cargoAbono\">D/H</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_factura\">Factura</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_tconcepto\">TIPO CONCEPTO</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_grupo\">Grupo</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_grupo\">Concepto</th>");//FRT08112018
         $("#table_info>thead>tr").append("<th class=\"lbl_cuenta\">Cuenta</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_cuentaNom\">Nombre de cuenta</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_tipoimp\">Tipo Imp.</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_imputacion\">Imputación</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_ccosto\">Centro de costo</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_ccosto\">Centro de Costo</th>"); //FRT08112018
         $("#table_info>thead>tr").append("<th class=\"lbl_monto\">Monto</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_impuesto\">Impuesto</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_iva\">IVA</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_Texto\">TEXTO</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_Texto\">Texto</th>");//FRT08112018
         var colspan = 20;
         tRet2 = tRet;
         for (i = 0; i < tRet.length; i++) {//Revisare las retenciones que tienes ligadas
@@ -1481,7 +1489,7 @@ function obtenerRetenciones(flag) {
         //Tfoot       
         var tfoot = $("#table_info tfoot");
         tfoot.append($("<tr />"));
-        $("#table_info>tfoot>tr").append("<th colspan=\"" + colspan + "\" style=\"text-align:right\">Total:</th>");
+        $("#table_info>tfoot>tr").append("<th colspan=\"" + colspan + "\" style=\"text-align:right\"></th>");
         $("#table_info>tfoot>tr").append("<th id=\"total_info\"></th>");
         //Se hara un push al arreglo de columnas original
         for (i = 0; i < tRet2.length; i++) {

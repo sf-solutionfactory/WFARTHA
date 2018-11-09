@@ -161,7 +161,14 @@ namespace WFARTHA.Controllers
                 {
                     _total = _total + _t[i].TOTAL;
                 }
+
                 ViewBag.total = _total;
+
+                //FRT08112018  Mostrar el Total en Details 
+                var _vtotal = Math.Round(_total, 2);
+                ViewBag.totalt = _vtotal.ToString("C");
+                //FRT08112018
+
                 doc.DOCUMENTOPSTR = dml;
             }
             var anexos = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
@@ -579,12 +586,23 @@ namespace WFARTHA.Controllers
             }
             try
             {
-                string p = Session["pr"].ToString();
-                string pid = Session["id_pr"].ToString();
-                ViewBag.PrSl = p;
-                pselG = pid;//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
+                //FRT08112018 Para poder identificar si viene de Edit
+                string editar = Session["Edit"].ToString();
+                if (editar == "1")
+                {
+                    Session["Edit"] = 0;
+                    return RedirectToAction("Proyectos", "Home", new { returnUrl = Request.Url.AbsolutePath });
+                }
+                else {
+                    string p = Session["pr"].ToString();
+                    string pid = Session["id_pr"].ToString();
+                    ViewBag.PrSl = p;
+                    pselG = pid;//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
 
-                ViewBag.pid = pid;//MGC 29-10-2018 Guardar el proyecto en el create
+                    ViewBag.pid = pid;//MGC 29-10-2018 Guardar el proyecto en el create
+                }
+                //FRT08112018 Para poder identificar si viene de Edit
+
             }
             catch
             {
@@ -1893,6 +1911,7 @@ namespace WFARTHA.Controllers
             var _nameprov = db.PROYECTOes.Where(x => x.ID_PSPNR == _proy.ID_PSPNR).FirstOrDefault();
             Session["pr"] = _nameprov.NOMBRE;
             Session["id_pr"] = _proy.ID_PSPNR;
+            Session["edit"] = 1;  //FRT08112018 para mostrar pantalla de proyectos en edit
             //Lejgg05-11-2018-------------------
             if (pacc == null)
             {
@@ -5008,7 +5027,7 @@ namespace WFARTHA.Controllers
 
                 var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
                 var _Mt = xmlnode[0].Attributes["Total"].Value;
-                var _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;
+                //var _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;   //FRT08112018 para validar RFC
                 var _RFCReceptor = xmlnode2[0].Attributes["Rfc"].Value;
                 var _RFCEmisor = xmlnode3[0].Attributes["Rfc"].Value;
                 var _Uuid = xmlnode4[0].Attributes["UUID"].Value;
@@ -5019,7 +5038,7 @@ namespace WFARTHA.Controllers
                 lstvals.Add(_RFCReceptor);//RFCReceptor
                 lstvals.Add(_RFCEmisor);//RFCEmisor
                 lstvals.Add(_Uuid);//UUID
-                lstvals.Add(_TipoCambio);//TCambio
+                lstvals.Add("1");//TCambio //FRT08112018 para validar RFC
                 lstvals.Add(_rfc_soc);//Sociedad
                 JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
                 //FRT 07112018 
@@ -5719,6 +5738,15 @@ namespace WFARTHA.Controllers
                     dm.CUENTA = dps.ElementAt(i).CUENTA;
                     string ct = dps.ElementAt(i).GRUPO;
                     var tct = dps.ElementAt(i).TCONCEPTO;
+
+                    //FRT08112018 Agrgar Impuesto
+                    var _imp = dps.ElementAt(i).MWSKZ;
+                    var _imptxt = db.IMPUESTOTs.Where(a => a.MWSKZ == _imp).FirstOrDefault().TXT50;
+                    dm.IMPUESTOT = _imp + " - " + _imptxt;
+                    dm.MWSKZ = dps.ElementAt(i).MWSKZ;
+                    //END FRT08112018
+
+
                     try
                     {
                         dm.NOMCUENTA = db.CONCEPTOes.Where(x => x.ID_CONCEPTO == ct && x.TIPO_CONCEPTO == tct).FirstOrDefault().DESC_CONCEPTO.Trim();
@@ -5744,7 +5772,7 @@ namespace WFARTHA.Controllers
                 {
                     _total = _total + _t[i].TOTAL;
                 }
-                ViewBag.total = _total;
+                ViewBag.total = _total;   
                 doc.DOCUMENTOPSTR = dml;
             }
             JsonResult jc = Json(doc, JsonRequestBehavior.AllowGet);

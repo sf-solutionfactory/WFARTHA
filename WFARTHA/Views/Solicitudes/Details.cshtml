@@ -716,8 +716,8 @@
                                         A5
                                     </th>
                                     @*<th class="">
-                                            D/H
-                                        </th>*@
+                    D/H
+                </th>*@
                                     <th class="">
                                         Factura
                                     </th>
@@ -725,21 +725,21 @@
                                         Concepto
                                     </th>
                                     @*<th class="">
-                                            Cuenta
-                                        </th>*@
+                    Cuenta
+                </th>*@
                                     <th class="">
                                         Centro de Costo
                                     </th>
 
                                     @*<th class="">
-                                            Nombre de Cuenta
-                                        </th>
-                                        <th class="">
-                                            Tipo Imp.
-                                        </th>
-                                        <th class="">
-                                            Imputación
-                                        </th>*@
+                    Nombre de Cuenta
+                </th>
+                <th class="">
+                    Tipo Imp.
+                </th>
+                <th class="">
+                    Imputación
+                </th>*@
                                     <th class="">
                                         Monto
                                     </th>
@@ -800,10 +800,10 @@
                                             <td> @Model.D.DOCUMENTOPSTR[i].TCONCEPTO@Model.D.DOCUMENTOPSTR[i].GRUPO</td>
                                             <td> @Model.D.DOCUMENTOPSTR[i].CCOSTO</td>
                                             @*<td> @Model.D.DOCUMENTOPSTR[i].GRUPO</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].CUENTA</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].TIPOIMP</td>
-                                                <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td>*@
+                        <td> @Model.D.DOCUMENTOPSTR[i].CUENTA</td>
+                        <td> @Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td>
+                        <td> @Model.D.DOCUMENTOPSTR[i].TIPOIMP</td>
+                        <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td>*@
                                             <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td>
                                             <td>@Model.D.DOCUMENTOPSTR[i].IMPUESTOT</td>
                                             <td>@Model.D.DOCUMENTOPSTR[i].IVA</td>
@@ -826,6 +826,12 @@
                                     }
                                 }
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Total: </th>
+                                    <th>@ViewBag.totalt</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -880,7 +886,7 @@
                                                 <td> @lstDocsA[i].TIPO</td>
                                                 <td> @lstDocsA[i].DESC</td>
                                                 <td>
-                                                    <button class="btn btnD" name="file" id="file" type="submit" value=@lstDocsA[i].PATH>DESCARGAR</button>
+                                                    <button class="btn btnD" name="archivo" id="archivo" type="submit" value=@lstDocsA[i].PATH>DESCARGAR</button>
                                                 </td>
                                             </tr>
                                         }
