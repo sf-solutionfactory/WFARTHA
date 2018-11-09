@@ -39,7 +39,11 @@
 <script src="~/Scripts/editArtha.js"></script>@*LEJGG-04-10-2018*@
 <script src="~/Scripts/ValidarCampos.js"></script>@*LEJGG-19-10-2018*@
 <script src="~/Scripts/formatos.js"></script>
-
+<style>
+    .leftAlignement {
+        text-align: left;
+    }
+</style>
 @if (ViewBag.error != "")
 {
     <script>
@@ -346,14 +350,28 @@
                                 <div class="form-group col s3">
                                     @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.DropDownList("MONEDA_ID", null, new { htmlAttributes = new { @class = "form-control  ddl" } })@*LEJ 04.09.2018*@
+                                        @if (pacc == "B")
+                                        {
+                                            @Html.DropDownList("MONEDA_ID", null, new { htmlAttributes = new { @class = "form-control  ddl" } })@*LEJ 04.09.2018*@
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownList("MONEDA_ID", null, new { htmlAttributes = new { @class = "form-control  ddl", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                        }
                                     </div>
                                 </div>
 
                                 <div class="form-group col s3">
                                     @Html.LabelFor(model => model.TIPO_CAMBIO, "Tipo de Cambio", htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon" } })@*LEJ 04.09.2018*@
+                                        @if (pacc == "B")
+                                        {
+                                            @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon" } })@*LEJ 04.09.2018*@
+                                        }
+                                        else
+                                        {
+                                            @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                        }
                                     </div>
                                 </div>
 
@@ -473,25 +491,25 @@
                                 <table class="table display mdl-data-table striped" id="table_ret" style="width:100%;">
                                     <thead>
                                         <tr>
-                                            <th class="lbl_socret">
+                                            <th class="lbl_socret leftAlignement">
                                                 Sociedad Retención
                                             </th>
-                                            <th class="lbl_provret">
+                                            <th class="lbl_provret leftAlignement">
                                                 Proveedor Retención
                                             </th>
-                                            <th class="lbl_tret">
+                                            <th class="lbl_tret leftAlignement">
                                                 Tipo Retención
                                             </th>
-                                            <th class="lbl_descret">
+                                            <th class="lbl_descret leftAlignement">
                                                 Descripción Retención
                                             </th>
-                                            <th class="lbl_indret">
+                                            <th class="lbl_indret leftAlignement">
                                                 Indicador de Retención
                                             </th>
-                                            <th class="lbl_bimponible">
+                                            <th class="lbl_bimponible leftAlignement">
                                                 Base Imponible
                                             </th>
-                                            <th id="lbl_impret">
+                                            <th id="lbl_impret" class="leftAlignement">
                                                 Importe de Retención
                                             </th>
                                         </tr>
@@ -506,20 +524,20 @@
                                                 <tr>
                                                     <td></td>
                                                     <td></td>
-                                                    <td>
+                                                    <td class="leftAlignement">
                                                         @Html.DisplayFor(m => drets[i].WITHT)
                                                     </td>
-                                                    <td>
+                                                    <td class="leftAlignement">
                                                         @Html.DisplayFor(m => drets[i].DESC)
                                                     </td>
-                                                    <td>
+                                                    <td class="leftAlignement">
                                                         @Html.DisplayFor(m => drets[i].WT_WITHCD)
                                                     </td>
-                                                    <td>
+                                                    <td class="leftAlignement">
                                                         @{ decimal bi = 0; try { bi = Convert.ToDecimal(drets[i].BIMPONIBLE); } catch (Exception) { }; string bim = formatoc.toShow(bi, deci);}
                                                         @bim
                                                     </td>
-                                                    <td>
+                                                    <td class="leftAlignement">
                                                         @{ decimal im = 0; try { im = Convert.ToDecimal(drets[i].IMPORTE_RET); } catch (Exception) { }; string ims = formatoc.toShow(im, deci);}
                                                         @ims
                                                     </td>

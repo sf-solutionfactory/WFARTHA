@@ -258,9 +258,9 @@ namespace WFARTHA.Controllers
 
             //FRT 03112018.3--------Mostrar anexos de la misma forma que en Editar >
 
-            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
+            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "").ToList();
             DOCUMENTOA d_a = new DOCUMENTOA();
-            var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id).ToList();
+            var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id && a.PATH != "").ToList();
             for (int i = 0; i < la1.Count; i++)
             {
                 d_a = new DOCUMENTOA();
@@ -606,7 +606,7 @@ namespace WFARTHA.Controllers
 
                     ViewBag.pid = pid;//MGC 29-10-2018 Guardar el proyecto en el create
                 }
-           
+
             }
             catch
             {
@@ -1976,9 +1976,9 @@ namespace WFARTHA.Controllers
             ViewBag.Title += id; //MGC 05-10-2018 Modificación para work flow al ser editada
             ViewBag.ndoc = id;
             //LEJGG19 10 2018----------------------------------------------------->
-            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id).ToList();
+            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id&&a.PATH!="").ToList();
             DOCUMENTOA d_a = new DOCUMENTOA();
-            var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id).ToList();
+            var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id && a.PATH != "").ToList();
             for (int i = 0; i < la1.Count; i++)
             {
                 d_a = new DOCUMENTOA();
@@ -2343,12 +2343,15 @@ namespace WFARTHA.Controllers
                     _t = _t.Replace(",", "");
                     _doc.MONTO_DOC_MD = decimal.Parse(_t);
                     _doc.CONCEPTO = dOCUMENTO.CONCEPTO;
+                    var _payerid_ = "";
                     if (_doc.ESTATUS == "B")
                     {
-                        _doc.PAYER_ID = dOCUMENTO.PAYER_ID;
+                        //_doc.PAYER_ID = dOCUMENTO.PAYER_ID;
+                        _payerid_ = _doc.PAYER_ID;
                     }
                     else
                     { //se queda el que tiene
+                        _payerid_ = _doc.PAYER_ID;
                     }
                     if (dOCUMENTO.CONDICIONES != null)
                     {
@@ -2482,7 +2485,7 @@ namespace WFARTHA.Controllers
                             _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
                             _dp.POS = j;
                             _dp.ACCION = "H";
-                            _dp.CUENTA = _doc.PAYER_ID;
+                            _dp.CUENTA = _payerid_ ;
                             _dp.MONTO = _monto + _iva;//Obtener las retenciones relacionadas con las ya mostradas en la tabla
                             _dp.MWSKZ = _mwskz;
                             _dp.IVA = _iva;
@@ -2496,7 +2499,7 @@ namespace WFARTHA.Controllers
                             _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
                             _dp.POS = j;
                             _dp.ACCION = "H";
-                            _dp.CUENTA = _doc.PAYER_ID;
+                            _dp.CUENTA = _payerid_;
                             _dp.MONTO = _monto + _iva;//Obtener las retenciones relacionadas con las ya mostradas en la tabla
                             _dp.MWSKZ = _mwskz;
                             _dp.IVA = _iva;
@@ -2630,7 +2633,7 @@ namespace WFARTHA.Controllers
                                 }
                                 else//para cuando es nuevo
                                 {
-                                   // var docr = dOCUMENTO.DOCUMENTOR;
+                                    // var docr = dOCUMENTO.DOCUMENTOR;
                                     /*var ret = db.RETENCIONs.Where(x => x.WITHT == _str).FirstOrDefault().WITHT_SUB;
                                     if (ret != null)
                                     {
@@ -5674,7 +5677,7 @@ namespace WFARTHA.Controllers
                 {
                     _total = _total + _t[i].TOTAL;
                 }
-                ViewBag.total = _total;   
+                ViewBag.total = _total;
                 doc.DOCUMENTOPSTR = dml;
             }
             JsonResult jc = Json(doc, JsonRequestBehavior.AllowGet);
@@ -5843,6 +5846,7 @@ namespace WFARTHA.Controllers
             contDescarga(archivo, ref contentyp, ref nombre);
             //return File(descargarArchivo(btnArchivo, contentyp, nombre), contentyp, nombre);
             return File(archivo, contentyp, nombre);
+
         }
 
         //FRT06112018 Se agrega para poder descargar archivos desde detail

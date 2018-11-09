@@ -355,13 +355,21 @@ $(document).ready(function () {
                                     _resVu = validarUuid(data[4]);
                                     //si es false significa que no hay coincidencias
                                     if (!_resVu) {
-                                        $('#Uuid').val(data[4]);
-                                        $('#FECHAD').val(data[0]);
-                                        $('#FECHADO').val(data[0]);
-                                        $("#FECHAD").trigger("change");
-                                        data[1];//Monto Total
-                                        _fbool = validarRFC(data[2]);
-                                        //data[2];//RFC
+                                        //$('#Uuid').val(data[4]);
+                                        //$('#FECHAD').val(data[0]);
+                                        //$('#FECHADO').val(data[0]);
+                                        //$("#FECHAD").trigger("change");
+                                        //data[1];//Monto Total
+                                        //_fbool = validarRFC(data[2]);
+                                        ////data[2];//RFC
+                                        _fbool = validarRFC(data[3], data[2], data[6]);
+                                        if (_fbool) {
+                                            $('#Uuid').val(data[4]);
+                                            $('#FECHAD').val(data[0]);
+                                            $('#FECHADO').val(data[0]);
+                                            $("#FECHAD").trigger("change");
+                                            data[1];//Monto Total
+                                        }
                                     }
                                 }
                             },
@@ -436,13 +444,21 @@ $(document).ready(function () {
                                     if (data !== null || data !== "") {
                                         _resVu = validarUuid(data[4]);
                                         if (!_resVu) {
-                                            $('#Uuid').val(data[4]);
-                                            $('#FECHAD').val(data[0]);
-                                            $('#FECHADO').val(data[0]);
-                                            $("#FECHAD").trigger("change");
-                                            data[1];//Monto Total
-                                            _fbool = validarRFC(data[2]);
-                                            //data[2];//RFC
+                                            //$('#Uuid').val(data[4]);
+                                            //$('#FECHAD').val(data[0]);
+                                            //$('#FECHADO').val(data[0]);
+                                            //$("#FECHAD").trigger("change");
+                                            //data[1];//Monto Total
+                                            //_fbool = validarRFC(data[2]);
+                                            ////data[2];//RFC
+                                            _fbool = validarRFC(data[3], data[2], data[6]);
+                                            if (_fbool) {
+                                                $('#Uuid').val(data[4]);
+                                                $('#FECHAD').val(data[0]);
+                                                $('#FECHADO').val(data[0]);
+                                                $("#FECHAD").trigger("change");
+                                                data[1];//Monto Total
+                                            }
                                         }
                                     }
                                 },
