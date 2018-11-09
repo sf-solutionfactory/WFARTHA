@@ -60,7 +60,10 @@ namespace WFARTHA.Controllers
                 }
             }
 
-            var dOCUMENTOes = db.DOCUMENTOes.Where(a => a.USUARIOC_ID.Equals(User.Identity.Name) | a.USUARIOD_ID.Equals(User.Identity.Name)).ToList();
+            //Modificación de consulta para mostrar solamente las solicitudes en la sección Solicitude, dependiendo del estatus en el que estan
+            //var dOCUMENTOes = db.DOCUMENTOes.Where(a => a.USUARIOC_ID.Equals(User.Identity.Name) | a.USUARIOD_ID.Equals(User.Identity.Name)).ToList();  
+            //Descartar el borrador
+            var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(User.Identity.Name) | a.USUARIOD_ID.Equals(User.Identity.Name)) && a.ESTATUS != "B" ).Include(a => a.SOCIEDAD).ToList();
 
             dOCUMENTOes = dOCUMENTOes.Distinct(new DocumentoComparer()).ToList();
             return View(dOCUMENTOes);
