@@ -271,6 +271,21 @@ namespace WFARTHA.Controllers
                 d_a.PATH = la1[i].PATH;
                 lst.Add(d_a);
             }
+            for (int x = 0; x < lst.Count; x++)
+            {
+                var _xtr = lst[x].PATH.Split('\\');
+                var _nxtr = _xtr[_xtr.Length - 1];
+                _nxtr = Uri.EscapeUriString(_nxtr);
+                string _path = "";
+                for (int j = 0; j < _xtr.Length; j++)
+                {
+                    if (j != _xtr.Length - 1)
+                        _path += _xtr[j] + '\\';
+                    else
+                        _path += _nxtr;
+                }
+                lst[x].PATH = _path;
+            }
             ViewBag.docAn = lst;
 
             //FRT END 
@@ -2335,7 +2350,10 @@ namespace WFARTHA.Controllers
                     {//se queda el de la bd
                     }
                     _doc.MONEDA_ID = dOCUMENTO.MONEDA_ID;
-                    _doc.TIPO_CAMBIO = dOCUMENTO.TIPO_CAMBIO;
+                    if (_doc.ESTATUS == "B")
+                    {
+                        _doc.TIPO_CAMBIO = dOCUMENTO.TIPO_CAMBIO;
+                    }
                     _doc.IMPUESTO = dOCUMENTO.IMPUESTO;
                     //_doc.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;//MGC 03-11-2018
                     _doc.USUARIOD_ID = DETTA_USUARIOA_ID;//MGC 03-11-2018
@@ -2368,7 +2386,7 @@ namespace WFARTHA.Controllers
                     USUARIO us = db.USUARIOs.Find(User.Identity.Name);
                     _doc.PUESTO_ID = us.PUESTO_ID;
                     _doc.USUARIOC_ID = User.Identity.Name;
-                    var _usC= User.Identity.Name;
+                    var _usC = User.Identity.Name;
                     //Obtener el tipo de documento
                     var doct = db.DET_TIPODOC.Where(dt => dt.TIPO_SOL == dOCUMENTO.TSOL_ID).FirstOrDefault();
                     _doc.DOCUMENTO_SAP = doct.BLART.ToString();
@@ -5842,12 +5860,26 @@ namespace WFARTHA.Controllers
         [HttpPost]
         public FileResult Descargar(string archivo)
         {
-            //LEJ 03.10.2018
-            string nombre = "", contentyp = "";
-            contDescarga(archivo, ref contentyp, ref nombre);
-            //return File(descargarArchivo(btnArchivo, contentyp, nombre), contentyp, nombre);
-            return File(archivo, contentyp, nombre);
+            //LEJGG 09-11-2018------------------------------------
+            if (archivo.Contains("%20"))//codificacion a tipo de url
+            {
+                var _Ar = archivo.Replace("%20", " ");
 
+                //LEJ 03.10.2018
+                string nombre = "", contentyp = "";
+                contDescarga(_Ar, ref contentyp, ref nombre);
+                //return File(descargarArchivo(btnArchivo, contentyp, nombre), contentyp, nombre);
+                return File(_Ar, contentyp, nombre);
+            }
+            //LEJGG 09-11-2018------------------------------------
+            else
+            {
+                //LEJ 03.10.2018
+                string nombre = "", contentyp = "";
+                contDescarga(archivo, ref contentyp, ref nombre);
+                //return File(descargarArchivo(btnArchivo, contentyp, nombre), contentyp, nombre);
+                return File(archivo, contentyp, nombre);
+            }
         }
 
         //FRT06112018 Se agrega para poder descargar archivos desde detail
