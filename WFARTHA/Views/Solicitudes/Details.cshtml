@@ -53,8 +53,8 @@
             @ViewBag.Error
         </div>*@
 
-    if (TempData["error"].ToString() != "")
-    {
+if (TempData["error"].ToString() != "")
+{
         <script>
                 /**/
                 /**/
@@ -309,7 +309,7 @@
                                     </div>
                                     <div class="modal-footer right">
                                         <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                        <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
+                                        <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes", new { id = Model.D.NUM_DOC })">Si</a>
                                     </div>
                                 </div>
                             }
@@ -336,7 +336,7 @@
                                 </div>
                                 <div class="modal-footer right">
                                     <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                    <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
+                                    <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes", new { id = Model.D.NUM_DOC })">Si</a>
                                 </div>
                             </div>
                         }
@@ -520,10 +520,14 @@
                         <div class="form-group col s3">
                             @Html.LabelFor(model => model.D.TIPO_CAMBIO, "Tipo de Cambio", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
-                                @{ decimal tc = decimal.Parse(Model.D.TIPO_CAMBIO.ToString()); var _tc = formatoc.toShow(tc, ViewBag.dec);} @*LEJGG 16102018*@
-                                @*@Html.EditorFor(model => model.D.TIPO_CAMBIO, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })*@
-                                <input type="text" disabled class="form-control" id="TIPO_CAMBIO" name="TIPO_CAMBIO" value="@_tc" />@*LEJGG 16102018*@
-                            </div>
+                                @{var tca = Model.D.TIPO_CAMBIO.ToString();
+                                    decimal tc = 0;}
+                                @{ try                { tc = decimal.Parse(tca); } catch (Exception e) { };
+
+                                    var _tc = formatoc.toShow(tc, ViewBag.dec);} @*LEJGG 16102018*@
+                                    @*@Html.EditorFor(model => model.D.TIPO_CAMBIO, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })*@
+                                    <input type="text" disabled class="form-control" id="TIPO_CAMBIO" name="TIPO_CAMBIO" value="@_tc" />@*LEJGG 16102018*@
+                                </div>
                         </div>
                         <div class="form-group col s2">
                             @Html.LabelFor(model => model.D.CONDICIONES, "Condición de Pago", htmlAttributes: new { @class = "control-label col-md-2" })
