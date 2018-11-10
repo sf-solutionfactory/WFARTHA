@@ -220,8 +220,8 @@
                                     <i class="large material-icons">work</i>
                                 </a>
                                 <ul>
-                                    <li><a id="lbl_wfa" class="btn-floating green modal-trigger" href="#modal1" onclick="aprobar()"><i class="material-icons">check</i></a></li>
                                     <li><a id="lbl_wfr" class="btn-floating red modal-trigger" href="#modal1" onclick="rechazar()"><i class="material-icons">close</i></a></li>
+                                    <li><a id="lbl_wfa" class="btn-floating green modal-trigger" href="#modal1" onclick="aprobar()"><i class="material-icons">check</i></a></li>
                                 </ul>
                             </div>
                             <script>
@@ -236,8 +236,9 @@
                             </script>
                             @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
                                 <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
-                            <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
+                            <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
+
                         }
                         else if (ViewBag.accion == "N")
                         {
@@ -270,8 +271,9 @@
                                     <i class="large material-icons">work</i>
                                 </a>
                                 <ul>
-                                    <li><a id="lbl_wfn" class="btn-floating yellow darken-1 modal-trigger" href="#modal1" onclick="contabilizar()"><i class="material-icons">send</i></a></li>
                                     <li><a id="lbl_wfr" class="btn-floating red modal-trigger" href="#modal1" onclick="rechazar()"><i class="material-icons">close</i></a></li>
+                                    <li><a id="lbl_wfn" class="btn-floating yellow darken-1 modal-trigger" href="#modal1" onclick="contabilizar()"><i class="material-icons">send</i></a></li>
+
                                 </ul>
                             </div>
                             <script>
@@ -285,8 +287,9 @@
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
                             @*<a id="lbl_wfn" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="N" })">Siguiente</a>*@
-                            <a id="lbl_wfn" class="btn-small modal-trigger" href="#modal1" onclick="contabilizar()">Contabilizar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
+                            <a id="lbl_wfn" class="btn-small modal-trigger" href="#modal1" onclick="contabilizar()">Contabilizar</a>
+
                         }
                         else if (!Model.D.ESTATUS.Equals("A"))
                         {
@@ -695,7 +698,7 @@
                 <div class="card-panel">
                     <h5 id="head_cabecera">Detalle</h5>
                     <div class="row" style="margin-bottom:0">
-
+                        @*aQUI PONES LA TABLA*@
                         <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
                             <thead>
                                 <tr>
@@ -776,9 +779,9 @@
                                     {
                                         <tr>
                                             @*@if (colsret.Count == 0)
-                                            {
-                                                <td></td>
-                                            }*@
+                                                {
+                                                    <td></td>
+                                                }*@
                                             <td></td>
                                             <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
                                             @if (@Model.D.Anexo != null)
@@ -797,19 +800,97 @@
                                                 <td></td>
                                                 <td></td>
                                             }
-                                            <td> @Model.D.DOCUMENTOPSTR[i].ACCION</td>
-                                            <td> @Model.D.DOCUMENTOPSTR[i].FACTURA</td>
+                                            @if (Model.D.DOCUMENTOPSTR[i].ACCION != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].ACCION</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+                                            @if (Model.D.DOCUMENTOPSTR[i].FACTURA != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].FACTURA</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
                                             <td> @Model.D.DOCUMENTOPSTR[i].TCONCEPTO@Model.D.DOCUMENTOPSTR[i].GRUPO</td>
-                                            <td> @Model.D.DOCUMENTOPSTR[i].CCOSTO</td>
-                                            <td> @Model.D.DOCUMENTOPSTR[i].GRUPO</td>
-                                            <td> @Model.D.DOCUMENTOPSTR[i].CUENTA</td>
-                                            <td> @Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td>
-                                            <td> @Model.D.DOCUMENTOPSTR[i].TIPOIMP</td>
-                                            <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td>
-                                            <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td>
-                                            <td>@Model.D.DOCUMENTOPSTR[i].IMPUESTOT</td>
-                                            <td>@Model.D.DOCUMENTOPSTR[i].IVA</td>
-                                            <td>@Model.D.DOCUMENTOPSTR[i].TEXTO</td>
+
+                                            @if (Model.D.DOCUMENTOPSTR[i].CUENTA != null)
+                                            {
+                                            <td>@Model.D.DOCUMENTOPSTR[i].CUENTA</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+
+                                            @if (Model.D.DOCUMENTOPSTR[i].CCOSTO != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].CCOSTO</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+
+                                            @if (Model.D.DOCUMENTOPSTR[i].NOMCUENTA != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+                                            @if (Model.D.DOCUMENTOPSTR[i].TIPOIMP != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].TIPOIMP</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+
+
+
+                                            @if (Model.D.DOCUMENTOPSTR[i].IMPUTACION != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+
+                                            @if (Model.D.DOCUMENTOPSTR[i].MONTO != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+
+                                            
+                                            @if (Model.D.DOCUMENTOPSTR[i].IMPUESTOT != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].IMPUESTOT</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+
+                                            @if (Model.D.DOCUMENTOPSTR[i].IVA != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].IVA</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+
+                                            @if (Model.D.DOCUMENTOPSTR[i].TEXTO != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].TEXTO</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+
+
                                             @for (int y = 0; y < colsret.Count; y++)
                                             {
                                                 <td>
@@ -835,6 +916,8 @@
                                 </tr>
                             </tfoot>
                         </table>
+                        @*aQUI PONES LA TABLA*@
+
                     </div>
                 </div>
             </div>
