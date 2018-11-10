@@ -564,6 +564,9 @@ $(document).ready(function () {
         updateFooter();
         event.returnValue = false;
         event.cancel = true;
+        if (tRet2.length > 0) {
+            updateTableRet();
+        }
     });
 
     $('#delRowAnex').click(function (e) {
@@ -2127,6 +2130,11 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
     }
 
     return r;
+}
+
+function updateTableRet() {
+    llenarRetencionesIRet();
+    llenarRetencionesBImp();
 }
 
 function updateFooter() {
