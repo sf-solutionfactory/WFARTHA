@@ -68,7 +68,7 @@ $(document).ready(function () {
             {
                 "name": 'A1',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo',
-                "orderable": false,
+                "orderable": false
             },
             {
                 "name": 'A2',//MGC 22-10-2018 Etiquetas
