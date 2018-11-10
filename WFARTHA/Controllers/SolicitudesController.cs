@@ -2781,36 +2781,43 @@ namespace WFARTHA.Controllers
                      }*/
                     //Lej26.09.2018------
                     //Lejgg 09-11-2018-------------
-                    var _docrets = dOCUMENTO.DOCUMENTOR;
-                    for (int i = 0; i < _docrets.Count; i++)
+                    try
                     {
-                        var _with = _docrets[i].WITHT.Trim();
-                        var _wt_withcd = _docrets[i].WT_WITHCD.Trim();
-                        var _witht_sub = db.RETENCIONs.Where(a => a.WITHT == _with && a.WT_WITHCD == _wt_withcd).FirstOrDefault().WITHT_SUB;
-                        var bd_docr = db.DOCUMENTORs.Where(d => d.NUM_DOC == _ndoc && d.WITHT == _with).FirstOrDefault();
-                        if (_witht_sub != null)
+                        var _docrets = dOCUMENTO.DOCUMENTOR;
+                        if (_docrets != null)//significa que hay valores
                         {
-                            //Se actualizan las f 
-                            bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
-                            bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
-                            db.Entry(bd_docr).State = EntityState.Modified;
-                            db.SaveChanges();
-                            //Se actualizan lasligadas
-                            var bd_docrl = db.DOCUMENTORs.Where(d => d.NUM_DOC == _ndoc && d.WITHT == _witht_sub).FirstOrDefault();
-                            bd_docrl.BIMPONIBLE = _docrets[i].BIMPONIBLE;
-                            bd_docrl.IMPORTE_RET = _docrets[i].IMPORTE_RET;
-                            db.Entry(bd_docrl).State = EntityState.Modified;
-                            db.SaveChanges();
-                        }
-                        else
-                        {
-                            bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
-                            bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
-                            db.Entry(bd_docr).State = EntityState.Modified;
-                            db.SaveChanges();
-                        }
+                            for (int i = 0; i < _docrets.Count; i++)
+                            {
+                                var _with = _docrets[i].WITHT.Trim();
+                                var _wt_withcd = _docrets[i].WT_WITHCD.Trim();
+                                var _witht_sub = db.RETENCIONs.Where(a => a.WITHT == _with && a.WT_WITHCD == _wt_withcd).FirstOrDefault().WITHT_SUB;
+                                var bd_docr = db.DOCUMENTORs.Where(d => d.NUM_DOC == _ndoc && d.WITHT == _with).FirstOrDefault();
+                                if (_witht_sub != null)
+                                {
+                                    //Se actualizan las f 
+                                    bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
+                                    bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
+                                    db.Entry(bd_docr).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                    //Se actualizan lasligadas
+                                    var bd_docrl = db.DOCUMENTORs.Where(d => d.NUM_DOC == _ndoc && d.WITHT == _witht_sub).FirstOrDefault();
+                                    bd_docrl.BIMPONIBLE = _docrets[i].BIMPONIBLE;
+                                    bd_docrl.IMPORTE_RET = _docrets[i].IMPORTE_RET;
+                                    db.Entry(bd_docrl).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
+                                else
+                                {
+                                    bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
+                                    bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
+                                    db.Entry(bd_docr).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
 
+                            }
+                        }
                     }
+                    catch (Exception e) { }
                     //Lejgg 09-11-2018-------------
                     List<string> listaDirectorios = new List<string>();
                     List<string> listaNombreArchivos = new List<string>();

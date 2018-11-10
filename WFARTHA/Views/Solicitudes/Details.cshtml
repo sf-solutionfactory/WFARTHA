@@ -718,31 +718,30 @@
                                     <th class="">
                                         A5
                                     </th>
-                                    @*<th class="">
-                                            D/H
-                                        </th>*@
+                                    <th class="">
+                                        D/H
+                                    </th>
                                     <th class="">
                                         Factura
                                     </th>
                                     <th class="">
                                         Concepto
                                     </th>
-                                    @*<th class="">
-                                            Cuenta
-                                        </th>*@
+                                    <th class="">
+                                        Cuenta
+                                    </th>
                                     <th class="">
                                         Centro de Costo
                                     </th>
-
-                                    @*<th class="">
-                                            Nombre de Cuenta
-                                        </th>
-                                        <th class="">
-                                            Tipo Imp.
-                                        </th>
-                                        <th class="">
-                                            Imputación
-                                        </th>*@
+                                    <th class="">
+                                        nombre de cuenta
+                                    </th>
+                                    <th class="">
+                                        tipo imp.
+                                    </th>
+                                    <th class="">
+                                        imputación
+                                    </th>
                                     <th class="">
                                         Monto
                                     </th>
@@ -776,10 +775,10 @@
                                     for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
                                     {
                                         <tr>
-                                            @if (colsret.Count == 0)
+                                            @*@if (colsret.Count == 0)
                                             {
                                                 <td></td>
-                                            }
+                                            }*@
                                             <td></td>
                                             <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
                                             @if (@Model.D.Anexo != null)
@@ -798,15 +797,15 @@
                                                 <td></td>
                                                 <td></td>
                                             }
-                                            @*<td> @Model.D.DOCUMENTOPSTR[i].ACCION</td>*@
+                                            <td> @Model.D.DOCUMENTOPSTR[i].ACCION</td>
                                             <td> @Model.D.DOCUMENTOPSTR[i].FACTURA</td>
                                             <td> @Model.D.DOCUMENTOPSTR[i].TCONCEPTO@Model.D.DOCUMENTOPSTR[i].GRUPO</td>
                                             <td> @Model.D.DOCUMENTOPSTR[i].CCOSTO</td>
-                                            @*<td> @Model.D.DOCUMENTOPSTR[i].GRUPO</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].CUENTA</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td>
-                                                <td> @Model.D.DOCUMENTOPSTR[i].TIPOIMP</td>
-                                                <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td>*@
+                                            <td> @Model.D.DOCUMENTOPSTR[i].GRUPO</td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].CUENTA</td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].TIPOIMP</td>
+                                            <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td>
                                             <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td>
                                             <td>@Model.D.DOCUMENTOPSTR[i].IMPUESTOT</td>
                                             <td>@Model.D.DOCUMENTOPSTR[i].IVA</td>

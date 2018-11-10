@@ -35,27 +35,27 @@ $(document).ready(function () {
                 "orderable": false
             },
             {
-                "name": 'NumAnexo',
+                "name": 'A1',
                 "className": 'NumAnexo',
                 "orderable": false
             },
             {
-                "name": 'NumAnexo2',
+                "name": 'A2',
                 "className": 'NumAnexo2',
                 "orderable": false
             },
             {
-                "name": 'NumAnexo3',
+                "name": 'A3',
                 "className": 'NumAnexo3',
                 "orderable": false
             },
             {
-                "name": 'NumAnexo4',
+                "name": 'A4',
                 "className": 'NumAnexo4',
                 "orderable": false
             },
             {
-                "name": 'NumAnexo5',
+                "name": 'A5',
                 "className": 'NumAnexo5',
                 "orderable": false
             },
@@ -103,6 +103,11 @@ $(document).ready(function () {
             {
                 "name": 'IVA',
                 "className": 'IVA',
+                "orderable": false
+            },
+            {
+                "name": 'TXTPOS',
+                "className": 'TXTPOS',
                 "orderable": false
             },
             {
