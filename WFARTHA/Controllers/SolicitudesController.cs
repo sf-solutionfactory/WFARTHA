@@ -2780,6 +2780,38 @@ namespace WFARTHA.Controllers
 
                      }*/
                     //Lej26.09.2018------
+                    //Lejgg 09-11-2018-------------
+                    var _docrets = dOCUMENTO.DOCUMENTOR;
+                    for (int i = 0; i < _docrets.Count; i++)
+                    {
+                        var _with = _docrets[i].WITHT.Trim();
+                        var _wt_withcd = _docrets[i].WT_WITHCD.Trim();
+                        var _witht_sub = db.RETENCIONs.Where(a => a.WITHT == _with && a.WT_WITHCD == _wt_withcd).FirstOrDefault().WITHT_SUB;
+                        var bd_docr = db.DOCUMENTORs.Where(d => d.NUM_DOC == _ndoc && d.WITHT == _with).FirstOrDefault();
+                        if (_witht_sub != null)
+                        {
+                            //Se actualizan las f 
+                            bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
+                            bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
+                            db.Entry(bd_docr).State = EntityState.Modified;
+                            db.SaveChanges();
+                            //Se actualizan lasligadas
+                            var bd_docrl = db.DOCUMENTORs.Where(d => d.NUM_DOC == _ndoc && d.WITHT == _witht_sub).FirstOrDefault();
+                            bd_docrl.BIMPONIBLE = _docrets[i].BIMPONIBLE;
+                            bd_docrl.IMPORTE_RET = _docrets[i].IMPORTE_RET;
+                            db.Entry(bd_docrl).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                        else {
+                            bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
+                            bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
+
+                            db.Entry(bd_docr).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                        
+                    }
+                    //Lejgg 09-11-2018-------------
                     List<string> listaDirectorios = new List<string>();
                     List<string> listaNombreArchivos = new List<string>();
                     List<string> listaDescArchivos = new List<string>();
@@ -3566,16 +3598,17 @@ namespace WFARTHA.Controllers
                         {
                             for (int j = 0; j < dOCUMENTO.DOCUMENTOA_TAB.Count; j++)
                             {
-                                if (lstDAS[w].PATH == dOCUMENTO.DOCUMENTOA_TAB[j].PATH)
+                                var _xtr = lstDAS[w].PATH.Split('\\'); var nombre = _xtr[_xtr.Length - 1];
+                                if (nombre == dOCUMENTO.DOCUMENTOA_TAB[j].PATH)
                                 {
-                                    //si es igual, se queda
+                                    //si es iguallstDAS[w].PATH, se queda
                                     band = true;
                                 }
                                 if (band)
                                 { break; }
                             }
                         }
-                        if (!false)
+                        if (!band)
                         {
                             lstDAS[w].ACTIVO = false;
                             db.Entry(lstDAS).State = EntityState.Modified;
