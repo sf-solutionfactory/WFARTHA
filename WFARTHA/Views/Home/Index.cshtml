@@ -421,7 +421,7 @@
                                     @*<td class="">
                                 <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Generando Preliminar</span>
                             </td>*@
-                            estatus = "Generando Preliminar";
+                            estatus = "Procesando Preliminar";
                             visible = false;
                             color = "yellow darken-2";
                         }
@@ -437,7 +437,7 @@
                             </td>*@
                             if (ViewBag.usuario.ID == item.USUARIOC_ID)
                             {
-                                estatus = "Error Archivo Preliminar Portal";
+                                estatus = "Error Preliminar Portal";
                                 visible = true;
                                 color = "red darken-2";
                             }
@@ -485,7 +485,7 @@
                                     </td>*@
                                     if (ViewBag.usuario.ID == item.USUARIOC_ID)
                                     {
-                                        estatus = "Se generó Preliminar SAP";
+                                        estatus = "Se Generó Preliminar SAP";
                                         visible = true;
                                         color = "yellow darken-2";
                                     }
@@ -601,7 +601,7 @@
 
                                     if (ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
                                     {
-                                        estatus = "Error Archivo Contabilización Portal";
+                                        estatus = "Error Contabilizar Portal";
                                         visible = true;
                                         color = "red darken-2";
                                     }
@@ -632,7 +632,7 @@
                                     @*<td class="">
                                 <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Contabilizando SAP</span>
                             </td>*@
-                            estatus = "Contabilizando SAP";
+                            estatus = "Procesando Contabilizar SAP";
                             visible = false;
                             color = "yellow darken-2";
                         }
@@ -656,7 +656,7 @@
 
                                 if (ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
                                 {
-                                    estatus = "Error contabilizando SAP";
+                                    estatus = "Error Contabilizar SAP";
                                     visible = true;
                                     color = "red darken-2";
                                 }
@@ -686,7 +686,7 @@
                             @*<td class="green darken-1 white-text">
                                 <div class="lbl_contab">Por contabilizar</div>
                             </td>*@
-                            estatus = "Por contabilizar";
+                            estatus = "Por Contabilizar";
                             visible = false;
                             color = "green darken-1";
                         }
@@ -724,7 +724,7 @@
                        //Nada más la ve el usuario creador
                         if (ViewBag.usuario.ID == item.USUARIOC_ID)
                         {
-                            estatus = "Pendiente Corrección Usuario";
+                            estatus = "Pendiente Corrección";
                             visible = true;
                             color = "red darken-2";
                         }
@@ -832,7 +832,9 @@
                     @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@
                     @*MGC 07-11-2018 Solicitudes y estatus*@
                     <td class="">
-                        <span class="new badge @color white-text" data-badge-caption=" ">@estatus</span>
+                        @*<span class="new badge @color white-text" data-badge-caption=" ">@estatus</span>*@
+                        @*<span class="badge black-text" data-badge-caption=" ">@estatus</span>*@  @*MGC 10-11-2018 Sin color y letra color negra*@
+                        @estatus  @*MGC 10-11-2018 Sin color y letra color negra*@
                     </td>
 
                     @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@

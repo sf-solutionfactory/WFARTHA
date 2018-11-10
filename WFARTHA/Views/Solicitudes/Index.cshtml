@@ -132,7 +132,7 @@
                 @*<td class="">
                     <span class="lbl_tax new badge green darken-2 white-text" data-badge-caption=" ">Contabilizado SAP</span>
                 </td>*@
-                estatus = "Contabilizado SAP";
+                estatus = "Procesando Contabilizar SAP";
                 visible = true;
                 color = "green darken-2";
             }
@@ -149,7 +149,7 @@
                     @*<td class="">
                         <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Generando Preliminar</span>
                     </td>*@
-                    estatus = "Generando Preliminar";
+                    estatus = "Procesando Preliminar";
                     visible = true;
                     color = "yellow darken-2";
                 }
@@ -163,7 +163,7 @@
                     @*<td class="">
                         <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error al generar Archivo Preliminar</span>
                     </td>*@
-                    estatus = "Error Archivo Preliminar Portal";
+                    estatus = "Error Preliminar Portal";
                     visible = false;
                     color = "red darken-2";
                 }
@@ -197,7 +197,7 @@
                     @*<td class="">
                         <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Se generó archivo SAP</span>
                     </td>*@
-                    estatus = "Se generó Preliminar SAP";
+                    estatus = "Se Generó Preliminar SAP";
                     visible = false;
                     color = "yellow darken-2";
 
@@ -285,7 +285,7 @@
                     @*<td class="">
                         <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error generando archivo de contabilizacion</span>
                     </td>*@
-                    estatus = "Error Archivo Contabilización Portal";
+                    estatus = "Error Contabilizar Portal";
                     visible = true;
                     color = "red darken-2";
 
@@ -300,7 +300,7 @@
                     @*<td class="">
                         <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Contabilizando SAP</span>
                     </td>*@
-                    estatus = "Contabilizando SAP";
+                    estatus = "Procesando Contabilizar SAP";
                     visible = true;
                     color = "yellow darken-2";
                 }
@@ -314,7 +314,7 @@
                     @*<td class="">
                         <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error contabilizando SAP</span>
                     </td>*@
-                    estatus = "Error contabilizando SAP";
+                    estatus = "Error Contabilizar SAP";
                     visible = true;
                     color = "red darken-2";
                 }
@@ -361,7 +361,7 @@
                 @*<td class="">
                     <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Pendiente corrección usuario</span>
                 </td>*@
-                estatus = "Pendiente Corrección Usuario";
+                estatus = "Pendiente Corrección";
                 visible = false;
                 color = "red darken-2";
             }
@@ -462,7 +462,8 @@
 
                 @*MGC 07-11-2018 Solicitudes y estatus*@
                 <td class="">
-                    <span class="new badge @color white-text" data-badge-caption=" ">@estatus</span>
+                    @*<span class="new badge @color white-text" data-badge-caption=" ">@estatus</span>*@ @*MGC 10-11-2018 Sin color y letra color negra*@
+                    @estatus
                 </td>
 
 
