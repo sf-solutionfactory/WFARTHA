@@ -2802,14 +2802,14 @@ namespace WFARTHA.Controllers
                             db.Entry(bd_docrl).State = EntityState.Modified;
                             db.SaveChanges();
                         }
-                        else {
+                        else
+                        {
                             bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
                             bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
-
                             db.Entry(bd_docr).State = EntityState.Modified;
                             db.SaveChanges();
                         }
-                        
+
                     }
                     //Lejgg 09-11-2018-------------
                     List<string> listaDirectorios = new List<string>();
@@ -2897,34 +2897,7 @@ namespace WFARTHA.Controllers
                     List<string> listaDescArchivos2 = listaDescArchivos;
                     List<DOCUMENTOA> lsta = db.DOCUMENTOAs.Where(n => n.NUM_DOC == _ndoc).ToList();
                     List<DOCUMENTOA1> lstas = db.DOCUMENTOAS1.Where(n => n.NUM_DOC == _ndoc).ToList();
-                    int da = 0;
-                    int das = 0;
-                    //se hace un for a documentoa para ver los archivos que se agregaron
-                    for (int x = 0; x < lsta.Count; x++)
-                    {
-                        for (int y = 0; y < dOCUMENTO.DOCUMENTOA_TAB.Count; y++)
-                        {
-                            if (lsta[x].PATH == dOCUMENTO.DOCUMENTOA_TAB[y].PATH)
-                            {
-                                //Significa que el archivo sigue en el proyecto actual
-                                da++;
-                            }
-                        }
-                    }
-                    //se hace un for a documentoas para ver los archivos que se agregaron
-                    for (int x = 0; x < lstas.Count; x++)
-                    {
-                        for (int y = 0; y < dOCUMENTO.DOCUMENTOA_TAB.Count; y++)
-                        {
-                            if (lstas[x].PATH == dOCUMENTO.DOCUMENTOA_TAB[y].PATH)
-                            {
-                                //Significa que el archivo sigue en el proyecto actual
-                                das++;
-                            }
-                        }
-                    }
-                    //DocumentoA
-                    //2- Luego se a guardan/actualizan las posiciones de la solicitud
+
                     //Misma cantidad de archivos y nombres, osea todo bien
                     if (listaDirectorios.Count == listaDescArchivos.Count && listaDirectorios.Count == listaNombreArchivos.Count)
                     {
@@ -3582,7 +3555,7 @@ namespace WFARTHA.Controllers
                                 { break; }
                             }
                         }
-                        if (!false)
+                        if (!band)
                         {
                             lstDA[w].ACTIVO = false;
                             db.Entry(lstDA).State = EntityState.Modified;
@@ -3611,7 +3584,7 @@ namespace WFARTHA.Controllers
                         if (!band)
                         {
                             lstDAS[w].ACTIVO = false;
-                            db.Entry(lstDAS).State = EntityState.Modified;
+                            db.Entry(lstDAS[w]).State = EntityState.Modified;
                             db.SaveChanges();
                         }
                     }
