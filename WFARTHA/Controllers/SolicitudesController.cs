@@ -258,9 +258,9 @@ namespace WFARTHA.Controllers
 
             //FRT 03112018.3--------Mostrar anexos de la misma forma que en Editar >
 
-            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "").ToList();
+            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).ToList();
             DOCUMENTOA d_a = new DOCUMENTOA();
-            var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id && a.PATH != "").ToList();
+            var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).ToList();
             for (int i = 0; i < la1.Count; i++)
             {
                 d_a = new DOCUMENTOA();
@@ -1991,9 +1991,9 @@ namespace WFARTHA.Controllers
             ViewBag.Title += id; //MGC 05-10-2018 Modificación para work flow al ser editada
             ViewBag.ndoc = id;
             //LEJGG19 10 2018----------------------------------------------------->
-            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "").ToList();
+            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).ToList();
             DOCUMENTOA d_a = new DOCUMENTOA();
-            var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id && a.PATH != "").ToList();
+            var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).ToList();
             for (int i = 0; i < la1.Count; i++)
             {
                 d_a = new DOCUMENTOA();
