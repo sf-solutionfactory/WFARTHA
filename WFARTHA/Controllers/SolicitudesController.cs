@@ -3582,7 +3582,7 @@ namespace WFARTHA.Controllers
                                 { break; }
                             }
                         }
-                        if (!false)
+                        if (!band)
                         {
                             lstDA[w].ACTIVO = false;
                             db.Entry(lstDA).State = EntityState.Modified;
