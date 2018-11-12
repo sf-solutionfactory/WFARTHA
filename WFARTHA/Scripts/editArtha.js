@@ -2,13 +2,12 @@
 var posinfo = 0;
 var posrows = 0;  //FRT08112018
 var inicio = 0;   //FRT08112018  
-
+var ini = 0; //FRT10112018
 var tRet = [];//Agrego a un array los tipos de retenciones
 var tRet2 = [];
 $(document).ready(function () {
     var elem = document.querySelectorAll('select');
     var instance = M.Select.init(elem, []);
-
     //Formato a campo tipo_cambio
     var _Tc = $('#TIPO_CAMBIO').val();
     $('#TIPO_CAMBIO').val(toShow(_Tc));
@@ -117,6 +116,7 @@ $(document).ready(function () {
 
     solicitarDatos();
     insertarCondicion();
+    inicio = 1;  //FRT10112018
     $('#btn_guardarh').on("click", function (e) {
         //LEJGG 06-11-18
         //Aqui verificare si es invoice o factura
@@ -1615,11 +1615,13 @@ function copiarTableRet() {
 
 function solicitarDatos() {
     var _ref = $('#REFERENCIA').val();
+    inicio = 0;   //FRT08112018
     $.ajax({
         type: "POST",
         url: '../getDocsPSTR',
         dataType: "json",
         data: { 'id': _ref },
+     
         success: function (data) {
             if (data !== null || data !== "") {
                 if (data !== "Null") {
@@ -2173,7 +2175,7 @@ function updateFooter() {
     if (inicio == 0) {
         totalinicio = "";
         $('#total_info').text((totalinicio));
-        inicio = 1;
+        //inicio = 1;    FRT10112018
     }else {
         $('#total_info').text(toShow(total));
     }
