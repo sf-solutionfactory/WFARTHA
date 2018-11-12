@@ -1311,7 +1311,12 @@ namespace WFARTHA.Services
             //DET_AGENTEH dah = db.DET_AGENTEH.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) & a.PUESTOC_ID == d.PUESTO_ID &
             //                    a.USUARIOC_ID.Equals(d.USUARIOC_ID) & a.VERSION == f_actual.DETVER).FirstOrDefault();
 
-            dap = db.DET_APROB.Where(ap => ap.VERSION == f_actual.RUTA_VERSION && ap.ID_SOCIEDAD == d.SOCIEDAD_ID).OrderBy(apo => apo.VERSION).FirstOrDefault();
+            ////MGC 12-11-2018 El usuario aprobador, no tiene como tal una versión, se toma el actual-------------------------------------------------------------------->
+            
+            //dap = db.DET_APROB.Where(ap => ap.VERSION == f_actual.RUTA_VERSION && ap.ID_SOCIEDAD == d.SOCIEDAD_ID).OrderBy(apo => apo.VERSION).FirstOrDefault();
+            dap = db.DET_APROB.Where(ap => ap.ID_SOCIEDAD == d.SOCIEDAD_ID).OrderBy(apo => apo.VERSION).FirstOrDefault();
+
+            ////MGC 12-11-2018 El usuario aprobador, no tiene como tal una versión, se toma el actual--------------------------------------------------------------------<
 
             int ppos = 0;
 
