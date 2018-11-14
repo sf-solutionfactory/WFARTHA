@@ -315,6 +315,36 @@ $(document).ready(function () {
         //$("#table_anexa > tbody  > tr").each(function () {
         //    _rw++;
         //});
+
+        //FRT 13112018 PARA PODER SUBIR LOS ARCHIVOS A CAREPETA TEMPORAL
+        var lengthtemp = $(this).get(0).files.length;
+
+        for (var t = 0; t < lengthtemp; t++) {
+            var filetemp = $(this).get(0).files[t];
+            var datatemp = new FormData();
+            datatemp.append('file', filetemp);
+            $.ajax({
+                type: "POST",
+                url: '../subirTemporalEditar',
+                data: datatemp,
+                dataType: "json",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (datatemp) {
+                    if (datatemp !== null || datatemp !== "") {
+
+                    }
+                },
+                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                    M.toast({ html: httpStatusMessage });
+                },
+                async: false
+            });
+        }
+
+        //END FRT13112018
+
         //Validacion para saber si es sin orden de compra o reembolso
         var val3 = $('#tsol').val();
         val3 = "[" + val3 + "]";
@@ -573,7 +603,11 @@ $(document).ready(function () {
         var t = $('#table_anexa').DataTable();
         t.rows('.selected').remove().draw(false);
         event.returnValue = false;
-        event.cancel = true;
+        event.cancel = true;//FRT 12112018  Para recorrer los numero borrados de los anexos
+        var _num = t.rows().count();
+        for (i = 1; i < _num + 1; i++) {
+            document.getElementById("table_anexa").rows[i].cells[1].innerHTML = i;
+        }
     });
 });
 
