@@ -353,6 +353,7 @@ $(document).ready(function () {
         var t = $('#table_info').DataTable();
 
         var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018 //MGC 03-10-2018 solicitud con orden de compra
+        tamanosRenglones();
         posinfo++;
 
         //Obtener el select de impuestos en la cabecera
@@ -673,7 +674,7 @@ $(document).ready(function () {
         }
         //update codigo fer
         //END FRT04112018.2
-               
+
         if (_p) {
             if (_b) {
                 //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
@@ -689,7 +690,7 @@ $(document).ready(function () {
             M.toast({ html: msgerror });
         }
         ///FRT08112018
-        
+
     });
 
     $('#btn_borradorh').on("click", function (e) {
@@ -1421,8 +1422,7 @@ function obtenerRetenciones(flag) {
             {
                 "name": 'TEXTO',
                 "className": 'TEXTO',
-                "orderable": false,
-                "width": "80%"
+                "orderable": false
             }
         ];
         //Se rearmara la tabla en HTML
@@ -1530,14 +1530,13 @@ function obtenerRetenciones(flag) {
             "info": false,
             "searching": false,
             "columns": arrCols,
-            columnDefs: [
+            "columnDefs": [
                 { targets: 2, width: '580px' },
                 { targets: 3, width: '40px' },
                 { targets: 4, width: '580px' },
                 { targets: 5, width: '580px' },
                 { targets: 6, width: '580px' },
-                { targets: 19, width: '580px' }
-
+                { "targets": 19, "width": '200' }
             ]
         });
 
@@ -2093,7 +2092,7 @@ function impuestoVal(ti) {
 }
 
 function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5, CA, FACTURA, TIPO_CONCEPTO, GRUPO, CUENTA, CUENTANOM, TIPOIMP, IMPUTACION, CCOSTO, MONTO, IMPUESTO, IVA, TEXTO, TOTAL, disabled, check) { //MGC 03 - 10 - 2018 solicitud con orden de compra
-
+  
     var r = addRowl(
         t,
         POS,
@@ -2118,7 +2117,8 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
         "<input " + disabled + " class=\"MONTO OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO + "\">",
         "",
         "<input disabled class=\"IVA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + IVA + "\">",
-        "<input " + disabled + " class=\"\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + TEXTO + "\">",//Lej 13.09.2018
+        //"<input " + disabled + " class=\"\" style=\"font-size:12px;\"  style=\"width:150px;\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + TEXTO + "\">",//Lej 13.09.2018
+        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;\"  style=\"width:150px;\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + TEXTO + "\">",//Lej 13.09.2018
         TOTAL,//"<input " + disabled + " class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + TOTAL + "\">"
         check //MGC 03-10-2018 solicitud con orden de compra
     );
@@ -2698,7 +2698,8 @@ function copiarTableInfoControl() {
             iva1 = iva1.replace(/\s/g, '');
             var iva = toNum(iva1);
             var total1 = $(this).find("td.TOTAL input").val();
-            var texto = $(this).find("td.TEXTO input").val();//LEJ 14.09.2018
+            //var texto = $(this).find("td.TEXTO input").val();//LEJ 14.09.2018
+            var texto = $(this).find("td.TEXTO textarea").val();//LEJGG 13.11.2018
             total1 = total1.replace(/\s/g, '');
             var total = toNum(total1);
             //Para anexos
@@ -3014,6 +3015,19 @@ function resetTabs() {
     //instances.updateTabIndicator
 }
 
+//LEJGG 13/11/2018
+function tamanosRenglones() {
+    $("#table_info > thead").each(function () {
+        //POS
+        var t = $(this).find("th.select_row");
+        t.removeAttr('style');
+        t.css("width", "40px");
+        //TEXTO
+        var t_ret = $(this).find("th.TEXTO");
+        t_ret.removeAttr('style');
+        t_ret.css("width", "150px");
+    });
+}
 //Lejgg 10/10/2018
 function guardarBorrador(asyncv) {
     //var _miles = $("#miles").val();

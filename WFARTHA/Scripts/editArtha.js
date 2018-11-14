@@ -2369,3 +2369,16 @@ function getConceptoC(con, tipo, bukrs, message) {
 function asignarValConC(val) {
     conceptoValC = val;
 }
+//LEJGG 13/11/2018
+function tamanosRenglones() {
+    $("#table_info > thead").each(function () {
+        //POS
+        var t = $(this).find("th.select_row");
+        t.removeAttr('style');
+        t.css("width", "40px");
+        //TEXTO
+        var t_ret = $(this).find("th.TEXTO");
+        t_ret.removeAttr('style');
+        t_ret.css("width", "150px");
+    });
+}
