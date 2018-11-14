@@ -627,11 +627,22 @@ namespace WFARTHA.Controllers
             }
             try
             {
+                //FRT14112018 Para abrir proyectos
                 //frt 081118---------------------
                 string editar = Session["Edit"].ToString();
+                string create = Session["create"].ToString();
+
                 if (editar == 1 + "")
                 {
                     Session["Edit"] = 0;
+                    Session["create"] = 0;
+                    return RedirectToAction("Proyectos", "Home", new { returnUrl = Request.Url.AbsolutePath });
+                    //frt 081118---------------------
+                }
+                else if (create == 1 + "")
+                {
+                    Session["Edit"] = 0;
+                    Session["create"] = 0;
                     return RedirectToAction("Proyectos", "Home", new { returnUrl = Request.Url.AbsolutePath });
                     //frt 081118---------------------
                 }
@@ -643,7 +654,9 @@ namespace WFARTHA.Controllers
                     pselG = pid;//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
 
                     ViewBag.pid = pid;//MGC 29-10-2018 Guardar el proyecto en el create
+                    Session["create"] = 1;  //FRT14112018 para mostrar pantalla de proyectos en create
                 }
+                //END FRT14112018 Para abrir proyectos
 
             }
             catch
@@ -797,7 +810,7 @@ namespace WFARTHA.Controllers
             "MONTO_BASE_NS_PCT_ML2,PORC_ADICIONAL,IMPUESTO,ESTATUS_EXT,PAYER_ID,MONEDA_ID,MONEDAL_ID,MONEDAL2_ID," +
             "TIPO_CAMBIO,TIPO_CAMBIOL,TIPO_CAMBIOL2,NO_FACTURA,FECHAD_SOPORTE,METODO_PAGO,NO_PROVEEDOR,PASO_ACTUAL," +
             "AGENTE_ACTUAL,FECHA_PASO_ACTUAL,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,FECHACON,FECHA_BASE,REFERENCIA," +
-            "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo")] Models.DOCUMENTO_MOD doc, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc,
+            "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,DOCUMENTOA_TAB,Anexo")] Models.DOCUMENTO_MOD doc, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc,
             //MGC 02-10-2018 Cadenas de autorización
             string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr, string FECHADO, string Uuid)
         {
@@ -1206,45 +1219,120 @@ namespace WFARTHA.Controllers
                             try
                             {
                                 int indexlabel = 0;
-                                foreach (HttpPostedFileBase file in file_sopAnexar)
+
+
+                                //FRT13112018 Para cambio de fuente de archivos
+                                string temporal = Session["Temporal"].ToString();
+                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL\att\" + temporal + "\\");
+                                FileInfo[] archivos = directorio.GetFiles();
+                                foreach (var a in archivos)
                                 {
                                     var descripcion = "";
-                                    try
+
+                                    for (int i = 0; i < doc.DOCUMENTOA_TAB.Count; i++)
                                     {
-                                        listaDescArchivos.Add(labels_desc[indexlabel]);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        descripcion = "";
-                                        listaDescArchivos.Add(descripcion);
-                                    }
-                                    try
-                                    {
-                                        listaNombreArchivos.Add(file.FileName);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        listaNombreArchivos.Add("");
-                                    }
-                                    string errorfiles = "";
-                                    if (file != null)
-                                    {
-                                        if (file.ContentLength > 0)
+                                        if (a.Name.Trim() == doc.DOCUMENTOA_TAB[i].NAME.Trim())
                                         {
-                                            string path = "";
-                                            string filename = file.FileName;
-                                            errorfiles = "";
-                                            //res = SaveFile(file, url);
-                                            res = SaveFile(file, doc.NUM_DOC);
-                                            listaDirectorios.Add(res);
+                                            try
+                                            {
+                                                listaDescArchivos.Add(labels_desc[indexlabel]);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                descripcion = "";
+                                                listaDescArchivos.Add(descripcion);
+                                            }
+
+                                            try
+                                            {
+                                                listaNombreArchivos.Add(a.Name);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                listaNombreArchivos.Add("");
+                                            }
+
+                                            string errorfiles = "";
+
+                                            var url_prel = "";
+                                            var dirFile = "";
+                                            string carpeta = "att";
+                                            try
+                                            {
+                                                url_prel = getDirPrel(carpeta, doc.NUM_DOC);
+                                                dirFile = url_prel;
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                dirFile = ConfigurationManager.AppSettings["URL_ATT"].ToString() + @"att";
+                                            }
+
+                                            bool existd = ValidateIOPermission(dirFile);
+
+                                            if (existd)
+                                            {
+                                                if (!System.IO.File.Exists(dirFile + "\\" + a.Name))
+                                                {
+                                                    a.CopyTo(dirFile + "\\" + a.Name);
+                                                    listaDirectorios.Add(dirFile + "\\" + a.Name);
+                                                }
+                                            }
+
+                                            indexlabel++;
+                                            if (errorfiles != "")
+                                            {
+                                                errorMessage += "Error con el archivo " + errorfiles;
+                                            }
+
                                         }
-                                    }
-                                    indexlabel++;
-                                    if (errorfiles != "")
-                                    {
-                                        errorMessage += "Error con el archivo " + errorfiles;
+
                                     }
                                 }
+
+                                System.IO.Directory.Delete(@"\\192.168.32.207\test\PORTAL\att\" + temporal, true);
+                                //END FRT13112018
+
+
+
+                                //foreach (HttpPostedFileBase file in file_sopAnexar)
+                                //{
+                                //    var descripcion = "";
+                                //    try
+                                //    {
+                                //        listaDescArchivos.Add(labels_desc[indexlabel]);
+                                //    }
+                                //    catch (Exception ex)
+                                //    {
+                                //        descripcion = "";
+                                //        listaDescArchivos.Add(descripcion);
+                                //    }
+                                //    try
+                                //    {
+                                //        listaNombreArchivos.Add(file.FileName);
+                                //    }
+                                //    catch (Exception ex)
+                                //    {
+                                //        listaNombreArchivos.Add("");
+                                //    }
+                                //    string errorfiles = "";
+                                //    if (file != null)
+                                //    {
+                                //        if (file.ContentLength > 0)
+                                //        {
+                                //            string path = "";
+                                //            string filename = file.FileName;
+                                //            errorfiles = "";
+                                //            //res = SaveFile(file, url);
+                                //            res = SaveFile(file, doc.NUM_DOC);
+                                //            listaDirectorios.Add(res);
+                                //        }
+                                //    }
+                                //    indexlabel++;
+                                //    if (errorfiles != "")
+                                //    {
+                                //        errorMessage += "Error con el archivo " + errorfiles;
+                                //    }
+                                //}
                             }
                             catch (Exception e)
                             {
@@ -1875,6 +1963,9 @@ namespace WFARTHA.Controllers
         // GET: Solicitudes/Edit/5
         public ActionResult Edit(decimal id, string pacc)
         {
+
+            Session["NUM_DOC_TEM"] = id;
+
             //lEJGG 7-11-18----------------------->
             int pagina = 204;//lEJGG 7-11-18
             if (pacc == "B")
@@ -1920,7 +2011,7 @@ namespace WFARTHA.Controllers
             var _nameprov = db.PROYECTOes.Where(x => x.ID_PSPNR == _proy.ID_PSPNR).FirstOrDefault();
             Session["pr"] = _nameprov.NOMBRE;
             Session["id_pr"] = _proy.ID_PSPNR;
-            Session["edit"] = 1;  //FRT08112018 para mostrar pantalla de proyectos en edit
+            Session["Edit"] = 1;  //FRT08112018 para mostrar pantalla de proyectos en edit
 
             //Lejgg05-11-2018-------------------
             if (pacc == null)
@@ -2868,45 +2959,128 @@ namespace WFARTHA.Controllers
                             try
                             {
                                 int indexlabel = 0;
-                                foreach (HttpPostedFileBase file in file_sopAnexar)
+
+                                //FRT13112018 Para poder subir muchos archivos
+                                var num_doc = Convert.ToDecimal(Session["NUM_DOC"]);
+                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL\att\" + num_doc + "\\");
+                                FileInfo[] archivos = directorio.GetFiles();
+
+                                //var _bol = false;
+                                var listaDAS = db.DOCUMENTOAS1.Where(x => x.NUM_DOC == num_doc).ToList();
+
+                                foreach (var a in archivos)
                                 {
-                                    var descripcion = "";
-                                    try
+                                    var _bol = false;
+                                    for (int w = 0; w < listaDAS.Count; w++)
                                     {
-                                        listaDescArchivos.Add(labels_desc[indexlabel]);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        descripcion = "";
-                                        listaDescArchivos.Add(descripcion);
-                                    }
-                                    try
-                                    {
-                                        listaNombreArchivos.Add(file.FileName);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        listaNombreArchivos.Add("");
-                                    }
-                                    string errorfiles = "";
-                                    if (file != null)
-                                    {
-                                        if (file.ContentLength > 0)
+                                        
+                                        var _xtrtemp = listaDAS[w].PATH.Split('\\');
+                                        var nombre = _xtrtemp[_xtrtemp.Length - 1];
+                                        if (nombre == a.Name)
                                         {
-                                            string path = "";
-                                            string filename = file.FileName;
-                                            errorfiles = "";
-                                            //res = SaveFile(file, url);
-                                            res = SaveFile(file, _ndoc);
-                                            listaDirectorios.Add(res);
+                                            _bol = true;
+                                            break;
                                         }
                                     }
-                                    indexlabel++;
-                                    if (errorfiles != "")
+                                    if (!_bol)
                                     {
-                                        errorMessage += "Error con el archivo " + errorfiles;
+                                        for (int i = 0; i < dOCUMENTO.DOCUMENTOA_TAB.Count; i++)
+                                        {
+                                            if (a.Name == dOCUMENTO.DOCUMENTOA_TAB[i].NAME.Trim())
+                                            {
+
+                                                var descripcion = "";
+                                                try
+                                                {
+                                                    listaDescArchivos.Add(labels_desc[indexlabel]);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    descripcion = "";
+                                                    listaDescArchivos.Add(descripcion);
+                                                }
+
+                                                try
+                                                {
+                                                    listaNombreArchivos.Add(a.Name);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    listaNombreArchivos.Add("");
+                                                }
+                                                string errorfiles = "";
+
+
+                                                var url_prel = "";
+                                                var dirFile = "";
+                                                string carpeta = "att";
+                                                try
+                                                {
+                                                    url_prel = getDirPrel(carpeta, num_doc);
+                                                    dirFile = url_prel;
+                                                }
+                                                catch (Exception e)
+                                                {
+                                                    dirFile = ConfigurationManager.AppSettings["URL_ATT"].ToString() + @"att";
+                                                }
+
+
+                                                listaDirectorios.Add(dirFile + "\\" + a.Name);
+
+                                                indexlabel++;
+                                                if (errorfiles != "")
+                                                {
+                                                    errorMessage += "Error con el archivo " + errorfiles;
+                                                }
+
+
+
+                                            }
+                                        }
                                     }
+
                                 }
+                                //FRT13112018 Para Eliminar y Guardar Nuevos
+
+                                //foreach (HttpPostedFileBase file in file_sopAnexar)
+                                //{
+                                //    var descripcion = "";
+                                //    try
+                                //    {
+                                //        listaDescArchivos.Add(labels_desc[indexlabel]);
+                                //    }
+                                //    catch (Exception ex)
+                                //    {
+                                //        descripcion = "";
+                                //        listaDescArchivos.Add(descripcion);
+                                //    }
+                                //    try
+                                //    {
+                                //        listaNombreArchivos.Add(file.FileName);
+                                //    }
+                                //    catch (Exception ex)
+                                //    {
+                                //        listaNombreArchivos.Add("");
+                                //    }
+                                //    string errorfiles = "";
+                                //    if (file != null)
+                                //    {
+                                //        if (file.ContentLength > 0)
+                                //        {
+                                //            string path = "";
+                                //            string filename = file.FileName;
+                                //            errorfiles = "";
+                                //            //res = SaveFile(file, url);
+                                //            res = SaveFile(file, _ndoc);
+                                //            listaDirectorios.Add(res);
+                                //        }
+                                //    }
+                                //    indexlabel++;
+                                //    if (errorfiles != "")
+                                //    {
+                                //        errorMessage += "Error con el archivo " + errorfiles;
+                                //    }
+                                //}
                             }
                             catch (Exception e)
                             {
@@ -5325,6 +5499,92 @@ namespace WFARTHA.Controllers
             JsonResult cc = Json(lcont, JsonRequestBehavior.AllowGet);
             return cc;
         }
+
+
+
+        //FRT 12112018 PARA ENVIAR LOS ARCHIVOS EN LA TABLA ANEXOS Y PODER HACER EL BARRIDO
+        [HttpPost]
+        public ActionResult getPartialCon41(List<DOCUMENTOA_TAB> docs)
+        {
+            DOCUMENTO_MOD doc = new DOCUMENTO_MOD();
+            doc.DOCUMENTOA_TAB = docs;
+            return PartialView("~/Views/Solicitudes/_PartialConTr4.cshtml", doc);
+        }
+        //END FRT 12112018 PARA ENVIAR LOS ARCHIVOS EN LA TABLA ANEXOS Y PODER HACER EL BARRIDO
+
+
+
+        //FRT13112018 Para subir los temporales
+
+        [HttpPost]
+        public JsonResult subirTemporal(IEnumerable<HttpPostedFileBase> file)
+        {
+            try
+            {
+                Random random = new Random();
+                if (Session["Temporal"] == null)
+                {
+                    Session["Temporal"] = random.Next(10000, 50000);
+                }
+
+                decimal carpetatemporal = Convert.ToDecimal(Session["Temporal"]);
+                foreach (HttpPostedFileBase files in file)
+                {
+                    if (files.ContentLength > 0)
+                    {
+                        string res;
+                        string path = "";
+                        string filename = files.FileName;
+
+                        //res = SaveFile(file, url);
+                        res = SaveFile(files, carpetatemporal);
+
+                    }
+                }
+                JsonResult jc = Json(true, JsonRequestBehavior.AllowGet);
+                return jc;
+            }
+            catch
+            {
+                JsonResult jc = Json(false, JsonRequestBehavior.AllowGet);
+                return jc;
+            }
+
+        }
+        //END FRT13112018
+
+        //FRT13112018 Para subir los temporales
+
+        [HttpPost]
+        public JsonResult subirTemporalEditar(IEnumerable<HttpPostedFileBase> file)
+        {
+            try
+            {
+                decimal carpetatemporal = Convert.ToDecimal(Session["NUM_DOC_TEM"]);
+                foreach (HttpPostedFileBase files in file)
+                {
+                    if (files.ContentLength > 0)
+                    {
+                        string res;
+                        string path = "";
+                        string filename = files.FileName;
+
+                        //res = SaveFile(file, url);
+                        res = SaveFile(files, carpetatemporal);
+
+                    }
+                }
+                JsonResult jc = Json(true, JsonRequestBehavior.AllowGet);
+                return jc;
+            }
+            catch
+            {
+                JsonResult jc = Json(false, JsonRequestBehavior.AllowGet);
+                return jc;
+            }
+
+        }
+        //END FRT13112018
 
         [HttpPost]
         public JsonResult getCondicion(string Prefix)
