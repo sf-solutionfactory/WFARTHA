@@ -386,6 +386,11 @@ $(document).ready(function () {
         t.rows('.selected').remove().draw(false);
         event.returnValue = false;
         event.cancel = true;
+        //FRT 12112018  Para recorrer los numero borrados de los anexos
+        //var _num = t.rows().count();
+        //for (i = 1; i < _num + 1; i++) {
+        //    document.getElementById("table_anexa").rows[i].cells[1].innerHTML = i;
+        }
     });
 
     //MGC 30-10-2018 Tipo de presupuesto---------------------------------->
@@ -681,6 +686,7 @@ $(document).ready(function () {
                 copiarTableInfoControl();
                 copiarTableInfoPControl();
                 copiarTableRet();
+                //copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
                 //end FRT06112018.3 
                 $('#btn_guardar').trigger("click");
             } else {
@@ -732,6 +738,38 @@ $(document).ready(function () {
     });
 
     $('#file_sopAnexar').change(function () {
+
+        ////FRT 13112018 PARA PODER SUBIR LOS ARCHIVOS A CAREPETA TEMPORAL
+        //var lengthtemp = $(this).get(0).files.length;
+
+        //for (var t = 0; t < lengthtemp; t++) {
+        //    var filetemp = $(this).get(0).files[t];
+        //    var datatemp = new FormData();
+        //    datatemp.append('file', filetemp);
+        //    $.ajax({
+        //        type: "POST",
+        //        url: 'subirTemporal',
+        //        data: datatemp,
+        //        dataType: "json",
+        //        cache: false,
+        //        contentType: false,
+        //        processData: false,
+        //        success: function (datatemp) {
+        //            if (datatemp !== null || datatemp !== "") {
+        //                var valida = datatemp;
+        //            }
+        //        },
+        //        error: function (xhr, httpStatusMessage, customErrorMessage) {
+        //            M.toast({ html: httpStatusMessage });
+        //        },
+        //        async: false
+        //    });
+        //}
+
+
+
+        //END FRT13112018
+
 
         //Validacion para saber si es sin orden de compra o reembolso
         var val3 = $('#tsol').val();
@@ -2603,6 +2641,70 @@ function copiarTableRet() {
     }
 
 }
+
+
+////FRT 12112018 pARA PODER LLENAR LOS VALORES DE LA TABLA QUE SE ELIMINO
+//function copiarTableAnexos() {
+
+//    var lengthT = $("table#table_anexa tbody tr[role='row']").length;
+//    var docsenviar = {};
+//    if (lengthT > 0) {
+
+//        jsonObjDocs = [];
+//        var i = 1;
+//        var t = $('#table_anexa').DataTable();
+
+
+//        $("#table_anexa > tbody  > tr[role='row']").each(function () {
+//            //Obtener el row para el plugin
+//            var tr = $(this);
+//            var indexopc = t.row(tr).index();
+
+
+//            var name = $(this).find("td.NAME").text();
+//            var tipo = $(this).find("td.TYPE").text();
+//            var desc = "";
+//            var path = "";
+
+//            var item = {};
+
+//            item["NAME"] = name;
+//            item["TIPO"] = tipo;
+//            item["DESC"] = desc;
+//            item["PATH"] = path;
+
+//            jsonObjDocs.push(item);
+//            i++;
+//            item = "";
+
+//        });
+
+//        docsenviar = JSON.stringify({ 'docs': jsonObjDocs });
+
+//        $.ajax({
+//            type: "POST",
+//            url: 'getPartialCon41',
+//            contentType: "application/json; charset=UTF-8",
+//            data: docsenviar,
+//            success: function (data) {
+
+//                if (data !== null || data !== "") {
+
+//                    $("table#table_anexa tbody").append(data);
+//                }
+
+//            },
+//            error: function (xhr, httpStatusMessage, customErrorMessage) {
+//                M.toast({ html: httpStatusMessage });
+//            },
+//            async: false
+//        });
+//    }
+
+//}
+
+////END FRT 12112018
+
 
 function copiarTableInfoControl() {
 
