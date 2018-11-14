@@ -52,9 +52,11 @@ namespace WFARTHA.Controllers
         [HttpPost]
         public ActionResult Procesa(FLUJO f)
         {
-            FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
 
+            ProcesaFlujo pf = new ProcesaFlujo();
             DOCUMENTO d = db.DOCUMENTOes.Find(f.NUM_DOC);
+            FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
+                 
             //MGC 12092018
             //List<TS_FORM> tts = db.TS_FORM.Where(a => a.BUKRS_ID.Equals(d.SOCIEDAD_ID) & a.LAND_ID.Equals(d.PAIS_ID)).ToList();
 
@@ -101,35 +103,67 @@ namespace WFARTHA.Controllers
             flujo.RUTA_VERSION = f.RUTA_VERSION;
             flujo.STEP_AUTO = f.STEP_AUTO;
 
-            ProcesaFlujo pf = new ProcesaFlujo();
-            if (ModelState.IsValid)
+            //Agregar funcionalidad, para checar si el próximo es contabilización, y si es contabilización 
+            //checar que el usuario contabilizador esté asignado a la sociedad
+            ContabilizarRes resc = new ContabilizarRes();
+            if (d.ESTATUS == "F" && (d.ESTATUS_WF.Equals("P") | d.ESTATUS_WF.Equals("S")))
             {
-                string res = pf.procesa(flujo, "", false,"", "");
-                if (res.Equals("0"))//Aprobado
+                //MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
+                if (d.ESTATUS_PRE == "G")
                 {
-                    return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                    //Pendiente verificar quién es el dueño del flujo si C o A
+                    if (User.Identity.Name == actual.USUARIOA_ID)
+                    {
+
+                        //Simular el pf.procesa
+                        //ContabilizarRes res = new ContabilizarRes();
+                        resc = pf.procesaConta(flujo);
+                    }
                 }
-                else if (res.Equals("1") | res.Equals("2") | res.Equals("3"))//CORREO
+            }
+
+            //Validar la respuesta
+            //Hay respuesta
+            if (resc.contabilizar != null && resc.res != null)
+            {
+                if (resc.contabilizar == true && resc.res == false)
                 {
-                    //return RedirectToAction("Enviar", "Mails", new { id = flujo.NUM_DOC, index = false, tipo = "A" });
-                    //MGC 12092018
-                    //Email em = new Email();
-                    //string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
-                    //string image = Server.MapPath("~/images/logo_kellogg.png");
-                    //if (res.Equals("1") | res.Equals("2"))//CORREO
-                    //{
-                    //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
-                    //}
-                    //else
-                    //{
-                    //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Details", image);
-                    //}
+                    TempData["error"] = "Se necesita asignar usuario contabilizador a la sociedad: " + d.SOCIEDAD_ID;
                     return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+
                 }
                 else
                 {
-                    TempData["error"] = res;
-                    return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                    if (ModelState.IsValid)
+                    {
+                        string res = pf.procesa(flujo, "", false, "", "");
+                        if (res.Equals("0"))//Aprobado
+                        {
+                            return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                        }
+                        else if (res.Equals("1") | res.Equals("2") | res.Equals("3"))//CORREO
+                        {
+                            //return RedirectToAction("Enviar", "Mails", new { id = flujo.NUM_DOC, index = false, tipo = "A" });
+                            //MGC 12092018
+                            //Email em = new Email();
+                            //string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                            //string image = Server.MapPath("~/images/logo_kellogg.png");
+                            //if (res.Equals("1") | res.Equals("2"))//CORREO
+                            //{
+                            //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                            //}
+                            //else
+                            //{
+                            //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Details", image);
+                            //}
+                            return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                        }
+                        else
+                        {
+                            TempData["error"] = res;
+                            return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                        }
+                    }
                 }
             }
 
