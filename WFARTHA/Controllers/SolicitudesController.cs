@@ -569,6 +569,29 @@ namespace WFARTHA.Controllers
 
             //MGC 04 - 10 - 2018 Botones para acciones y flujo <--
 
+            ////MGC 12-11-2018 Saber si el siguiente aprobador es el contabilizador------------------------------------------------------->
+            ///
+
+            ContabilizarRes contanext = new ContabilizarRes();
+            //Validar que esté en proceso de aprobación
+            if (dOCUMENTO.ESTATUS == "F" && (dOCUMENTO.ESTATUS_WF.Equals("P") | dOCUMENTO.ESTATUS_WF.Equals("S")))
+            {
+                //MGC 30-10-2018 Modificación estatus, Pendiente por aprobadores  *@
+                if (dOCUMENTO.ESTATUS_PRE == "G")
+                {
+                    //Pendente verificar quién es el dueño del flujo si C o A
+                    if (ViewBag.usuario.ID == DF.F.USUARIOA_ID)
+                    {
+                        ProcesaFlujo pf = new ProcesaFlujo();
+                        contanext = pf.nextContabilizar(DF.F,User.Identity.Name);
+                    }
+                }
+            }
+
+            ViewBag.contanext = contanext;
+            ////MGC 12-11-2018 Saber si el siguiente aprobador es el contabilizador-------------------------------------------------------<
+
+
             return View(DF);
         }
 
@@ -6378,6 +6401,7 @@ namespace WFARTHA.Controllers
         }
 
         //MGC 19-10-2018 CECOS --------------------------------------------------------------<
+
     }
     public class TXTImp
     {

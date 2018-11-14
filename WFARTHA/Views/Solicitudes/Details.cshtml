@@ -16,6 +16,7 @@
     var total = ViewBag.total;
     var montomd = formatoc.toShow(total, ViewBag.dec);
 
+
 }
 
 <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
@@ -214,6 +215,36 @@
                     {
                         if (ViewBag.accion == "A" | ViewBag.accion == "R")
                         {
+
+                            //////MGC 12-11-2018 Saber si el siguiente aprobador es el contabilizador------------------------------------------------------->
+                            ///Obtiene la respuesta de contabilización
+                            WFARTHA.Models.ContabilizarRes contanext = new WFARTHA.Models.ContabilizarRes();
+
+                            contanext = ViewBag.contanext as WFARTHA.Models.ContabilizarRes;
+
+                            //Hay respuesta
+                            if (contanext.contabilizar != null && contanext.res != null)
+                            {
+                                if (contanext.contabilizar == true && contanext.res == false)
+                                {
+                                    string sociedadm = Model.D.SOCIEDAD_ID;
+
+
+                                    <script>
+                                        /**/
+                                        /**/
+                                        M.toast({ html: 'Se necesita asignar usuario contabilizador a la sociedad: '+ @sociedadm , classes: '' });
+                                        /**/
+                                        /**/
+                                    </script>
+
+                                }
+
+                            }
+
+
+
+
                             @*<button type="button" class="btn-small  " id="btn_workf">Acciones</button>*@
                             <div class="fixed-action-btn" id="lbl_wf">
                                 <a class="btn-floating btn-large blue">
@@ -235,7 +266,7 @@
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
                             @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                                <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                    <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
 

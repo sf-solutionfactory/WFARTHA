@@ -451,7 +451,7 @@ namespace WFARTHA.Services
                             {
                                 //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC); //MGC 09-10-2018 Envío de correos
 
-                                //Verificar si hay un siguiente aprovador
+                                //Verificar si hay un siguiente aprobador
                                 int stepnew = 0;
                                 if (paso_a.ACCION.TIPO == "A")
                                 {
@@ -1691,6 +1691,207 @@ namespace WFARTHA.Services
         //    f.USUARIOA_ID = agente;
         //    return f;
         //}
+
+
+        //Modificación para checar que el usuario contabilizador esté asignado a la sociedad
+        ////MGC 12-11-2018 Saber si el siguiente aprobador es el contabilizador------------------------------------------------------->
+        public ContabilizarRes nextContabilizar(FLUJO f, string user)
+        {
+            WFARTHAEntities db = new WFARTHAEntities();
+
+            //Cambio a A en la vista details
+            f.ESTATUS = "A";
+
+            //Simular el post en FlujosController
+            FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
+
+            DOCUMENTO d = db.DOCUMENTOes.Find(f.NUM_DOC);
+
+            FLUJO flujo = actual;
+            flujo.ESTATUS = f.ESTATUS;
+            flujo.FECHAM = DateTime.Now;
+            flujo.COMENTARIO = f.COMENTARIO;
+            flujo.USUARIOA_ID = user;
+
+            flujo.ID_RUTA_A = f.ID_RUTA_A;
+            flujo.RUTA_VERSION = f.RUTA_VERSION;
+            flujo.STEP_AUTO = f.STEP_AUTO;
+
+            //Simular el pf.procesa
+            ContabilizarRes res = new ContabilizarRes();
+            res = procesaConta(flujo);
+
+            return res;
+        }
+
+        public ContabilizarRes procesaConta(FLUJO f)
+        {
+
+            ContabilizarRes res = new ContabilizarRes();
+
+            res.contabilizar = false;
+            res.res = false;
+
+            WFARTHAEntities db = new WFARTHAEntities();
+            FLUJO actual = new FLUJO();
+            string emailsto = ""; //MGC 09-10-2018 Envío de correos
+            ProcesaFlujo pf = new ProcesaFlujo();
+            if (f.ESTATUS.Equals("A"))   //---------------------EN PROCESO DE APROBACIÓN
+            {
+
+                DOCUMENTO d = db.DOCUMENTOes.Find(f.NUM_DOC);//MGC 09-10-2018 Envío de correos
+
+                actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC) & a.POS == f.POS).OrderByDescending(a => a.POS).FirstOrDefault();
+
+                if (!actual.ESTATUS.Equals("P"))
+                {
+                    res.contabilizar = false;//-----------------YA FUE PROCESADA
+                    res.res = false;
+                    return res;
+                }
+                else
+                {
+                    var wf = actual.WORKFP;
+                    actual.ESTATUS = f.ESTATUS;
+                    actual.FECHAM = f.FECHAM;
+                    actual.COMENTARIO = f.COMENTARIO;
+                    actual.USUARIOA_ID = f.USUARIOA_ID;
+                    //db.Entry(actual).State = EntityState.Modified;
+
+                    WORKFP paso_a = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS.Equals(actual.WF_POS)).FirstOrDefault();
+                    bool ban = true;
+                    while (ban)         //--------------PARA LOOP
+                    {
+                        int next_step_a = 0;
+                        int next_step_r = 0;
+                        if (paso_a.NEXT_STEP != null)
+                            next_step_a = (int)paso_a.NEXT_STEP;
+                        if (paso_a.NS_ACCEPT != null)
+                            next_step_a = (int)paso_a.NS_ACCEPT;
+                        if (paso_a.NS_REJECT != null)
+                            next_step_r = (int)paso_a.NS_REJECT;
+
+                        WORKFP next = new WORKFP();
+                        if (paso_a.ACCION.TIPO == "A" | paso_a.ACCION.TIPO == "N" | paso_a.ACCION.TIPO == "R" | paso_a.ACCION.TIPO == "T" | paso_a.ACCION.TIPO == "E" | paso_a.ACCION.TIPO == "B" | paso_a.ACCION.TIPO == "M")//Si está en proceso de aprobación
+                        {
+                            if (f.ESTATUS.Equals("A") | f.ESTATUS.Equals("N") | f.ESTATUS.Equals("M"))//APROBAR SOLICITUD
+                            {
+                                //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC); //MGC 09-10-2018 Envío de correos
+
+                                //Verificar si hay un siguiente aprobador
+                                int stepnew = 0;
+                                if (paso_a.ACCION.TIPO == "A")
+                                {
+                                    bool resl = false;
+
+                                    resl = pf.detAgenteSiguiente(d.NUM_DOC, actual);
+
+                                    if (resl)
+                                    {
+                                        next = paso_a;
+                                        stepnew = Convert.ToInt32(actual.STEP_AUTO) + 1;
+                                    }
+                                    else
+                                    {
+                                        next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
+                                        stepnew = Convert.ToInt32(actual.STEP_AUTO);
+                                    }
+                                }
+
+                                FLUJO nuevo = new FLUJO();
+                                nuevo.WORKF_ID = paso_a.ID;
+                                nuevo.WF_VERSION = paso_a.VERSION;
+                                nuevo.WF_POS = next.POS;
+                                nuevo.NUM_DOC = actual.NUM_DOC;
+                                nuevo.POS = actual.POS + 1;
+                                nuevo.LOOP = 1;//-----------------------------------cc
+                                               //                                   //int loop = db.FLUJOes.Where(a => a.WORKF_ID.Equals(next.ID) & a.WF_VERSION.Equals(next.VERSION) & a.WF_POS == next.POS & a.NUM_DOC.Equals(actual.NUM_DOC) & a.ESTATUS.Equals("A")).Count();
+                                               //                                   //if (loop >= next.LOOPS)
+                                               //                                   //{
+                                               //                                   //    paso_a = next;
+                                               //                                   //    continue;
+                                               //                                   //}
+                                               //                                   //if (loop != 0)
+                                               //                                   //    nuevo.LOOP = loop + 1;
+                                               //                                   //else
+                                               //                                   //    nuevo.LOOP = 1;
+                                DET_APROB detA = new DET_APROB();
+                                if (paso_a.ACCION.TIPO == "N")
+                                    actual.DETPOS = actual.DETPOS - 1;
+                                int sop = 99;
+                                if (next.ACCION.TIPO == "S")
+                                    sop = 98;
+
+                                nuevo.STEP_AUTO = stepnew;
+                                nuevo.RUTA_VERSION = actual.RUTA_VERSION;
+                                nuevo.ID_RUTA_A = actual.ID_RUTA_A;
+
+                                //MGC 08-10-2018 Modificación para mensaje por contabilizar
+                                bool contabilizar = false;
+
+
+                                //Para la contabilización se obtiene otra ruta
+                                if (next.ACCION.TIPO == "P")
+                                {
+                                    res.contabilizar = true;
+                                    try
+                                    {
+                                        detA = determinaAgenteContabilidadAp(d, actual.USUARIOA_ID, actual.USUARIOD_ID, actual.DETPOS, next.LOOPS, sop, Convert.ToInt32(actual.STEP_AUTO));
+                                        contabilizar = true;//MGC 08-10-2018 Modificación para mensaje por contabilizar
+                                        if (detA == null)
+                                        {
+                                            res.res = false;
+                                        }
+                                        else
+                                        {
+                                            res.res = true;
+                                        }
+                                    }
+                                    catch (Exception)
+                                    {
+                                        res.res = false;
+                                    }
+                                }
+                                else
+                                {
+
+                                    //detA = pf.determinaAgente(d, actual.USUARIOA_ID, actual.USUARIOD_ID, actual.DETPOS, next.LOOPS, sop, stepnew);
+                                    res.contabilizar = false;
+                                    res.res = false;
+                                }
+
+                            }
+                        }
+                        ban = false;
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        public DET_APROB determinaAgenteContabilidadAp(DOCUMENTO d, string user, string delega, int pos, int? loop, int sop, int fase_det)
+        {
+
+            WFARTHAEntities db = new WFARTHAEntities();
+            DET_APROB dap = new DET_APROB();
+
+            ////MGC 12-11-2018 El usuario aprobador, no tiene como tal una versión, se toma el actual-------------------------------------------------------------------->
+
+            //dap = db.DET_APROB.Where(ap => ap.VERSION == f_actual.RUTA_VERSION && ap.ID_SOCIEDAD == d.SOCIEDAD_ID).OrderBy(apo => apo.VERSION).FirstOrDefault();
+            try
+            {
+                dap = db.DET_APROB.Where(ap => ap.ID_SOCIEDAD == d.SOCIEDAD_ID).OrderBy(apo => apo.VERSION).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+
+            }
+            ////MGC 12-11-2018 El usuario aprobador, no tiene como tal una versión, se toma el actual--------------------------------------------------------------------<
+
+            return dap;
+        }
+        ////MGC 12-11-2018 Saber si el siguiente aprobador es el contabilizador-------------------------------------------------------<
 
     }
 }
