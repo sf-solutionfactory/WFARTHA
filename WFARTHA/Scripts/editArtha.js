@@ -316,6 +316,37 @@ $(document).ready(function () {
         //    _rw++;
         //});
         //Validacion para saber si es sin orden de compra o reembolso
+
+        //FRT 13112018 PARA PODER SUBIR LOS ARCHIVOS A CAREPETA TEMPORAL
+        var lengthtemp = $(this).get(0).files.length;
+
+        for (var t = 0; t < lengthtemp; t++) {
+            var filetemp = $(this).get(0).files[t];
+            var datatemp = new FormData();
+            datatemp.append('file', filetemp);
+            $.ajax({
+                type: "POST",
+                url: '../subirTemporalEditar',
+                data: datatemp,
+                dataType: "json",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (datatemp) {
+                    if (datatemp !== null || datatemp !== "") {
+                      
+                    }
+                },
+                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                    M.toast({ html: httpStatusMessage });
+                },
+                async: false
+            });
+        }
+
+        //END FRT13112018
+
+
         var val3 = $('#tsol').val();
         val3 = "[" + val3 + "]";
         val3 = val3.replace("{", "{ \"");
@@ -344,7 +375,7 @@ $(document).ready(function () {
                         data.append('file', file);
                         $.ajax({
                             type: "POST",
-                            url: 'procesarXML',
+                            url: '../procesarXML',
                             data: data,
                             dataType: "json",
                             cache: false,
@@ -574,6 +605,11 @@ $(document).ready(function () {
         t.rows('.selected').remove().draw(false);
         event.returnValue = false;
         event.cancel = true;
+        //FRT 12112018  Para recorrer los numero borrados de los anexos
+        var _num = t.rows().count();
+        for (i = 1; i < _num + 1; i++) {
+            document.getElementById("table_anexa").rows[i].cells[1].innerHTML = i;
+        }
     });
 });
 

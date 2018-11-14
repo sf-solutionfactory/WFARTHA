@@ -48,7 +48,11 @@
 <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">  
 
 
-
+<script language="javascript">
+    function mas() {
+        document.getElementById('cuerpo').innerHTML += "<input name=file[] type=file><br>";
+    }
+</script>
 
 <div class="row" style="margin-bottom:0">
 
@@ -1009,12 +1013,13 @@
                             <div class="file-field input-field" id="cargar_archivo">
                                 <div class="btn" style="margin-left: 2px;">
                                     <span id="span_fileloadAnexar">Anexar</span>
-                                    <input name="file_sopAnexar" id="file_sopAnexar" type="file" multiple="multiple" />
+                                    <input name="file_sopAnexar" id="file_sopAnexar" multiple="multiple" type="file" />
                                 </div>
                                 <div class="file-path-wrapper">
                                     <input class="file-path validate file_sopAnexar" type="text">
                                 </div>
                             </div>
+
                             <table class="table display mdl-data-table striped" id="table_anexa" style="width:100%;">
                                 <thead>
                                     <tr>

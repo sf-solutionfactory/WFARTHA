@@ -770,6 +770,7 @@
     <Content Include="Views\SociedadesUsuario\Create.cshtml" />
     <Content Include="Views\SociedadesUsuario\Edit.cshtml" />
     <Content Include="Views\ProyectoSociedad\Create.cshtml" />
+    <Content Include="Views\UsuarioC\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

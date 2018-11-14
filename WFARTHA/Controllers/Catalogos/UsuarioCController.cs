@@ -84,7 +84,11 @@ namespace TAT001.Controllers.Catalogos
             return RedirectToAction("Index");
         }
 
-   
+
+        public ActionResult Edit() {
+            return View();
+        }
+
 
     }
 }

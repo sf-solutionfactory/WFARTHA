@@ -68,6 +68,9 @@
                             <a href="@Url.Action("Delete", "UsuarioC", new { ID_SOCIEDAD = item.ID_SOCIEDAD , ID_USUARIO = item.ID_USUARIO})">
                                 <i class='material-icons red-text'>delete</i>
                             </a>&nbsp;
+                            <a href="@Url.Action("Edit", "UsuarioC", new { ID_SOCIEDAD = item.ID_SOCIEDAD , ID_USUARIO = item.ID_USUARIO})">
+                                <i class='material-icons red-text'>Edit</i>
+                            </a>&nbsp;
                         </td>
                     </tr>
                 }
