@@ -829,7 +829,7 @@ namespace WFARTHA.Controllers
             //MGC 26-10-2018 Agregar usuario solicitante a la bd
             doc.USUARIOD_ID = DETTA_USUARIOA_ID;
 
-            if (ModelState.IsValid)
+           if (ModelState.IsValid)
             {
                 try
                 {
@@ -1221,9 +1221,13 @@ namespace WFARTHA.Controllers
                                 int indexlabel = 0;
 
 
+                                
+
                                 //FRT13112018 Para cambio de fuente de archivos
                                 string temporal = Session["Temporal"].ToString();
-                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL_QAS\att\" + temporal + "\\");
+                                
+                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\\\192.168.32.207\\test\\PORTAL\\att\\" + temporal + "\\");
+                                //System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(temp + temporal + "\\");
                                 FileInfo[] archivos = directorio.GetFiles();
                                 foreach (var a in archivos)
                                 {
@@ -1289,7 +1293,10 @@ namespace WFARTHA.Controllers
                                     }
                                 }
 
-                                System.IO.Directory.Delete(@"\\192.168.32.207\test\PORTAL_QAS\att\" + temporal, true);
+
+                                System.IO.Directory.Delete(@"\\192.168.32.207\test\PORTAL\att\" + temporal, true);
+                                
+                                //System.IO.Directory.Delete(temp + temporal, true);
                                 //END FRT13112018
 
 
@@ -2962,7 +2969,7 @@ namespace WFARTHA.Controllers
 
                                 //FRT13112018 Para poder subir muchos archivos
                                 var num_doc = Convert.ToDecimal(Session["NUM_DOC"]);
-                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL_QAS\att\" + num_doc + "\\");
+                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL\att\" + num_doc + "\\");
                                 FileInfo[] archivos = directorio.GetFiles();
 
                                 //var _bol = false;
@@ -5521,6 +5528,9 @@ namespace WFARTHA.Controllers
         [HttpPost]
         public JsonResult subirTemporal(IEnumerable<HttpPostedFileBase> file)
         {
+
+
+
             try
             {
                 Random random = new Random();
