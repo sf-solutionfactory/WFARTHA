@@ -1223,7 +1223,7 @@ namespace WFARTHA.Controllers
 
                                 //FRT13112018 Para cambio de fuente de archivos
                                 string temporal = Session["Temporal"].ToString();
-                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL\att\" + temporal + "\\");
+                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL_QAS\att\" + temporal + "\\");
                                 FileInfo[] archivos = directorio.GetFiles();
                                 foreach (var a in archivos)
                                 {
@@ -1289,7 +1289,7 @@ namespace WFARTHA.Controllers
                                     }
                                 }
 
-                                System.IO.Directory.Delete(@"\\192.168.32.207\test\PORTAL\att\" + temporal, true);
+                                System.IO.Directory.Delete(@"\\192.168.32.207\test\PORTAL_QAS\att\" + temporal, true);
                                 //END FRT13112018
 
 
@@ -2962,7 +2962,7 @@ namespace WFARTHA.Controllers
 
                                 //FRT13112018 Para poder subir muchos archivos
                                 var num_doc = Convert.ToDecimal(Session["NUM_DOC"]);
-                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL\att\" + num_doc + "\\");
+                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL_QAS\att\" + num_doc + "\\");
                                 FileInfo[] archivos = directorio.GetFiles();
 
                                 //var _bol = false;
