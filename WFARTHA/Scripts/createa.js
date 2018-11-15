@@ -257,28 +257,28 @@ function selectConcepto(val, tr, tipo) {
             //Eliminar contenido en el centro de costo o pep si es que antes ya se había seleccionado alguno diferente
 
             //Cuenta
-            t.cell(indexopc, 11).data("").draw();//MGC 29-10-2018 Limpiar las celdas
-            t.cell(indexopc, 11).data(con.CUENTA).draw();//MGC 11-10-2018 No enviar correos 
+            t.cell(indexopc, 12).data("").draw();//MGC 29-10-2018 Limpiar las celdas
+            t.cell(indexopc, 12).data(con.CUENTA).draw();//MGC 11-10-2018 No enviar correos 
             //tr.find("td.CUENTA").text(con.CUENTA);//MGC 11-10-2018 No enviar correos 
 
             //Nombre de la cuenta
-            t.cell(indexopc, 12).data("").draw();//MGC 29-10-2018 Limpiar las celdas
-            t.cell(indexopc, 12).data(con.DESC_CONCEPTO).draw();
+            t.cell(indexopc, 13).data("").draw();//MGC 29-10-2018 Limpiar las celdas
+            t.cell(indexopc, 13).data(con.DESC_CONCEPTO).draw();
             //tr.find("td.CUENTANOM").text(con.DESC_CONCEPTO);//MGC 11-10-2018 No enviar correos 
 
             //Tipo de imputación
             //tr.find("td.TIPOIMP").text(con.TIPO_IMPUTACION);//MGC 22-10-2018 Modificación en etiquetas
-            t.cell(indexopc, 13).data("").draw();//MGC 29-10-2018 Limpiar las celdas
-            t.cell(indexopc, 13).data(con.TIPO_IMPUTACION).draw();//MGC 22-10-2018 Modificación en etiquetas
+            t.cell(indexopc, 14).data("").draw();//MGC 29-10-2018 Limpiar las celdas
+            t.cell(indexopc, 14).data(con.TIPO_IMPUTACION).draw();//MGC 22-10-2018 Modificación en etiquetas
 
             //Actualizar el tipo concepto
             var indexopc = t.row(tr).index();
             //var cell = t.row(indexopc).data()[4];
             //t.cell(indexopc, 9).data(tipo).draw();
-            t.cell(indexopc, 9).data("").draw();//MGC 29-10-2018 Limpiar las celdas
-            t.cell(indexopc, 9).data("<input class=\"\" disabled style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + tipo + "\">").draw();//LEJ 01.10.2018
+            t.cell(indexopc, 10).data("").draw();//MGC 29-10-2018 Limpiar las celdas
+            t.cell(indexopc, 10).data("<input class=\"\" disabled style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + tipo + "\">").draw();//LEJ 01.10.2018
 
-            t.cell(indexopc, 14).data("").draw();//MGC 29-10-2018 Limpiar las celdas
+            t.cell(indexopc, 15).data("").draw();//MGC 29-10-2018 Limpiar las celdas
             tr.find("td.CCOSTO input").val("");
 
             //MGC 29-10-2018 Obtener el proyecto
@@ -299,7 +299,7 @@ function selectConcepto(val, tr, tipo) {
                 //var PEP = "RE-00900-I" + soc + "" + tipo + "-" + p0 + "-" + p1; //MGC 29-10-2018 Obtener el proyecto
                 var PEP = proy + "-" + tipopre + soc + "" + tipo + "-" + p0 + "-" + p1; //MGC 29-10-2018 Obtener el proyecto //MGC 30-10-2018 Tipo de presupuesto
 
-                t.cell(indexopc, 14).data(PEP).draw();//MGC 11-10-2018 No enviar correos 
+                t.cell(indexopc, 15).data(PEP).draw();//MGC 11-10-2018 No enviar correos 
                 //tr.find("td.IMPUTACION").text(PEP);//MGC 11-10-2018 No enviar correos 
 
                 tr.find("td.CCOSTO input").prop('disabled', true);

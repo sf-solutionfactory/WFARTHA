@@ -5164,10 +5164,11 @@ namespace WFARTHA.Controllers
 
                 var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
                 var _Mt = xmlnode[0].Attributes["Total"].Value;
-                //var _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;   //FRT08112018 para validar RFC
                 var _RFCReceptor = xmlnode2[0].Attributes["Rfc"].Value;
                 var _RFCEmisor = xmlnode3[0].Attributes["Rfc"].Value;
                 var _Uuid = xmlnode4[0].Attributes["UUID"].Value;
+                var _Moneda = xmlnode[0].Attributes["Moneda"].Value;   //FRT14112018.3 para agregar la moneda al JSON
+                var _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;  //FRT14112018.3 para agregar la TIPO CAMBIO al JSON
 
                 List<string> lstvals = new List<string>();
                 lstvals.Add(_F);//Fecha
@@ -5175,8 +5176,9 @@ namespace WFARTHA.Controllers
                 lstvals.Add(_RFCReceptor);//RFCReceptor
                 lstvals.Add(_RFCEmisor);//RFCEmisor
                 lstvals.Add(_Uuid);//UUID
-                lstvals.Add("1");//TCambio //FRT08112018 para validar RFC
+                lstvals.Add(_Moneda);//Moneda //FRT14112018.3 para agregar la moneda al JSON
                 lstvals.Add(_rfc_soc);//Sociedad
+                lstvals.Add(_TipoCambio);//Tipo de Cambio //FRT14112018.3 para agregar tipo de cambio  al JSON
                 JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
                 //FRT 07112018 
                 return jc;
@@ -5623,6 +5625,39 @@ namespace WFARTHA.Controllers
 
             return text;
         }
+
+        //FRT14112018.3 funcion para traer de la base de datos el tipo de cambio
+        [HttpPost]
+        public JsonResult getTipoCambio(string tcurr, DateTime gdatu)//MGC 19-10-2018 Condiciones
+        {
+            var _bol = false;
+            decimal? _tipocambio = 0;
+            var dia = 0;
+
+            if (tcurr == null)
+                tcurr = "";
+
+            WFARTHAEntities db = new WFARTHAEntities();
+
+            while (true)
+            {
+                DateTime fecha = gdatu.AddDays(-dia);
+
+                string displayName = null;
+                var keyValue = db.TCAMBIOs.FirstOrDefault(a => a.TCURR == tcurr & a.GDATU == fecha);
+                if (keyValue != null)
+                {
+                    var lprov = db.TCAMBIOs.Where(a => a.TCURR == tcurr & a.GDATU == fecha).First().UKURS;
+                    _tipocambio = lprov;
+                    break;
+                }
+                dia++;
+            }
+            JsonResult cc = Json(_tipocambio, JsonRequestBehavior.AllowGet);
+            return cc;
+
+        }
+        //FRT14112018.3 funcion para traer de la base de datos el tipo de cambio
 
         [HttpPost]
         public JsonResult getProveedor(string Prefix, string bukrs)

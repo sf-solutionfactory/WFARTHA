@@ -60,6 +60,11 @@ $(document).ready(function () {
                 "orderable": false
             },
             {
+                "name": 'TXTPOS',
+                "className": 'TXTPOS',
+                "orderable": false
+            },
+            {
                 "name": 'CA',
                 "className": 'CA',
                 "orderable": false
@@ -104,12 +109,7 @@ $(document).ready(function () {
                 "name": 'IVA',
                 "className": 'IVA',
                 "orderable": false
-            },
-            {
-                "name": 'TXTPOS',
-                "className": 'TXTPOS',
-                "orderable": false
-            },
+            },          
             {
                 "name": 'TOTAL',
                 "className": 'TOTAL',

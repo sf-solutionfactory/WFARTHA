@@ -266,7 +266,7 @@
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
                             @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                    <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                                <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
 
@@ -753,6 +753,9 @@
                                         A5
                                     </th>
                                     <th class="">
+                                        Texto
+                                    </th>
+                                    <th class="">
                                         D/H
                                     </th>
                                     <th class="">
@@ -784,9 +787,6 @@
                                     </th>
                                     <th class="">
                                         IVA
-                                    </th>
-                                    <th class="">
-                                        Texto
                                     </th>
                                     @for (int i = 0; i < colsret.Count; i++)
                                     {
@@ -831,6 +831,16 @@
                                                 <td></td>
                                                 <td></td>
                                             }
+
+
+                                            @if (Model.D.DOCUMENTOPSTR[i].TEXTO != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].TEXTO</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+
                                             @if (Model.D.DOCUMENTOPSTR[i].ACCION != null)
                                             {
                                                 <td>@Model.D.DOCUMENTOPSTR[i].ACCION</td> }
@@ -849,7 +859,7 @@
 
                                             @if (Model.D.DOCUMENTOPSTR[i].CUENTA != null)
                                             {
-                                            <td>@Model.D.DOCUMENTOPSTR[i].CUENTA</td> }
+                                                <td>@Model.D.DOCUMENTOPSTR[i].CUENTA</td> }
                                             else
                                             {
                                                 <td></td>}
@@ -896,7 +906,7 @@
                                                 <td></td>}
 
 
-                                            
+
                                             @if (Model.D.DOCUMENTOPSTR[i].IMPUESTOT != null)
                                             {
                                                 <td>@Model.D.DOCUMENTOPSTR[i].IMPUESTOT</td> }
@@ -911,15 +921,6 @@
                                             else
                                             {
                                                 <td></td>}
-
-
-                                            @if (Model.D.DOCUMENTOPSTR[i].TEXTO != null)
-                                            {
-                                                <td>@Model.D.DOCUMENTOPSTR[i].TEXTO</td> }
-                                            else
-                                            {
-                                                <td></td>}
-
 
 
                                             @for (int y = 0; y < colsret.Count; y++)
