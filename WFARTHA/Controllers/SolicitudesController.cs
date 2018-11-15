@@ -846,7 +846,12 @@ namespace WFARTHA.Controllers
                     dOCUMENTO.FECHACON = doc.FECHAD;
                     dOCUMENTO.FECHA_BASE = doc.FECHAD;
                     dOCUMENTO.MONEDA_ID = doc.MONEDA_ID;
-                    dOCUMENTO.TIPO_CAMBIO = doc.TIPO_CAMBIO;
+                    if (doc.TIPO_CAMBIO == null)//Lejgg 15-11-2018
+                    {
+                        dOCUMENTO.TIPO_CAMBIO = 0;//Lejgg 15-11-2018
+                    }
+                    else
+                    { dOCUMENTO.TIPO_CAMBIO = doc.TIPO_CAMBIO; }
                     dOCUMENTO.IMPUESTO = doc.IMPUESTO;
                     dOCUMENTO.USUARIOD_ID = doc.USUARIOD_ID;//MGC 26-10-2018 Agregar usuario solicitante a la bd
                     // dOCUMENTO.MONTO_DOC_MD = doc.MONTO_DOC_MD;
@@ -2045,6 +2050,8 @@ namespace WFARTHA.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             DOCUMENTO dOCUMENTO = db.DOCUMENTOes.Find(id);
+            if (dOCUMENTO.TIPO_CAMBIO == null)//Lejgg 15-11-2018
+            { dOCUMENTO.TIPO_CAMBIO = 0; }
             //Documento a documento mod //Copiar valores del post al nuevo objeto
             DOCUMENTO_MOD doc = new DOCUMENTO_MOD();
             if (dOCUMENTO == null)
