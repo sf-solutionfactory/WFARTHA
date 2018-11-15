@@ -2962,6 +2962,13 @@ namespace WFARTHA.Controllers
 
                                 //FRT13112018 Para poder subir muchos archivos
                                 var num_doc = Convert.ToDecimal(Session["NUM_DOC"]);
+                                var url_prel12 = "";
+                                var dirFile12 = "";
+                                string carpeta12 = "att";
+                                url_prel12 = getDirPrel(carpeta12, num_doc);
+                                dirFile12 = url_prel12;
+
+                                
                                 System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL\att\" + num_doc + "\\");
                                 FileInfo[] archivos = directorio.GetFiles();
 

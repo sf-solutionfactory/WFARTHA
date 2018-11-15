@@ -708,7 +708,7 @@ $(document).ready(function () {
                 copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
                 copiarTableRet();
                 //end FRT06112018.3 
-               // $('#btn_guardar').trigger("click");
+                $('#btn_guardar').trigger("click");
             } else {
                 M.toast({ html: msgerror });
             }
