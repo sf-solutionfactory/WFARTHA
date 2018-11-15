@@ -91,6 +91,11 @@ $(document).ready(function () {
                 "orderable": false
             },
             {
+                "name": 'TXTPOS',
+                "className": 'TXTPOS',
+                "orderable": false
+            },
+            {
                 "name": 'CA',
                 "className": 'CA',
                 "orderable": false,
@@ -155,11 +160,6 @@ $(document).ready(function () {
             {
                 "name": 'IVA',
                 "className": 'IVA',
-                "orderable": false
-            },
-            {
-                "name": 'TXTPOS',
-                "className": 'TXTPOS',
                 "orderable": false
             },
             {
@@ -351,9 +351,7 @@ $(document).ready(function () {
     $('#addRowInfo').on('click', function () {
 
         var t = $('#table_info').DataTable();
-
-        var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018 //MGC 03-10-2018 solicitud con orden de compra
-        tamanosRenglones();
+        var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018 //MGC 03-10-2018 solicitud con orden de compra       
         posinfo++;
 
         //Obtener el select de impuestos en la cabecera
@@ -370,7 +368,15 @@ $(document).ready(function () {
         updateFooter();
         event.returnValue = false;
         event.cancel = true;
+        //tamanosRenglones();
+    });
 
+    $('#div-menu').on('click', function () {
+        obtenerRetenciones(99);
+    });
+
+    $('#cerrar-menu').on('click', function () {
+        obtenerRetenciones(99);
     });
 
     $('#delRowInfo').click(function (e) {
@@ -438,6 +444,20 @@ $(document).ready(function () {
         var tr = $(this).closest('tr');
 
         $(tr).toggleClass('selected');
+
+    });
+
+    //FRT14112018.3 Se añade para obtener el Tipo de Cambio
+    $("#MONEDA_ID").change(function () {
+        var moneda = $('#MONEDA_ID Option:Selected').val();
+        var fecha = $('#FECHAD').val();
+        //var fecha = "12/08/2018";
+        if (moneda.substring(0, 3) == "USD") {
+            tipocambio = getTipoCambio(moneda, fecha);
+            $("#TIPO_CAMBIO").val(tipocambio);
+        } else {
+            $('#TIPO_CAMBIO').val(0)
+        }
 
     });
 
@@ -569,7 +589,7 @@ $(document).ready(function () {
             var tr = $(this);
             var indexopc = t.row(tr).index();
 
-            var tipoimp = t.row(indexopc).data()[13];
+            var tipoimp = t.row(indexopc).data()[14];
 
 
 
@@ -688,7 +708,7 @@ $(document).ready(function () {
                 copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
                 copiarTableRet();
                 //end FRT06112018.3 
-                $('#btn_guardar').trigger("click");
+               // $('#btn_guardar').trigger("click");
             } else {
                 M.toast({ html: msgerror });
             }
@@ -820,6 +840,15 @@ $(document).ready(function () {
                                             $('#FECHADO').val(data[0]);
                                             $("#FECHAD").trigger("change");
                                             data[1];//Monto Total
+                                            //FRT14112018.3 Para Tipo de Cambio en XML
+                                            if (data[5] != "MXN") {
+                                                tipo = data[7];
+                                                $('#TIPO_CAMBIO').val(tipo);
+                                                $('#TIPO_CAMBIO').trigger("change");
+
+                                                var objSelect = document.getElementById("MONEDA_ID");
+                                                objSelect.options[1].selected = true;
+                                            }
                                         }
                                         //data[2];//RFC
                                     }
@@ -908,6 +937,14 @@ $(document).ready(function () {
                                                 $('#FECHADO').val(data[0]);
                                                 $("#FECHAD").trigger("change");
                                                 data[1];//Monto Total
+                                                //FRT14112018.3 Para Tipo de Cambio en XML
+                                                if (data[5] != "MXN") {
+                                                    tipo = data[7];
+                                                    $('#TIPO_CAMBIO').val(tipo);
+                                                    $('#TIPO_CAMBIO').trigger("change");
+                                                    $("#MONEDA_ID").prop("disabled", true);
+
+                                                }
                                             }
                                             //data[2];//RFC
                                         }
@@ -1347,8 +1384,10 @@ function obtenerRetenciones(flag) {
         //Lej 12.09.18-------------------------------------------------------
         //Aqui se agregaran las columnas extras a la tabla de detalle
         //$('#table_info').DataTable().clear().draw();//Reinicio la tabla
-        $('#table_info').DataTable().destroy();
-        $('#table_info').empty();
+        if (parseInt(flag) !== 99) {
+            $('#table_info').DataTable().destroy();
+            $('#table_info').empty();
+        }
         var arrCols = [
             {
                 "className": 'select_row',
@@ -1386,6 +1425,11 @@ function obtenerRetenciones(flag) {
             {
                 "name": 'A5',//MGC 22-10-2018 Etiquetas
                 "className": 'NumAnexo5',
+                "orderable": false
+            },
+            {
+                "name": 'TEXTO',
+                "className": 'TEXTO',
                 "orderable": false
             },
             {
@@ -1454,11 +1498,6 @@ function obtenerRetenciones(flag) {
                 "name": 'IVA',
                 "className": 'IVA',
                 "orderable": false
-            },
-            {
-                "name": 'TEXTO',
-                "className": 'TEXTO',
-                "orderable": false
             }
         ];
         //Se rearmara la tabla en HTML
@@ -1476,6 +1515,7 @@ function obtenerRetenciones(flag) {
         $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A3</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A4</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A5</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_Texto\">Texto        </th>");//FRT08112018
         $("#table_info>thead>tr").append("<th class=\"lbl_cargoAbono\">D/H</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_factura\">Factura</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_tconcepto\">TIPO CONCEPTO</th>");
@@ -1486,9 +1526,8 @@ function obtenerRetenciones(flag) {
         $("#table_info>thead>tr").append("<th class=\"lbl_imputacion\">Imputación</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_ccosto\">Centro de Costo</th>"); //FRT08112018
         $("#table_info>thead>tr").append("<th class=\"lbl_monto\">Monto</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_impuesto\">Impuesto</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_impuesto\">Impuesto  </th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_iva\">IVA</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_Texto\">Texto</th>");//FRT08112018
         var colspan = 20;
         tRet2 = tRet;
         for (i = 0; i < tRet.length; i++) {//Revisare las retenciones que tienes ligadas
@@ -1565,17 +1604,10 @@ function obtenerRetenciones(flag) {
             "paging": false,
             "info": false,
             "searching": false,
-            "columns": arrCols,
-            "columnDefs": [
-                { targets: 2, width: '580px' },
-                { targets: 3, width: '40px' },
-                { targets: 4, width: '580px' },
-                { targets: 5, width: '580px' },
-                { targets: 6, width: '580px' },
-                { "targets": 19, "width": '200' }
-            ]
+            "columns": arrCols
         });
 
+        tamanosRenglones();
         //MGC 22-10-2018 Etiquetas------------------------------------------>
         //Columna tipo de concepto y columna tipo imputación ocultarlas
 
@@ -2128,7 +2160,7 @@ function impuestoVal(ti) {
 }
 
 function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5, CA, FACTURA, TIPO_CONCEPTO, GRUPO, CUENTA, CUENTANOM, TIPOIMP, IMPUTACION, CCOSTO, MONTO, IMPUESTO, IVA, TEXTO, TOTAL, disabled, check) { //MGC 03 - 10 - 2018 solicitud con orden de compra
-  
+
     var r = addRowl(
         t,
         POS,
@@ -2154,7 +2186,7 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
         "",
         "<input disabled class=\"IVA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + IVA + "\">",
         //"<input " + disabled + " class=\"\" style=\"font-size:12px;\"  style=\"width:150px;\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + TEXTO + "\">",//Lej 13.09.2018
-        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;\"  style=\"width:150px;\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + TEXTO + "\">",//Lej 13.09.2018
+        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;width:150px;\" maxlength=\"50\" type=\"text\" id=\"\" name=\"\" value=\"" + TEXTO + "\"> </textarea>",//Lej 13.09.2018
         TOTAL,//"<input " + disabled + " class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + TOTAL + "\">"
         check //MGC 03-10-2018 solicitud con orden de compra
     );
@@ -2179,10 +2211,10 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
     colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"
         //+ "<td><input class=\"CHECK\" style=\"font-size:12px;\" type=\"checkbox\" id=\"\" name=\"\" value=\"" + check + "\"></td>" //MGC 03 - 10 - 2018 solicitud con orden de compra
         + "<td><p><label><input type=\"checkbox\" checked=\"" + check + "\" /><span></span></label></p></td>";//MGC 03 - 10 - 2018 solicitud con orden de compra
-    var table_rows = '<tr><td></td><td>' + pos + '</td><td><input class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td>' +
-        ca + '</td><td>' + factura + '</td><td>' + tipo_concepto
+    var table_rows = '<tr><td></td><td>' + pos + '</td><td><input class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td>' +
+        '<td> ' + texto + '</td><td>' + ca + '</td><td>' + factura + '</td><td>' + tipo_concepto
         + '</td><td>' + grupo + '</td><td>' + cuenta + '</td><td>' + cuentanom + '</td><td>' + tipoimp + '</td><td>' + imputacion
-        + '</td><td>' + ccentro + '</td><td>' + monto + '</td><td>' + impuesto + '</td><td>' + iva + '</td><td>' + texto + '</td>' + colstoAdd + '</tr>';
+        + '</td><td>' + ccentro + '</td><td>' + monto + '</td><td>' + impuesto + '</td><td>' + iva + '</td>' + colstoAdd + '</tr>';
     //Lej 13.09.2018--------------------------------
     if (extraCols == 0) {//Lej 13.09.2018
         var r = t.row.add([
@@ -2193,6 +2225,7 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
             nA3,
             nA4,
             nA5,
+            texto,
             ca,
             factura,
             tipo_concepto,
@@ -2205,7 +2238,6 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
             monto,
             impuesto,
             iva,
-            texto,
             "<input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\">",
             "<input class=\"CHECK\" style=\"font-size:12px;\" type=\"checkbox\" id=\"\" name=\"\" value=\"" + check + "\">" //MGC 03 - 10 - 2018 solicitud con orden de compra
         ]).draw(false).node();
@@ -2678,7 +2710,7 @@ function copiarTableInfoControl() {
 
             var tconcepto = "";
             //Obtener el concepto
-            var inpt = t.row(indexopc).data()[9];
+            var inpt = t.row(indexopc).data()[10];
             //LEJ 03-10-2018
             if (inpt !== "") {
                 var parser = $($.parseHTML(inpt));
@@ -2690,14 +2722,15 @@ function copiarTableInfoControl() {
             //LEJ 03-10-2018
             //MGC 11-10-2018 Obtener valor de columnas ocultas --------------------------->
             //Obtener la cuenta
-            var cuenta = t.row(indexopc).data()[11];
+            var cuenta = t.row(indexopc).data()[12];
 
             //Obtener la imputación
-            var imputacion = t.row(indexopc).data()[14];
+            //var imputacion = t.row(indexopc).data()[14];
+            var imputacion = t.row(indexopc).data()[14];//linea 271 de acuerdo a createa.js
 
             //MGC 22-10-2018 Modificación en etiquetas
             //Obtener el nombre de la cuenta
-            var cuentanom = t.row(indexopc).data()[12];
+            var cuentanom = t.row(indexopc).data()[13];
 
             //MGC 11-10-2018 Obtener valor de columnas ocultas <---------------------------
             //Lej 14.08.2018-------------------------------------------------------------I
@@ -2706,7 +2739,7 @@ function copiarTableInfoControl() {
             //Lej 14.08.2018-------------------------------------------------------------T
             var pos = toNum($(this).find("td.POS").text());
             // var ca = $(this).find("td.CA").text(); //MGC 04092018 Conceptos
-            var ca = t.row(indexopc).data()[7];//lejgg 09-10-2018 Conceptos
+            var ca = t.row(indexopc).data()[8];//lejgg 09-10-2018 Conceptos
             var factura = $(this).find("td.FACTURA input").val();
             //var tconcepto = $(this).find("td.TCONCEPTO").text();
             var grupo = $(this).find("td.GRUPO input").val();
@@ -2722,7 +2755,9 @@ function copiarTableInfoControl() {
             //var cuenta = $(this).find("td.CUENTA").text();//MGC 04092018 Conceptos //MGC 11-10-2018 Obtener valor de columnas oculta
             //var cuentanom = $(this).find("td.CUENTANOM").text();//MGC 22-10-2018 Modificación en etiquetas
             //var tipoimp = $(this).find("td.TIPOIMP").text();//MGC 22-10-2018 Modificación en etiquetas
-            var tipoimp = t.row(indexopc).data()[13];//MGC 22-10-2018 Modificación en etiquetas
+            //var tipoimp = t.row(indexopc).data()[13];//MGC 22-10-2018 Modificación en etiquetas
+            //var tipoimp = t.row(indexopc).data()[14];//LEJGG 15-11-2018 Modificación en etiquetas
+            var tipoimp = t.row(indexopc).data()[15];//LEJGG 15-11-2018 Modificación en etiquetas
 
             //var imputacion = $(this).find("td.IMPUTACION").text(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var ccosto = $(this).find("td.CCOSTO input").val(); //MGC 11-10-2018 Obtener valor de columnas oculta
@@ -3113,16 +3148,10 @@ function resetTabs() {
 
 //LEJGG 13/11/2018
 function tamanosRenglones() {
-    $("#table_info > thead").each(function () {
-        //POS
-        var t = $(this).find("th.select_row");
-        t.removeAttr('style');
-        t.css("width", "40px");
-        //TEXTO
-        var t_ret = $(this).find("th.TEXTO");
-        t_ret.removeAttr('style');
-        t_ret.css("width", "150px");
-    });
+    //TEXTO
+    var t_ret = $("#table_info>thead>tr").find('th.TEXTO');
+    //var t_ret = $(this).find("th.TEXTO");
+    t_ret.css("text-align", "center");
 }
 //Lejgg 10/10/2018
 function guardarBorrador(asyncv) {
@@ -3270,3 +3299,40 @@ function guardarBorrador(asyncv) {
     $('#btn_guardarh').trigger("click");
 }
 
+//FRT14112018.3 fUNCIONES PARA TENER EL TIPO DE CAMBIO
+function getTipoCambio(moneda, fecha) {//MGC 19-10-2018 Condiciones
+    tipocambio = "";
+    var localval = "";
+    if (moneda != "") {
+        $.ajax({
+            type: "POST",
+            url: 'getTipoCambio',
+            dataType: "json",
+            data: { "tcurr": moneda, "gdatu": fecha },//MGC 19-10-2018 Condiciones
+
+            success: function (data) {
+
+                if (data !== null || data !== "") {
+                    asignarVal(data);
+                }
+
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                if (message == "X") {
+                    M.toast({ html: "Valor no encontrado" });
+                }
+            },
+            async: false
+        });
+    }
+
+    localval = tipocambio;
+    return localval;
+}
+
+function asignarVal(val) {
+    tipocambio = val;
+}
+
+
+//END FRT14112018

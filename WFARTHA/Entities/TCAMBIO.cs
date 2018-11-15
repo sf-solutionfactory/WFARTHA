@@ -12,11 +12,15 @@ namespace WFARTHA.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DET_PROYECTO_DEC_V
+    public partial class TCAMBIO
     {
-        public string ID_PSPNR { get; set; }
-        public string NOMBRE { get; set; }
-        public string ID_BUKRS { get; set; }
-        public string BUTXT { get; set; }
+        public string KURST { get; set; }
+        public string FCURR { get; set; }
+        public string TCURR { get; set; }
+        public System.DateTime GDATU { get; set; }
+        public Nullable<decimal> UKURS { get; set; }
+    
+        public virtual MONEDA MONEDA { get; set; }
+        public virtual MONEDA MONEDA1 { get; set; }
     }
 }
