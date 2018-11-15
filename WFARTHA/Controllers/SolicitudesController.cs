@@ -257,22 +257,22 @@ namespace WFARTHA.Controllers
 
 
             //FRT 03112018.3--------Mostrar anexos de la misma forma que en Editar >
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
             var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).ToList();
             DOCUMENTOA d_a = new DOCUMENTOA();
             var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).ToList();
             for (int i = 0; i < la1.Count; i++)
             {
-                d_a = new DOCUMENTOA();
+                d_a = new DOCUMENTOA();                                                     
                 d_a.NUM_DOC = la1[i].NUM_DOC;
-                d_a.TIPO = la1[i].TIPO;
+                d_a.TIPO = la1[i].TIPO;                                                                                                                                                                                                                                                                                                                                        
                 d_a.DESC = la1[i].DESC;
                 d_a.CLASE = la1[i].CLASE;
                 d_a.PATH = la1[i].PATH;
-                lst.Add(d_a);
+                lst.Add(d_a);              
             }
             for (int x = 0; x < lst.Count; x++)
-            {
+                                                                            {
                 var _xtr = lst[x].PATH.Split('\\');
                 var _nxtr = _xtr[_xtr.Length - 1];
                 _nxtr = Uri.EscapeUriString(_nxtr);
@@ -1228,7 +1228,7 @@ namespace WFARTHA.Controllers
 
                                 //FRT13112018 Para cambio de fuente de archivos
                                 string temporal = Session["Temporal"].ToString();
-                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL_QAS\att\" + temporal + "\\");
+                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\\\192.168.32.207\\test\PORTAL_QAS\\att\\" + temporal + "\\");
                                 FileInfo[] archivos = directorio.GetFiles();
                                 foreach (var a in archivos)
                                 {
