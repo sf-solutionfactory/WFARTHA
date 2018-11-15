@@ -2726,7 +2726,7 @@ function copiarTableInfoControl() {
 
             //Obtener la imputación
             //var imputacion = t.row(indexopc).data()[14];
-            var imputacion = t.row(indexopc).data()[14];//linea 271 de acuerdo a createa.js
+            var imputacion = t.row(indexopc).data()[15];//linea 271 de acuerdo a createa.js
 
             //MGC 22-10-2018 Modificación en etiquetas
             //Obtener el nombre de la cuenta
@@ -2757,7 +2757,7 @@ function copiarTableInfoControl() {
             //var tipoimp = $(this).find("td.TIPOIMP").text();//MGC 22-10-2018 Modificación en etiquetas
             //var tipoimp = t.row(indexopc).data()[13];//MGC 22-10-2018 Modificación en etiquetas
             //var tipoimp = t.row(indexopc).data()[14];//LEJGG 15-11-2018 Modificación en etiquetas
-            var tipoimp = t.row(indexopc).data()[15];//LEJGG 15-11-2018 Modificación en etiquetas
+            var tipoimp = t.row(indexopc).data()[14];//LEJGG 15-11-2018 Modificación en etiquetas
 
             //var imputacion = $(this).find("td.IMPUTACION").text(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var ccosto = $(this).find("td.CCOSTO input").val(); //MGC 11-10-2018 Obtener valor de columnas oculta
