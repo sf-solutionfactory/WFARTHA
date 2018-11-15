@@ -1018,7 +1018,15 @@ $(document).ready(function () {
         val3 = val3.replace(/\,/g, "\" , \"");
         val3 = val3.replace(/\=/g, "\" : \"");
         val3 = val3.replace(/\ /g, "");
-        var jsval = $.parseJSON(val3)
+        var jsval = $.parseJSON(val3);
+
+        //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+        //Obtener los datos de la cadena
+        var version = "";
+        var usuarioc = "";
+        var id_ruta = "";
+        var usuarioa = "";
+        //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 
         $.each(jsval, function (i, dataj) {
             $("#DETTA_VERSION").val(dataj.VERSION);
@@ -1026,7 +1034,24 @@ $(document).ready(function () {
             $("#DETTA_ID_RUTA_AGENTE").val(dataj.ID_RUTA_AGENTE);
             $("#DETTA_USUARIOA_ID").val(dataj.USUARIOA_ID);
 
+
+            //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+            //Obtener los datos de la cadena
+            version = dataj.VERSION;
+            usuarioc = dataj.USUARIOC_ID;
+            id_ruta = dataj.ID_RUTA_AGENTE;
+            usuarioa = dataj.USUARIOA_ID;
+            //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
+
         });
+
+        //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+        //Al seleccionar un solicitante, obtener la cadena para mostrar
+
+        obtenerCadena(version, usuarioc, id_ruta, usuarioa);
+
+        //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
+
 
     });
 
@@ -1124,6 +1149,15 @@ $('body').on('change', '#tsol', function (event, param1) {
         mostrarTabla(dataj.EDITDET);
     });
 });
+
+//MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+//Al seleccionar un solicitante, obtener la cadena para mostrar
+
+function obtenerCadena(version, usuarioc, id_ruta, usuarioa) {
+
+}
+
+//MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 
 //LEJGG 28-10-2018
 function validarUuid(uuid) {
