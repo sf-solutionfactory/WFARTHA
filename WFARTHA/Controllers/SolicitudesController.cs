@@ -1224,11 +1224,14 @@ namespace WFARTHA.Controllers
                             try
                             {
                                 int indexlabel = 0;
+                                var server = "";
+                                var car_ser = "att";
 
 
                                 //FRT13112018 Para cambio de fuente de archivos
-                                string temporal = Session["Temporal"].ToString();
-                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\\\192.168.32.207\\test\PORTAL_QAS\\att\\" + temporal + "\\");
+                                var temporal = Convert.ToDecimal(Session["Temporal"]);
+                                server = getDirPrel(car_ser, temporal);
+                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(server + "\\");
                                 FileInfo[] archivos = directorio.GetFiles();
                                 foreach (var a in archivos)
                                 {
@@ -1294,7 +1297,7 @@ namespace WFARTHA.Controllers
                                     }
                                 }
 
-                                System.IO.Directory.Delete(@"\\192.168.32.207\test\PORTAL_QAS\att\" + temporal, true);
+                                System.IO.Directory.Delete(server, true);
                                 //END FRT13112018
 
 
@@ -2968,22 +2971,37 @@ namespace WFARTHA.Controllers
                                 int indexlabel = 0;
 
                                 //FRT13112018 Para poder subir muchos archivos
+                                var car_ser = "att";
+                                var server = "";
+                                
+
+
                                 var num_doc = Convert.ToDecimal(Session["NUM_DOC"]);
-                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL_QAS\att\" + num_doc + "\\");
+                                server = getDirPrel(car_ser, num_doc);
+                                //System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(@"\\192.168.32.207\test\PORTAL_QAS\att\" + num_doc + "\\");
+                                System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(server + "\\");
                                 FileInfo[] archivos = directorio.GetFiles();
 
-                                //var _bol = false;
-                                var listaDAS = db.DOCUMENTOAS1.Where(x => x.NUM_DOC == num_doc).ToList();
+                                var listaDA = db.DOCUMENTOAs.Where(x => x.NUM_DOC == num_doc && x.ACTIVO == true).ToList();
+                                var _listaDAS = db.DOCUMENTOAS1.Where(x => x.NUM_DOC == num_doc && x.ACTIVO == true).ToList();
+                                DOCUMENTOA dOCUMENTOA = new DOCUMENTOA();
+                                for (int i = 0; i < _listaDAS.Count; i++)
+                                {
+                                    dOCUMENTOA = new DOCUMENTOA();
+                                    dOCUMENTOA.PATH = _listaDAS[i].PATH;
+                                    listaDA.Add(dOCUMENTOA);
+                                }
+
 
                                 foreach (var a in archivos)
                                 {
                                     var _bol = false;
-                                    for (int w = 0; w < listaDAS.Count; w++)
+                                    for (int w = 0; w < listaDA.Count; w++)
                                     {
-                                        
-                                        var _xtrtemp = listaDAS[w].PATH.Split('\\');
+
+                                        var _xtrtemp = listaDA[w].PATH.Split('\\');
                                         var nombre = _xtrtemp[_xtrtemp.Length - 1];
-                                        if (nombre == a.Name)
+                                       if (nombre == a.Name)
                                         {
                                             _bol = true;
                                             break;
@@ -3047,6 +3065,85 @@ namespace WFARTHA.Controllers
                                     }
 
                                 }
+
+
+
+
+                                ////var _bol = false;
+                                //var listaDAS = db.DOCUMENTOAS1.Where(x => x.NUM_DOC == num_doc && x.ACTIVO == true).ToList();
+
+                                //foreach (var a in archivos)
+                                //{
+                                //    var _bol = false;
+                                //    for (int w = 0; w < listaDAS.Count; w++)
+                                //    {
+                                        
+                                //        var _xtrtemp = listaDAS[w].PATH.Split('\\');
+                                //        var nombre = _xtrtemp[_xtrtemp.Length - 1];
+                                //        if (nombre == a.Name)
+                                //        {
+                                //            _bol = true;
+                                //            break;
+                                //        }
+                                //    }
+                                //    if (!_bol)
+                                //    {
+                                //        for (int i = 0; i < dOCUMENTO.DOCUMENTOA_TAB.Count; i++)
+                                //        {
+                                //            if (a.Name == dOCUMENTO.DOCUMENTOA_TAB[i].NAME.Trim())
+                                //            {
+
+                                //                var descripcion = "";
+                                //                try
+                                //                {
+                                //                    listaDescArchivos.Add(labels_desc[indexlabel]);
+                                //                }
+                                //                catch (Exception ex)
+                                //                {
+                                //                    descripcion = "";
+                                //                    listaDescArchivos.Add(descripcion);
+                                //                }
+
+                                //                try
+                                //                {
+                                //                    listaNombreArchivos.Add(a.Name);
+                                //                }
+                                //                catch (Exception ex)
+                                //                {
+                                //                    listaNombreArchivos.Add("");
+                                //                }
+                                //                string errorfiles = "";
+
+
+                                //                var url_prel = "";
+                                //                var dirFile = "";
+                                //                string carpeta = "att";
+                                //                try
+                                //                {
+                                //                    url_prel = getDirPrel(carpeta, num_doc);
+                                //                    dirFile = url_prel;
+                                //                }
+                                //                catch (Exception e)
+                                //                {
+                                //                    dirFile = ConfigurationManager.AppSettings["URL_ATT"].ToString() + @"att";
+                                //                }
+
+
+                                //                listaDirectorios.Add(dirFile + "\\" + a.Name);
+
+                                //                indexlabel++;
+                                //                if (errorfiles != "")
+                                //                {
+                                //                    errorMessage += "Error con el archivo " + errorfiles;
+                                //                }
+
+
+
+                                //            }
+                                //        }
+                                //    }
+
+                                //}
                                 //FRT13112018 Para Eliminar y Guardar Nuevos
 
                                 //foreach (HttpPostedFileBase file in file_sopAnexar)
@@ -3103,6 +3200,9 @@ namespace WFARTHA.Controllers
                     {
 
                     }
+
+                    //Revisar desde aqui para los anexos   15112018
+
                     List<string> listaDirectorios2 = listaDirectorios;
                     List<string> listaNombreArchivos2 = listaNombreArchivos;
                     List<string> listaDescArchivos2 = listaDescArchivos;

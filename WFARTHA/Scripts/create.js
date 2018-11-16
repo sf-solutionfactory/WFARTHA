@@ -1515,7 +1515,7 @@ function obtenerRetenciones(flag) {
         $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A3</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A4</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A5</th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_Texto\">Texto        </th>");//FRT08112018
+        $("#table_info>thead>tr").append("<th class=\"lbl_Texto\">Texto</th>");//FRT08112018
         $("#table_info>thead>tr").append("<th class=\"lbl_cargoAbono\">D/H</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_factura\">Factura</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_tconcepto\">TIPO CONCEPTO</th>");

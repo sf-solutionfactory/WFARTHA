@@ -23,6 +23,10 @@ $(document).ready(function () {
         tamanosRenglones();
     });
 
+    $('#Contable_cont').change(function () {
+        tamanosRenglones();
+    });
+
     //Tabla de Anexos
     $('#table_anexa').DataTable({
         language: {
@@ -160,7 +164,7 @@ $(document).ready(function () {
         var _rni = 0;
         //Validar que los anexos existan
         $("#table_anexa > tbody  > tr[role='row']").each(function () {
-            var pos = $(this).find("td.POS").text();
+            var pos = $(this).find("td.POS").text().trim();
             _vs.push(pos);
         });
 
@@ -189,7 +193,7 @@ $(document).ready(function () {
             var tr = $(this);
             var indexopc = t.row(tr).index();
 
-            var tipoimp = t.row(indexopc).data()[13];
+            var tipoimp = t.row(indexopc).data()[14];
 
 
 
@@ -309,7 +313,7 @@ $(document).ready(function () {
         updateFooter();
         event.returnValue = false;
         event.cancel = true;
-
+        tamanosRenglones();
     });
 
     $('.btnD').on("click", function (e) {
@@ -2097,7 +2101,7 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
         "<input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo3 + "\">",
         "<input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo4 + "\">",
         "<input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo5 + "\">",
-        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;width:150px;\" maxlength=\"50\" type=\"text\" id=\"\" name=\"\" value=\"" + TEXTO + "\"> </textarea>",//Lej 13.09.2018
+        
         CA,//MGC 04092018 Conceptos
         "<input " + disabled + " class=\"FACTURA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + FACTURA + "\">",
         TIPO_CONCEPTO,
@@ -2112,7 +2116,7 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
         "<input " + disabled + " class=\"MONTO OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO + "\">",
         "",
         "<input disabled class=\"IVA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + IVA + "\">",
-        
+        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;width:150px;\" maxlength=\"50\" type=\"text\" id=\"\" name=\"\" value=\"" + TEXTO + "\"> </textarea>",//Lej 13.09.2018
         TOTAL,
         check, //MGC 03-10-2018 solicitud con orden de compra
         colsBIIR
@@ -2151,6 +2155,7 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
             nA3,
             nA4,
             nA5,
+            texto,
             ca,
             factura,
             tipo_concepto,
@@ -2163,7 +2168,6 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
             monto,
             impuesto,
             iva,
-            texto,
             "<input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\">",
             "<input class=\"CHECK\" style=\"font-size:12px;\" type=\"checkbox\" id=\"\" name=\"\" value=\"" + check + "\">" //MGC 03 - 10 - 2018 solicitud con orden de compra
         ]).draw(false).node();
@@ -2318,17 +2322,17 @@ function selectConcepto(val, tr, tipo) {
         if (con != "" & con != null) {
 
             //Cuenta
-            t.cell(indexopc, 11).data(con.CUENTA).draw();
+            t.cell(indexopc, 12).data(con.CUENTA).draw();
 
             //Nombre de la cuenta
-            t.cell(indexopc, 12).data(con.DESC_CONCEPTO).draw();
+            t.cell(indexopc, 13).data(con.DESC_CONCEPTO).draw();
 
             //Tipo de imputación
-            t.cell(indexopc, 13).data(con.TIPO_IMPUTACION).draw();
+            t.cell(indexopc, 14).data(con.TIPO_IMPUTACION).draw();
 
             //Actualizar el tipo concepto
             var indexopc = t.row(tr).index();
-            t.cell(indexopc, 9).data("<input class=\"\" disabled style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + tipo + "\">").draw();//LEJ 01.10.2018
+            t.cell(indexopc, 10).data("<input class=\"\" disabled style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + tipo + "\">").draw();//LEJ 01.10.2018
 
             //ocultar o mostrar el centro de costo
             if (con.TIPO_IMPUTACION == "P") {
@@ -2339,7 +2343,7 @@ function selectConcepto(val, tr, tipo) {
                 //var PEP = "RE-00900-I" + soc + "" + tipo + "-" + val;
                 var PEP = "RE-00900-I" + soc + "" + tipo + "-" + p0 + "-" + p1;
 
-                t.cell(indexopc, 14).data(PEP).draw();
+                t.cell(indexopc, 15).data(PEP).draw();
 
                 tr.find("td.CCOSTO input").prop('disabled', true);
             } else if (con.TIPO_IMPUTACION == "K") {
