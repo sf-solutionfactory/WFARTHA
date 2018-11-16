@@ -6662,6 +6662,45 @@ namespace WFARTHA.Controllers
 
         //MGC 19-10-2018 CECOS --------------------------------------------------------------<
 
+        //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+
+        [HttpPost]
+        public JsonResult getCadena(int version, string usuarioc,string id_ruta,string usuarioa)
+        {
+
+            //Obtener el encabezado de la cadena
+            DET_AGENTECC detc = new DET_AGENTECC();
+
+            detc = db.DET_AGENTECC.Where(dc => dc.VERSION == version && dc.USUARIOC_ID == usuarioc && dc.ID_RUTA_AGENTE == id_ruta && dc.USUARIOA_ID == usuarioa).FirstOrDefault();
+
+            DET_AGENTECA deta = new DET_AGENTECA();
+            //Existe el encabezado de la cadena
+            if (detc != null)
+            {
+                //deta = db.DET_AGENTECA.Where()
+
+
+            }
+
+
+            var ret = "";// db.DOCUMENTOUUIDs.Where(x => x.UUID == id).FirstOrDefault();
+            var st = "";
+            //Significa que no hay coincidencia
+            if (ret == null)
+            {
+                st = "Null";
+            }
+            else
+            {
+                st = "Match";
+            }
+
+            JsonResult jc = Json(st, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
+        //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
+
     }
     public class TXTImp
     {

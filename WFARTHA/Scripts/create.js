@@ -1155,6 +1155,28 @@ $('body').on('change', '#tsol', function (event, param1) {
 
 function obtenerCadena(version, usuarioc, id_ruta, usuarioa) {
 
+    $.ajax({
+        type: "POST",
+        url: 'getCadena',
+        data: { 'version': version, 'usuarioc': usuarioc, 'id_ruta': id_ruta, 'usuarioa': usuarioa },
+        dataType: "json",
+        success: function (data) {
+            if (data !== null || data !== "") {
+                if (data != "Null") {
+                    //Si es diferente a null significa que si hay coincidencia
+                    ban = true;
+                }
+                else {
+                    //
+                }
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
+
 }
 
 //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
