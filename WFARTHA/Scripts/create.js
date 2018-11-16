@@ -708,7 +708,7 @@ $(document).ready(function () {
                 copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
                 copiarTableRet();
                 //end FRT06112018.3 
-               $('#btn_guardar').trigger("click");
+                $('#btn_guardar').trigger("click");
             } else {
                 M.toast({ html: msgerror });
             }
@@ -2762,13 +2762,13 @@ function copiarTableInfoControl() {
             //var imputacion = $(this).find("td.IMPUTACION").text(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var ccosto = $(this).find("td.CCOSTO input").val(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var impuesto = $(this).find("td.IMPUESTO input").val();
-            var monto1 = $(this).find("td.MONTO input").val();
+            var monto1 = $(this).find("td.MONTO input").val().replace(',', '');
             monto1 = monto1.replace(/\s/g, '');
             var monto = toNum(monto1);
-            var iva1 = $(this).find("td.IVA input").val();
+            var iva1 = $(this).find("td.IVA input").val().replace(',', '');
             iva1 = iva1.replace(/\s/g, '');
             var iva = toNum(iva1);
-            var total1 = $(this).find("td.TOTAL input").val();
+            var total1 = $(this).find("td.TOTAL input").val().replace(',', '');
             //var texto = $(this).find("td.TEXTO input").val();//LEJ 14.09.2018
             var texto = $(this).find("td.TEXTO textarea").val();//LEJGG 13.11.2018
             total1 = total1.replace(/\s/g, '');
@@ -2800,8 +2800,14 @@ function copiarTableInfoControl() {
                 item2["POS"] = pos;
                 item2["WITHT"] = tRet2[j];
                 item2["WT_WITHCD"] = "01";
-                item2["BIMPONIBLE"] = parseFloat($(this).find("td.BaseImp" + tRet2[j] + " input").val().replace('$', '').replace(',', ''));
-                item2["IMPORTE_RET"] = parseFloat($(this).find("td.ImpRet" + tRet2[j] + " input").val().replace('$', '').replace(',', ''));
+                var b1 = $(this).find("td.BaseImp" + tRet2[j] + " input").val().replace('$', '').replace(',', '');
+                b1 = b1.replace(/\s/g, '');
+                var _bi = toNum(b1);
+                item2["BIMPONIBLE"] = parseFloat(_bi);
+                var b2 = $(this).find("td.ImpRet" + tRet2[j] + " input").val().replace('$', '').replace(',', '');
+                b2 = b2.replace(/\s/g, '');
+                var _iret = toNum(b2);
+                item2["IMPORTE_RET"] = parseFloat(_iret);
                 jsonObjDocs2.push(item2);
                 item2 = "";
             }
