@@ -459,7 +459,7 @@
                             @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Sociedad", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
-
+                                
                             </div>
                         </div>
                     </div>
@@ -579,7 +579,7 @@
                             @Html.LabelFor(model => model.D.PAYER_ID, "Proveedor", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.EditorFor(model => model.D.PAYER_ID, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
-
+                                <input type="hidden" id="pid" value="@Model.D.PAYER_ID"/>
                             </div>
                         </div>
                         @{string rfc = ""; string name = ""; }
@@ -835,10 +835,12 @@
 
                                             @if (Model.D.DOCUMENTOPSTR[i].TEXTO != null)
                                             {
-                                                <td>@Model.D.DOCUMENTOPSTR[i].TEXTO</td> }
+                                                <td> <textarea class="materialize-textarea" style="font-size:12px;width:150px;" type="text" value="" disabled>@Model.D.DOCUMENTOPSTR[i].TEXTO </textarea></td>
+                                            }
                                             else
                                             {
-                                                <td></td>}
+                                                <td></td>
+                                            }
 
 
                                             @if (Model.D.DOCUMENTOPSTR[i].ACCION != null)
