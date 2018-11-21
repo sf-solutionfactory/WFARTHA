@@ -2842,12 +2842,21 @@ function copiarTableInfoControl() {
             var ccosto = $(this).find("td.CCOSTO input").val(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var impuesto = $(this).find("td.IMPUESTO input").val();
             var monto1 = $(this).find("td.MONTO input").val().replace(',', '');
+            while (monto1.indexOf(',') > -1) {
+                monto1 = monto1.replace('$', '').replace(',', '');
+            }
             monto1 = monto1.replace(/\s/g, '');
             var monto = toNum(monto1);
             var iva1 = $(this).find("td.IVA input").val().replace(',', '');
+            while (iva1.indexOf(',') > -1) {
+                iva1 = iva1.replace('$', '').replace(',', '');
+            }
             iva1 = iva1.replace(/\s/g, '');
             var iva = toNum(iva1);
             var total1 = $(this).find("td.TOTAL input").val().replace(',', '');
+            while (total1.indexOf(',') > -1) {
+                total1 = total1.replace('$', '').replace(',', '');
+            }
             //var texto = $(this).find("td.TEXTO input").val();//LEJ 14.09.2018
             var texto = $(this).find("td.TEXTO textarea").val();//LEJGG 13.11.2018
             total1 = total1.replace(/\s/g, '');
