@@ -1046,9 +1046,14 @@ $(document).ready(function () {
         });
 
         //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+        //Obtener el monto
+        var monto = $('#MONTO_DOC_MD').val();
+        //Obtener la sociedad
+        var sociedad = $('#SOCIEDAD_ID').val();
+        
         //Al seleccionar un solicitante, obtener la cadena para mostrar
 
-        obtenerCadena(version, usuarioc, id_ruta, usuarioa);
+        obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad);
 
         //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 
@@ -1153,22 +1158,35 @@ $('body').on('change', '#tsol', function (event, param1) {
 //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
 //Al seleccionar un solicitante, obtener la cadena para mostrar
 
-function obtenerCadena(version, usuarioc, id_ruta, usuarioa) {
+function obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad) {
+
+    try {
+        monto = parseFloat(monto) || 0.0;
+    } catch (err) {
+        monto = 0.0;
+    }
+
+    //Eliminar Registros
+    $("#tableAutorizadores > tbody > tr").remove();
 
     $.ajax({
         type: "POST",
         url: 'getCadena',
-        data: { 'version': version, 'usuarioc': usuarioc, 'id_ruta': id_ruta, 'usuarioa': usuarioa },
+        data: { 'version': version, 'usuarioc': usuarioc, 'id_ruta': id_ruta, 'usuarioa': usuarioa, 'monto': monto, 'bukrs': sociedad },
         dataType: "json",
         success: function (data) {
             if (data !== null || data !== "") {
-                if (data != "Null") {
-                    //Si es diferente a null significa que si hay coincidencia
-                    ban = true;
-                }
-                else {
-                    //
-                }
+
+                $.each(data, function (i, dataj) {
+                    var fase = dataj.fase;
+                    var autorizador = dataj.autorizador;
+
+                    //Agregar los valores de las cadenas a las tablas
+                    $('#tableAutorizadores').append('<tr><td>' + fase + '</td><td>' + autorizador + '</td></tr>');
+
+                }); //Fin de for
+                
+
             }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
@@ -1178,6 +1196,8 @@ function obtenerCadena(version, usuarioc, id_ruta, usuarioa) {
     });
 
 }
+
+//eliminar registros de tabla
 
 //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 

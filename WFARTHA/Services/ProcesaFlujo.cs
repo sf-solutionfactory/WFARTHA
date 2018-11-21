@@ -1892,6 +1892,26 @@ namespace WFARTHA.Services
             return dap;
         }
         ////MGC 12-11-2018 Saber si el siguiente aprobador es el contabilizador-------------------------------------------------------<
+        ///
+        //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+        public DET_APROB determinaAgenteContabilidadCadena(string sociedad)
+        {
 
+            WFARTHAEntities db = new WFARTHAEntities();
+            DET_APROB dap = new DET_APROB();
+
+            try
+            {
+                dap = db.DET_APROB.Where(ap => ap.ID_SOCIEDAD == sociedad).OrderBy(apo => apo.VERSION).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+
+            }
+            
+
+            return dap;
+        }
+        //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
     }
 }
