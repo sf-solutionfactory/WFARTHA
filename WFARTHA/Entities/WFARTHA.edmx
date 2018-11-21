@@ -95,6 +95,17 @@ advertencia 6013: La tabla o vista 'PAGOS300I.dbo.CADENAS M2$' no tiene definida
           <Property Name="CUENTA" Type="nchar" MaxLength="10" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
+        <!--Errores durante la generación:
+advertencia 6013: La tabla o vista 'PAGOS300I.dbo.CONCEPTO$' no tiene definida una clave principal y no es posible inferir ninguna clave principal válida. Esta tabla o vista se ha excluido. Para usar la entidad, necesitará revisar el esquema, agregar las claves correctas y quitar sus comentarios.
+        <EntityType Name="CONCEPTO$">
+          <Property Name="ID_CONCEPTO" Type="nchar" MaxLength="10" />
+          <Property Name="DESC_CONCEPTO" Type="nvarchar" MaxLength="80" />
+          <Property Name="TIPO_CONCEPTO" Type="nchar" MaxLength="2" />
+          <Property Name="TIPO_IMPUTACION" Type="nchar" MaxLength="1" />
+          <Property Name="ID_PRESUPUESTO" Type="nchar" MaxLength="2" />
+          <Property Name="TIPO_PRESUPUESTO" Type="nchar" MaxLength="1" />
+          <Property Name="CUENTA" Type="nchar" MaxLength="10" />
+        </EntityType>-->
         <EntityType Name="CONDICIONES_PAGO">
           <Key>
             <PropertyRef Name="COND_PAGO" />
@@ -155,7 +166,7 @@ advertencia 6013: La tabla o vista 'PAGOS300I.dbo.CADENAS M2$' no tiene definida
           <Property Name="VERSION" Type="int" Nullable="false" />
           <Property Name="STEP_FASE" Type="int" Nullable="false" />
           <Property Name="STEP_ACCION" Type="int" Nullable="false" />
-          <Property Name="LIM_SUP" Type="decimal" Precision="13" Scale="2" Nullable="false" />
+          <Property Name="LIM_SUP" Type="decimal" Precision="18" Scale="5" Nullable="false" />
           <Property Name="AGENTE_SIG" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="OVERRIDE" Type="bit" />
         </EntityType>
@@ -281,12 +292,12 @@ advertencia 6013: La tabla o vista 'PAGOS300I.dbo.DET_PROVEEDOR$' no tiene defin
           <Property Name="DOCUMENTO_REF" Type="decimal" Precision="10" Scale="0" />
           <Property Name="CONCEPTO" Type="nvarchar" MaxLength="100" />
           <Property Name="NOTAS" Type="nvarchar" MaxLength="255" />
-          <Property Name="MONTO_DOC_MD" Type="decimal" Precision="13" Scale="2" />
-          <Property Name="MONTO_FIJO_MD" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="MONTO_DOC_MD" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="MONTO_FIJO_MD" Type="decimal" Precision="18" Scale="5" />
           <Property Name="MONTO_BASE_GS_PCT_MD" Type="decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_NS_PCT_MD" Type="decimal" Precision="13" Scale="2" />
-          <Property Name="MONTO_DOC_ML" Type="decimal" Precision="13" Scale="2" />
-          <Property Name="MONTO_FIJO_ML" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="MONTO_DOC_ML" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="MONTO_FIJO_ML" Type="decimal" Precision="18" Scale="5" />
           <Property Name="MONTO_BASE_GS_PCT_ML" Type="decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_NS_PCT_ML" Type="decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_DOC_ML2" Type="decimal" Precision="13" Scale="2" />
@@ -387,10 +398,10 @@ advertencia 6013: La tabla o vista 'PAGOS300I.dbo.DET_PROVEEDOR$' no tiene defin
           <Property Name="TIPOIMP" Type="nchar" MaxLength="1" />
           <Property Name="IMPUTACION" Type="nchar" MaxLength="30" />
           <Property Name="CCOSTO" Type="nchar" MaxLength="20" />
-          <Property Name="MONTO" Type="decimal" Precision="13" Scale="5" Nullable="false" />
+          <Property Name="MONTO" Type="decimal" Precision="18" Scale="5" Nullable="false" />
           <Property Name="MWSKZ" Type="nchar" MaxLength="2" Nullable="false" />
-          <Property Name="IVA" Type="decimal" Precision="13" Scale="5" Nullable="false" />
-          <Property Name="TOTAL" Type="decimal" Precision="13" Scale="5" Nullable="false" />
+          <Property Name="IVA" Type="decimal" Precision="18" Scale="5" Nullable="false" />
+          <Property Name="TOTAL" Type="decimal" Precision="18" Scale="5" Nullable="false" />
           <Property Name="TEXTO" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="DOCUMENTOPRE">
@@ -412,8 +423,8 @@ advertencia 6013: La tabla o vista 'PAGOS300I.dbo.DET_PROVEEDOR$' no tiene defin
           <Property Name="WITHT" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="WT_WITHCD" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="POS" Type="numeric" Precision="5" Scale="0" />
-          <Property Name="BIMPONIBLE" Type="decimal" Precision="13" Scale="2" />
-          <Property Name="IMPORTE_RET" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="BIMPONIBLE" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="IMPORTE_RET" Type="decimal" Precision="18" Scale="5" />
           <Property Name="VISIBLE" Type="bit" />
         </EntityType>
         <EntityType Name="DOCUMENTORP">
@@ -427,8 +438,8 @@ advertencia 6013: La tabla o vista 'PAGOS300I.dbo.DET_PROVEEDOR$' no tiene defin
           <Property Name="POS" Type="numeric" Precision="5" Scale="0" Nullable="false" />
           <Property Name="WITHT" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="WT_WITHCD" Type="nchar" MaxLength="2" Nullable="false" />
-          <Property Name="BIMPONIBLE" Type="decimal" Precision="13" Scale="2" />
-          <Property Name="IMPORTE_RET" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="BIMPONIBLE" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="IMPORTE_RET" Type="decimal" Precision="18" Scale="5" />
         </EntityType>
         <EntityType Name="DOCUMENTOSAP">
           <Key>
@@ -2876,7 +2887,7 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
           <Property Name="VERSION" Type="Int32" Nullable="false" />
           <Property Name="STEP_FASE" Type="Int32" Nullable="false" />
           <Property Name="STEP_ACCION" Type="Int32" Nullable="false" />
-          <Property Name="LIM_SUP" Type="Decimal" Precision="13" Scale="2" Nullable="false" />
+          <Property Name="LIM_SUP" Type="Decimal" Precision="18" Scale="5" Nullable="false" />
           <Property Name="AGENTE_SIG" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="OVERRIDE" Type="Boolean" />
         </EntityType>
@@ -2979,12 +2990,12 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
           <Property Name="DOCUMENTO_REF" Type="Decimal" Precision="10" Scale="0" />
           <Property Name="CONCEPTO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="NOTAS" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="MONTO_DOC_MD" Type="Decimal" Precision="13" Scale="2" />
-          <Property Name="MONTO_FIJO_MD" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="MONTO_DOC_MD" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="MONTO_FIJO_MD" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="MONTO_BASE_GS_PCT_MD" Type="Decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_NS_PCT_MD" Type="Decimal" Precision="13" Scale="2" />
-          <Property Name="MONTO_DOC_ML" Type="Decimal" Precision="13" Scale="2" />
-          <Property Name="MONTO_FIJO_ML" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="MONTO_DOC_ML" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="MONTO_FIJO_ML" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="MONTO_BASE_GS_PCT_ML" Type="Decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_NS_PCT_ML" Type="Decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_DOC_ML2" Type="Decimal" Precision="13" Scale="2" />
@@ -3099,10 +3110,10 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
           <Property Name="TIPOIMP" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
           <Property Name="IMPUTACION" Type="String" MaxLength="30" FixedLength="true" Unicode="true" />
           <Property Name="CCOSTO" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
-          <Property Name="MONTO" Type="Decimal" Precision="13" Scale="5" Nullable="false" />
+          <Property Name="MONTO" Type="Decimal" Precision="18" Scale="5" Nullable="false" />
           <Property Name="MWSKZ" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="IVA" Type="Decimal" Precision="13" Scale="5" Nullable="false" />
-          <Property Name="TOTAL" Type="Decimal" Precision="13" Scale="5" Nullable="false" />
+          <Property Name="IVA" Type="Decimal" Precision="18" Scale="5" Nullable="false" />
+          <Property Name="TOTAL" Type="Decimal" Precision="18" Scale="5" Nullable="false" />
           <Property Name="TEXTO" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="DOCUMENTO" Relationship="Self.FK_DOCUMENTOP_DOCUMENTO" FromRole="DOCUMENTOP" ToRole="DOCUMENTO" />
           <NavigationProperty Name="DOCUMENTOAs" Relationship="Self.FK_DOCUMENTOA_DOCUMENTOP" FromRole="DOCUMENTOP" ToRole="DOCUMENTOA" />
@@ -3129,8 +3140,8 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
           <Property Name="WITHT" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="WT_WITHCD" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="POS" Type="Decimal" Precision="5" Scale="0" />
-          <Property Name="BIMPONIBLE" Type="Decimal" Precision="13" Scale="2" />
-          <Property Name="IMPORTE_RET" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="BIMPONIBLE" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="IMPORTE_RET" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="VISIBLE" Type="Boolean" />
           <NavigationProperty Name="DOCUMENTO" Relationship="Self.FK_DOCUMENTOR_DOCUMENTO" FromRole="DOCUMENTOR" ToRole="DOCUMENTO" />
         </EntityType>
@@ -3145,8 +3156,8 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
           <Property Name="POS" Type="Decimal" Precision="5" Scale="0" Nullable="false" />
           <Property Name="WITHT" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="WT_WITHCD" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="BIMPONIBLE" Type="Decimal" Precision="13" Scale="2" />
-          <Property Name="IMPORTE_RET" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="BIMPONIBLE" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="IMPORTE_RET" Type="Decimal" Precision="18" Scale="5" />
           <NavigationProperty Name="DOCUMENTOP" Relationship="Self.FK_DOCUMENTORP_DOCUMENTOP" FromRole="DOCUMENTORP" ToRole="DOCUMENTOP" />
           <NavigationProperty Name="RETENCION" Relationship="Self.FK_DOCUMENTORP_RETENCION" FromRole="DOCUMENTORP" ToRole="RETENCION" />
         </EntityType>
