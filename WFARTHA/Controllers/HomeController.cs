@@ -167,6 +167,10 @@ namespace WFARTHA.Controllers
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
                 ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
+
+                Session["Edit"] = 0;///FRT20112018
+                Session["create"] = 0;///FRT20112018
+
                 //MGC 16-10-2018 Conociendo mi usuario, obtener las sociedades a las que tengo acceso
                 List<DET_TIPOPRESUPUESTO> detsoc = new List<DET_TIPOPRESUPUESTO>();
                 detsoc = db.DET_TIPOPRESUPUESTO.Where(tp => tp.ID_USER == user.ID).ToList();
