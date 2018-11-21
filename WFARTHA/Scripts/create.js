@@ -545,6 +545,7 @@ $(document).ready(function () {
             _vs.push(pos);
         });
 
+
         //LEJGG 23-10-18
         //Aqui verificare si es invoice o factura
         var val3 = $('#tsol').val();
@@ -602,7 +603,8 @@ $(document).ready(function () {
             }
 
             //FRT20112018 iNGRESAR VALIDACION DE CONCEPTO
-            var concepto = t.row(indexopc).data()[13];
+            //var concepto = t.row(indexopc).data()[13];
+            var concepto = $(this).find("td.GRUPO input").val(); //FRT21112018
 
             if (concepto == "" | concepto == null) {
                 msgerror = "Falta ingresar Conecepto";
@@ -712,15 +714,36 @@ $(document).ready(function () {
         //update codigo fer
         //END FRT04112018.2
 
+
+        //FRT21112018 Para validar cantidad de anexos solamente al enviar
+        var borrador = $("#borr").val();
+        var lengthT = $("table#table_anexa tbody tr[role='row']").length;    
+        _a = true;
+        if (borrador != "B") {
+            if (lengthT == 0) {
+                msgerror = "Es necesario agregar por lo menos 1 Anexo";
+                _a = false;
+            } else {
+                _a = true;
+            }
+        } 
+
+        //ENDFRT21112018
+
         if (_p) {
             if (_b) {
-                //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
-                copiarTableInfoControl();
-                copiarTableInfoPControl();
-                copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
-                copiarTableRet();
-                //end FRT06112018.3 
-                $('#btn_guardar').trigger("click");
+                if (_a) {
+                    //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
+                    copiarTableInfoControl();
+                    copiarTableInfoPControl();
+                    copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
+                    copiarTableRet();
+                    //end FRT06112018.3 
+                    $('#btn_guardar').trigger("click");
+                } else {
+                    M.toast({ html: msgerror });
+                }
+                
             } else {
                 M.toast({ html: msgerror });
             }

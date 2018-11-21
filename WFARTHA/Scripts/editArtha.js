@@ -194,7 +194,8 @@ $(document).ready(function () {
             var indexopc = t.row(tr).index();
 
             //FRT20112018 iNGRESAR VALIDACION DE CONCEPTO
-            var concepto = t.row(indexopc).data()[13];
+            //var concepto = t.row(indexopc).data()[13]; 
+            var concepto = $(this).find("td.GRUPO input").val(); //FRT21112018
 
             if (concepto == "" | concepto == "") {
                 msgerror = "Falta ingresar Conecepto";
@@ -284,12 +285,34 @@ $(document).ready(function () {
                 _b = true;
             }
         });
+
+
+        //FRT21112018 Para validar cantidad de anexos solamente al enviar
+        var lengthT = $("table#table_anexa tbody tr[role='row']").length;
+        _a = true;
+
+            if (lengthT == 0) {
+                msgerror = "Es necesario agregar por lo menos 1 Anexo";
+                _a = false;
+            } else {
+                _a = true;
+            }
+
+
+        //ENDFRT21112018
+
+
         if (_b) {
-            //Guardar los valores de la tabla en el modelo para enviarlos al controlador
-            copiarTableInfoControl(); //copiarTableInfoPControl();
-            //copiarTableSopControl();
-            copiarTableRet();
-            $('#btn_guardar').trigger("click");
+            if (_a) {
+                //Guardar los valores de la tabla en el modelo para enviarlos al controlador
+                copiarTableInfoControl(); //copiarTableInfoPControl();
+                //copiarTableSopControl();
+                copiarTableRet();
+                $('#btn_guardar').trigger("click");
+            } else {
+                M.toast({ html: msgerror });
+            }
+          
         } else {
             M.toast({ html: msgerror });
         }
@@ -1735,6 +1758,7 @@ function solicitarDatos() {
                     //
                     inicio = 0;   //FRT08112018
                     armarTablaInfo(data);
+                    inicio = 1;    //FRT21112018
                 }
                 else {
                     //
@@ -2179,7 +2203,7 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
         "<input " + disabled + " class=\"MONTO OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO + "\">",
         "",
         "<input disabled class=\"IVA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + IVA + "\">",
-        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;width:100px;\" maxlength=\"50\" type=\"text\" id=\"TEXTO\" name=\"TEXTO\" value=\"" + TEXTO + "\"> " + TEXTO + "</textarea>",//Lej 13.09.2018//FRT20112018 
+        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;width:100px;height:0px;\" maxlength=\"50\" type=\"text\" id=\"TEXTO\" name=\"TEXTO\" value=\"" + TEXTO + "\"> " + TEXTO + "</textarea>",//Lej 13.09.2018//FRT20112018 
         TOTAL,
         check, //MGC 03-10-2018 solicitud con orden de compra
         colsBIIR
@@ -2284,7 +2308,7 @@ function updateFooter() {
     if (inicio == 0) {
         totalinicio = "";
         $('#total_info').text((totalinicio));
-        inicio = 1;
+        //inicio = 1;
     } else {
         $('#total_info').text(toShow(total));
     }
@@ -2293,6 +2317,8 @@ function updateFooter() {
 
     $('#MONTO_DOC_MD').val(toShow(total));//Lej 18.09.2018
     $('#mtTot').val($('#MONTO_DOC_MD').val());//Lej 29.09.2018
+
+   
 }
 
 function resetTabs() {
