@@ -610,7 +610,7 @@
                             @Html.LabelFor(model => model.D.REFERENCIA, "Referencia", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10col s2">
                                 @Html.EditorFor(model => model.D.REFERENCIA, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
-
+                                <input type="hidden" id="refHd" value="@Model.D.REFERENCIA"/>
                             </div>
                         </div>
 
@@ -1027,58 +1027,35 @@
                 <div class="card-panel">
                     <h5 id="head_cabecera">Cadena de Autorización</h5>
                     <h6 id="header_cadena" style="display:inline-block">@ViewBag.nomautoriza</h6>
-                    @*<h5 id="head_cabecera">Detalle NT</h5>
-                        <div class="row" style="margin-bottom:0">
-
-
-
-                            <table class="table display mdl-data-table striped" id="table_sop" style="width:100%;">
-                                <thead>
-                                    <tr>
-                                        <th>
-
-                                        </th>
-                                        <th class="lbl_opc">
-                                            OPC NT
-                                        </th>
-                                        <th class="lbl_pos">
-                                            Pos NT
-                                        </th>
-                                        <th class="lbl_rfc">
-                                            RFC NT
-                                        </th>
-                                        <th class="lbl_factura">
-                                            Factura NT
-                                        </th>
-                                        <th id="lbl_fecha">
-                                            Fecha NT
-                                        </th>
-                                        <th id="lbl_monto">
-                                            Monto NT
-                                        </th>
-                                        <th id="lbl_iva">
-                                            IVA NT
-                                        </th>
-                                        <th id="lbl_total">
-                                            Total NT
-                                        </th>
-                                        <th id="lbl_archivo">
-                                            Archivo NT
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-
-                            <div class="form-group">
-                                <div class="col-md-offset-2 col-md-10">
-                                    <input type="submit" value="Create" id="btn_guardar" style="display:none" class="btn btn-default" />
-                                </div>
-                            </div>
-                        </div>*@
                 </div>
             </div>
         </div>
+
+        @*MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->*@
+        <div class="row" style="font-size:12px;">
+            <div class="col s12" style="padding:0px">
+                <div class="card-panel">
+                    <div class="row" style="margin-bottom:0">
+                        <h5>Cadena de autorizadores</h5>
+                        <table class="table highlight responsive-table" id="tableAutorizadores">
+                            <thead>
+                                <tr>
+                                    <th width="" style="width: 300px;">
+                                        Fase
+                                    </th>
+                                    <th width="">
+                                        Agente
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<*@
     </div>
 
     @*Soporte SAP*@

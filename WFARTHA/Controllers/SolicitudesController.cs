@@ -1987,11 +1987,6 @@ namespace WFARTHA.Controllers
         {
 
             Session["NUM_DOC_TEM"] = id;
-
-
-
-
-
             //lEJGG 7-11-18----------------------->
             int pagina = 204;//lEJGG 7-11-18
             if (pacc == "B")
@@ -2211,37 +2206,6 @@ namespace WFARTHA.Controllers
 
             retl = db.DOCUMENTORs.Where(x => x.NUM_DOC == id).ToList();
 
-            //retlt = (from r in retl
-            //         join rt in db.RETENCIONTs
-            //         on r.WITHT equals rt.WITHT
-            //         into jj
-            //         from rt in jj.DefaultIfEmpty()
-            //         where rt.SPRAS_ID.Equals("ES")
-            //         select new DOCUMENTOR_MOD
-            //         {
-            //             WITHT = r.WITHT,
-            //             DESC = rt.TXT50 == null ? String.Empty : "",
-            //             WT_WITHCD = r.WT_WITHCD,
-            //             BIMPONIBLE = r.BIMPONIBLE,
-            //             IMPORTE_RET = r.IMPORTE_RET
-
-            //         }).ToList();
-
-            //List<DOCUMENTOR_MOD> _relt = new List<DOCUMENTOR_MOD>();
-            //var _retl = db.RETENCIONs.Where(rt => rt.ESTATUS == true)
-            //    .Join(
-            //    db.RETENCION_PROV.Where(rtp => rtp.LIFNR == dOCUMENTO.PAYER_ID && rtp.BUKRS == dOCUMENTO.SOCIEDAD_ID),
-            //    ret => ret.WITHT,
-            //    retp => retp.WITHT,
-            //    (ret, retp) => new
-            //    {
-            //        LIFNR = retp.LIFNR,
-            //        BUKRS = retp.BUKRS,
-            //        WITHT = retp.WITHT,
-            //        DESC = ret.DESCRIPCION,
-            //        WT_WITHCD = retp.WT_WITHCD
-
-            //    }).ToList();
             List<listRet> lstret = new List<listRet>();
             var lifnr = dOCUMENTO.PAYER_ID;
             var bukrs = dOCUMENTO.SOCIEDAD_ID;
@@ -2314,27 +2278,7 @@ namespace WFARTHA.Controllers
                     }
                 }
             }
-            //var _xdocsrp = db.DOCUMENTORPs.Where(x => x.NUM_DOC == id).ToList();
-            //List<DOCUMENTORP_MOD> _xdocsrp2 = new List<DOCUMENTORP_MOD>();
-            //DOCUMENTORP_MOD _Data = new DOCUMENTORP_MOD();
-            //for (int x = 0; x < rets2.Count; x++)
-            //{
-            //    for (int j = 0; j < _xdocsrp.Count; j++)
-            //    {
-            //        if (rets2[x] == _xdocsrp[j].WITHT)
-            //        {
-            //            _Data = new DOCUMENTORP_MOD();
-            //            _Data.NUM_DOC = _xdocsrp[j].NUM_DOC;
-            //            _Data.POS = _xdocsrp[j].POS;
-            //            _Data.WITHT = _xdocsrp[j].WITHT;
-            //            _Data.WT_WITHCD = _xdocsrp[j].WT_WITHCD;
-            //            _Data.BIMPONIBLE = _xdocsrp[j].BIMPONIBLE;
-            //            _Data.IMPORTE_RET = _xdocsrp[j].IMPORTE_RET;
-            //            _xdocsrp2.Add(_Data);
-            //        }
-            //    }
-            //}
-            //ViewBag.DocsRp = _xdocsrp2;
+
             ViewBag.Retenciones = rets2;
             //LEJ 05 10 2018-----------------------------
             //lej 30.08.2018------------------
@@ -2376,18 +2320,49 @@ namespace WFARTHA.Controllers
                                         System.Globalization.CultureInfo.InvariantCulture,
                                         System.Globalization.DateTimeStyles.None);
 
-            //ViewBag.fechah = theTime.ToString();
-            //lejgg 04.10.2018------>
-            //doc.FECHAD = theTime;
-            //doc.FECHACON = theTime;
-            //doc.FECHA_BASE = theTime;
-            //lejgg 04.10.2018<------
+            //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+            //Obtener las cadenas vigentes, considerando la versión
+            var detcv = (from detc in db.DET_AGENTECC
+                         where detc.USUARIOC_ID == user_id
+                         group detc by new { detc.USUARIOC_ID, detc.ID_RUTA_AGENTE, detc.USUARIOA_ID } into grp
+                         select grp.OrderByDescending(x => x.VERSION).FirstOrDefault());
+
+            //Consulta tomada de sql
+            //select DISTINCT MAX([VERSION]) AS VERSION
+            //      ,[USUARIOC_ID]
+            //      ,[ID_RUTA_AGENTE]
+            //      ,[USUARIOA_ID]
+            //FROM[PAGOS].[dbo].[DET_AGENTECC]
+            //where USUARIOC_ID = 'admin'
+            //group by[USUARIOC_ID], [ID_RUTA_AGENTE], [USUARIOA_ID]
+            //order by[ID_RUTA_AGENTE]
+
+            //Obtener las cadenas
+            List<DET_AGENTECC> detcl = new List<DET_AGENTECC>();
+
+            detcl = (from dv in detcv.ToList()
+                     join dccl in db.DET_AGENTECC.ToList()
+                     on new { dv.VERSION, dv.USUARIOC_ID, dv.ID_RUTA_AGENTE, dv.USUARIOA_ID } equals new { dccl.VERSION, dccl.USUARIOC_ID, dccl.ID_RUTA_AGENTE, dccl.USUARIOA_ID }
+                     select new DET_AGENTECC
+                     {
+                         VERSION = dccl.VERSION,
+                         USUARIOC_ID = dccl.USUARIOC_ID,
+                         ID_RUTA_AGENTE = dccl.ID_RUTA_AGENTE,
+                         DESCRIPCION = dccl.DESCRIPCION,
+                         USUARIOA_ID = dccl.USUARIOA_ID,
+                         FECHAC = dccl.FECHAC
+                     }).ToList();
 
 
-            // Cadena de autorización
+            //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
+
+            //MGC 02-10-2018 Cadena de autorización
             //List<DET_AGENTECC> dta = new List<DET_AGENTECC>();
             //Falta vigencia
-            var dta = db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).
+            //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+            //var dta = db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).
+            var dta = detcl.
+            //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
                 Join(
                 db.USUARIOs,
                 da => da.USUARIOA_ID,
@@ -2399,33 +2374,7 @@ namespace WFARTHA.Controllers
                     TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
                 }).ToList();
 
-            //MGC 03-11-2018 Obtener la cadena seleccionada
-            FLUJO fcadena = new FLUJO();
-            fcadena = db.FLUJOes.Where(fp => fp.NUM_DOC == id).FirstOrDefault();
-
-            if (fcadena != null)
-            {
-                //MGC 03-11-2018 Obtener el id compuesto de la cadena
-                var dtas = db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id && dt.VERSION == fcadena.RUTA_VERSION && dt.ID_RUTA_AGENTE == fcadena.ID_RUTA_A && dt.USUARIOA_ID == dOCUMENTO.USUARIOD_ID).
-                Join(
-                db.USUARIOs,
-                da => da.USUARIOA_ID,
-                us => us.ID,
-                (da, us) => new
-                {
-                    //ID = new List<string>() { da.VERSION, da.USUARIOC_ID, da.ID_RUTA_AGENTE, da.USUARIOA_ID},                    
-                    ID = new { VERSION = da.VERSION.ToString().Replace(" ", ""), USUARIOC_ID = da.USUARIOC_ID.ToString().Replace(" ", ""), ID_RUTA_AGENTE = da.ID_RUTA_AGENTE.ToString().Replace(" ", ""), USUARIOA_ID = da.USUARIOA_ID.ToString().Replace(" ", "") },
-                    TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
-                    //}).FirstOrDefault();//MGC 03-11-2018 Posible cambio lista dtas
-                }).ToList();//MGC 03-11-2018 Posible cambio lista dtas
-
-                ViewBag.DETAA = new SelectList(dtas, "ID", "TEXT", dtas);//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas) //lejgg 06-11-2018
-                //ViewBag.DETAA = new SelectList(dta, "ID", "TEXT", dtas);//MGC 03-11-2018 Posible cambio lista dtas y SelectList(dta, "ID", "TEXT", dtas)
-            }
-            else
-            {
-                ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
-            }
+            ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
 
             ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Newtonsoft.Json.Formatting.Indented);
 
@@ -3145,7 +3094,7 @@ namespace WFARTHA.Controllers
                                     a11 = dOCUMENTO.Anexo[i].a1;
                                     a11 = a11 - arBorr;
                                     a11 = a11 - 1;
-                                  
+
                                     _dA.POS = dOCUMENTO.Anexo[i].a1;
 
                                     try
@@ -3225,7 +3174,7 @@ namespace WFARTHA.Controllers
                                     a12 = dOCUMENTO.Anexo[i].a2;
                                     a12 = a12 - arBorr;
                                     a12 = a12 - 1;
-                                    
+
                                     _dA.POS = dOCUMENTO.Anexo[i].a2;
                                     try
                                     {
@@ -3305,7 +3254,7 @@ namespace WFARTHA.Controllers
                                     a13 = dOCUMENTO.Anexo[i].a3;
                                     a13 = a13 - arBorr;
                                     a13 = a13 - 1;
-                                   
+
 
 
                                     _dA.POS = dOCUMENTO.Anexo[i].a3;
@@ -3391,7 +3340,7 @@ namespace WFARTHA.Controllers
                                     a14 = a14 - arBorr;
                                     a14 = a14 - 1;
 
-                                   
+
                                     _dA.POS = dOCUMENTO.Anexo[i].a4;
                                     try
                                     {
@@ -6481,6 +6430,23 @@ namespace WFARTHA.Controllers
             return jc;
         }
         //END OF INSERT RSG 19.10.2018
+
+        [HttpPost]
+        public JsonResult getCadAut(decimal nd)
+        {
+            //Traigo el usuario
+            var usA = db.DOCUMENTOes.Where(x => x.NUM_DOC == nd).FirstOrDefault();
+            var uC = usA.USUARIOC_ID;
+            var ud = usA.USUARIOD_ID;
+            var detcv = (from detc in db.DET_AGENTECC
+                         where detc.USUARIOC_ID == uC
+                         group detc by new { detc.USUARIOC_ID, detc.ID_RUTA_AGENTE, detc.USUARIOA_ID } into grp
+                         select grp.OrderByDescending(x => x.VERSION).FirstOrDefault()).ToList();
+            var res = detcv.Where(x => x.USUARIOA_ID == ud).FirstOrDefault();
+            string[] _r = { usA.SOCIEDAD_ID, usA.MONTO_DOC_MD.ToString(), res.ID_RUTA_AGENTE, res.USUARIOA_ID, res.USUARIOC_ID, res.VERSION.ToString() };
+            JsonResult jc = Json(_r, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
 
         //MGC 18-10-2018 Firma del usuario ------------------------------------------------->
         [HttpPost]
