@@ -776,10 +776,49 @@ namespace WFARTHA.Controllers
             d.FECHACON = theTime;
             d.FECHA_BASE = theTime;
 
+            //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+            //Obtener las cadenas vigentes, considerando la versión
+            var detcv = (from detc in db.DET_AGENTECC
+                         where detc.USUARIOC_ID == user_id
+                         group detc by new { detc.USUARIOC_ID, detc.ID_RUTA_AGENTE, detc.USUARIOA_ID } into grp
+                         select grp.OrderByDescending(x => x.VERSION).FirstOrDefault());
+
+            //Consulta tomada de sql
+            //select DISTINCT MAX([VERSION]) AS VERSION
+            //      ,[USUARIOC_ID]
+            //      ,[ID_RUTA_AGENTE]
+            //      ,[USUARIOA_ID]
+            //FROM[PAGOS].[dbo].[DET_AGENTECC]
+            //where USUARIOC_ID = 'admin'
+            //group by[USUARIOC_ID], [ID_RUTA_AGENTE], [USUARIOA_ID]
+            //order by[ID_RUTA_AGENTE]
+
+            //Obtener las cadenas
+            List<DET_AGENTECC> detcl = new List<DET_AGENTECC>();
+
+            detcl = (from dv in detcv.ToList()
+                     join dccl in db.DET_AGENTECC.ToList()
+                     on new { dv.VERSION, dv.USUARIOC_ID, dv.ID_RUTA_AGENTE, dv.USUARIOA_ID } equals new { dccl.VERSION, dccl.USUARIOC_ID, dccl.ID_RUTA_AGENTE, dccl.USUARIOA_ID }
+                     select new DET_AGENTECC
+                     {
+                         VERSION = dccl.VERSION,
+                         USUARIOC_ID = dccl.USUARIOC_ID,
+                         ID_RUTA_AGENTE = dccl.ID_RUTA_AGENTE,
+                         DESCRIPCION = dccl.DESCRIPCION,
+                         USUARIOA_ID = dccl.USUARIOA_ID,
+                         FECHAC = dccl.FECHAC
+                     }).ToList();
+
+
+            //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
+
             //MGC 02-10-2018 Cadena de autorización
             //List<DET_AGENTECC> dta = new List<DET_AGENTECC>();
             //Falta vigencia
-            var dta = db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).
+            //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+            //var dta = db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).
+            var dta = detcl.
+            //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
                 Join(
                 db.USUARIOs,
                 da => da.USUARIOA_ID,
@@ -7546,6 +7585,116 @@ namespace WFARTHA.Controllers
         }
 
         //MGC 19-10-2018 CECOS --------------------------------------------------------------<
+        //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+
+        [HttpPost]
+        public JsonResult getCadena(int version, string usuarioc, string id_ruta, string usuarioa, decimal monto, string bukrs)
+        {
+
+            //Obtener el encabezado de la cadena
+            DET_AGENTECC detc = new DET_AGENTECC();
+            List<int> fases = new List<int>();
+
+            detc = db.DET_AGENTECC.Where(dc => dc.VERSION == version && dc.USUARIOC_ID == usuarioc && dc.ID_RUTA_AGENTE == id_ruta && dc.USUARIOA_ID == usuarioa).FirstOrDefault();
+
+            List<DET_AGENTECA> deta = new List<DET_AGENTECA>();
+            //Existe el encabezado de la cadena
+            if (detc != null)
+            {
+                deta = db.DET_AGENTECA.Where(da => da.ID_RUTA_AGENTE == detc.ID_RUTA_AGENTE && da.VERSION == detc.VERSION).OrderBy(da => da.STEP_FASE).ToList();
+            }
+
+            //Lista de cadena de autorizadores
+            List<CadenaAutorizadores> lcadena = new List<CadenaAutorizadores>();
+
+            //Agregar el solicitante
+            try
+            {
+                if (detc != null)
+                {
+                    CadenaAutorizadores sol = new CadenaAutorizadores();
+                    sol.fase = "Solicitante";
+                    sol.autorizador = detc.USUARIOA_ID;
+
+                    lcadena.Add(sol);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+
+            //Obtener las fases del proyecto
+            fases = deta.Select(da => da.STEP_FASE).Distinct().ToList();
+            ProcesaFlujo pf = new ProcesaFlujo();
+            //loop para obtener los autorizadores por fase
+            for (int i = 0; i < fases.Count(); i++)
+            {
+                List<DET_AGENTECA> detafase = new List<DET_AGENTECA>();
+
+                detafase = deta.Where(detf => detf.STEP_FASE == fases[i]).ToList();
+
+                if (detafase != null || detafase.Count > 0)
+                {
+                    DET_AGENTECA dap = new DET_AGENTECA();
+                    dap = pf.detAgenteLimite(detafase, monto);
+
+                    //Si se obtiene el agente por monto y fase, agregarlo a la lista
+                    CadenaAutorizadores cadenaauto = new CadenaAutorizadores();
+                    cadenaauto.fase = "Aprobador " + dap.STEP_FASE;
+                    cadenaauto.autorizador = dap.AGENTE_SIG;
+
+                    lcadena.Add(cadenaauto);
+
+                }
+            }
+
+            //Obtener el contabilizador
+            try
+            {
+                DET_APROB dap = new DET_APROB();
+                dap = pf.determinaAgenteContabilidadCadena(bukrs);
+                if (dap != null)
+                {
+                    //Se obtiene el agente contabilizador 
+                    CadenaAutorizadores cadenaauto = new CadenaAutorizadores();
+                    cadenaauto.fase = "Contabilizador";
+                    cadenaauto.autorizador = dap.ID_USUARIO;
+
+                    lcadena.Add(cadenaauto);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            //Obtener el nombre de los usuarios
+            List<CadenaAutorizadores> lcadenan = new List<CadenaAutorizadores>();
+            try
+            {
+                lcadenan = (from ca in lcadena
+                            join us in db.USUARIOs
+                            on ca.autorizador equals us.ID
+                            into jj
+                            from us in jj.DefaultIfEmpty()
+                            select new CadenaAutorizadores
+                            {
+                                fase = ca.fase,
+                                autorizador = ca.autorizador + " - " + us.NOMBRE + " " + us.APELLIDO_P + " " + us.APELLIDO_M
+                            }).ToList();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            JsonResult jc = Json(lcadenan, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
+        //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 
     }
     public class TXTImp
