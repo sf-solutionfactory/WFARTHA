@@ -1895,6 +1895,10 @@ $('body').on('focusout', '.OPER', function (e) {
 
         //Desde el subtotal
         var sub = $(this).val().replace('$', '').replace(',', '');
+        //While para que elimine las comas //LEJGG20-11-2018
+        while (sub.indexOf(',') > -1) {
+            sub = sub.replace('$', '').replace(',', '');
+        }
         sub = parseFloat(sub);
 
         //Lleno los campos de Base Imponible con el valor del monto
