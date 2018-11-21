@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="758287a8ce6b4aa39ad1e16c329001b9" Name="Diagram1">
+      <Diagram DiagramId="bac27246f42c49d5b1189ab02d570ec3" Name="Diagram1">
         <EntityTypeShape EntityType="WFARTHAModel.ACCION" Width="1.5" PointX="13.5" PointY="27.125" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.APPSETTING" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="WFARTHAModel.CAMPOS" Width="1.5" PointX="3.75" PointY="33.875" IsExpanded="true" />

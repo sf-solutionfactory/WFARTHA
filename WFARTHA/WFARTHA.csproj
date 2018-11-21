@@ -458,8 +458,8 @@
       <DependentUpon>WFARTHA.Context.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\WFARTHA.cs">
-      <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\WFARTHA.Designer.cs">
