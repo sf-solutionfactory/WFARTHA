@@ -591,8 +591,6 @@ $(document).ready(function () {
 
             var tipoimp = t.row(indexopc).data()[14];
 
-
-
             if (tipoimp == "K" & (ceco == "" | ceco == null)) {
                 msgerror = "Falta ingresar Centro de Costo";
                 _b = false;
@@ -602,6 +600,20 @@ $(document).ready(function () {
             if (_b === false) {
                 return false;
             }
+
+            //FRT20112018 iNGRESAR VALIDACION DE CONCEPTO
+            var concepto = t.row(indexopc).data()[13];
+
+            if (concepto == "" | concepto == null) {
+                msgerror = "Falta ingresar Conecepto";
+                _b = false;
+            } else {
+                _b = true;
+            }
+            if (_b === false) {
+                return false;
+            }
+            //ENDFRT20112018 iNGRESAR VALIDACION DE CONCEPTO
 
             //FRT06112018.3 Se realizara validación del monto > 0
             var monto = $(this).find("td.MONTO input").val();
@@ -825,33 +837,32 @@ $(document).ready(function () {
                             contentType: false,
                             processData: false,
                             success: function (data) {
-                                if (data != null | data != "") {
-                                    _resVu = validarUuid(data[4]);
+                                //FRT20112018 Para validar los RFC
+                                if (data[0] == "1") {
+                                    _bcorrecto = true;
+                                    _resVu = validarUuid(data[5]);
                                     if (!_resVu) {
-                                        //$('#Uuid').val(data[4]);
-                                        //$('#FECHAD').val(data[0]);
-                                        //$('#FECHADO').val(data[0]);
-                                        //$("#FECHAD").trigger("change");
-                                        //data[1];//Monto Total
-                                        _fbool = validarRFC(data[3], data[2], data[6]);
-                                        if (_fbool) {
-                                            $('#Uuid').val(data[4]);
-                                            $('#FECHAD').val(data[0]);
-                                            $('#FECHADO').val(data[0]);
+                                        _bemisor = validarRFCEmisor(data[4]);
+                                        _breceptor = validarRFCReceptor(data[3], data[7]);
+                                        if (_bemisor & _breceptor) {
+                                            $('#Uuid').val(data[5]);
+                                            $('#FECHAD').val(data[1]);
+                                            $('#FECHADO').val(data[1]);
                                             $("#FECHAD").trigger("change");
-                                            data[1];//Monto Total
+                                            data[2];//Monto Total
                                             //FRT14112018.3 Para Tipo de Cambio en XML
-                                            if (data[5] != "MXN") {
-                                                tipo = data[7];
+                                            if (data[6] != "MXN") {
+                                                tipo = data[8];
                                                 $('#TIPO_CAMBIO').val(tipo);
                                                 $('#TIPO_CAMBIO').trigger("change");
-
                                                 var objSelect = document.getElementById("MONEDA_ID");
                                                 objSelect.options[1].selected = true;
                                             }
                                         }
-                                        //data[2];//RFC
                                     }
+
+                                } else {
+                                    _bcorrecto = false;
                                 }
                             },
                             error: function (xhr, httpStatusMessage, customErrorMessage) {
@@ -866,15 +877,30 @@ $(document).ready(function () {
                             M.toast({ html: "UUID existente en BD" });
                         }
                         else {
-                            //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
-                            if (_fbool) {
-                                _tab.row.add(
-                                    $(tdata)
-                                ).draw(false).node();
-                            }
-                            else {
+                            if (_bcorrecto) {
+                                if (!_bemisor & !_breceptor) {
+                                    //Alert no se metio porque ya hay un xml en la tabla
+                                    M.toast({ html: "El RFC de Receptor y Emisor no coinciden" });
+                                } else {
+                                    if (_bemisor) {
+                                        if (_breceptor) {
+                                            _tab.row.add(
+                                                $(tdata)
+                                            ).draw(false).node();
+                                        }
+                                        else {
+                                            //Alert no se metio porque ya hay un xml en la tabla
+                                            M.toast({ html: "El RFC de Receptor no coincide" });
+                                        }
+
+                                    } else {
+                                        //Alert no se metio porque ya hay un xml en la tabla
+                                        M.toast({ html: "El RFC de Emisor no coincide" });
+                                    }
+                                }
+                            } else {
                                 //Alert no se metio porque ya hay un xml en la tabla
-                                M.toast({ html: "No Coincide el rfc" });
+                                M.toast({ html: "El XML no tiene formato correcto" });
                             }
                         }
                     }
@@ -922,32 +948,33 @@ $(document).ready(function () {
                                 contentType: false,
                                 processData: false,
                                 success: function (data) {
-                                    if (data !== null || data !== "") {
-                                        _resVu = validarUuid(data[4]);
+                                    //FRT20112018 Para validar los RFC
+                                    if (data[0] == "1") {
+                                        _bcorrecto = true;
+                                        _resVu = validarUuid(data[5]);
                                         if (!_resVu) {
-                                            //$('#Uuid').val(data[4]);
-                                            //$('#FECHAD').val(data[0]);
-                                            //$('#FECHADO').val(data[0]);
-                                            //$("#FECHAD").trigger("change");
-                                            //data[1];//Monto Total
-                                            _fbool = validarRFC(data[3], data[2], data[6]);
-                                            if (_fbool) {
-                                                $('#Uuid').val(data[4]);
-                                                $('#FECHAD').val(data[0]);
-                                                $('#FECHADO').val(data[0]);
+                                            _bemisor = validarRFCEmisor(data[4]);
+                                            _breceptor = validarRFCReceptor(data[3], data[7]);
+                                            if (_bemisor & _breceptor) {
+                                                $('#Uuid').val(data[5]);
+                                                $('#FECHAD').val(data[1]);
+                                                $('#FECHADO').val(data[1]);
                                                 $("#FECHAD").trigger("change");
-                                                data[1];//Monto Total
+                                                data[2];//Monto Total
                                                 //FRT14112018.3 Para Tipo de Cambio en XML
-                                                if (data[5] != "MXN") {
-                                                    tipo = data[7];
+                                                if (data[6] !== "MXN") {
+                                                    tipo = data[8];
                                                     $('#TIPO_CAMBIO').val(tipo);
                                                     $('#TIPO_CAMBIO').trigger("change");
-                                                    $("#MONEDA_ID").prop("disabled", true);
-
+                                                    var objSelect = document.getElementById("MONEDA_ID");
+                                                    objSelect.options[1].selected = true;
                                                 }
                                             }
-                                            //data[2];//RFC
+
                                         }
+
+                                    } else {
+                                        _bcorrecto = false;
                                     }
                                 },
                                 error: function (xhr, httpStatusMessage, customErrorMessage) {
@@ -961,14 +988,31 @@ $(document).ready(function () {
                             }
                             else {
                                 //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
-                                if (_fbool) {
-                                    _tab.row.add(
-                                        $(tdata)
-                                    ).draw(false).node();
-                                }
-                                else {
+                                //FRT20112018 Para saber de donde sale el error
+                                if (_bcorrecto) {
+                                    if (!_bemisor & !_breceptor) {
+                                        //Alert no se metio porque ya hay un xml en la tabla
+                                        M.toast({ html: "El RFC de Receptor y Emisor no coinciden" });
+                                    } else {
+                                        if (_bemisor) {
+                                            if (_breceptor) {
+                                                _tab.row.add(
+                                                    $(tdata)
+                                                ).draw(false).node();
+                                            }
+                                            else {
+                                                //Alert no se metio porque ya hay un xml en la tabla
+                                                M.toast({ html: "El RFC de Receptor no coincide" });
+                                            }
+
+                                        } else {
+                                            //Alert no se metio porque ya hay un xml en la tabla
+                                            M.toast({ html: "El RFC de Emisor no coincide" });
+                                        }
+                                    }
+                                } else {
                                     //Alert no se metio porque ya hay un xml en la tabla
-                                    M.toast({ html: "RFC no coincide" });
+                                    M.toast({ html: "El XML no tiene formato correcto" });
                                 }
                             }
                         }
@@ -1297,9 +1341,10 @@ function ocultarCampos(opc, load) {
     ocultarColumnas(opc);
 }
 
-function validarRFC(rfc_pro, rfc_soc, rfc_soc_doc) {
+//FRT2011218 Para Validacion individual de RFCs
+function validarRFCEmisor(rfc_pro) {
     var _rfc_pro = $('#rfc_proveedor').val();
-    if (_rfc_pro.trim() === rfc_pro & rfc_soc_doc.trim() === rfc_soc.trim()) {
+    if (_rfc_pro.trim() === rfc_pro) {
         return true;
     }
     else {
@@ -1307,12 +1352,15 @@ function validarRFC(rfc_pro, rfc_soc, rfc_soc_doc) {
     }
 }
 
+function validarRFCReceptor(rfc_soc, rfc_soc_doc) {
 
-
-
-
-
-
+    if (rfc_soc_doc.trim() === rfc_soc.trim()) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 
 //MGC 03-10-2018 solicitud con orden de compra
 function ocultarColumnas(opc) {
