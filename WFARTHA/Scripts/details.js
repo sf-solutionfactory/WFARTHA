@@ -10,6 +10,11 @@ $(document).ready(function () {
         tamanosRenglones();
     });
 
+    //Lejgg 21-11-2018---------------------->
+    //Nombre del autorizador ya establecido
+    var nDoc = $('#refHd').val();
+    datosCadena(nDoc);
+    //Lejgg 21-11-2018----------------------<
     //Iniciar todos los selects
     var elem = document.querySelectorAll('select');
     var instance = M.Select.init(elem, []);
@@ -109,11 +114,11 @@ $(document).ready(function () {
     });
 
     $('#div-menu').on('click', function () {
-       
+
     });
 
     $('#cerrar-menu').on('click', function () {
-       
+
     });
 
     formatoMon();
@@ -514,4 +519,67 @@ function tamanosRenglones() {
     //var t_ret = $(this).find("th.TEXTO");
     t_ret.css("text-align", "center");
     t_ret.css("width", "150px");
+}
+//LEJGG 21-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+//Al seleccionar un solicitante, obtener la cadena para mostrar
+
+function obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad) {
+
+    try {
+        monto = parseFloat(monto) || 0.0;
+    } catch (err) {
+        monto = 0.0;
+    }
+
+    //Eliminar Registros
+    $("#tableAutorizadores > tbody > tr").remove();
+
+    $.ajax({
+        type: "POST",
+        url: '../getCadena',
+        data: { 'version': version, 'usuarioc': usuarioc, 'id_ruta': id_ruta, 'usuarioa': usuarioa, 'monto': monto, 'bukrs': sociedad },
+        dataType: "json",
+        success: function (data) {
+            if (data !== null || data !== "") {
+
+                $.each(data, function (i, dataj) {
+                    var fase = dataj.fase;
+                    var autorizador = dataj.autorizador;
+
+                    //Agregar los valores de las cadenas a las tablas
+                    $('#tableAutorizadores').append('<tr><td>' + fase + '</td><td>' + autorizador + '</td></tr>');
+
+                }); //Fin de for
+
+
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
+
+}
+
+//eliminar registros de tabla
+
+//LEJGG 21-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
+
+function datosCadena(nDoc) {
+    $.ajax({
+        type: "POST",
+        url: '../getCadAut',
+        data: { 'nd': nDoc },
+        dataType: "json",
+        success: function (data) {
+            if (data !== null || data !== "") {
+                obtenerCadena(data[5],data[4],data[2],data[3],data[1],data[0]);
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
 }

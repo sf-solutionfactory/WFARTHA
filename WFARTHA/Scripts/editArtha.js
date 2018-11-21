@@ -8,7 +8,7 @@ var tRet2 = [];
 $(document).ready(function () {
     var elem = document.querySelectorAll('select');
     var instance = M.Select.init(elem, []);
-
+    $("#list_detaa").trigger("change");
     //Formato a campo tipo_cambio
     var _Tc = $('#TIPO_CAMBIO').val();
     $('#TIPO_CAMBIO').val(toShow(_Tc));
@@ -710,9 +710,8 @@ $(window).on('load', function () {
 });
 
 //Cadena de autorización
-//MGC 03-11-2018
 //$('#list_detaa').change(function () {
-$('body').on('change', '#list_detaa', function (e) {
+$('body').on('change', '#list_detaa', function (event, param1) {
     var val3 = $(this).val();
     val3 = "[" + val3 + "]";
     val3 = val3.replace("{", "{ \"");
@@ -720,15 +719,40 @@ $('body').on('change', '#list_detaa', function (e) {
     val3 = val3.replace(/\,/g, "\" , \"");
     val3 = val3.replace(/\=/g, "\" : \"");
     val3 = val3.replace(/\ /g, "");
-    var jsval = $.parseJSON(val3)
+    var jsval = $.parseJSON(val3);
+
+    //LEJGG 21-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+    //Obtener los datos de la cadena
+    var version = "";
+    var usuarioc = "";
+    var id_ruta = "";
+    var usuarioa = "";
+    //lejgg 21-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 
     $.each(jsval, function (i, dataj) {
         $("#DETTA_VERSION").val(dataj.VERSION);
         $("#DETTA_USUARIOC_ID").val(dataj.USUARIOC_ID);
         $("#DETTA_ID_RUTA_AGENTE").val(dataj.ID_RUTA_AGENTE);
         $("#DETTA_USUARIOA_ID").val(dataj.USUARIOA_ID);
-
+        //LEJGG 21-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+        //Obtener los datos de la cadena
+        version = dataj.VERSION;
+        usuarioc = dataj.USUARIOC_ID;
+        id_ruta = dataj.ID_RUTA_AGENTE;
+        usuarioa = dataj.USUARIOA_ID;
+        //LEJGG 21-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
     });
+
+    //LEJGG 21-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+    //Obtener el monto
+    var monto = $('#MONTO_DOC_MD').val();
+    //Obtener la sociedad
+    var sociedad = $('#SOCIEDAD_ID').val();
+
+    //Al seleccionar un solicitante, obtener la cadena para mostrar
+
+    obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad);
+    //LEJGG 21-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 
 });
 
@@ -2164,7 +2188,7 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
         "<input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo3 + "\">",
         "<input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo4 + "\">",
         "<input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + NumAnexo5 + "\">",
-        
+
         CA,//MGC 04092018 Conceptos
         "<input " + disabled + " class=\"FACTURA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + FACTURA + "\">",
         TIPO_CONCEPTO,
@@ -2526,7 +2550,6 @@ function validarRFCEmisor(rfc_pro) {
     }
 }
 
-
 function validarRFCReceptor(rfc_soc, rfc_soc_doc) {
 
     if (rfc_soc_doc.trim() === rfc_soc.trim()) {
@@ -2536,3 +2559,49 @@ function validarRFCReceptor(rfc_soc, rfc_soc_doc) {
         return false;
     }
 }
+
+//LEJGG 21-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+//Al seleccionar un solicitante, obtener la cadena para mostrar
+
+function obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad) {
+
+    try {
+        monto = parseFloat(monto) || 0.0;
+    } catch (err) {
+        monto = 0.0;
+    }
+
+    //Eliminar Registros
+    $("#tableAutorizadores > tbody > tr").remove();
+
+    $.ajax({
+        type: "POST",
+        url: '../getCadena',
+        data: { 'version': version, 'usuarioc': usuarioc, 'id_ruta': id_ruta, 'usuarioa': usuarioa, 'monto': monto, 'bukrs': sociedad },
+        dataType: "json",
+        success: function (data) {
+            if (data !== null || data !== "") {
+
+                $.each(data, function (i, dataj) {
+                    var fase = dataj.fase;
+                    var autorizador = dataj.autorizador;
+
+                    //Agregar los valores de las cadenas a las tablas
+                    $('#tableAutorizadores').append('<tr><td>' + fase + '</td><td>' + autorizador + '</td></tr>');
+
+                }); //Fin de for
+
+
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
+
+}
+
+//eliminar registros de tabla
+
+//LEJGG 21-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
