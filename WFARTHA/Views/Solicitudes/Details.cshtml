@@ -810,9 +810,9 @@
                                     {
                                         <tr>
                                             @*@if (colsret.Count == 0)
-                                                {
-                                                    <td></td>
-                                                }*@
+                                {
+                                    <td></td>
+                                }*@
                                             <td></td>
                                             <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
                                             @if (@Model.D.Anexo != null)
@@ -952,6 +952,10 @@
                         </table>
                         @*aQUI PONES LA TABLA*@
 
+                    </div>
+                    <div style="text-align:right">
+                        <label id="lbl_status">Total:</label>
+                        <label id="total_info1">@ViewBag.totalt</label>
                     </div>
                 </div>
             </div>

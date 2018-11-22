@@ -2104,9 +2104,9 @@ function armarTablaInfo(datos) {
     //Tfoot       
     var tfoot = $("#table_info tfoot");
     tfoot.append($("<tr />"));
-    $("#table_info>tfoot>tr").append("<th colspan=\"" + colspan + "\" style=\"text-align:right\"></th>");
-    //$("#table_info>tfoot>tr").append("<th colspan=\"" + colspan + "\" style=\"text-align:right\">Total:</th>");  FRT08112018 footer
-    $("#table_info>tfoot>tr").append("<th id=\"total_info\"></th>");
+    //$("#table_info>tfoot>tr").append("<th colspan=\"" + colspan + "\" style=\"text-align:right\"></th>"); FRT22112018 para quitar el footer
+    ////$("#table_info>tfoot>tr").append("<th colspan=\"" + colspan + "\" style=\"text-align:right\">Total:</th>");  FRT08112018 footer FRT22112018 para quitar el footer
+    //$("#table_info>tfoot>tr").append("<th id=\"total_info\"></th>"); FRT22112018 para quitar el footer
     //Se hara un push al arreglo de columnas original
     for (i = 0; i < tRet2.length; i++) {
         arrCols.push({
@@ -2388,13 +2388,15 @@ function updateFooter() {
         $('#total_info').text((totalinicio));
         //inicio = 1;
     } else {
-        $('#total_info').text(toShow(total));
+        totalinicio = "";
+        $('#total_info').text(toShow(totalinicio));
     }
     //$('#total_info').text(toShow(total));  
     //FRT08112018 Para eliminar el Total
 
     $('#MONTO_DOC_MD').val(toShow(total));//Lej 18.09.2018
     $('#mtTot').val($('#MONTO_DOC_MD').val());//Lej 29.09.2018
+    $('#total_info1').text(toShow(total));//FRT22112018
 
    
 }
