@@ -27,7 +27,7 @@ $(document).ready(function () {
         tamanosRenglones();
     });
 
-    //FRT21112018.3 Se añade para obtener el Tipo de Cambio
+       //FRT21112018.3 Se añade para obtener el Tipo de Cambio
     $("#MONEDA_ID").change(function () {
         var moneda = $('#MONEDA_ID Option:Selected').val();
         var fecha = $('#FECHAD').val();
@@ -36,7 +36,7 @@ $(document).ready(function () {
             tipocambio = getTipoCambio(moneda, fecha);
             $("#TIPO_CAMBIO").val(tipocambio);
         } else {
-            $('#TIPO_CAMBIO').val(0)
+            $('#TIPO_CAMBIO').val(0);
         }
 
     });
@@ -749,6 +749,8 @@ $(document).ready(function () {
             document.getElementById("table_anexa").rows[i].cells[1].innerHTML = i;
         }
     });
+
+    tamanoTextArea();
 });
 
 //MGC 03-11-2018 Cadena de autorización
@@ -2281,7 +2283,7 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
         "<input " + disabled + " class=\"MONTO OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO + "\">",
         "",
         "<input disabled class=\"IVA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + IVA + "\">",
-        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;width:100px;height:0px;\" maxlength=\"50\" type=\"text\" id=\"TEXTO\" name=\"TEXTO\" value=\"" + TEXTO + "\"> " + TEXTO + "</textarea>",//Lej 13.09.2018//FRT20112018 
+        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;width:100px;height:91px;\" maxlength=\"50\" type=\"text\" id=\"TEXTO\" name=\"TEXTO\" value=\"" + TEXTO + "\"> " + TEXTO + "</textarea>",//Lej 13.09.2018//FRT20112018 
         TOTAL,
         check, //MGC 03-10-2018 solicitud con orden de compra
         colsBIIR
@@ -2684,6 +2686,14 @@ function obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad) {
 
 //eliminar registros de tabla
 
+//Para verificar el tamaño del textarea
+//LEJGG 22/11/2018
+function tamanoTextArea() {
+    $("#table_info > tbody > tr[role = 'row']").each(function (index) {       
+        var colex = $(this).find("td.TEXTO");
+        colex.css('height', '100px');
+    });
+}
 
 //FRT21112018.3 fUNCIONES PARA TENER EL TIPO DE CAMBIO
 function getTipoCambio(moneda, fecha) {
