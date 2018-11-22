@@ -245,7 +245,7 @@
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.FECHAD, "Fecha Documento", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.FECHAD, new { htmlAttributes = new { @class = "form-control fechaVal input_fe" } })@*LEJ 04.09.2018*@
+                                    @Html.EditorFor(model => model.FECHAD, new { htmlAttributes = new { @class = "form-control fechaVal input_fe",@disabled="disabled" } })@*LEJ 04.09.2018*@
                                     <input type="hidden" id="FECHADO" name="FECHADO" />
                                 </div>
                             </div>
