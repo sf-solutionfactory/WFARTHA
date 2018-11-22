@@ -366,11 +366,11 @@
                                     <div class="col-md-10">
                                         @if (pacc == "B")
                                         {
-                                            @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon" } })@*LEJ 04.09.2018*@
+                                            @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon", @readonly = "readonly" } })@*LEJ 04.09.2018*@
                                         }
                                         else
                                         {
-                                            @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon", @disabled = "disabled" } })@*LEJ 04.09.2018*@
+                                            @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @class = "form-control valmon", @readonly = "readonly" } })@*LEJ 04.09.2018*@
                                         }
                                     </div>
                                 </div>
@@ -862,7 +862,7 @@
                 <div class="col s12" style="padding:0px">
                     <div class="card-panel">
                         <div class="row" style="margin-bottom:0">
-                            <h5>Cadena de autorizadores</h5>
+                            <h5>Cadena de Autorizadores</h5>
                             <table class="table highlight responsive-table" id="tableAutorizadores">
                                 <thead>
                                     <tr>
@@ -946,7 +946,7 @@
                                 <div class="col s12" style="padding:0px">
                                     <div class="card-panel">
                                         <div class="row" style="margin-bottom:0">
-                                            <h5>Mensajes SAP</h5>
+                                            <h5>Mensajes Portal SAP</h5>
                                             <table class="table highlight responsive-table" id="table">
                                                 <thead>
                                                     <tr>
@@ -968,15 +968,17 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach (WFARTHA.Entities.DOCUMENTOLOG sap in ViewBag.LogSap)
+                                                    @if(ViewBag.LogSap.Count != 0){
+                                                    for (int i = 0; i < ViewBag.LogSap.Count; i++)
                                                     {
                                                         <tr>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.NUM_DOC)</td>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.TYPE) </td>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.NUMBER) </td>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.MESSAGE) </td>
-                                                            <td width=""> @Html.DisplayFor(modelItem => sap.FECHA) </td>
+                                                            <td width="">@ViewBag.LogSap[i].NUM_DOC</td>
+                                                            <td width="">@ViewBag.LogSap[i].TYPE</td>
+                                                            <td width="">@ViewBag.LogSap[i].NUMBER</td>
+                                                            <td width="">@ViewBag.LogSap[i].MESSAGE</td>
+                                                            <td width="">@ViewBag.LogSap[i].FECHA</td>
                                                         </tr>
+                                                    }
                                                     }
                                                 </tbody>
                                             </table>

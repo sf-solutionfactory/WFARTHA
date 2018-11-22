@@ -271,7 +271,7 @@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
 
                         }
-                        else if (ViewBag.accion == "N")
+                        @*else if (ViewBag.accion == "N")
                         {
                             <div class="fixed-action-btn" id="lbl_wf">
                                 <a class="btn-floating btn-large blue">
@@ -290,10 +290,10 @@
                                     toolbarEnabled: false
                                 };
                                 var instance = M.FloatingActionButton.init(elem, options);
-                            </script>
-                            @*<a id="lbl_wfn" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="N" })">Siguiente</a>*@
-                            <a id="lbl_wfn" class="btn-small modal-trigger" href="#modal1" onclick="siguiente()">Siguiente</a>
-                        }
+                            </script>*@
+                            @*esto ya estaba comentado <a id="lbl_wfn" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="N" })">Siguiente</a>*@
+                            @*<a id="lbl_wfn" class="btn-small modal-trigger" href="#modal1" onclick="siguiente()">Siguiente</a>
+                        }*@
                         else if (ViewBag.accion == "P")
                         {
 
@@ -1036,7 +1036,7 @@
             <div class="col s12" style="padding:0px">
                 <div class="card-panel">
                     <div class="row" style="margin-bottom:0">
-                        <h5>Cadena de autorizadores</h5>
+                        <h5>Cadena de Autorizadores</h5>
                         <table class="table highlight responsive-table" id="tableAutorizadores">
                             <thead>
                                 <tr>
@@ -1068,7 +1068,7 @@
                         <div class="col s12" style="padding:0px">
                             <div class="card-panel">
                                 <div class="row" style="margin-bottom:0">
-                                    <h5>Mensajes SAP</h5>
+                                    <h5>Mensajes Portal SAP</h5>
                                     <table class="table highlight responsive-table" id="table">
                                         <thead>
                                             <tr>
@@ -1090,19 +1090,19 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if (ViewBag.LogSap.Count != 0)
+                                            @if (ViewBag.LogSap.Count != 0){
+                                           for (int i = 0; i < ViewBag.LogSap.Count; i++)
                                             {
-                                                foreach (WFARTHA.Entities.DOCUMENTOLOG sap in ViewBag.LogSap)
-                                                {
-                                                    <tr>
-                                                        <td width=""> @Html.DisplayFor(modelItem => sap.NUM_DOC)</td>
-                                                        <td width=""> @Html.DisplayFor(modelItem => sap.TYPE) </td>
-                                                        <td width=""> @Html.DisplayFor(modelItem => sap.NUMBER) </td>
-                                                        <td width=""> @Html.DisplayFor(modelItem => sap.MESSAGE) </td>
-                                                        <td width=""> @Html.DisplayFor(modelItem => sap.FECHA) </td>
-                                                    </tr>
-                                                }
+                                            <tr>
+                                                <td width="">@ViewBag.LogSap[i].NUM_DOC</td>
+                                                <td width="">@ViewBag.LogSap[i].TYPE</td>
+                                                <td width="">@ViewBag.LogSap[i].NUMBER</td>
+                                                <td width="">@ViewBag.LogSap[i].MESSAGE</td>
+                                                <td width="">@ViewBag.LogSap[i].FECHA</td>
+                                            </tr>
                                             }
+                                            }
+                                          
                                         </tbody>
                                     </table>
                                 </div>

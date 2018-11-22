@@ -631,9 +631,6 @@ $(document).ready(function () {
             }
             //END FRT06112018.3
 
-
-
-
             if (_vs.length > 0) {
                 for (var i = 0; i < _vs.length; i++) {
                     if (na1 === _vs[i] || na1 === "") {
@@ -898,12 +895,14 @@ $(document).ready(function () {
                         if (_resVu) {
                             //Alert no se metio porque ya hay un xml en la tabla
                             M.toast({ html: "UUID existente en BD" });
+                            document.getElementById('file_sopAnexar').value = '';
                         }
                         else {
                             if (_bcorrecto) {
                                 if (!_bemisor & !_breceptor) {
                                     //Alert no se metio porque ya hay un xml en la tabla
                                     M.toast({ html: "El RFC de Receptor y Emisor no coinciden" });
+                                    document.getElementById('file_sopAnexar').value = '';
                                 } else {
                                     if (_bemisor) {
                                         if (_breceptor) {
@@ -914,16 +913,19 @@ $(document).ready(function () {
                                         else {
                                             //Alert no se metio porque ya hay un xml en la tabla
                                             M.toast({ html: "El RFC de Receptor no coincide" });
+                                            document.getElementById('file_sopAnexar').value = '';
                                         }
 
                                     } else {
                                         //Alert no se metio porque ya hay un xml en la tabla
                                         M.toast({ html: "El RFC de Emisor no coincide" });
+                                        document.getElementById('file_sopAnexar').value = '';
                                     }
                                 }
                             } else {
                                 //Alert no se metio porque ya hay un xml en la tabla
                                 M.toast({ html: "El XML no tiene formato correcto" });
+                                document.getElementById('file_sopAnexar').value = '';
                             }
                         }
                     }
@@ -1008,6 +1010,7 @@ $(document).ready(function () {
                             if (_resVu) {
                                 //Alert no se metio porque ya hay un xml en la tabla
                                 M.toast({ html: "UUID existente en BD" });
+                                document.getElementById('file_sopAnexar').value = '';
                             }
                             else {
                                 //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
@@ -1016,6 +1019,7 @@ $(document).ready(function () {
                                     if (!_bemisor & !_breceptor) {
                                         //Alert no se metio porque ya hay un xml en la tabla
                                         M.toast({ html: "El RFC de Receptor y Emisor no coinciden" });
+                                        document.getElementById('file_sopAnexar').value = '';
                                     } else {
                                         if (_bemisor) {
                                             if (_breceptor) {
@@ -1026,22 +1030,27 @@ $(document).ready(function () {
                                             else {
                                                 //Alert no se metio porque ya hay un xml en la tabla
                                                 M.toast({ html: "El RFC de Receptor no coincide" });
+                                                document.getElementById('file_sopAnexar').value = '';
                                             }
 
                                         } else {
                                             //Alert no se metio porque ya hay un xml en la tabla
                                             M.toast({ html: "El RFC de Emisor no coincide" });
+                                            document.getElementById('file_sopAnexar').value = '';
                                         }
                                     }
                                 } else {
                                     //Alert no se metio porque ya hay un xml en la tabla
                                     M.toast({ html: "El XML no tiene formato correcto" });
+                                    document.getElementById('file_sopAnexar').value = '';
                                 }
                             }
                         }
                         else {
                             //Alert no se metio porque ya hay un xml en la tabla
                             M.toast({ html: "Ya existe una factura" });
+                            document.getElementById('file_sopAnexar').value = '';
+                            
                         }
                     }
                     //LEJGG23/10/18----------------------------------------------------<
@@ -3465,7 +3474,7 @@ function guardarBorrador(asyncv) {
 }
 
 //FRT14112018.3 fUNCIONES PARA TENER EL TIPO DE CAMBIO
-function getTipoCambio(moneda, fecha) {//MGC 19-10-2018 Condiciones
+function getTipoCambio(moneda, fecha) {
     tipocambio = "";
     var localval = "";
     if (moneda != "") {
