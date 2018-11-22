@@ -27,6 +27,21 @@ $(document).ready(function () {
         tamanosRenglones();
     });
 
+    //FRT21112018.3 Se añade para obtener el Tipo de Cambio
+    $("#MONEDA_ID").change(function () {
+        var moneda = $('#MONEDA_ID Option:Selected').val();
+        var fecha = $('#FECHAD').val();
+        //var fecha = "12/08/2018";
+        if (moneda.substring(0, 3) == "USD") {
+            tipocambio = getTipoCambio(moneda, fecha);
+            $("#TIPO_CAMBIO").val(tipocambio);
+        } else {
+            $('#TIPO_CAMBIO').val(0)
+        }
+
+    });
+
+
     //Tabla de Anexos
     $('#table_anexa').DataTable({
         language: {
@@ -207,6 +222,23 @@ $(document).ready(function () {
                 return false;
             }
             //ENDFRT20112018 iNGRESAR VALIDACION DE CONCEPTO
+
+
+            //FRT21112018.3 Se realizara validación del monto > 0
+            var monto = $(this).find("td.MONTO input").val();
+
+            if (monto == "$ 0.00" | monto == null | monto == "") { //MGC 07-11-2018 Validación en el monto
+                msgerror = "El monto debe ser MAYOR a cero";
+                _b = false;
+            } else {
+                _b = true;
+            }
+            if (_b === false) {
+                return false;
+            }
+            //END FRT06112018.3
+
+
 
             var tipoimp = t.row(indexopc).data()[14];
 
@@ -467,6 +499,7 @@ $(document).ready(function () {
                         if (_resVu) {
                             //Alert no se metio porque ya hay un xml en la tabla
                             M.toast({ html: "UUID existente en BD" });
+                            document.getElementById('file_sopAnexar').value = '';
                         }
                         else {
                             //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
@@ -475,6 +508,7 @@ $(document).ready(function () {
                                 if (!_bemisor & !_breceptor) {
                                     //Alert no se metio porque ya hay un xml en la tabla
                                     M.toast({ html: "El RFC de Receptor y Emisor no coinciden" });
+                                    document.getElementById('file_sopAnexar').value = '';
                                 } else {
                                     if (_bemisor) {
                                         if (_breceptor) {
@@ -485,16 +519,19 @@ $(document).ready(function () {
                                         else {
                                             //Alert no se metio porque ya hay un xml en la tabla
                                             M.toast({ html: "El RFC de Receptor no coincide" });
+                                            document.getElementById('file_sopAnexar').value = '';
                                         }
 
                                     } else {
                                         //Alert no se metio porque ya hay un xml en la tabla
                                         M.toast({ html: "El RFC de Emisor no coincide" });
+                                        document.getElementById('file_sopAnexar').value = '';
                                     }
                                 }
                             } else {
                                 //Alert no se metio porque ya hay un xml en la tabla
                                 M.toast({ html: "El XML no tiene formato correcto" });
+                                document.getElementById('file_sopAnexar').value = '';
                             }
                         }
                     }
@@ -577,6 +614,7 @@ $(document).ready(function () {
                             if (_resVu) {
                                 //Alert no se metio porque ya hay un xml en la tabla
                                 M.toast({ html: "UUID existente en BD" });
+                                document.getElementById('file_sopAnexar').value = '';
                             }
                             else {
                                 //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
@@ -585,6 +623,7 @@ $(document).ready(function () {
                                     if (!_bemisor & !_breceptor) {
                                         //Alert no se metio porque ya hay un xml en la tabla
                                         M.toast({ html: "El RFC de Receptor y Emisor no coinciden" });
+                                        document.getElementById('file_sopAnexar').value = '';
                                     } else {
                                         if (_bemisor) {
                                             if (_breceptor) {
@@ -595,22 +634,26 @@ $(document).ready(function () {
                                             else {
                                                 //Alert no se metio porque ya hay un xml en la tabla
                                                 M.toast({ html: "El RFC de Receptor no coincide" });
+                                                document.getElementById('file_sopAnexar').value = '';
                                             }
 
                                         } else {
                                             //Alert no se metio porque ya hay un xml en la tabla
                                             M.toast({ html: "El RFC de Emisor no coincide" });
+                                            document.getElementById('file_sopAnexar').value = '';
                                         }
                                     }
                                 } else {
                                     //Alert no se metio porque ya hay un xml en la tabla
                                     M.toast({ html: "El XML no tiene formato correcto" });
+                                    document.getElementById('file_sopAnexar').value = '';
                                 }
                             }
                         }
                         else {
                             //Alert no se metio porque ya hay un xml en la tabla
                             M.toast({ html: "Ya existe una factura" });
+                            document.getElementById('file_sopAnexar').value = '';
                         }
                     }
                     //LEJGG23/10/18----------------------------------------------------<
@@ -2204,6 +2247,13 @@ function armarTablaInfo(datos) {
 
 function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5, CA, FACTURA, TIPO_CONCEPTO, GRUPO, CUENTA, CUENTANOM, TIPOIMP, IMPUTACION, CCOSTO, MONTO, IMPUESTO, IVA, TEXTO, TOTAL, disabled, check, colsBIIR) { //MGC 03 - 10 - 2018 solicitud con orden de compra
     var _tcgp = TIPO_CONCEPTO + GRUPO;//Para que grupo se muestre correctamente //Lejgg 06-11-18
+    var ceco = "";
+    if (TIPOIMP == 'P') {
+        ceco = "<input disabled class=\"CCOSTO\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + CCOSTO + "\">";
+        } else {
+        ceco = "<input class=\"CCOSTO\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + CCOSTO + "\">";
+        }
+
     var r = addRowl(
         t,
         POS,
@@ -2221,9 +2271,7 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
         CUENTANOM,
         TIPOIMP,
         IMPUTACION,
-        //"<input disabled class=\"CCOSTO\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + CCOSTO + "\">",
-        // frt 04112018 para habilitar el ingreso de ceco
-        "<input class=\"CCOSTO\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + CCOSTO + "\">",
+        ceco,
         "<input " + disabled + " class=\"MONTO OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO + "\">",
         "",
         "<input disabled class=\"IVA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + IVA + "\">",
@@ -2629,5 +2677,44 @@ function obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad) {
 }
 
 //eliminar registros de tabla
+
+
+//FRT21112018.3 fUNCIONES PARA TENER EL TIPO DE CAMBIO
+function getTipoCambio(moneda, fecha) {
+    tipocambio = "";
+    var localval = "";
+    if (moneda != "") {
+        $.ajax({
+            type: "POST",
+            url: '../getTipoCambio',
+            dataType: "json",
+            data: { "tcurr": moneda, "gdatu": fecha },//MGC 19-10-2018 Condiciones
+
+            success: function (data) {
+
+                if (data !== null || data !== "") {
+                    asignarVal(data);
+                }
+
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                if (message == "X") {
+                    M.toast({ html: "Valor no encontrado" });
+                }
+            },
+            async: false
+        });
+    }
+
+    localval = tipocambio;
+    return localval;
+}
+
+function asignarVal(val) {
+    tipocambio = val;
+}
+
+
+//END FRT21112018
 
 //LEJGG 21-11-2018 Cadena de autorización-----------------------------------------------------------------------------<

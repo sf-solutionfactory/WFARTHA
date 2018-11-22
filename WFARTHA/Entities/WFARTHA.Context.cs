@@ -38,6 +38,7 @@ namespace WFARTHA.Entities
         public virtual DbSet<DELEGAR> DELEGARs { get; set; }
         public virtual DbSet<DET_AGENTEC> DET_AGENTEC { get; set; }
         public virtual DbSet<DET_AGENTECA> DET_AGENTECA { get; set; }
+        public virtual DbSet<DET_AGENTECC> DET_AGENTECC { get; set; }
         public virtual DbSet<DET_APROB> DET_APROB { get; set; }
         public virtual DbSet<DET_K> DET_K { get; set; }
         public virtual DbSet<DET_PEP> DET_PEP { get; set; }
@@ -95,7 +96,6 @@ namespace WFARTHA.Entities
         public virtual DbSet<WORKFP> WORKFPs { get; set; }
         public virtual DbSet<WORKFT> WORKFTs { get; set; }
         public virtual DbSet<WORKFV> WORKFVs { get; set; }
-        public virtual DbSet<DET_AGENTECC> DET_AGENTECC { get; set; }
         public virtual DbSet<IIMPUESTO> IIMPUESTOes { get; set; }
         public virtual DbSet<ASIGN_PROY_SOC> ASIGN_PROY_SOC { get; set; }
         public virtual DbSet<CARPETAV> CARPETAVs { get; set; }
