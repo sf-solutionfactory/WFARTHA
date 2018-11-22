@@ -142,6 +142,9 @@ $(document).ready(function () {
         ]
     });
 
+    //Establecer fechas
+    $("#FECHADO").val($("#FECHAD").val());//lejgg 22/11/2018
+
     solicitarDatos();
     insertarCondicion();
     $('#btn_guardarh').on("click", function (e) {
@@ -839,6 +842,9 @@ $('body').on('change', '.IMPUESTO_SELECT', function (event, param1) {
         var colTotal = sumarColumnasExtras(tr);//lej 19.08.18
 
         var sub = tr.find("td.MONTO input").val().replace('$', '').replace(',', '');
+        while (sub.indexOf(',') > -1) {
+            sub = sub.replace('$', '').replace(',', '');
+        }
         sub = parseFloat(sub);
 
         //rimpimp = 100 - impimp;//lej 19.08.18

@@ -1251,12 +1251,12 @@ $('body').on('change', '#tsol', function (event, param1) {
 
     //LEJGG 22-10-2018---------------------->
     //Para pago de facturas
-    if (jsval[0].ID === "SSO") {
-        $("#FECHAD").prop('disabled', true);
-    }
-    else {
-        $("#FECHAD").prop('disabled', false);
-    }
+    //if (jsval[0].ID === "SSO") {
+    //    $("#FECHAD").prop('disabled', true);
+    //}
+    //else {
+    //    $("#FECHAD").prop('disabled', false);
+    //}
     //LEJGG 22-10-2018---------------------->
 
     $.each(jsval, function (i, dataj) {
@@ -1894,6 +1894,9 @@ $('body').on('change', '.IMPUESTO_SELECT', function (event, param1) {
         var colTotal = sumarColumnasExtras(tr);//lej 19.08.18
 
         var sub = tr.find("td.MONTO input").val().replace('$', '').replace(',', '');
+        while (sub.indexOf(',') > -1) {
+            sub = sub.replace('$', '').replace(',', '');
+        }
         sub = parseFloat(sub);
 
         //rimpimp = 100 - impimp;//lej 19.08.18
