@@ -12,9 +12,11 @@ $(document).ready(function () {
 
     //Lejgg 21-11-2018---------------------->
     //Nombre del autorizador ya establecido
-    var nDoc = $('#refHd').val();
-    datosCadena(nDoc);
+    //MGC 22-11-2018.2 Cadena de autorización----------------------------------------------------------------------->
+    //var nDoc = $('#refHd').val();
+    //datosCadena(nDoc);
     //Lejgg 21-11-2018----------------------<
+    //MGC 22-11-2018.2 Cadena de autorización-----------------------------------------------------------------------<
     //Iniciar todos los selects
     var elem = document.querySelectorAll('select');
     var instance = M.Select.init(elem, []);

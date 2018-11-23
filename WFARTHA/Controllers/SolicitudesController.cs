@@ -19,6 +19,8 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Web.UI;
+using Newtonsoft.Json.Linq;
+using System.Web.Script.Serialization;
 
 namespace WFARTHA.Controllers
 {
@@ -514,19 +516,109 @@ namespace WFARTHA.Controllers
             var vbFl = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderBy(a => a.POS).ToList();
             ViewBag.workflow = vbFl;
 
-            //FRT06112018 Se agregan las lineas para poder llevar a pantalla la Cadena de Autorización 
+            //MGC 22-11-2018.2 Cadena de autorización----------------------------------------------------------------------->
+            ////FRT06112018 Se agregan las lineas para poder llevar a pantalla la Cadena de Autorización 
+            //var _ruta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).FirstOrDefault().ID_RUTA_A;
+            //int? _version = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).FirstOrDefault().RUTA_VERSION;
+            //var _user = db.DET_AGENTECC.Where(a => a.ID_RUTA_AGENTE == (_ruta) && a.VERSION == (_version)).FirstOrDefault().USUARIOA_ID;
+            //var _nombre = db.USUARIOs.Where(a => a.ID.Equals(_user)).ToList();
+            //for (int n = 0; n < _nombre.Count; n++)
+            //{
+            //    var _nom = _nombre[n].ID + " - " + _nombre[n].NOMBRE + " " + _nombre[n].APELLIDO_P + " " + _nombre[n].APELLIDO_M;
+            //    ViewBag.nomautoriza = _nom;
 
-            var _ruta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).FirstOrDefault().ID_RUTA_A;
-            int? _version = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).FirstOrDefault().RUTA_VERSION;
-            var _user = db.DET_AGENTECC.Where(a => a.ID_RUTA_AGENTE == (_ruta) && a.VERSION == (_version)).FirstOrDefault().USUARIOA_ID;
-            var _nombre = db.USUARIOs.Where(a => a.ID.Equals(_user)).ToList();
-            for (int n = 0; n < _nombre.Count; n++)
+            //}
+            //// END FRT06112018
+            ///
+            IQueryable<DET_AGENTECC> detcc = Enumerable.Empty<DET_AGENTECC>().AsQueryable(); ;
+            //Obtener la descripción de la cadena
+            FLUJO vbFlujo = new FLUJO();
+            vbFlujo = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderBy(a => a.POS).FirstOrDefault();
+
+
+            string id_cadena = "";
+            int? rutav = 0;
+            string usuarioc = "";
+            if (vbFlujo != null)
             {
-                var _nom = _nombre[n].ID + " - " + _nombre[n].NOMBRE + " " + _nombre[n].APELLIDO_P + " " + _nombre[n].APELLIDO_M;
-                ViewBag.nomautoriza = _nom;
+                id_cadena = vbFlujo.ID_RUTA_A;
+                rutav = vbFlujo.RUTA_VERSION;
+                usuarioc = dOCUMENTO.USUARIOC_ID;
+            }
+
+            //Es una edición de un rechazo, por lo que solo se debe de mostrar la cadena correspondiente
+            detcc = (from detc in db.DET_AGENTECC
+                     where detc.USUARIOC_ID == usuarioc && detc.VERSION == rutav && detc.ID_RUTA_AGENTE == id_cadena
+                     select detc);
+            //group detc by new { detc.USUARIOC_ID, detc.ID_RUTA_AGENTE, detc.USUARIOA_ID } into grp
+            //select grp.OrderByDescending(x => x.VERSION).FirstOrDefault());
+
+            //Consulta tomada de sql
+            //select DISTINCT MAX([VERSION]) AS VERSION
+            //      ,[USUARIOC_ID]
+            //      ,[ID_RUTA_AGENTE]
+            //      ,[USUARIOA_ID]
+            //FROM[PAGOS].[dbo].[DET_AGENTECC]
+            //where USUARIOC_ID = 'admin'
+            //group by[USUARIOC_ID], [ID_RUTA_AGENTE], [USUARIOA_ID]
+            //order by[ID_RUTA_AGENTE]
+
+            //Obtener las cadenas
+            List<DET_AGENTECC> detcl = new List<DET_AGENTECC>();
+
+            detcl = (from dv in detcc.ToList()
+                     join dccl in db.DET_AGENTECC.ToList()
+                     on new { dv.VERSION, dv.USUARIOC_ID, dv.ID_RUTA_AGENTE, dv.USUARIOA_ID } equals new { dccl.VERSION, dccl.USUARIOC_ID, dccl.ID_RUTA_AGENTE, dccl.USUARIOA_ID }
+                     select new DET_AGENTECC
+                     {
+                         VERSION = dccl.VERSION,
+                         USUARIOC_ID = dccl.USUARIOC_ID,
+                         ID_RUTA_AGENTE = dccl.ID_RUTA_AGENTE,
+                         DESCRIPCION = dccl.DESCRIPCION,
+                         USUARIOA_ID = dccl.USUARIOA_ID,
+                         FECHAC = dccl.FECHAC
+                     }).ToList();
+
+            //Obtener el usario a
+            DET_AGENTECC deta = new DET_AGENTECC();
+
+            if (detcl != null && detcl.Count > 0)
+            {
+                deta = detcl.FirstOrDefault();
+            }
+
+            var dta = detcl.
+                Join(
+                db.USUARIOs,
+                da => da.USUARIOA_ID,
+                us => us.ID,
+                (da, us) => new
+                {
+                    //ID = new List<string>() { da.VERSION, da.USUARIOC_ID, da.ID_RUTA_AGENTE, da.USUARIOA_ID},                    
+                    ID = new { VERSION = da.VERSION.ToString().Replace(" ", ""), USUARIOC_ID = da.USUARIOC_ID.ToString().Replace(" ", ""), ID_RUTA_AGENTE = da.ID_RUTA_AGENTE.ToString().Replace(" ", ""), USUARIOA_ID = da.USUARIOA_ID.ToString().Replace(" ", "") },
+                    TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
+                }).ToList();
+
+            ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
+
+
+
+            //Obtener los aprobadores
+            JsonResult autorizadores = new JsonResult();
+            autorizadores = getCadena(Convert.ToInt32(rutav), usuarioc, id_cadena, deta.USUARIOA_ID, Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD), dOCUMENTO.SOCIEDAD_ID);
+
+            List<CadenaAutorizadores> lcandena = new List<CadenaAutorizadores>();
+            try
+            {
+                lcandena = autorizadores.Data as List<CadenaAutorizadores>;
+            }
+            catch (Exception)
+            {
 
             }
-            // END FRT06112018
+
+            ViewBag.lcadena = lcandena;
+            //MGC 22-11-2018.2 Cadena de autorización-----------------------------------------------------------------------<
 
 
             // frt obtener el flujo de SAP
@@ -2322,10 +2414,47 @@ namespace WFARTHA.Controllers
 
             //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
             //Obtener las cadenas vigentes, considerando la versión
-            var detcv = (from detc in db.DET_AGENTECC
+            //MGC 22-11-2018.2 Cadena de autorización----------------------------------------------------------------------->
+            //var detcv = (from detc in db.DET_AGENTECC
+            //             where detc.USUARIOC_ID == user_id
+            //             group detc by new { detc.USUARIOC_ID, detc.ID_RUTA_AGENTE, detc.USUARIOA_ID } into grp
+            //             select grp.OrderByDescending(x => x.VERSION).FirstOrDefault());
+
+            IQueryable<DET_AGENTECC> detcc = Enumerable.Empty<DET_AGENTECC>().AsQueryable(); ;
+            //Obtener la descripción de la cadena
+            FLUJO vbFlujo = new FLUJO();
+            vbFlujo = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderBy(a => a.POS).FirstOrDefault();
+
+            if (pacc == "R" | pacc == "P")
+            {
+                string id_cadena = "";
+                int? rutav = 0;
+                string usuarioc = "";
+                if (vbFlujo != null)
+                {
+                    id_cadena = vbFlujo.ID_RUTA_A;
+                    rutav = vbFlujo.RUTA_VERSION;
+                    usuarioc = dOCUMENTO.USUARIOC_ID;
+                }
+
+                //Es una edición de un rechazo, por lo que solo se debe de mostrar la cadena correspondiente
+                detcc = (from detc in db.DET_AGENTECC
+                         where detc.USUARIOC_ID == usuarioc && detc.VERSION == rutav && detc.ID_RUTA_AGENTE == id_cadena
+                         select detc);
+                //group detc by new { detc.USUARIOC_ID, detc.ID_RUTA_AGENTE, detc.USUARIOA_ID } into grp
+                //select grp.OrderByDescending(x => x.VERSION).FirstOrDefault());
+
+            }
+            else if (pacc == "B")
+            {
+                //Es un borrador, obtener todas las cadenas para mostrar
+                detcc = (from detc in db.DET_AGENTECC
                          where detc.USUARIOC_ID == user_id
                          group detc by new { detc.USUARIOC_ID, detc.ID_RUTA_AGENTE, detc.USUARIOA_ID } into grp
                          select grp.OrderByDescending(x => x.VERSION).FirstOrDefault());
+            }
+
+            //MGC 22-11-2018.2 Cadena de autorización-----------------------------------------------------------------------<
 
             //Consulta tomada de sql
             //select DISTINCT MAX([VERSION]) AS VERSION
@@ -2340,7 +2469,7 @@ namespace WFARTHA.Controllers
             //Obtener las cadenas
             List<DET_AGENTECC> detcl = new List<DET_AGENTECC>();
 
-            detcl = (from dv in detcv.ToList()
+            detcl = (from dv in detcc.ToList()
                      join dccl in db.DET_AGENTECC.ToList()
                      on new { dv.VERSION, dv.USUARIOC_ID, dv.ID_RUTA_AGENTE, dv.USUARIOA_ID } equals new { dccl.VERSION, dccl.USUARIOC_ID, dccl.ID_RUTA_AGENTE, dccl.USUARIOA_ID }
                      select new DET_AGENTECC

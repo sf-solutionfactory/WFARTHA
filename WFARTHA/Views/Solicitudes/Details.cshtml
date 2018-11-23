@@ -1027,12 +1027,25 @@
     @*Soporte Contable*@
     <div id="Soporte_cont" class="col s12" style="font-size:12px;">
         <div class="row">
+            @*//MGC 22-11-2018.2 Cadena de autorización -->*@
             <div class="col s12">
                 <div class="card-panel">
-                    <h5 id="head_cabecera">Cadena de Autorización</h5>
-                    <h6 id="header_cadena" style="display:inline-block">@ViewBag.nomautoriza</h6>
+                    <h5 id="head_cabecera">Autorización</h5>
+                    <div class="row" style="margin-bottom:0">
+                        <div class="form-group col s6">
+                            @Html.LabelFor(model => model.D.TSOL_ID, "Cadena de autorización ", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa", @disabled = "disabled" })
+                            </div>
+                            <input id="DETTA_VERSION" name="DETTA_VERSION" value="" hidden />
+                            <input id="DETTA_USUARIOC_ID" name="DETTA_USUARIOC_ID" value="" hidden />
+                            <input id="DETTA_ID_RUTA_AGENTE" name="DETTA_ID_RUTA_AGENTE" value="" hidden />
+                            <input id="DETTA_USUARIOA_ID" name="DETTA_USUARIOA_ID" value="" hidden />
+                        </div>
+                    </div>
                 </div>
             </div>
+            @*//MGC 22-11-2018.2 Cadena de autorización <--*@
         </div>
 
         @*MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->*@
@@ -1041,6 +1054,9 @@
                 <div class="card-panel">
                     <div class="row" style="margin-bottom:0">
                         <h5>Cadena de Autorizadores</h5>
+                        @* //MGC 22-11-2018.2 Cadena de autorización-----------------------------------------------------------------------> *@
+                        @{List<WFARTHA.Models.CadenaAutorizadores> lcadena = new List<WFARTHA.Models.CadenaAutorizadores>(); lcadena = ViewBag.lcadena as List<WFARTHA.Models.CadenaAutorizadores>; }
+
                         <table class="table highlight responsive-table" id="tableAutorizadores">
                             <thead>
                                 <tr>
@@ -1052,7 +1068,21 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                                @{if (lcadena != null && lcadena.Count > 0)
+                                    {
+                                        for (int i = 0; i < lcadena.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>@lcadena[i].fase</td>
+                                                <td>@lcadena[i].autorizador</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                @* //MGC 22-11-2018.2 Cadena de autorización-----------------------------------------------------------------------< *@
+
+                            </tbody>
                         </table>
                     </div>
                 </div>
