@@ -616,9 +616,9 @@ $(document).ready(function () {
             //ENDFRT20112018 iNGRESAR VALIDACION DE CONCEPTO
 
             //FRT06112018.3 Se realizara validación del monto > 0
-            var monto = $(this).find("td.MONTO input").val();
+            var monto = $(this).find("td.MONTO input").val().replace('$', '').replace(',', '');;
 
-            if (monto == "$ 0.00" | monto == null | monto == "") { //MGC 07-11-2018 Validación en el monto
+            if (monto == " 0.00" | monto == null | monto == "") { //MGC 07-11-2018 Validación en el monto
                 msgerror = "El monto debe ser MAYOR a cero";
                 _b = false;
             } else {
@@ -631,61 +631,46 @@ $(document).ready(function () {
 
 
 
-        //    //FRT23112018 Para validar el Monto contra las F
-        //    var lengthT = $("table#table_ret tbody tr[role='row']").length;
-        //    var docsenviar = {};
-        //    var jsonObjDocs = [];
-        //    if (lengthT > 0) {
-        //        //Obtener los valores de la tabla para agregarlos a la tabla oculta y agregarlos al json
-        //        //Se tiene que jugar con los index porque las columnas (ocultas) en vista son diferentes a las del plugin
 
-        //        var i = 1;
-        //        var t = $('#table_ret').DataTable();
+            //FRT23112018 Para validar el Monto contra las F
+            monto = parseFloat(monto);
+            var lengthT1 = $("table#table_ret tbody tr[role='row']").length;
+            if (lengthT1 > 0) {
+                for (var i = 1; i < lengthT1+1; i++) {
+                    var montobase = parseFloat($(this).find("td.BaseImpF" + i + " input").val().replace('$', '').replace(',', ''));
+                   
+                    if (monto < montobase) {
+                        msgerror = "El monto de posicion no debe ser MENOR a a Monto Base retencion";
+                        _m = false;
+                        break
+                    } else {
+                        _m = true;
+                    }
+                    if (_m === false) {
+                        return false;
+                    }
+                }
+                
+            } 
 
-        //        $("#table_ret > tbody  > tr[role='row']").each(function () {
+           
+        //end FRT22112018
 
-        //            //Obtener el row para el plugin
-        //            var tr = $(this);
-        //            var indexopc = t.row(tr).index();
 
-        //            //Obtener la sociedad oculta
-        //            var soc = t.row(indexopc).data()[0];
-
-        //            //Obtener el proveedor oculto
-        //            var prov = t.row(indexopc).data()[1];
-
-        //            //Obtener valores visibles en la tabla
-        //            var tret = toNum($(this).find("td.TRET").text());
-        //            var indret = toNum($(this).find("td.INDRET").text());
-        //            var bimponible = $(this).find("td.BIMPONIBLE").text();
-        //            var imret = $(this).find("td.IMPRET").text();
-
-        //            //Quitar espacios
-        //            bimponible = bimponible.replace(/\s/g, '');
-        //            imret = imret.replace(/\s/g, '');
-
-        //            //Conversión a número
-        //            var bimponible = toNum(bimponible);
-        //            var imret = toNum(imret);
-
-        //            var item = {};
-
-        //            //Agregar los valores para enviarlos al modelo
-        //            item["LIFNR"] = prov;
-        //            item["BUKRS"] = soc;
-        //            item["WITHT"] = tret;
-        //            item["WT_WITHCD"] = indret;
-        //            item["POS"] = i;
-        //            item["BIMPONIBLE"] = bimponible;
-        //            item["IMPORTE_RET"] = imret;
-
-        //            jsonObjDocs.push(item);
-        //            i++;
-        //            item = "";
-        //        });
-        //    }
-        ////end FRT22112018
-
+            //FRT2311208 PARA VALIDACION DE 50 CARACTERES
+            var texto = $(this).find("td.TEXTO textarea").val().trim();
+            var ct = texto.length;
+            ct = parseFloat(ct)
+            if (ct < 50) {
+                _b = false;
+                msgerror = "Faltan Caracteres en el renglon " + _rni + " ";
+            } else {
+                _b = true;
+            }
+            if (_b === false) {
+                return false;
+            }
+            //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
 
             if (_vs.length > 0) {
                 for (var i = 0; i < _vs.length; i++) {
@@ -783,20 +768,40 @@ $(document).ready(function () {
 
         //ENDFRT21112018
 
+
+        //FRT2311208 PARA VALIDACION DE 50 CARACTERES
+        var texto1 = $("#CONCEPTO").val();
+        var ct1 = texto1.length;
+        ct1 = parseFloat(ct1);
+        if (ct1 < 50) {
+            _ct = false;
+            msgerror = "El texto de Explicacion no contiene los 50 caracteres solicitados";
+        } else {
+            _ct = true;
+        }
+            //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
+
         if (_p) {
             if (_b) {
-                if (_a) {
-                    //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
-                    copiarTableInfoControl();
-                    copiarTableInfoPControl();
-                    copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
-                    copiarTableRet();
-                    //end FRT06112018.3 
-                    $('#btn_guardar').trigger("click");
+                if (_m) {
+                    if (_a) {
+                        if (_ct) {
+                            //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
+                            copiarTableInfoControl();
+                            copiarTableInfoPControl();
+                            copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
+                            copiarTableRet();
+                            //end FRT06112018.3 
+                            $('#btn_guardar').trigger("click");
+                        } else {
+                            M.toast({ html: msgerror });
+                        }
+                        } else {
+                            M.toast({ html: msgerror });
+                        }
                 } else {
                     M.toast({ html: msgerror });
                 }
-                
             } else {
                 M.toast({ html: msgerror });
             }
