@@ -568,9 +568,7 @@ $(document).ready(function () {
 
         }
 
-
-
-
+        
         //$("#table_info > tbody  > tr[role='row']").each(function () { //MGC 24-10-2018 Conflicto Enrique-Rogelio
         var t = $('#table_info').DataTable();
         var tabble = "table_info";
@@ -630,6 +628,64 @@ $(document).ready(function () {
                 return false;
             }
             //END FRT06112018.3
+
+
+
+        //    //FRT23112018 Para validar el Monto contra las F
+        //    var lengthT = $("table#table_ret tbody tr[role='row']").length;
+        //    var docsenviar = {};
+        //    var jsonObjDocs = [];
+        //    if (lengthT > 0) {
+        //        //Obtener los valores de la tabla para agregarlos a la tabla oculta y agregarlos al json
+        //        //Se tiene que jugar con los index porque las columnas (ocultas) en vista son diferentes a las del plugin
+
+        //        var i = 1;
+        //        var t = $('#table_ret').DataTable();
+
+        //        $("#table_ret > tbody  > tr[role='row']").each(function () {
+
+        //            //Obtener el row para el plugin
+        //            var tr = $(this);
+        //            var indexopc = t.row(tr).index();
+
+        //            //Obtener la sociedad oculta
+        //            var soc = t.row(indexopc).data()[0];
+
+        //            //Obtener el proveedor oculto
+        //            var prov = t.row(indexopc).data()[1];
+
+        //            //Obtener valores visibles en la tabla
+        //            var tret = toNum($(this).find("td.TRET").text());
+        //            var indret = toNum($(this).find("td.INDRET").text());
+        //            var bimponible = $(this).find("td.BIMPONIBLE").text();
+        //            var imret = $(this).find("td.IMPRET").text();
+
+        //            //Quitar espacios
+        //            bimponible = bimponible.replace(/\s/g, '');
+        //            imret = imret.replace(/\s/g, '');
+
+        //            //Conversión a número
+        //            var bimponible = toNum(bimponible);
+        //            var imret = toNum(imret);
+
+        //            var item = {};
+
+        //            //Agregar los valores para enviarlos al modelo
+        //            item["LIFNR"] = prov;
+        //            item["BUKRS"] = soc;
+        //            item["WITHT"] = tret;
+        //            item["WT_WITHCD"] = indret;
+        //            item["POS"] = i;
+        //            item["BIMPONIBLE"] = bimponible;
+        //            item["IMPORTE_RET"] = imret;
+
+        //            jsonObjDocs.push(item);
+        //            i++;
+        //            item = "";
+        //        });
+        //    }
+        ////end FRT22112018
+
 
             if (_vs.length > 0) {
                 for (var i = 0; i < _vs.length; i++) {
