@@ -2512,282 +2512,450 @@ namespace WFARTHA.Controllers
                     //Guardar número de documento creado
                     Session["NUM_DOC"] = _doc.NUM_DOC;
 
-                    //Guardar las posiciones de la solicitud
+
+
+                    //FRT22112018 FUNCIONALIDAD PARA DETALLES AGREGAR Y ELIMINAR
+
+
+                    var delDRP = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc).ToList();
+                    for (int i = 0; i < delDRP.Count; i++)
+                    {
+                        DOCUMENTORP dOCUMENTORP = db.DOCUMENTORPs.Find(delDRP[i].NUM_DOC, delDRP[i].POS, delDRP[i].WITHT, delDRP[i].WT_WITHCD);
+                        db.DOCUMENTORPs.Remove(dOCUMENTORP);
+                        db.SaveChanges();
+                    }
+
+
+                    var delDP = db.DOCUMENTOPs.Where(x => x.NUM_DOC == _ndoc).ToList();
+                    for (int i = 0; i < delDP.Count; i++)
+                    {
+                        try
+                        {
+                            DOCUMENTOP dOCUMENTOP = db.DOCUMENTOPs.Find(delDP[i].NUM_DOC, delDP[i].POS);
+                            db.DOCUMENTOPs.Remove(dOCUMENTOP);
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex ) {
+
+                        }
+                        
+                    }
+
+
+
+                    decimal _monto = 0;
+                    decimal _iva = 0;
+                    decimal _total = 0;
+                    var _mwskz = "";
+                    
+                    var _pos_err_imputacion = "";
+                    for (int i = 0; i < dOCUMENTO.DOCUMENTOP.Count; i++)
+                    {
+                        DOCUMENTOP dp = new DOCUMENTOP();
+
+                        dp.NUM_DOC = dOCUMENTO.NUM_DOC;
+                        dp.POS = i+1;
+                        dp.ACCION = dOCUMENTO.DOCUMENTOP[i].ACCION;
+                        dp.FACTURA = dOCUMENTO.DOCUMENTOP[i].FACTURA;
+                        dp.TCONCEPTO = dOCUMENTO.DOCUMENTOP[i].TCONCEPTO;
+                        dp.GRUPO = dOCUMENTO.DOCUMENTOP[i].GRUPO;
+                        dp.CUENTA = dOCUMENTO.DOCUMENTOP[i].CUENTA;//Modificación Cuenta de PEP
+                        dp.TIPOIMP = dOCUMENTO.DOCUMENTOP[i].TIPOIMP;
+                        dp.IMPUTACION = dOCUMENTO.DOCUMENTOP[i].IMPUTACION;
+                        dp.CCOSTO = dOCUMENTO.DOCUMENTOP[i].CCOSTO;
+                        dp.MONTO = dOCUMENTO.DOCUMENTOP[i].MONTO;
+                        _monto = _monto + dOCUMENTO.DOCUMENTOP[i].MONTO;//lejgg 10-10-2018
+                        var sp = dOCUMENTO.DOCUMENTOP[i].MWSKZ.Split('-');
+                        _mwskz = sp[0];//lejgg 10-10-2018
+                        dp.MWSKZ = sp[0];
+                        dp.IVA = dOCUMENTO.DOCUMENTOP[i].IVA;
+                        _iva = _iva + dOCUMENTO.DOCUMENTOP[i].IVA;//lejgg 10-10-2018
+                        dp.TOTAL = dOCUMENTO.DOCUMENTOP[i].TOTAL;
+                        _total = _total + dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
+                        dp.TEXTO = dOCUMENTO.DOCUMENTOP[i].TEXTO;
+                        db.DOCUMENTOPs.Add(dp);
+                        db.SaveChanges();
+
+                    }
+
+                    var delDPH = db.DOCUMENTOPs.Where(x => x.NUM_DOC == _ndoc).ToList();
+
+                    DOCUMENTOP _dp = new DOCUMENTOP();
+                    _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
+                    _dp.POS = delDPH.Count + 1;
+                    _dp.ACCION = "H";
+                    _dp.CUENTA = _payerid_;
+                    _dp.MONTO = _monto + _iva;//Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                    _dp.MWSKZ = _mwskz;
+                    _dp.IVA = _iva;
+                    _dp.TOTAL = _total;
+                    db.DOCUMENTOPs.Add(_dp);
+                    db.SaveChanges();
+
+                    
+
+                    for (int i = 0; i < dOCUMENTO.DOCUMENTORP.Count; i++)
+                    {
+                        
+                        var _op = ((i + 2) / 2);
+                        var _pos = _op.ToString().Split('.');
+
+                        DOCUMENTORP dr = new DOCUMENTORP();
+                        dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                        dr.WITHT = dOCUMENTO.DOCUMENTORP[i].WITHT;
+                        dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                        dr.POS = int.Parse(_pos[0]);
+                        dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                        dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                        db.DOCUMENTORPs.Add(dr);
+                        db.SaveChanges();
+
+                    }
+
+
                     try
                     {
-                        decimal _monto = 0;
-                        decimal _iva = 0;
-                        decimal _total = 0;
-                        var _mwskz = "";
-                        int j = 1;
-                        var _pos_err_imputacion = "";
-                        for (int i = 0; i < dOCUMENTO.DOCUMENTOP.Count; i++)
+                        var _docrets = dOCUMENTO.DOCUMENTOR;
+                        if (_docrets != null)//significa que hay valores
                         {
-                            try
+                            for (int i = 0; i < _docrets.Count; i++)
                             {
-                                decimal _error_imputacion = 0;
-                                //Busco Informacion Previa del documento si es que existe.
-                                var docpPrevio = db.DOCUMENTOPs.Where(x => x.NUM_DOC == _ndoc && x.POS == j).FirstOrDefault();
-                                //Si es null signfica que no hay nada, osea se crea, si es diferente de null ya existe, osea se modifica
-                                if (docpPrevio != null)//LEJGG 31-10-2018
+                                var _with = _docrets[i].WITHT.Trim();
+                                var _wt_withcd = _docrets[i].WT_WITHCD.Trim();
+                                var _witht_sub = db.RETENCIONs.Where(a => a.WITHT == _with && a.WT_WITHCD == _wt_withcd).FirstOrDefault().WITHT_SUB;
+                                var bd_docr = db.DOCUMENTORs.Where(d => d.NUM_DOC == _ndoc && d.WITHT == _with).FirstOrDefault();
+                                if (_witht_sub != null)
                                 {
-                                    DOCUMENTOP dp = docpPrevio;
-
-                                    dp.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                    dp.POS = j;
-                                    dp.ACCION = dOCUMENTO.DOCUMENTOP[i].ACCION;
-                                    dp.FACTURA = dOCUMENTO.DOCUMENTOP[i].FACTURA;
-                                    dp.TCONCEPTO = dOCUMENTO.DOCUMENTOP[i].TCONCEPTO;
-                                    dp.GRUPO = dOCUMENTO.DOCUMENTOP[i].GRUPO;
-                                    dp.CUENTA = dOCUMENTO.DOCUMENTOP[i].CUENTA;//Modificación Cuenta de PEP
-                                    dp.TIPOIMP = dOCUMENTO.DOCUMENTOP[i].TIPOIMP;
-                                    dp.IMPUTACION = dOCUMENTO.DOCUMENTOP[i].IMPUTACION;
-                                    dp.CCOSTO = dOCUMENTO.DOCUMENTOP[i].CCOSTO;
-                                    dp.MONTO = dOCUMENTO.DOCUMENTOP[i].MONTO;
-                                    _monto = _monto + dOCUMENTO.DOCUMENTOP[i].MONTO;//lejgg 10-10-2018
-                                    var sp = dOCUMENTO.DOCUMENTOP[i].MWSKZ.Split('-');
-                                    _mwskz = sp[0];//lejgg 10-10-2018
-                                    dp.MWSKZ = sp[0];
-                                    dp.IVA = dOCUMENTO.DOCUMENTOP[i].IVA;
-                                    _iva = _iva + dOCUMENTO.DOCUMENTOP[i].IVA;//lejgg 10-10-2018
-                                    dp.TOTAL = dOCUMENTO.DOCUMENTOP[i].TOTAL;
-                                    _total = _total + dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
-                                    dp.TEXTO = dOCUMENTO.DOCUMENTOP[i].TEXTO;
-                                    db.Entry(dp).State = EntityState.Modified;
+                                    //Se actualizan las f 
+                                    bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
+                                    bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
+                                    db.Entry(bd_docr).State = EntityState.Modified;
                                     db.SaveChanges();
-
+                                    //Se actualizan lasligadas
+                                    var bd_docrl = db.DOCUMENTORs.Where(d => d.NUM_DOC == _ndoc && d.WITHT == _witht_sub).FirstOrDefault();
+                                    bd_docrl.BIMPONIBLE = _docrets[i].BIMPONIBLE;
+                                    bd_docrl.IMPORTE_RET = _docrets[i].IMPORTE_RET;
+                                    db.Entry(bd_docrl).State = EntityState.Modified;
+                                    db.SaveChanges();
                                 }
                                 else
                                 {
-                                    DOCUMENTOP dp = new DOCUMENTOP();
-
-                                    dp.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                    dp.POS = j;
-                                    dp.ACCION = dOCUMENTO.DOCUMENTOP[i].ACCION;
-                                    dp.FACTURA = dOCUMENTO.DOCUMENTOP[i].FACTURA;
-                                    dp.TCONCEPTO = dOCUMENTO.DOCUMENTOP[i].TCONCEPTO;
-                                    dp.GRUPO = dOCUMENTO.DOCUMENTOP[i].GRUPO;
-                                    dp.CUENTA = dOCUMENTO.DOCUMENTOP[i].CUENTA;//Modificación Cuenta de PEP
-                                    dp.TIPOIMP = dOCUMENTO.DOCUMENTOP[i].TIPOIMP;
-                                    dp.IMPUTACION = dOCUMENTO.DOCUMENTOP[i].IMPUTACION;
-                                    dp.CCOSTO = dOCUMENTO.DOCUMENTOP[i].CCOSTO;
-                                    dp.MONTO = dOCUMENTO.DOCUMENTOP[i].MONTO;
-                                    _monto = _monto + dOCUMENTO.DOCUMENTOP[i].MONTO;//lejgg 10-10-2018
-                                    var sp = dOCUMENTO.DOCUMENTOP[i].MWSKZ.Split('-');
-                                    _mwskz = sp[0];//lejgg 10-10-2018
-                                    dp.MWSKZ = sp[0];
-                                    dp.IVA = dOCUMENTO.DOCUMENTOP[i].IVA;
-                                    _iva = _iva + dOCUMENTO.DOCUMENTOP[i].IVA;//lejgg 10-10-2018
-                                    dp.TOTAL = dOCUMENTO.DOCUMENTOP[i].TOTAL;
-                                    _total = _total + dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
-                                    dp.TEXTO = dOCUMENTO.DOCUMENTOP[i].TEXTO;
-                                    db.DOCUMENTOPs.Add(dp);
+                                    bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
+                                    bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
+                                    db.Entry(bd_docr).State = EntityState.Modified;
                                     db.SaveChanges();
                                 }
-                            }
-                            catch (Exception e)
-                            {
-                                //
-                            }
-                            j++;
-                        }
 
-                        //lejgg 10-10-2018-------------------->
-                        //Busco Informacion Previa del documento si es que existe.
-                        var docp2 = db.DOCUMENTOPs.Where(x => x.NUM_DOC == _ndoc && x.ACCION == "H").FirstOrDefault();
-                        //Si es diferente a null, es que ya existe, sino se crea
-                        if (docp2 != null)
-                        {
-                            DOCUMENTOP _dp = docp2;
-
-                            _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
-                            _dp.POS = j;
-                            _dp.ACCION = "H";
-                            _dp.CUENTA = _payerid_;
-                            _dp.MONTO = _monto + _iva;//Obtener las retenciones relacionadas con las ya mostradas en la tabla
-                            _dp.MWSKZ = _mwskz;
-                            _dp.IVA = _iva;
-                            _dp.TOTAL = _total;
-                            db.Entry(_dp).State = EntityState.Modified;
-                            db.SaveChanges();
-                        }
-                        else
-                        {
-                            DOCUMENTOP _dp = new DOCUMENTOP();
-                            _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
-                            _dp.POS = j;
-                            _dp.ACCION = "H";
-                            _dp.CUENTA = _payerid_;
-                            _dp.MONTO = _monto + _iva;//Obtener las retenciones relacionadas con las ya mostradas en la tabla
-                            _dp.MWSKZ = _mwskz;
-                            _dp.IVA = _iva;
-                            _dp.TOTAL = _total;
-                            db.DOCUMENTOPs.Add(_dp);
-                            db.SaveChanges();
-                        }
-                        //lejgg 10-10-2018-------------------------<
-                    }
-                    //Guardar las retenciones de la solicitud
-
-                    catch (Exception e)
-                    {
-                        errorString = e.Message.ToString();
-                        //Guardar número de documento creado
-
-                    }
-                    //Guardar las retenciones por posición
-                    //Lej14.09.2018------
-                    try
-                    {
-                        for (int i = 0; i < dOCUMENTO.DOCUMENTORP.Count; i++)
-                        {
-                            //cantdidad de renglones añadidos y su posicion
-                            var _op = ((i + 2) / 2);
-                            var _pos = _op.ToString().Split('.');
-                            try
-                            {
-                                var _str = dOCUMENTO.DOCUMENTORP[i].WITHT;
-                                var _p_p = int.Parse(_pos[0]);
-                                var _docrp = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.WITHT == _str && x.POS == _p_p).FirstOrDefault();
-                                if (_docrp != null)//para cuando es edicion
-                                {
-                                    var docr = dOCUMENTO.DOCUMENTOR;
-                                    var _wt_withcd = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
-                                    //var ret = db.RETENCIONs.Where(x => x.WITHT == _str && x.WT_WITHCD == _wt_withcd).FirstOrDefault().WITHT_SUB;
-                                    // if (ret != null)
-                                    // {
-                                    // bool f = false;
-                                    /*for (int _a = 0; _a < docr.Count; _a++)
-                                    {
-                                        //si encuentra coincidencia con una ret ligada a el
-                                        if (docr[_a].WITHT == ret)
-                                        {
-                                            var p_s = int.Parse(_pos[0]);
-                                            var _wt_w = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
-                                            DOCUMENTORP _docspr2 = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.POS == p_s && x.WITHT == _str && x.WT_WITHCD == _wt_w).FirstOrDefault();
-
-                                            _docspr2.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
-                                            _docspr2.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
-                                            db.Entry(_docspr2).State = EntityState.Modified;
-                                            db.SaveChanges();
-                                            //valido si existe la ligada y la modifico o la creo segun sea el caso
-                                            var _docrpl = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.WITHT == ret).FirstOrDefault();
-                                            if (_docrpl != null)
-                                            {
-                                                var p_s2 = int.Parse(_pos[0]);
-                                                var _wt_w2 = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
-                                                DOCUMENTORP _docspr3 = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.POS == p_s2 && x.WITHT == _str && x.WT_WITHCD == _wt_w2).FirstOrDefault();
-
-                                                _docspr3.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
-                                                _docspr3.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
-                                                db.Entry(_docspr3).State = EntityState.Modified;
-                                                db.SaveChanges();
-                                                f = true;
-                                            }
-                                            else
-                                            {
-                                                //se crea la ret ligada
-                                                var _dr = new DOCUMENTORP();
-                                                _dr.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                                _dr.WITHT = docr[_a].WITHT;
-                                                _dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
-                                                _dr.POS = int.Parse(_pos[0]);
-                                                _dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
-                                                _dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
-                                                db.DOCUMENTORPs.Add(_dr);
-                                                db.SaveChanges();
-                                                f = true;
-                                            }
-                                        }
-                                    }*/
-                                    //if (f)
-                                    //{
-                                    //var p_s = int.Parse(_pos[0]);
-                                    //DOCUMENTORP _docspr2 = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.POS == p_s && x.WITHT == _str && x.WT_WITHCD == _wt_withcd).FirstOrDefault();
-                                    //if (_docspr2 != null)//signfica que hay valores, entonces se actualizan
-                                    //{
-                                    // _docspr2.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
-                                    // _docspr2.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
-
-                                    // db.Entry(_docspr2).State = EntityState.Modified;
-                                    // db.SaveChanges();
-                                    //la ligada
-                                    /* DOCUMENTORP _docrpligada = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.POS == p_s && x.WITHT == ret && x.WT_WITHCD == _wt_withcd).FirstOrDefault();
-                                     if (_docrpligada != null)//signfica que hay valores, entonces se actualizan
-                                     {
-                                         _docrpligada.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
-                                         _docrpligada.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
-
-                                         db.Entry(_docrpligada).State = EntityState.Modified;
-                                         db.SaveChanges();
-                                     }
-                                     else//sino, se crea
-                                     {
-                                         var docprlig = new DOCUMENTORP();
-                                         docprlig.NUM_DOC = _docspr2.NUM_DOC;
-                                         docprlig.POS = _docspr2.POS;
-                                         docprlig.WITHT = ret;
-                                         docprlig.WT_WITHCD = _docspr2.WT_WITHCD;
-                                         docprlig.BIMPONIBLE = _docspr2.BIMPONIBLE;
-                                         docprlig.IMPORTE_RET = _docspr2.IMPORTE_RET;
-                                         db.DOCUMENTORPs.Add(docprlig);
-                                         db.SaveChanges();
-                                     }*/
-                                    // }
-                                    //}
-                                    //}
-                                    // else
-                                    // {
-                                    var p_s = int.Parse(_pos[0]);
-                                    DOCUMENTORP _docspr2 = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.POS == p_s && x.WITHT == _str && x.WT_WITHCD == _wt_withcd).FirstOrDefault();
-                                    if (_docspr2 != null)//signfica que hay valores, entonces se actualizan
-                                    {
-                                        _docspr2.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
-                                        _docspr2.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
-                                        db.Entry(_docspr2).State = EntityState.Modified;
-                                        db.SaveChanges();
-                                    }
-                                    // }
-                                }
-                                else//para cuando es nuevo
-                                {
-                                    // var docr = dOCUMENTO.DOCUMENTOR;
-                                    /*var ret = db.RETENCIONs.Where(x => x.WITHT == _str).FirstOrDefault().WITHT_SUB;
-                                    if (ret != null)
-                                    {
-                                        DOCUMENTORP dr = new DOCUMENTORP();
-                                        dr.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                        dr.WITHT = dOCUMENTO.DOCUMENTORP[i].WITHT;
-                                        dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
-                                        dr.POS = int.Parse(_pos[0]);
-                                        dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
-                                        dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
-                                        db.DOCUMENTORPs.Add(dr);
-                                        db.SaveChanges();
-                                    }
-                                    else
-                                    {*/
-                                    DOCUMENTORP dr = new DOCUMENTORP();
-                                    dr.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                    dr.WITHT = dOCUMENTO.DOCUMENTORP[i].WITHT;
-                                    dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
-                                    dr.POS = int.Parse(_pos[0]);
-                                    dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
-                                    dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
-                                    db.DOCUMENTORPs.Add(dr);
-                                    db.SaveChanges();
-                                    //}
-                                }
-                            }
-                            catch (Exception e)
-                            {
                             }
                         }
                     }
-                    catch (Exception e)
-                    {
-                        //
-                    }
+                    catch (Exception e) { }
+
+
+
+
+
+
+
+
+                    //END FRT22112018
+
+
+
+
+
+
+
+
+                    //FRT22112018 Comentado para Agregar y Eliminar Detalles
+
+                    ////Guardar las posiciones de la solicitud
+                    //    try
+                    //{
+                    //    decimal _monto = 0;
+                    //    decimal _iva = 0;
+                    //    decimal _total = 0;
+                    //    var _mwskz = "";
+                    //    int j = 1;
+                    //    var _pos_err_imputacion = "";
+                    //    for (int i = 0; i < dOCUMENTO.DOCUMENTOP.Count; i++)
+                    //    {
+                    //        try
+                    //        {
+                    //            decimal _error_imputacion = 0;
+                    //            //Busco Informacion Previa del documento si es que existe.
+                    //            var docpPrevio = db.DOCUMENTOPs.Where(x => x.NUM_DOC == _ndoc && x.POS == j).FirstOrDefault();
+                    //            //Si es null signfica que no hay nada, osea se crea, si es diferente de null ya existe, osea se modifica
+                    //            if (docpPrevio != null)//LEJGG 31-10-2018
+                    //            {
+                    //                DOCUMENTOP dp = docpPrevio;
+
+                    //                dp.NUM_DOC = dOCUMENTO.NUM_DOC;
+                    //                dp.POS = j;
+                    //                dp.ACCION = dOCUMENTO.DOCUMENTOP[i].ACCION;
+                    //                dp.FACTURA = dOCUMENTO.DOCUMENTOP[i].FACTURA;
+                    //                dp.TCONCEPTO = dOCUMENTO.DOCUMENTOP[i].TCONCEPTO;
+                    //                dp.GRUPO = dOCUMENTO.DOCUMENTOP[i].GRUPO;
+                    //                dp.CUENTA = dOCUMENTO.DOCUMENTOP[i].CUENTA;//Modificación Cuenta de PEP
+                    //                dp.TIPOIMP = dOCUMENTO.DOCUMENTOP[i].TIPOIMP;
+                    //                dp.IMPUTACION = dOCUMENTO.DOCUMENTOP[i].IMPUTACION;
+                    //                dp.CCOSTO = dOCUMENTO.DOCUMENTOP[i].CCOSTO;
+                    //                dp.MONTO = dOCUMENTO.DOCUMENTOP[i].MONTO;
+                    //                _monto = _monto + dOCUMENTO.DOCUMENTOP[i].MONTO;//lejgg 10-10-2018
+                    //                var sp = dOCUMENTO.DOCUMENTOP[i].MWSKZ.Split('-');
+                    //                _mwskz = sp[0];//lejgg 10-10-2018
+                    //                dp.MWSKZ = sp[0];
+                    //                dp.IVA = dOCUMENTO.DOCUMENTOP[i].IVA;
+                    //                _iva = _iva + dOCUMENTO.DOCUMENTOP[i].IVA;//lejgg 10-10-2018
+                    //                dp.TOTAL = dOCUMENTO.DOCUMENTOP[i].TOTAL;
+                    //                _total = _total + dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
+                    //                dp.TEXTO = dOCUMENTO.DOCUMENTOP[i].TEXTO;
+                    //                db.Entry(dp).State = EntityState.Modified;
+                    //                db.SaveChanges();
+
+                    //            }
+                    //            else
+                    //            {
+                    //                DOCUMENTOP dp = new DOCUMENTOP();
+
+                    //                dp.NUM_DOC = dOCUMENTO.NUM_DOC;
+                    //                dp.POS = j;
+                    //                dp.ACCION = dOCUMENTO.DOCUMENTOP[i].ACCION;
+                    //                dp.FACTURA = dOCUMENTO.DOCUMENTOP[i].FACTURA;
+                    //                dp.TCONCEPTO = dOCUMENTO.DOCUMENTOP[i].TCONCEPTO;
+                    //                dp.GRUPO = dOCUMENTO.DOCUMENTOP[i].GRUPO;
+                    //                dp.CUENTA = dOCUMENTO.DOCUMENTOP[i].CUENTA;//Modificación Cuenta de PEP
+                    //                dp.TIPOIMP = dOCUMENTO.DOCUMENTOP[i].TIPOIMP;
+                    //                dp.IMPUTACION = dOCUMENTO.DOCUMENTOP[i].IMPUTACION;
+                    //                dp.CCOSTO = dOCUMENTO.DOCUMENTOP[i].CCOSTO;
+                    //                dp.MONTO = dOCUMENTO.DOCUMENTOP[i].MONTO;
+                    //                _monto = _monto + dOCUMENTO.DOCUMENTOP[i].MONTO;//lejgg 10-10-2018
+                    //                var sp = dOCUMENTO.DOCUMENTOP[i].MWSKZ.Split('-');
+                    //                _mwskz = sp[0];//lejgg 10-10-2018
+                    //                dp.MWSKZ = sp[0];
+                    //                dp.IVA = dOCUMENTO.DOCUMENTOP[i].IVA;
+                    //                _iva = _iva + dOCUMENTO.DOCUMENTOP[i].IVA;//lejgg 10-10-2018
+                    //                dp.TOTAL = dOCUMENTO.DOCUMENTOP[i].TOTAL;
+                    //                _total = _total + dOCUMENTO.DOCUMENTOP[i].TOTAL;//lejgg 10-10-2018
+                    //                dp.TEXTO = dOCUMENTO.DOCUMENTOP[i].TEXTO;
+                    //                db.DOCUMENTOPs.Add(dp);
+                    //                db.SaveChanges();
+                    //            }
+                    //        }
+                    //        catch (Exception e)
+                    //        {
+                    //            //
+                    //        }
+                    //        j++;
+                    //    }
+
+
+                    ////lejgg 10-10-2018-------------------->
+                    ////Busco Informacion Previa del documento si es que existe.
+                    //var docp2 = db.DOCUMENTOPs.Where(x => x.NUM_DOC == _ndoc && x.ACCION == "H").FirstOrDefault();
+                    //    //Si es diferente a null, es que ya existe, sino se crea
+                    //    if (docp2 != null)
+                    //    {
+                    //        DOCUMENTOP _dp = docp2;
+
+                    //        _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
+                    //        _dp.POS = j;
+                    //        _dp.ACCION = "H";
+                    //        _dp.CUENTA = _payerid_;
+                    //        _dp.MONTO = _monto + _iva;//Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                    //        _dp.MWSKZ = _mwskz;
+                    //        _dp.IVA = _iva;
+                    //        _dp.TOTAL = _total;
+                    //        db.Entry(_dp).State = EntityState.Modified;
+                    //        db.SaveChanges();
+                    //    }
+                    //    else
+                    //    {
+                    //        DOCUMENTOP _dp = new DOCUMENTOP();
+                    //        _dp.NUM_DOC = dOCUMENTO.NUM_DOC;
+                    //        _dp.POS = j;
+                    //        _dp.ACCION = "H";
+                    //        _dp.CUENTA = _payerid_;
+                    //        _dp.MONTO = _monto + _iva;//Obtener las retenciones relacionadas con las ya mostradas en la tabla
+                    //        _dp.MWSKZ = _mwskz;
+                    //        _dp.IVA = _iva;
+                    //        _dp.TOTAL = _total;
+                    //        db.DOCUMENTOPs.Add(_dp);
+                    //        db.SaveChanges();
+                    //    }
+                    //    //lejgg 10-10-2018-------------------------<
+                    //}
+                    ////Guardar las retenciones de la solicitud
+
+                    //catch (Exception e)
+                    //{
+                    //    errorString = e.Message.ToString();
+                    //    //Guardar número de documento creado
+
+                    //}
+
+                    ////Guardar las retenciones por posición
+                    ////Lej14.09.2018------
+                    //try
+                    //{
+                    //    for (int i = 0; i < dOCUMENTO.DOCUMENTORP.Count; i++)
+                    //    {
+                    //        //cantdidad de renglones añadidos y su posicion
+                    //        var _op = ((i + 2) / 2);
+                    //        var _pos = _op.ToString().Split('.');
+                    //        try
+                    //        {
+                    //            var _str = dOCUMENTO.DOCUMENTORP[i].WITHT;
+                    //            var _p_p = int.Parse(_pos[0]);
+                    //            var _docrp = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.WITHT == _str && x.POS == _p_p).FirstOrDefault();
+                    //            if (_docrp != null)//para cuando es edicion
+                    //            {
+                    //                var docr = dOCUMENTO.DOCUMENTOR;
+                    //                var _wt_withcd = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                    //                //var ret = db.RETENCIONs.Where(x => x.WITHT == _str && x.WT_WITHCD == _wt_withcd).FirstOrDefault().WITHT_SUB;
+                    //                // if (ret != null)
+                    //                // {
+                    //                // bool f = false;
+                    //                /*for (int _a = 0; _a < docr.Count; _a++)
+                    //                {
+                    //                    //si encuentra coincidencia con una ret ligada a el
+                    //                    if (docr[_a].WITHT == ret)
+                    //                    {
+                    //                        var p_s = int.Parse(_pos[0]);
+                    //                        var _wt_w = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                    //                        DOCUMENTORP _docspr2 = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.POS == p_s && x.WITHT == _str && x.WT_WITHCD == _wt_w).FirstOrDefault();
+
+                    //                        _docspr2.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                    //                        _docspr2.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                    //                        db.Entry(_docspr2).State = EntityState.Modified;
+                    //                        db.SaveChanges();
+                    //                        //valido si existe la ligada y la modifico o la creo segun sea el caso
+                    //                        var _docrpl = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.WITHT == ret).FirstOrDefault();
+                    //                        if (_docrpl != null)
+                    //                        {
+                    //                            var p_s2 = int.Parse(_pos[0]);
+                    //                            var _wt_w2 = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                    //                            DOCUMENTORP _docspr3 = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.POS == p_s2 && x.WITHT == _str && x.WT_WITHCD == _wt_w2).FirstOrDefault();
+
+                    //                            _docspr3.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                    //                            _docspr3.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                    //                            db.Entry(_docspr3).State = EntityState.Modified;
+                    //                            db.SaveChanges();
+                    //                            f = true;
+                    //                        }
+                    //                        else
+                    //                        {
+                    //                            //se crea la ret ligada
+                    //                            var _dr = new DOCUMENTORP();
+                    //                            _dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                    //                            _dr.WITHT = docr[_a].WITHT;
+                    //                            _dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                    //                            _dr.POS = int.Parse(_pos[0]);
+                    //                            _dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                    //                            _dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                    //                            db.DOCUMENTORPs.Add(_dr);
+                    //                            db.SaveChanges();
+                    //                            f = true;
+                    //                        }
+                    //                    }
+                    //                }*/
+                    //                //if (f)
+                    //                //{
+                    //                //var p_s = int.Parse(_pos[0]);
+                    //                //DOCUMENTORP _docspr2 = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.POS == p_s && x.WITHT == _str && x.WT_WITHCD == _wt_withcd).FirstOrDefault();
+                    //                //if (_docspr2 != null)//signfica que hay valores, entonces se actualizan
+                    //                //{
+                    //                // _docspr2.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                    //                // _docspr2.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+
+                    //                // db.Entry(_docspr2).State = EntityState.Modified;
+                    //                // db.SaveChanges();
+                    //                //la ligada
+                    //                /* DOCUMENTORP _docrpligada = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.POS == p_s && x.WITHT == ret && x.WT_WITHCD == _wt_withcd).FirstOrDefault();
+                    //                 if (_docrpligada != null)//signfica que hay valores, entonces se actualizan
+                    //                 {
+                    //                     _docrpligada.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                    //                     _docrpligada.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+
+                    //                     db.Entry(_docrpligada).State = EntityState.Modified;
+                    //                     db.SaveChanges();
+                    //                 }
+                    //                 else//sino, se crea
+                    //                 {
+                    //                     var docprlig = new DOCUMENTORP();
+                    //                     docprlig.NUM_DOC = _docspr2.NUM_DOC;
+                    //                     docprlig.POS = _docspr2.POS;
+                    //                     docprlig.WITHT = ret;
+                    //                     docprlig.WT_WITHCD = _docspr2.WT_WITHCD;
+                    //                     docprlig.BIMPONIBLE = _docspr2.BIMPONIBLE;
+                    //                     docprlig.IMPORTE_RET = _docspr2.IMPORTE_RET;
+                    //                     db.DOCUMENTORPs.Add(docprlig);
+                    //                     db.SaveChanges();
+                    //                 }*/
+                    //                // }
+                    //                //}
+                    //                //}
+                    //                // else
+                    //                // {
+                    //                var p_s = int.Parse(_pos[0]);
+                    //                DOCUMENTORP _docspr2 = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc && x.POS == p_s && x.WITHT == _str && x.WT_WITHCD == _wt_withcd).FirstOrDefault();
+                    //                if (_docspr2 != null)//signfica que hay valores, entonces se actualizan
+                    //                {
+                    //                    _docspr2.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                    //                    _docspr2.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                    //                    db.Entry(_docspr2).State = EntityState.Modified;
+                    //                    db.SaveChanges();
+                    //                }
+                    //                // }
+                    //            }
+                    //            else//para cuando es nuevo
+                    //            {
+                    //                // var docr = dOCUMENTO.DOCUMENTOR;
+                    //                /*var ret = db.RETENCIONs.Where(x => x.WITHT == _str).FirstOrDefault().WITHT_SUB;
+                    //                if (ret != null)
+                    //                {
+                    //                    DOCUMENTORP dr = new DOCUMENTORP();
+                    //                    dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                    //                    dr.WITHT = dOCUMENTO.DOCUMENTORP[i].WITHT;
+                    //                    dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                    //                    dr.POS = int.Parse(_pos[0]);
+                    //                    dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                    //                    dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                    //                    db.DOCUMENTORPs.Add(dr);
+                    //                    db.SaveChanges();
+                    //                }
+                    //                else
+                    //                {*/
+                    //                DOCUMENTORP dr = new DOCUMENTORP();
+                    //                dr.NUM_DOC = dOCUMENTO.NUM_DOC;
+                    //                dr.WITHT = dOCUMENTO.DOCUMENTORP[i].WITHT;
+                    //                dr.WT_WITHCD = dOCUMENTO.DOCUMENTORP[i].WT_WITHCD;
+                    //                dr.POS = int.Parse(_pos[0]);
+                    //                dr.BIMPONIBLE = dOCUMENTO.DOCUMENTORP[i].BIMPONIBLE;
+                    //                dr.IMPORTE_RET = dOCUMENTO.DOCUMENTORP[i].IMPORTE_RET;
+                    //                db.DOCUMENTORPs.Add(dr);
+                    //                db.SaveChanges();
+                    //                //}
+                    //            }
+                    //        }
+                    //        catch (Exception e)
+                    //        {
+                    //        }
+                    //    }
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    //
+                    //}
+
+
+
+
+
+
+                    //FRT22112018 esto ya estaba comentado
+
+
                     //Lej14.09.2018------
                     //Guardar las retenciones en el encabezado
                     /* try
@@ -2878,43 +3046,56 @@ namespace WFARTHA.Controllers
                      }*/
                     //Lej26.09.2018------
                     //Lejgg 09-11-2018-------------
-                    try
-                    {
-                        var _docrets = dOCUMENTO.DOCUMENTOR;
-                        if (_docrets != null)//significa que hay valores
-                        {
-                            for (int i = 0; i < _docrets.Count; i++)
-                            {
-                                var _with = _docrets[i].WITHT.Trim();
-                                var _wt_withcd = _docrets[i].WT_WITHCD.Trim();
-                                var _witht_sub = db.RETENCIONs.Where(a => a.WITHT == _with && a.WT_WITHCD == _wt_withcd).FirstOrDefault().WITHT_SUB;
-                                var bd_docr = db.DOCUMENTORs.Where(d => d.NUM_DOC == _ndoc && d.WITHT == _with).FirstOrDefault();
-                                if (_witht_sub != null)
-                                {
-                                    //Se actualizan las f 
-                                    bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
-                                    bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
-                                    db.Entry(bd_docr).State = EntityState.Modified;
-                                    db.SaveChanges();
-                                    //Se actualizan lasligadas
-                                    var bd_docrl = db.DOCUMENTORs.Where(d => d.NUM_DOC == _ndoc && d.WITHT == _witht_sub).FirstOrDefault();
-                                    bd_docrl.BIMPONIBLE = _docrets[i].BIMPONIBLE;
-                                    bd_docrl.IMPORTE_RET = _docrets[i].IMPORTE_RET;
-                                    db.Entry(bd_docrl).State = EntityState.Modified;
-                                    db.SaveChanges();
-                                }
-                                else
-                                {
-                                    bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
-                                    bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
-                                    db.Entry(bd_docr).State = EntityState.Modified;
-                                    db.SaveChanges();
-                                }
 
-                            }
-                        }
-                    }
-                    catch (Exception e) { }
+
+                    //FRT22112018 esto ya estaba comentado
+
+                    //FRT22112018 Se comenta para agregar y eliminar detalles
+                    //try
+                    //{
+                    //    var _docrets = dOCUMENTO.DOCUMENTOR;
+                    //    if (_docrets != null)//significa que hay valores
+                    //    {
+                    //        for (int i = 0; i < _docrets.Count; i++)
+                    //        {
+                    //            var _with = _docrets[i].WITHT.Trim();
+                    //            var _wt_withcd = _docrets[i].WT_WITHCD.Trim();
+                    //            var _witht_sub = db.RETENCIONs.Where(a => a.WITHT == _with && a.WT_WITHCD == _wt_withcd).FirstOrDefault().WITHT_SUB;
+                    //            var bd_docr = db.DOCUMENTORs.Where(d => d.NUM_DOC == _ndoc && d.WITHT == _with).FirstOrDefault();
+                    //            if (_witht_sub != null)
+                    //            {
+                    //                //Se actualizan las f 
+                    //                bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
+                    //                bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
+                    //                db.Entry(bd_docr).State = EntityState.Modified;
+                    //                db.SaveChanges();
+                    //                //Se actualizan lasligadas
+                    //                var bd_docrl = db.DOCUMENTORs.Where(d => d.NUM_DOC == _ndoc && d.WITHT == _witht_sub).FirstOrDefault();
+                    //                bd_docrl.BIMPONIBLE = _docrets[i].BIMPONIBLE;
+                    //                bd_docrl.IMPORTE_RET = _docrets[i].IMPORTE_RET;
+                    //                db.Entry(bd_docrl).State = EntityState.Modified;
+                    //                db.SaveChanges();
+                    //            }
+                    //            else
+                    //            {
+                    //                bd_docr.BIMPONIBLE = _docrets[i].BIMPONIBLE;
+                    //                bd_docr.IMPORTE_RET = _docrets[i].IMPORTE_RET;
+                    //                db.Entry(bd_docr).State = EntityState.Modified;
+                    //                db.SaveChanges();
+                    //            }
+
+                    //        }
+                    //    }
+                    //}
+                    //catch (Exception e) { }
+
+                    //END FRT22112018 se comenta para agregar y eliminar detalles
+
+
+
+
+
+
                     //Lejgg 09-11-2018-------------
                     List<string> listaDirectorios = new List<string>();
                     List<string> listaNombreArchivos = new List<string>();
@@ -2972,6 +3153,7 @@ namespace WFARTHA.Controllers
 
                                 for (int i = 0; i < delDAS.Count; i++)
                                 {
+                                    
                                     DOCUMENTOA1 dOCUMENTOASd = db.DOCUMENTOAS1.Find(delDAS[i].NUM_DOC, delDAS[i].POS);
                                     db.DOCUMENTOAS1.Remove(dOCUMENTOASd);
                                     db.SaveChanges();
