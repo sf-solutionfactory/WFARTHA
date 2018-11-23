@@ -360,7 +360,7 @@ $('body').on('keydown.autocomplete', '#norden_compra', function () {
                 type: "POST",
                 url: 'getPedidos',
                 dataType: "json",
-                data: { "Prefix": request.term, lifnr: prov },
+                data: { "Prefix": request.term, "lifnr": prov },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         //return { label: trimStart('0', item.LIFNR) + " - " + item.NAME1, value: trimStart('0', item.LIFNR) };
