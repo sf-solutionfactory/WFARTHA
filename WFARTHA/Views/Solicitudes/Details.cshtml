@@ -54,8 +54,8 @@
             @ViewBag.Error
         </div>*@
 
-    if (TempData["error"].ToString() != "")
-    {
+if (TempData["error"].ToString() != "")
+{
         <script>
                 /**/
                 /**/
@@ -294,8 +294,8 @@
                             @*esto ya estaba comentado <a id="lbl_wfn" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="N" })">Siguiente</a>*@
                             @*<a id="lbl_wfn" class="btn-small modal-trigger" href="#modal1" onclick="siguiente()">Siguiente</a>
                         }*@
-                        else if (ViewBag.accion == "P")
-                        {
+                else if (ViewBag.accion == "P")
+                {
 
                             <div class="fixed-action-btn" id="lbl_wf">
                                 <a class="btn-floating btn-large blue">
@@ -321,11 +321,11 @@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                             <a id="lbl_wfn" class="btn-small modal-trigger" href="#modal1" onclick="contabilizar()">Contabilizar</a>
 
-                        }
-                        else if (!Model.D.ESTATUS.Equals("A"))
-                        {
-                            if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
-                            {
+                }
+                else if (!Model.D.ESTATUS.Equals("A"))
+                {
+                    if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
+                    {
                                 <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
                                 <div id="modal2" class="modal">
                                     <div class="modal-content">
@@ -343,16 +343,16 @@
                                     </div>
                                     <div class="modal-footer right">
                                         <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                        <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
+                                        <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes", new { id = Model.D.NUM_DOC })">Si</a>
                                     </div>
                                 </div>
-                            }
                         }
                     }
-                    else if (!Model.D.ESTATUS.Equals("A"))
+                }
+                else if (!Model.D.ESTATUS.Equals("A"))
+                {
+                    if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
                     {
-                        if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
-                        {
                             <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
                             <div id="modal2" class="modal">
                                 <div class="modal-content">
@@ -370,7 +370,7 @@
                                 </div>
                                 <div class="modal-footer right">
                                     <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                    <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
+                                    <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes", new { id = Model.D.NUM_DOC })">Si</a>
                                 </div>
                             </div>
                         }
@@ -709,8 +709,8 @@
                                                     @ims
                                                 </td>
                                             </tr>
-                                        }
-                                    }
+                                                            }
+                                                        }
                                 </tbody>
                             </table>
                         </div>
@@ -936,12 +936,12 @@
                                                     @{decimal imp2 = 0; try { imp2 = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().IMPORTE_RET.ToString()); } catch (Exception e) { }; string bim2 = formatoc.toShow(imp2, deci);}
                                                     @bim2
                                                 </td>
-                                            }
+                                                        }
                                             <td> @Model.D.DOCUMENTOPSTR[i].TOTAL</td>
 
                                         </tr>
-                                    }
-                                }
+                                                            }
+                                                        }
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -1012,9 +1012,9 @@
                                                     <button class="btn btnD" name="archivo" id="archivo" type="submit" value=@lstDocsA[i].PATH>DESCARGAR</button>
                                                 </td>
                                             </tr>
-                                        }
-                                    }
-                                }
+                                                            }
+                                                        }
+                                                    }
                             </tbody>
                         </table>
 
@@ -1027,12 +1027,25 @@
     @*Soporte Contable*@
     <div id="Soporte_cont" class="col s12" style="font-size:12px;">
         <div class="row">
+            @*//MGC 22-11-2018.2 Cadena de autorización -->*@
             <div class="col s12">
                 <div class="card-panel">
-                    <h5 id="head_cabecera">Cadena de Autorización</h5>
-                    <h6 id="header_cadena" style="display:inline-block">@ViewBag.nomautoriza</h6>
+                    <h5 id="head_cabecera">Autorización</h5>
+                    <div class="row" style="margin-bottom:0">
+                        <div class="form-group col s6">
+                            @Html.LabelFor(model => model.D.TSOL_ID, "Cadena de autorización ", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                    @Html.DropDownList("DETAA", null, htmlAttributes: new { @class = "form-control", @id = "list_detaa", @disabled = "disabled" })
+                            </div>
+                            <input id="DETTA_VERSION" name="DETTA_VERSION" value="" hidden />
+                            <input id="DETTA_USUARIOC_ID" name="DETTA_USUARIOC_ID" value="" hidden />
+                            <input id="DETTA_ID_RUTA_AGENTE" name="DETTA_ID_RUTA_AGENTE" value="" hidden />
+                            <input id="DETTA_USUARIOA_ID" name="DETTA_USUARIOA_ID" value="" hidden />
+                        </div>
+                    </div>
                 </div>
             </div>
+            @*//MGC 22-11-2018.2 Cadena de autorización <--*@
         </div>
 
         @*MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->*@
@@ -1041,6 +1054,9 @@
                 <div class="card-panel">
                     <div class="row" style="margin-bottom:0">
                         <h5>Cadena de Autorizadores</h5>
+                        @* //MGC 22-11-2018.2 Cadena de autorización-----------------------------------------------------------------------> *@
+                        @{List<WFARTHA.Models.CadenaAutorizadores> lcadena = new List<WFARTHA.Models.CadenaAutorizadores>(); lcadena = ViewBag.lcadena as List<WFARTHA.Models.CadenaAutorizadores>; }
+
                         <table class="table highlight responsive-table" id="tableAutorizadores">
                             <thead>
                                 <tr>
@@ -1052,7 +1068,19 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                                @{if(lcadena != null && lcadena.Count > 0){
+                                        for (int i = 0; i < lcadena.Count; i++)
+                                        {
+                                        <tr>
+                                            <td>@lcadena[i].fase</td>
+                                            <td>@lcadena[i].autorizador</td>
+                                        </tr>
+                                        }
+                                }
+                                }
+                                @* //MGC 22-11-2018.2 Cadena de autorización-----------------------------------------------------------------------< *@
+                            </tbody>
                         </table>
                     </div>
                 </div>

@@ -12,12 +12,15 @@ $(document).ready(function () {
 
     //Lejgg 21-11-2018---------------------->
     //Nombre del autorizador ya establecido
-    var nDoc = $('#refHd').val();
-    datosCadena(nDoc);
+    //MGC 22-11-2018.2 Cadena de autorización----------------------------------------------------------------------->
+    //var nDoc = $('#refHd').val();
+    //datosCadena(nDoc);
     //Lejgg 21-11-2018----------------------<
+    //MGC 22-11-2018.2 Cadena de autorización-----------------------------------------------------------------------<
     //Iniciar todos los selects
     var elem = document.querySelectorAll('select');
     var instance = M.Select.init(elem, []);
+
     formatoTabla();
     $('#table_sop').DataTable({
 
@@ -566,7 +569,7 @@ function obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad) {
 
 //LEJGG 21-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 
-function datosCadena(nDoc) {
+function F(nDoc) {
     $.ajax({
         type: "POST",
         url: '../getCadAut',
