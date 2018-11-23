@@ -1500,13 +1500,22 @@ function copiarTableInfoControl() {
             var ccosto = $(this).find("td.CCOSTO input").val(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var impuesto = $(this).find("td.IMPUESTO input").val();
             var monto1 = $(this).find("td.MONTO input").val();
+            while (monto1.indexOf(',') > -1) {
+                monto1 = monto1.replace('$', '').replace(',', '');
+            }
             monto1 = monto1.replace(/\s/g, '');
             var monto = toNum(monto1);
             var iva1 = $(this).find("td.IVA input").val();
+            while (iva1.indexOf(',') > -1) {
+                iva1 = iva1.replace('$', '').replace(',', '');
+            }
             iva1 = iva1.replace(/\s/g, '');
             var iva = toNum(iva1);
             var total1 = $(this).find("td.TOTAL input").val();
             var texto = $(this).find("td.TEXTO textarea").val();//FRT20112018 
+            while (total1.indexOf(',') > -1) {
+                total1 = total1.replace('$', '').replace(',', '');
+            }
             total1 = total1.replace(/\s/g, '');
             var total = toNum(total1);
             //Para anexos
