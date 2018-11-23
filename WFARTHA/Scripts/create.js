@@ -637,9 +637,9 @@ $(document).ready(function () {
             monto = parseFloat(monto);
             var lengthT1 = $("table#table_ret tbody tr[role='row']").length;
             if (lengthT1 > 0) {
-                for (var i = 1; i < lengthT1+1; i++) {
+                for (var i = 1; i < lengthT1 + 1; i++) {
                     var montobase = parseFloat($(this).find("td.BaseImpF" + i + " input").val().replace('$', '').replace(',', ''));
-                   
+
                     if (monto < montobase) {
                         msgerror = "El monto de posicion no debe ser MENOR a a Monto Base retencion";
                         _m = false;
@@ -651,11 +651,11 @@ $(document).ready(function () {
                         return false;
                     }
                 }
-                
-            } 
 
-           
-        //end FRT22112018
+            }
+
+
+            //end FRT22112018
 
 
 
@@ -781,7 +781,7 @@ $(document).ready(function () {
         } else {
             _ct = true;
         }
-            //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
+        //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
 
         if (_p) {
             if (_b) {
@@ -795,12 +795,13 @@ $(document).ready(function () {
                             copiarTableRet();
                             //end FRT06112018.3 
                             $('#btn_guardar').trigger("click");
-                        } else {
+                        }
+                        else {
                             M.toast({ html: msgerror });
                         }
-                        } else {
-                            M.toast({ html: msgerror });
-                        }
+                    } else {
+                        M.toast({ html: msgerror });
+                    }
                 } else {
                     M.toast({ html: msgerror });
                 }
@@ -2037,12 +2038,10 @@ $('body').on('focusout', '.OPER', function (e) {
 
     }
     else if ($(this).hasClass("MONTO")) {
-        //LEJGG 23/11/2018
-        var _valMonto = $("#_montoV").val(); //LEJGG 23/11/2018
-        if ($(this).val() === _valMonto) { //LEJGG 23/11/2018
-            //No hace nada
-        } //LEJGG 23/11/2018
-        else { //LEJGG 23/11/2018
+        if ($(this).hasClass("Cambio")) {//LEJGG 23-11-2018
+            //Si tiene la clase,ya no hace nada
+        }
+        else {
             //Desde el subtotal
             var sub = $(this).val().replace('$', '').replace(',', '');
             //While para que elimine las comas //LEJGG20-11-2018
@@ -2131,12 +2130,22 @@ $('body').on('focusout', '.OPER', function (e) {
             else {
                 tr.find("td.TOTAL input").val(total);
             }
-            $("#_montoV").val(sub); //LEJGG 23/11/2018
-        } //LEJGG 23/11/2018
+            $(this).addClass("Cambio");
+        }
     }
     updateFooter();
     llenarRetencionesIRet();
     llenarRetencionesBImp();
+});
+
+
+$('body').on('keydown', '.OPER', function (e) {
+    if ($(this).hasClass("Cambio")) {
+        $(this).removeClass("Cambio");
+    }
+    else {
+        //No hagas nada
+    }
 });
 
 function sumarColumnasExtras(tr) {
