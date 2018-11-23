@@ -228,9 +228,9 @@ $(document).ready(function () {
 
 
             //FRT21112018.3 Se realizara validación del monto > 0
-            var monto = $(this).find("td.MONTO input").val();
+            var monto = $(this).find("td.MONTO input").val().replace('$', '').replace(',', '');;
 
-            if (monto == "$ 0.00" | monto == null | monto == "") { //MGC 07-11-2018 Validación en el monto
+            if (monto == " 0.00" | monto == null | monto == "") { //MGC 07-11-2018 Validación en el monto
                 msgerror = "El monto debe ser MAYOR a cero";
                 _b = false;
             } else {
@@ -241,6 +241,45 @@ $(document).ready(function () {
             }
             //END FRT06112018.3
 
+            //FRT23112018 Para validar el Monto contra las F
+            monto = parseFloat(monto);
+            var lengthT1 = $("table#table_ret tbody tr[role='row']").length;
+            if (lengthT1 > 0) {
+                for (var i = 1; i < lengthT1 + 1; i++) {
+                    var montobase = parseFloat($(this).find("td.BaseImpF" + i + " input").val().replace('$', '').replace(',', ''));
+
+                    if (monto < montobase) {
+                        msgerror = "El monto de posicion no debe ser MENOR a a Monto Base retencion";
+                        _m = false;
+                        break
+                    } else {
+                        _m = true;
+                    }
+                    if (_m === false) {
+                        return false;
+                    }
+                }
+
+            }
+
+
+        //end FRT22112018
+
+
+            //FRT2311208 PARA VALIDACION DE 50 CARACTERES
+            var texto = $(this).find("td.TEXTO textarea").val().trim();
+            var ct = texto.length;
+            ct = parseFloat(ct)
+            if (ct < 50) {
+                _b = false;
+                msgerror = "Faltan Caracteres en el renglon " + _rni + " ";
+            } else {
+                _b = true;
+            }
+            if (_b === false) {
+                return false;
+            }
+            //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
 
 
             var tipoimp = t.row(indexopc).data()[14];
@@ -336,17 +375,40 @@ $(document).ready(function () {
 
         //ENDFRT21112018
 
+        //FRT2311208 PARA VALIDACION DE 50 CARACTERES
+        var texto1 = $("#CONCEPTO").val();
+        var ct1 = texto1.length;
+        ct1 = parseFloat(ct1);
+        if (ct1 < 50) {
+            _ct = false;
+            msgerror = "El texto de Explicacion no contiene los 50 caracteres solicitados";
+        } else {
+            _ct = true;
+        }
+            //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
+
 
         if (_b) {
-            if (_a) {
-                //Guardar los valores de la tabla en el modelo para enviarlos al controlador
-                copiarTableInfoControl(); //copiarTableInfoPControl();
-                //copiarTableSopControl();
-                copiarTableRet();
-                $('#btn_guardar').trigger("click");
+            if (_m) {
+                if (_a) {
+                    if (_ct) {
+                        //Guardar los valores de la tabla en el modelo para enviarlos al controlador
+                        copiarTableInfoControl(); //copiarTableInfoPControl();
+                        //copiarTableSopControl();
+                        copiarTableRet();
+                        $('#btn_guardar').trigger("click");
+                    } else {
+                        M.toast({ html: msgerror });
+                    }
+                    } else {
+                    M.toast({ html: msgerror });
+                    }
+
+                   
             } else {
                 M.toast({ html: msgerror });
             }
+            
           
         } else {
             M.toast({ html: msgerror });
