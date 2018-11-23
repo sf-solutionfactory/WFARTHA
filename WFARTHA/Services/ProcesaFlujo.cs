@@ -87,7 +87,7 @@ namespace WFARTHA.Services
 
         public string procesa(FLUJO f, string recurrente, bool edit, string email, string nuevo_acc)
         {
-
+            
             bool emails = false; //MGC 08-10-2018 Obtener los datos para el correo
             string correcto = String.Empty;
             WFARTHAEntities db = new WFARTHAEntities();
@@ -131,17 +131,13 @@ namespace WFARTHA.Services
                 //                    .OrderByDescending(a => a.VERSION).FirstOrDefault();
 
                 int step = 0;
+                int stepd = 0;//MGC 21-11-2018 Si es el inicio de la solicitud y si no hay cadena de autorización, asignar al solicitante/detonador
                 if (actual.STEP_AUTO == 0)
                 {
                     step = Convert.ToInt32(actual.STEP_AUTO) + 1;
+                    stepd = Convert.ToInt32(actual.STEP_AUTO);//MGC 21-11-2018 Si es el inicio de la solicitud y si no hay cadena de autorización, asignar al solicitante/detonador
                 }
-
-                //DET_AGENTECC dah = db.DET_AGENTECC.Where(a => a.VERSION == deta.VERSION && a.USUARIOC_ID == deta.USUARIOC_ID && a.ID_RUTA_AGENTE == deta.ID_RUTA_AGENTE && a.USUARIOA_ID == deta.USUARIOA_ID).OrderByDescending(a => a.VERSION).FirstOrDefault();
-                List<DET_AGENTECA> dap = db.DET_AGENTECA.Where(a => a.VERSION == f.RUTA_VERSION && a.ID_RUTA_AGENTE == f.ID_RUTA_A && a.STEP_FASE == step).OrderByDescending(a => a.VERSION).ToList();
-                DET_AGENTECA dah = new DET_AGENTECA();
-                dah = detAgenteLimite(dap, Convert.ToDecimal(d.MONTO_DOC_MD));
-
-
+                //MGC 21-11-2018 Si es el inicio de la solicitud y si no hay cadena de autorización, asignar al solicitante/detonador-------->
                 //actual.DETVER = dah.VERSION; //MGC COMM
                 actual.DETVER = f.RUTA_VERSION; //MGC COMM
                 actual.USUARIOA_ID = f.USUARIOA_ID;
@@ -151,6 +147,23 @@ namespace WFARTHA.Services
                 actual.WORKF_ID = f.WORKF_ID;
                 f.ESTATUS = "A";
                 actual.ESTATUS = f.ESTATUS;
+                //MGC 21-11-2018 Si es el inicio de la solicitud y si no hay cadena de autorización, asignar al solicitante/detonador--------<
+
+                //DET_AGENTECC dah = db.DET_AGENTECC.Where(a => a.VERSION == deta.VERSION && a.USUARIOC_ID == deta.USUARIOC_ID && a.ID_RUTA_AGENTE == deta.ID_RUTA_AGENTE && a.USUARIOA_ID == deta.USUARIOA_ID).OrderByDescending(a => a.VERSION).FirstOrDefault();
+                List<DET_AGENTECA> dap = db.DET_AGENTECA.Where(a => a.VERSION == f.RUTA_VERSION && a.ID_RUTA_AGENTE == f.ID_RUTA_A && a.STEP_FASE == step).OrderByDescending(a => a.VERSION).ToList();
+                DET_AGENTECA dah = new DET_AGENTECA();
+                //MGC 21-11-2018 Si es el inicio de la solicitud y si no hay cadena de autorización, asignar al solicitante/detonador-------->
+                if (dap == null || dap.Count == 0)
+                {
+
+                    dah = detAgenteLimite(dap, Convert.ToDecimal(d.MONTO_DOC_MD), stepd, actual);//MGC 19-10-2018 Cambio a detonador  
+
+                }
+                else
+                {
+                    dah = detAgenteLimite(dap, Convert.ToDecimal(d.MONTO_DOC_MD));
+                }
+                //MGC 21-11-2018 Si es el inicio de la solicitud y si no hay cadena de autorización, asignar al solicitante/detonador--------<
 
                 //Si es edición, solamente actualizar el status en el flujo
                 if (edit)
@@ -218,8 +231,20 @@ namespace WFARTHA.Services
                     {
                         if (recurrente != "X")
                         {
+                            //MGC 21-11-2018 Si es el inicio de la solicitud y si no hay cadena de autorización, asignar al solicitante/detonador-------->
+                            FLUJO detA = new FLUJO();
                             //MGC COMM
-                            FLUJO detA = determinaAgenteI(d, actual.USUARIOA_ID, actual.USUARIOD_ID, 0, dah);
+                            //FLUJO detA = determinaAgenteI(d, actual.USUARIOA_ID, actual.USUARIOD_ID, 0, dah);
+                            if (dap == null || dap.Count == 0)
+                            {
+                                detA = determinaAgenteI(d, actual.USUARIOA_ID, actual.USUARIOD_ID, 0, dah, stepd, actual);//MGC 19-10-2018 Cambio a detonador 
+                            }
+                            else
+                            {
+                                detA = determinaAgenteI(d, actual.USUARIOA_ID, actual.USUARIOD_ID, 0, dah);
+                            }
+                            //MGC 21-11-2018 Si es el inicio de la solicitud y si no hay cadena de autorización, asignar al solicitante/detonador--------<
+
                             nuevo.USUARIOA_ID = detA.USUARIOA_ID;
                             nuevo.USUARIOD_ID = nuevo.USUARIOA_ID;
                             nuevo.STEP_AUTO = detA.STEP_AUTO;
@@ -1914,6 +1939,108 @@ namespace WFARTHA.Services
             return dap;
         }
         //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
+
+        //MGC 21-11-2018 Si es el inicio de la solicitud y si no hay cadena de autorización, asignar al solicitante/detonador--------<
+        //Obtener el agente que se ajusta de a partir del monto del documento
+        public DET_AGENTECA detAgenteLimite(List<DET_AGENTECA> lag, decimal monto, int step, FLUJO flujo)//MGC 19-10-2018 Cambio a detonador  
+        {
+
+            List<DET_AGENTECA> lr = new List<DET_AGENTECA>();
+            //MGC 19-10-2018 Cambio a detonador 
+            if (lag.Count == 0 & step == 0)
+            {
+                WFARTHAEntities db = new WFARTHAEntities();
+                //Obtener el usuario al que se le creo la orden
+                DET_AGENTECC dc = new DET_AGENTECC();
+
+                dc = db.DET_AGENTECC.Where(dtc => dtc.VERSION == flujo.RUTA_VERSION && dtc.USUARIOC_ID == flujo.USUARIOA_ID && dtc.ID_RUTA_AGENTE == flujo.ID_RUTA_A).FirstOrDefault();
+
+                DET_AGENTECA dt = new DET_AGENTECA();
+
+                dt.ID_RUTA_AGENTE = flujo.ID_RUTA_A;
+                dt.VERSION = Convert.ToInt32(flujo.RUTA_VERSION);
+                dt.STEP_FASE = 0;
+                dt.STEP_ACCION = 0;
+                dt.LIM_SUP = Convert.ToDecimal(99999999999.00);
+                dt.AGENTE_SIG = dc.USUARIOA_ID;
+
+                lr.Add(dt);
+
+            }
+            //MGC 19-10-2018 Cambio a detonador 
+            else
+            {
+                //Funcionamiento en cadena
+                //List<DET_AGENTECA> lr = new List<DET_AGENTECA>();
+                foreach (DET_AGENTECA ag in lag)
+                {
+                    if (monto < ag.LIM_SUP)
+                    {
+                        lr.Add(ag);
+                    }
+                }
+            }
+
+            //Se obtuvieron los registros que pueden validar el monto
+            DET_AGENTECA rv = new DET_AGENTECA();
+
+            rv = lr.OrderBy(ll => ll.LIM_SUP).FirstOrDefault();
+
+
+            return rv;
+        }
+
+        public FLUJO determinaAgenteI(DOCUMENTO d, string user, string delega, int pos, DET_AGENTECA dah, int step, FLUJO actual)//MGC 19-10-2018 Cambio a detonador 
+        {
+            if (delega != null)
+                user = delega;
+            bool fin = false;
+            WFARTHAEntities db = new WFARTHAEntities();
+            DET_AGENTECA dap = new DET_AGENTECA();
+            USUARIO u = db.USUARIOs.Find(d.USUARIOC_ID);
+
+            if (pos.Equals(0))
+            {
+                //dap = db.DET_AGENTEP.Where(a => a.SOCIEDAD_ID.Equals(dah.SOCIEDAD_ID) & a.PUESTOC_ID == dah.PUESTOC_ID &
+                //                    a.VERSION == dah.VERSION & a.AGROUP_ID == dah.AGROUP_ID & a.POS == 1).FirstOrDefault();
+                //dap = db.DET_AGENTEC.Where(a => a.USUARIOC_ID.Equals(delega) & a.PAIS_ID == dah.PAIS_ID &
+                //                   a.VKORG.Equals(dah.VKORG) & a.VTWEG.Equals(dah.VTWEG) & a.SPART.Equals(dah.SPART) & a.KUNNR.Equals(dah.KUNNR) &
+                //                   a.VERSION == dah.VERSION & a.POS == 1).FirstOrDefault();
+
+                List<DET_AGENTECA> dal = db.DET_AGENTECA.Where(a => a.VERSION == dah.VERSION && a.ID_RUTA_AGENTE == dah.ID_RUTA_AGENTE && a.STEP_FASE == dah.STEP_FASE).OrderByDescending(a => a.VERSION).ToList();
+
+                dap = detAgenteLimite(dal, Convert.ToDecimal(d.MONTO_DOC_MD), step, actual);//MGC 19-10-2018 Cambio a detonador 
+
+
+            }
+
+            //string agente = "";
+            //FLUJO f = new FLUJO();
+            //f.DETPOS = 0;
+            //if (!fin)
+            //{
+            //    agente = dap.USUARIOA_ID;
+            //    f.DETPOS = dap.POS;
+            //}
+            //f.USUARIOA_ID = agente;
+            //return f;
+
+            string agente = "";
+            FLUJO f = new FLUJO();
+            f.DETPOS = 0;
+            if (!fin)
+            {
+                //agente = dap.USUARIOA_ID;
+                agente = dap.AGENTE_SIG;
+                //f.DETPOS = dap.POS;
+                f.DETPOS = dap.STEP_FASE;
+                f.STEP_AUTO = dap.STEP_FASE;
+            }
+            f.USUARIOA_ID = agente;
+            return f;
+        }
+
+        //MGC 21-11-2018 Si es el inicio de la solicitud y si no hay cadena de autorización, asignar al solicitante/detonador--------<
 
     }
 }

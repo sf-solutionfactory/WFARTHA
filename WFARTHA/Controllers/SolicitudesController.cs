@@ -4006,8 +4006,8 @@ namespace WFARTHA.Controllers
                                 fe.NUM_DOC = dOCUMENTO.NUM_DOC;
                                 fe.POS = f.POS;
                                 fe.LOOP = 1;
-                                fe.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
-                                fe.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
+                                fe.USUARIOA_ID = _docf.USUARIOC_ID;
+                                fe.USUARIOD_ID = _docf.USUARIOD_ID;
                                 fe.ESTATUS = "I";
                                 fe.FECHAC = DateTime.Now;
                                 fe.FECHAM = DateTime.Now;
