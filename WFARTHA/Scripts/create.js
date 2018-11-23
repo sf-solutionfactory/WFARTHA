@@ -568,7 +568,7 @@ $(document).ready(function () {
 
         }
 
-        
+
         //$("#table_info > tbody  > tr[role='row']").each(function () { //MGC 24-10-2018 Conflicto Enrique-Rogelio
         var t = $('#table_info').DataTable();
         var tabble = "table_info";
@@ -631,60 +631,60 @@ $(document).ready(function () {
 
 
 
-        //    //FRT23112018 Para validar el Monto contra las F
-        //    var lengthT = $("table#table_ret tbody tr[role='row']").length;
-        //    var docsenviar = {};
-        //    var jsonObjDocs = [];
-        //    if (lengthT > 0) {
-        //        //Obtener los valores de la tabla para agregarlos a la tabla oculta y agregarlos al json
-        //        //Se tiene que jugar con los index porque las columnas (ocultas) en vista son diferentes a las del plugin
+            //    //FRT23112018 Para validar el Monto contra las F
+            //    var lengthT = $("table#table_ret tbody tr[role='row']").length;
+            //    var docsenviar = {};
+            //    var jsonObjDocs = [];
+            //    if (lengthT > 0) {
+            //        //Obtener los valores de la tabla para agregarlos a la tabla oculta y agregarlos al json
+            //        //Se tiene que jugar con los index porque las columnas (ocultas) en vista son diferentes a las del plugin
 
-        //        var i = 1;
-        //        var t = $('#table_ret').DataTable();
+            //        var i = 1;
+            //        var t = $('#table_ret').DataTable();
 
-        //        $("#table_ret > tbody  > tr[role='row']").each(function () {
+            //        $("#table_ret > tbody  > tr[role='row']").each(function () {
 
-        //            //Obtener el row para el plugin
-        //            var tr = $(this);
-        //            var indexopc = t.row(tr).index();
+            //            //Obtener el row para el plugin
+            //            var tr = $(this);
+            //            var indexopc = t.row(tr).index();
 
-        //            //Obtener la sociedad oculta
-        //            var soc = t.row(indexopc).data()[0];
+            //            //Obtener la sociedad oculta
+            //            var soc = t.row(indexopc).data()[0];
 
-        //            //Obtener el proveedor oculto
-        //            var prov = t.row(indexopc).data()[1];
+            //            //Obtener el proveedor oculto
+            //            var prov = t.row(indexopc).data()[1];
 
-        //            //Obtener valores visibles en la tabla
-        //            var tret = toNum($(this).find("td.TRET").text());
-        //            var indret = toNum($(this).find("td.INDRET").text());
-        //            var bimponible = $(this).find("td.BIMPONIBLE").text();
-        //            var imret = $(this).find("td.IMPRET").text();
+            //            //Obtener valores visibles en la tabla
+            //            var tret = toNum($(this).find("td.TRET").text());
+            //            var indret = toNum($(this).find("td.INDRET").text());
+            //            var bimponible = $(this).find("td.BIMPONIBLE").text();
+            //            var imret = $(this).find("td.IMPRET").text();
 
-        //            //Quitar espacios
-        //            bimponible = bimponible.replace(/\s/g, '');
-        //            imret = imret.replace(/\s/g, '');
+            //            //Quitar espacios
+            //            bimponible = bimponible.replace(/\s/g, '');
+            //            imret = imret.replace(/\s/g, '');
 
-        //            //Conversión a número
-        //            var bimponible = toNum(bimponible);
-        //            var imret = toNum(imret);
+            //            //Conversión a número
+            //            var bimponible = toNum(bimponible);
+            //            var imret = toNum(imret);
 
-        //            var item = {};
+            //            var item = {};
 
-        //            //Agregar los valores para enviarlos al modelo
-        //            item["LIFNR"] = prov;
-        //            item["BUKRS"] = soc;
-        //            item["WITHT"] = tret;
-        //            item["WT_WITHCD"] = indret;
-        //            item["POS"] = i;
-        //            item["BIMPONIBLE"] = bimponible;
-        //            item["IMPORTE_RET"] = imret;
+            //            //Agregar los valores para enviarlos al modelo
+            //            item["LIFNR"] = prov;
+            //            item["BUKRS"] = soc;
+            //            item["WITHT"] = tret;
+            //            item["WT_WITHCD"] = indret;
+            //            item["POS"] = i;
+            //            item["BIMPONIBLE"] = bimponible;
+            //            item["IMPORTE_RET"] = imret;
 
-        //            jsonObjDocs.push(item);
-        //            i++;
-        //            item = "";
-        //        });
-        //    }
-        ////end FRT22112018
+            //            jsonObjDocs.push(item);
+            //            i++;
+            //            item = "";
+            //        });
+            //    }
+            ////end FRT22112018
 
 
             if (_vs.length > 0) {
@@ -770,7 +770,7 @@ $(document).ready(function () {
 
         //FRT21112018 Para validar cantidad de anexos solamente al enviar
         var borrador = $("#borr").val();
-        var lengthT = $("table#table_anexa tbody tr[role='row']").length;    
+        var lengthT = $("table#table_anexa tbody tr[role='row']").length;
         _a = true;
         if (borrador != "B") {
             if (lengthT == 0) {
@@ -779,7 +779,7 @@ $(document).ready(function () {
             } else {
                 _a = true;
             }
-        } 
+        }
 
         //ENDFRT21112018
 
@@ -796,7 +796,7 @@ $(document).ready(function () {
                 } else {
                     M.toast({ html: msgerror });
                 }
-                
+
             } else {
                 M.toast({ html: msgerror });
             }
@@ -1106,7 +1106,7 @@ $(document).ready(function () {
                             //Alert no se metio porque ya hay un xml en la tabla
                             M.toast({ html: "Ya existe una factura" });
                             document.getElementById('file_sopAnexar').value = '';
-                            
+
                         }
                     }
                     //LEJGG23/10/18----------------------------------------------------<
@@ -1234,7 +1234,6 @@ $(document).ready(function () {
         $('#FECHACON').val(fechad);
         $('#FECHA_BASE').val(fechad);
     });
-
 });
 
 //Cuando se termina de cargar la página
@@ -2031,100 +2030,106 @@ $('body').on('focusout', '.OPER', function (e) {
 
     }
     else if ($(this).hasClass("MONTO")) {
+        //LEJGG 23/11/2018
+        var _valMonto = $("#_montoV").val(); //LEJGG 23/11/2018
+        if ($(this).val() === _valMonto) { //LEJGG 23/11/2018
+            //No hace nada
+        } //LEJGG 23/11/2018
+        else { //LEJGG 23/11/2018
+            //Desde el subtotal
+            var sub = $(this).val().replace('$', '').replace(',', '');
+            //While para que elimine las comas //LEJGG20-11-2018
+            while (sub.indexOf(',') > -1) {
+                sub = sub.replace('$', '').replace(',', '');
+            }
+            sub = parseFloat(sub);
 
-        //Desde el subtotal
-        var sub = $(this).val().replace('$', '').replace(',', '');
-        //While para que elimine las comas //LEJGG20-11-2018
-        while (sub.indexOf(',') > -1) {
-            sub = sub.replace('$', '').replace(',', '');
-        }
-        sub = parseFloat(sub);
-
-        //Lleno los campos de Base Imponible con el valor del monto
-        for (x = 0; x < tRet2.length; x++) {
-            var _xvalue = tr.find("td.BaseImp" + tRet2[x] + " input").val().replace('$', '').replace(',', '');
-            // if (_xvalue === "") {
-            //AJAX
-            var indret = 0;
-            $("#table_ret > tbody  > tr[role='row']").each(function () {
-                var t_ret = $(this).find("td.TRET").text();
-                if (t_ret === tRet2[x]) {
-                    indret = $(this).find("td.INDRET").text();
-                }
-            });
-            var campo = "";
-            $.ajax({
-                type: "POST",
-                url: 'getCampoMult',
-                dataType: "json",
-                data: { 'witht': tRet2[x], 'ir': indret },
-                success: function (data) {
-                    if (data !== null || data !== "") {
-                        campo = data;
+            //Lleno los campos de Base Imponible con el valor del monto
+            for (x = 0; x < tRet2.length; x++) {
+                var _xvalue = tr.find("td.BaseImp" + tRet2[x] + " input").val().replace('$', '').replace(',', '');
+                // if (_xvalue === "") {
+                //AJAX
+                var indret = 0;
+                $("#table_ret > tbody  > tr[role='row']").each(function () {
+                    var t_ret = $(this).find("td.TRET").text();
+                    if (t_ret === tRet2[x]) {
+                        indret = $(this).find("td.INDRET").text();
                     }
-                },
-                error: function (xhr, httpStatusMessage, customErrorMessage) {
-                    M.toast({ html: httpStatusMessage });
-                },
-                async: false
-            });
-            if (campo == "MONTO") {
-                tr.find("td.BaseImp" + tRet2[x] + " input").val(toShow(sub));
-                //Ejecutamos un ajax para llenar el valor de importe de retencion
-                var _res = porcentajeImpRet(tRet2[x]);
-                _res = (sub * _res) / 100;//Saco el porcentaje
-                tr.find("td.ImpRet" + tRet2[x] + " input").val(toShow(_res));
+                });
+                var campo = "";
+                $.ajax({
+                    type: "POST",
+                    url: 'getCampoMult',
+                    dataType: "json",
+                    data: { 'witht': tRet2[x], 'ir': indret },
+                    success: function (data) {
+                        if (data !== null || data !== "") {
+                            campo = data;
+                        }
+                    },
+                    error: function (xhr, httpStatusMessage, customErrorMessage) {
+                        M.toast({ html: httpStatusMessage });
+                    },
+                    async: false
+                });
+                if (campo == "MONTO") {
+                    tr.find("td.BaseImp" + tRet2[x] + " input").val(toShow(sub));
+                    //Ejecutamos un ajax para llenar el valor de importe de retencion
+                    var _res = porcentajeImpRet(tRet2[x]);
+                    _res = (sub * _res) / 100;//Saco el porcentaje
+                    tr.find("td.ImpRet" + tRet2[x] + " input").val(toShow(_res));
+                }
+                if (campo == "IVA") {
+                    var xiva = (sub * impimp) / 100;
+                    var _iva_ = parseFloat(xiva);
+                    tr.find("td.BaseImp" + tRet2[x] + " input").val(toShow(_iva_));
+                    var _resx = porcentajeImpRet(tRet2[x]);
+                    var _resIva = _iva_ * _resx;
+                    //Ejecutamos un ajax para llenar el valor de importe de retencion
+                    tr.find("td.ImpRet" + tRet2[x] + " input").val(toShow(_resIva));
+                }
+                //}
             }
-            if (campo == "IVA") {
-                var xiva = (sub * impimp) / 100;
-                var _iva_ = parseFloat(xiva);
-                tr.find("td.BaseImp" + tRet2[x] + " input").val(toShow(_iva_));
-                var _resx = porcentajeImpRet(tRet2[x]);
-                var _resIva = _iva_ * _resx;
-                //Ejecutamos un ajax para llenar el valor de importe de retencion
-                tr.find("td.ImpRet" + tRet2[x] + " input").val(toShow(_resIva));
+            //Ejecutamos el metodo para sumarizar las columnas
+            var colTotal = sumarColumnasExtras(tr);
+
+            // rimpimp = 100 - impimp;
+
+            var impv = (sub * impimp) / 100;
+            impv = parseFloat(impv);
+            var total = sub + impv;
+            total = parseFloat(total);
+
+            var sub = total - impv;
+
+            impv = toShow(impv);
+            sub = toShow(sub);
+            total = toShow(total);
+
+            //Enviar los valores a la tabla
+            //Subtotal
+            tr.find("td.MONTO input").val();
+            tr.find("td.MONTO input").val(sub);
+
+            //IVA
+            tr.find("td.IVA input").val();
+            tr.find("td.IVA input").val(impv);
+
+            //Total
+            tr.find("td.TOTAL input").val();
+            if (colTotal > 0) {
+                var sumt = parseFloat(total.replace('$', '').replace(',', '')) - parseFloat(colTotal);
+                tr.find("td.TOTAL input").val(toShow(sumt));
             }
-            //}
-        }
-        //Ejecutamos el metodo para sumarizar las columnas
-        var colTotal = sumarColumnasExtras(tr);
-
-        // rimpimp = 100 - impimp;
-
-        var impv = (sub * impimp) / 100;
-        impv = parseFloat(impv);
-        var total = sub + impv;
-        total = parseFloat(total);
-
-        var sub = total - impv;
-
-        impv = toShow(impv);
-        sub = toShow(sub);
-        total = toShow(total);
-
-        //Enviar los valores a la tabla
-        //Subtotal
-        tr.find("td.MONTO input").val();
-        tr.find("td.MONTO input").val(sub);
-
-        //IVA
-        tr.find("td.IVA input").val();
-        tr.find("td.IVA input").val(impv);
-
-        //Total
-        tr.find("td.TOTAL input").val();
-        if (colTotal > 0) {
-            var sumt = parseFloat(total.replace('$', '').replace(',', '')) - parseFloat(colTotal);
-            tr.find("td.TOTAL input").val(toShow(sumt));
-        }
-        else {
-            tr.find("td.TOTAL input").val(total);
-        }
+            else {
+                tr.find("td.TOTAL input").val(total);
+            }
+            $("#_montoV").val(sub); //LEJGG 23/11/2018
+        } //LEJGG 23/11/2018
     }
     updateFooter();
     llenarRetencionesIRet();
     llenarRetencionesBImp();
-    //$(".extrasC").trigger("focusout"); //lej18102018
 });
 
 function sumarColumnasExtras(tr) {
@@ -2651,6 +2656,9 @@ $('body').on('focusout', '.extrasC', function (e) {
             _mnt = parseFloat("0.0");
         }
         else {
+            while (_mnt.indexOf(',') > -1) {
+                _mnt = _mnt.replace('$', '').replace(',', '');
+            }
             _mnt = parseFloat(_mnt.replace(',', ''));
         }
         var _iva = tr.find("td.IVA input").val().replace('$', '');
@@ -2750,6 +2758,9 @@ function sumarizarTodoRow(_this) {
 
     //Desde el subtotal
     var sub = tr.find("td.MONTO input").val().replace('$', '').replace(',', '');
+    while (sub.indexOf(',') > -1) {
+        sub = sub.replace('$', '').replace(',', '');
+    }
     sub = parseFloat(sub);
 
     //rimpimp = 100 - impimp;

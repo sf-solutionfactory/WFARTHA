@@ -27,7 +27,7 @@ $(document).ready(function () {
         tamanosRenglones();
     });
 
-       //FRT21112018.3 Se añade para obtener el Tipo de Cambio
+    //FRT21112018.3 Se añade para obtener el Tipo de Cambio
     $("#MONEDA_ID").change(function () {
         var moneda = $('#MONEDA_ID Option:Selected').val();
         var fecha = $('#FECHAD').val();
@@ -40,7 +40,6 @@ $(document).ready(function () {
         }
 
     });
-
 
     //Tabla de Anexos
     $('#table_anexa').DataTable({
@@ -326,12 +325,12 @@ $(document).ready(function () {
         var lengthT = $("table#table_anexa tbody tr[role='row']").length;
         _a = true;
 
-            if (lengthT == 0) {
-                msgerror = "Es necesario agregar por lo menos 1 Anexo";
-                _a = false;
-            } else {
-                _a = true;
-            }
+        if (lengthT == 0) {
+            msgerror = "Es necesario agregar por lo menos 1 Anexo";
+            _a = false;
+        } else {
+            _a = true;
+        }
 
 
         //ENDFRT21112018
@@ -347,7 +346,7 @@ $(document).ready(function () {
             } else {
                 M.toast({ html: msgerror });
             }
-          
+
         } else {
             M.toast({ html: msgerror });
         }
@@ -393,11 +392,6 @@ $(document).ready(function () {
     });
 
     $('#file_sopAnexar').change(function () {
-        //var _rw = 0;
-        //$("#table_anexa > tbody  > tr").each(function () {
-        //    _rw++;
-        //});
-
         //FRT 13112018 PARA PODER SUBIR LOS ARCHIVOS A CAREPETA TEMPORAL
         var lengthtemp = $(this).get(0).files.length;
 
@@ -1283,6 +1277,9 @@ $('body').on('focusout', '.extrasC', function (e) {
             _mnt = parseFloat("0.0");
         }
         else {
+            while (_mnt.indexOf(',') > -1) {
+                _mnt = _mnt.replace('$', '').replace(',', '');
+            }
             _mnt = parseFloat(_mnt.replace(',', ''));
         }
         var _iva = tr.find("td.IVA input").val().replace('$', '');
@@ -2267,9 +2264,9 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
     var ceco = "";
     if (TIPOIMP == 'P') {
         ceco = "<input disabled class=\"CCOSTO\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + CCOSTO + "\">";
-        } else {
+    } else {
         ceco = "<input class=\"CCOSTO\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + CCOSTO + "\">";
-        }
+    }
 
     var r = addRowl(
         t,
@@ -2409,7 +2406,7 @@ function updateFooter() {
     $('#mtTot').val($('#MONTO_DOC_MD').val());//Lej 29.09.2018
     $('#total_info1').text(toShow(total));//FRT22112018
 
-   
+
 }
 
 function resetTabs() {
@@ -2700,7 +2697,7 @@ function obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad) {
 //Para verificar el tamaño del textarea
 //LEJGG 22/11/2018
 function tamanoTextArea() {
-    $("#table_info > tbody > tr[role = 'row']").each(function (index) {       
+    $("#table_info > tbody > tr[role = 'row']").each(function (index) {
         var colex = $(this).find("td.TEXTO");
         colex.css('height', '100px');
     });
@@ -2745,3 +2742,56 @@ function asignarVal(val) {
 //END FRT21112018
 
 //LEJGG 21-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
+function sumarizarTodoRow(_this) {
+    //Inicio codio sumarizar
+    //Ejecutamos el metodo para sumarizar las columnas
+    //var t = $('#table_info').DataTable();
+    var tr = _this.closest('tr'); //Obtener el row 
+    //Obtener el valor del impuesto
+    var imp = tr.find("td.IMPUESTO input").val();
+    //Calcular impuesto y subtotal
+    var impimp = impuestoVal(imp);
+    impimp = parseFloat(impimp);
+    var colTotal = sumarColumnasExtras(tr);
+
+    //Desde el subtotal
+    var sub = tr.find("td.MONTO input").val().replace('$', '').replace(',', '');
+    while (sub.indexOf(',') > -1) {
+        sub = sub.replace('$', '').replace(',', '');
+    }
+    sub = parseFloat(sub);
+
+    //rimpimp = 100 - impimp;
+
+    var impv = (sub * impimp) / 100;
+    impv = parseFloat(impv);
+
+    var total = sub + impv;
+    total = parseFloat(total);
+    var sub = total - impv;
+
+    impv = toShow(impv);
+    sub = toShow(sub);
+    total = toShow(total);
+
+    //Enviar los valores a la tabla
+    //Subtotal
+    tr.find("td.MONTO input").val();
+    tr.find("td.MONTO input").val(sub);
+
+    //IVA
+    tr.find("td.IVA input").val();
+    tr.find("td.IVA input").val(impv);
+
+    //Total
+    tr.find("td.TOTAL input").val();
+    if (colTotal > 0) {
+        var sumt = parseFloat(total.replace('$', '').replace(',', '')) - parseFloat(colTotal);
+        tr.find("td.TOTAL input").val(toShow(sumt));
+    }
+    else {
+        tr.find("td.TOTAL input").val(total);
+    }
+    //Fin de codigo que sumariza
+    updateFooter();
+}
