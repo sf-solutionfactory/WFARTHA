@@ -1993,6 +1993,7 @@ namespace WFARTHA.Controllers
                     }
                     //Lejgg 26.10.2018----------------------------------------<
                     //Lejgg 28.10.2018---------------------------------------->
+                    Session["Temporal"] = null;
                     if (Uuid != string.Empty)
                     {
                         var pos = db.DOCUMENTOUUIDs.ToList();
@@ -2664,10 +2665,11 @@ namespace WFARTHA.Controllers
                             db.DOCUMENTOPs.Remove(dOCUMENTOP);
                             db.SaveChanges();
                         }
-                        catch (Exception ex ) {
+                        catch (Exception ex)
+                        {
 
                         }
-                        
+
                     }
 
 
@@ -2676,14 +2678,14 @@ namespace WFARTHA.Controllers
                     decimal _iva = 0;
                     decimal _total = 0;
                     var _mwskz = "";
-                    
+
                     var _pos_err_imputacion = "";
                     for (int i = 0; i < dOCUMENTO.DOCUMENTOP.Count; i++)
                     {
                         DOCUMENTOP dp = new DOCUMENTOP();
 
                         dp.NUM_DOC = dOCUMENTO.NUM_DOC;
-                        dp.POS = i+1;
+                        dp.POS = i + 1;
                         dp.ACCION = dOCUMENTO.DOCUMENTOP[i].ACCION;
                         dp.FACTURA = dOCUMENTO.DOCUMENTOP[i].FACTURA;
                         dp.TCONCEPTO = dOCUMENTO.DOCUMENTOP[i].TCONCEPTO;
@@ -2721,11 +2723,11 @@ namespace WFARTHA.Controllers
                     db.DOCUMENTOPs.Add(_dp);
                     db.SaveChanges();
 
-                    
+
 
                     for (int i = 0; i < dOCUMENTO.DOCUMENTORP.Count; i++)
                     {
-                        
+
                         var _op = ((i + 2) / 2);
                         var _pos = _op.ToString().Split('.');
 
@@ -3282,7 +3284,7 @@ namespace WFARTHA.Controllers
 
                                 for (int i = 0; i < delDAS.Count; i++)
                                 {
-                                    
+
                                     DOCUMENTOA1 dOCUMENTOASd = db.DOCUMENTOAS1.Find(delDAS[i].NUM_DOC, delDAS[i].POS);
                                     db.DOCUMENTOAS1.Remove(dOCUMENTOASd);
                                     db.SaveChanges();
