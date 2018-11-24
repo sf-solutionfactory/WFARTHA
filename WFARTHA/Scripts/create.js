@@ -616,7 +616,11 @@ $(document).ready(function () {
             //ENDFRT20112018 iNGRESAR VALIDACION DE CONCEPTO
 
             //FRT06112018.3 Se realizara validación del monto > 0
-            var monto = $(this).find("td.MONTO input").val().replace('$', '').replace(',', '');;
+            var monto = $(this).find("td.MONTO input").val().replace('$', '').replace(',', '');
+
+            while (monto.indexOf(',') > -1) {
+                monto = monto.replace('$', '').replace(',', '');
+            }
 
             if (monto == " 0.00" | monto == null | monto == "") { //MGC 07-11-2018 Validación en el monto
                 msgerror = "El monto debe ser MAYOR a cero";
@@ -634,25 +638,34 @@ $(document).ready(function () {
 
 
             //FRT23112018 Para validar el Monto contra las F
-            monto = parseFloat(monto);
-            var lengthT1 = $("table#table_ret tbody tr[role='row']").length;
-            if (lengthT1 > 0) {
-                for (var i = 1; i < lengthT1 + 1; i++) {
-                    var montobase = parseFloat($(this).find("td.BaseImpF" + i + " input").val().replace('$', '').replace(',', ''));
+            if (tRet[0] != null) {
+                monto = parseFloat(monto);
+                var lengthT1 = $("table#table_ret tbody tr[role='row']").length;
+                if (lengthT1 > 0) {
+                    for (var i = 1; i < lengthT1 + 1; i++) {
+                        var _montobase = $(this).find("td.BaseImpF" + i + " input").val().replace('$', '').replace(',', '');
+                        while (_montobase.indexOf(',') > -1) {
+                            _montobase = _montobase.replace('$', '').replace(',', '');
+                        }
+                        var montobase = parseFloat(_montobase);
 
-                    if (monto < montobase) {
-                        msgerror = "El monto de posicion no debe ser MENOR a a Monto Base retencion";
-                        _m = false;
-                        break
-                    } else {
-                        _m = true;
+                        if (monto < montobase) {
+                            msgerror = "El monto de posicion no debe ser MENOR a a Monto Base retencion";
+                            _m = false;
+                            break
+                        } else {
+                            _m = true;
+                        }
+                        if (_m === false) {
+                            return false;
+                        }
                     }
-                    if (_m === false) {
-                        return false;
-                    }
+
                 }
-
+            } else {
+                _m = true;
             }
+           
 
 
             //end FRT22112018
@@ -1985,7 +1998,14 @@ $('body').on('change', '.IMPUESTO_SELECT', function (event, param1) {
         //Total
         tr.find("td.TOTAL input").val();
         if (colTotal > 0) {
-            var sumt = parseFloat(total.replace('$', '').replace(',', '')) - parseFloat(colTotal);
+            var _tot = total.replace('$', '').replace(',', '');
+            while (_tot.indexOf(',') > -1) {
+                _tot = _tot.replace('$', '').replace(',', '');
+            }
+            var sumt = parseFloat(_tot) - parseFloat(colTotal);
+
+           
+
             tr.find("td.TOTAL input").val(toShow(sumt));
         }
         else {
@@ -2053,6 +2073,9 @@ $('body').on('focusout', '.OPER', function (e) {
             //Lleno los campos de Base Imponible con el valor del monto
             for (x = 0; x < tRet2.length; x++) {
                 var _xvalue = tr.find("td.BaseImp" + tRet2[x] + " input").val().replace('$', '').replace(',', '');
+                while (_xvalue.indexOf(',') > -1) {
+                    _xvalue = _xvalue.replace('$', '').replace(',', '');
+                }
                 // if (_xvalue === "") {
                 //AJAX
                 var indret = 0;
@@ -2124,7 +2147,11 @@ $('body').on('focusout', '.OPER', function (e) {
             //Total
             tr.find("td.TOTAL input").val();
             if (colTotal > 0) {
-                var sumt = parseFloat(total.replace('$', '').replace(',', '')) - parseFloat(colTotal);
+                var _tot = total.replace('$', '').replace(',', '');
+                while (_tot.indexOf(',') > -1) {
+                    _tot = _tot.replace('$', '').replace(',', '');
+                }
+                var sumt = parseFloat(_tot) - parseFloat(colTotal);
                 tr.find("td.TOTAL input").val(toShow(sumt));
             }
             else {
@@ -2161,13 +2188,17 @@ function sumarColumnasExtras(tr) {
         //    x1 = parseFloat("0");
         //}
         var x2 = tr.find("td.ImpRet" + tRet2[x] + " input").val().replace("$", "").replace(",", "");
+        
+        while (x2.indexOf(',') > -1) {
+            x2 = x2.replace('$', '').replace(',', '');
+        }
         if (x2 != "") {
             x2 = parseFloat(x2);
         } else {
             x2 = parseFloat("0");
         }
         //sumColAn = x1 + parseFloat(sumColAn);
-        sumColAn = x2 + parseFloat(sumColAn);
+        sumColAn = parseFloat(x2) + parseFloat(sumColAn);
     }
     return sumColAn;
 }
@@ -2626,7 +2657,11 @@ $('body').on('focusout', '.extrasC', function (e) {
         //si esta vacio le agrego un valor de 0.0
         _nnm = parseFloat("0.0");
     } else {
-        _nnm = parseFloat(_nnm.replace(',', ''));
+        while (_nnm.indexOf(',') > -1) {
+            _nnm = _nnm.replace('$', '').replace(',', '');
+        }
+        _nnm = parseFloat(_nnm);
+        
     }
 
     if (_nnm !== "") {
@@ -2682,7 +2717,10 @@ $('body').on('focusout', '.extrasC', function (e) {
             //si esta vacio le agrego un valor de 0.0
             _iva = parseFloat("0.0");
         } else {
-            _iva = parseFloat(_iva.replace(',', ''));
+            while (_iva.indexOf(',') > -1) {
+                _iva = _iva.replace('$', '').replace(',', '');
+            }
+            _iva = parseFloat(_iva);
         }
         var _ttal = (_mnt + _iva) - sumarColumnasExtras(tr);;
         //actualizar el total
@@ -2732,6 +2770,9 @@ $('body').on('focusout', '.extrasC2', function (e) {
         //si esta vacio le agrego un valor de 0.0
         _nnm = parseFloat("0.0");
     } else {
+        while (_nnm.indexOf(',') > -1) {
+            _nnm = _nnm.replace('$', '').replace(',', '');
+        }
         _nnm = parseFloat(_nnm.replace(',', ''));
     }
     $(this).val("$" + _nnm.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
@@ -2745,6 +2786,9 @@ $('body').on('focusout', '.extrasC2', function (e) {
             }
         }
         var colex = $(this).find("td." + _v2 + " input").val().replace("$", "").replace(',', '');
+        while (colex.indexOf(',') > -1) {
+            colex = colex.replace('$', '').replace(',', '');
+        }
         //de esta manera saco el renglon y la celad en especifico
         var er = $('#table_ret tbody tr').eq(x).find('td').eq(3).text().replace('$', '');;
         var txbi = $.trim(colex);
@@ -2804,7 +2848,11 @@ function sumarizarTodoRow(_this) {
     //Total
     tr.find("td.TOTAL input").val();
     if (colTotal > 0) {
-        var sumt = parseFloat(total.replace('$', '').replace(',', '')) - parseFloat(colTotal);
+        var _tot = total.replace('$', '').replace(',', '');
+        while (_tot.indexOf(',') > -1) {
+            _tot = _tot.replace('$', '').replace(',', '');
+        }
+        var sumt = parseFloat(_tot) - parseFloat(colTotal);
         tr.find("td.TOTAL input").val(toShow(sumt));
     }
     else {
@@ -3056,10 +3104,16 @@ function copiarTableInfoControl() {
                 item2["WITHT"] = tRet2[j];
                 item2["WT_WITHCD"] = "01";
                 var b1 = $(this).find("td.BaseImp" + tRet2[j] + " input").val().replace('$', '').replace(',', '');
+                while (b1.indexOf(',') > -1) {
+                    b1 = b1.replace('$', '').replace(',', '');
+                }
                 b1 = b1.replace(/\s/g, '');
                 var _bi = toNum(b1);
                 item2["BIMPONIBLE"] = parseFloat(_bi);
                 var b2 = $(this).find("td.ImpRet" + tRet2[j] + " input").val().replace('$', '').replace(',', '');
+                while (b2.indexOf(',') > -1) {
+                    b2 = b2.replace('$', '').replace(',', '');
+                }
                 b2 = b2.replace(/\s/g, '');
                 var _iret = toNum(b2);
                 item2["IMPORTE_RET"] = parseFloat(_iret);
@@ -3328,6 +3382,9 @@ function llenarRetencionesIRet() {
             if ($(this).find("td." + _v2 + " input").hasClass(_var)) {
                 centi = x;
                 var colex = $(this).find("td." + _v2 + " input").val().replace("$", "").replace(',', '');
+                while (colex.indexOf(',') > -1) {
+                    colex = colex.replace('$', '').replace(',', '');
+                }
                 //de esta manera saco el renglon y la celad en especifico
                 //var er = $('#table_ret tbody tr').eq(x).find('td').eq(3).text().replace('$', '');
                 var txbi = $.trim(colex);
