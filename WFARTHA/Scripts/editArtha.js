@@ -227,7 +227,7 @@ $(document).ready(function () {
 
 
             //FRT21112018.3 Se realizara validación del monto > 0
-        
+
             var monto = $(this).find("td.MONTO input").val().replace('$', '').replace(',', '');
             while (monto.indexOf(',') > -1) {
                 monto = monto.replace('$', '').replace(',', '');
@@ -254,7 +254,7 @@ $(document).ready(function () {
                             _montobase = _montobase.replace('$', '').replace(',', '');
                         }
                         var montobase = parseFloat(_montobase);
-                       
+
 
                         if (monto < montobase) {
                             msgerror = "El monto de posicion no debe ser MENOR a a Monto Base retencion";
@@ -1332,7 +1332,7 @@ $('body').on('focusout', '.extrasC', function (e) {
             _nnm = _nnm.replace('$', '').replace(',', '');
         }
         _nnm = parseFloat(_nnm.replace(',', ''));
-       
+
     }
 
     if (_nnm !== "") {
@@ -1616,12 +1616,14 @@ function copiarTableInfoControl() {
             }
             monto1 = monto1.replace(/\s/g, '');
             var monto = toNum(monto1);
+            monto = parseFloat(monto);
             var iva1 = $(this).find("td.IVA input").val();
             while (iva1.indexOf(',') > -1) {
                 iva1 = iva1.replace('$', '').replace(',', '');
             }
             iva1 = iva1.replace(/\s/g, '');
             var iva = toNum(iva1);
+            iva = parseFloat(iva);
             var total1 = $(this).find("td.TOTAL input").val();
             var texto = $(this).find("td.TEXTO textarea").val();//FRT20112018 
             while (total1.indexOf(',') > -1) {
@@ -1629,6 +1631,7 @@ function copiarTableInfoControl() {
             }
             total1 = total1.replace(/\s/g, '');
             var total = toNum(total1);
+            total = parseFloat(total);
             //Para anexos
             //-----------------------
 
