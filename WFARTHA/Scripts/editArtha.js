@@ -243,21 +243,21 @@ $(document).ready(function () {
                 return false;
             }
             //END FRT06112018.3
-            //FRT23112018 Para validar el Monto contra las F
-            if (tRet2[0] != null) {
+            //LEJGG 24112018 Para validar el Monto contra las F
+            if (tRet[0] != null) {
                 monto = parseFloat(monto);
                 var lengthT1 = $("table#table_ret tbody tr[role='row']").length;
-                if (lengthT1 > 0) {
-                    for (var i = 1; i < lengthT1 + 1; i++) {
-                        var _montobase = $(this).find("td.BaseImpF" + i + " input").val().replace('$', '').replace(',', '');
+                $("#table_info tbody tr[role='row']").each(function () {
+                    var _t = $(this);
+                    for (var x = 0; x < tRet2.length; x++) {
+                        var _montobase = _t.find("td.BaseImp" + tRet2[x] + " input").val().replace('$', '').replace(',', '');
                         while (_montobase.indexOf(',') > -1) {
                             _montobase = _montobase.replace('$', '').replace(',', '');
                         }
                         var montobase = parseFloat(_montobase);
 
-
                         if (monto < montobase) {
-                            msgerror = "El monto de posicion no debe ser MENOR a a Monto Base retencion";
+                            msgerror = "Monto base de retencion (" + monto + ") no debe ser mayor al monto antes de IVA (" + montobase + ")";
                             _m = false;
                             break
                         } else {
@@ -267,16 +267,11 @@ $(document).ready(function () {
                             return false;
                         }
                     }
-
-                }
+                });
             } else {
                 _m = true;
             }
-
-
-
-            //end FRT22112018
-            //end FRT22112018
+            //LEJGG 24112018
 
 
             //FRT2311208 PARA VALIDACION DE 50 CARACTERES
