@@ -2329,7 +2329,7 @@ function armarTablaInfo(datos) {
     // if (_infoc === datos.DOCUMENTOPSTR.length) {//LEJGG-05-11-2018
     if (datos.DOCUMENTOPSTR.length > 0) {
         for (var i = 0; i < datos.DOCUMENTOPSTR.length; i++) {
-
+            arrColExTA = [];//Para limpiar el arreglo
             posrows = i;  //FRT08112018
 
             for (var x = 0; x < _infoBIIR.length; x++) {
