@@ -637,20 +637,21 @@ $(document).ready(function () {
 
 
 
-            //FRT23112018 Para validar el Monto contra las F
+            //LEJGG 24112018 Para validar el Monto contra las F
             if (tRet[0] != null) {
                 monto = parseFloat(monto);
                 var lengthT1 = $("table#table_ret tbody tr[role='row']").length;
-                if (lengthT1 > 0) {
-                    for (var i = 1; i < lengthT1 + 1; i++) {
-                        var _montobase = $(this).find("td.BaseImpF" + i + " input").val().replace('$', '').replace(',', '');
+                $("#table_info tbody tr[role='row']").each(function () {
+                    var _t = $(this);
+                    for (var x = 0; x < tRet2.length; x++) {
+                        var _montobase = _t.find("td.BaseImp" + tRet2[x] + " input").val().replace('$', '').replace(',', '');
                         while (_montobase.indexOf(',') > -1) {
                             _montobase = _montobase.replace('$', '').replace(',', '');
                         }
                         var montobase = parseFloat(_montobase);
 
                         if (monto < montobase) {
-                            msgerror = "El monto de posicion no debe ser MENOR a a Monto Base retencion";
+                            msgerror = "Monto base de retencion (" + monto + ") no debe ser mayor al monto antes de IVA (" + montobase + ")";
                             _m = false;
                             break
                         } else {
@@ -660,15 +661,11 @@ $(document).ready(function () {
                             return false;
                         }
                     }
-
-                }
+                });
             } else {
                 _m = true;
             }
-           
-
-
-            //end FRT22112018
+            //LEJGG 24112018
 
 
 
@@ -2004,7 +2001,7 @@ $('body').on('change', '.IMPUESTO_SELECT', function (event, param1) {
             }
             var sumt = parseFloat(_tot) - parseFloat(colTotal);
 
-           
+
 
             tr.find("td.TOTAL input").val(toShow(sumt));
         }
@@ -2188,7 +2185,7 @@ function sumarColumnasExtras(tr) {
         //    x1 = parseFloat("0");
         //}
         var x2 = tr.find("td.ImpRet" + tRet2[x] + " input").val().replace("$", "").replace(",", "");
-        
+
         while (x2.indexOf(',') > -1) {
             x2 = x2.replace('$', '').replace(',', '');
         }
@@ -2456,7 +2453,7 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
         "",
         "<input disabled class=\"IVA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + IVA + "\">",
         //"<input " + disabled + " class=\"\" style=\"font-size:12px;\"  style=\"width:150px;\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + TEXTO + "\">",//Lej 13.09.2018
-        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;width:150px;\" maxlength=\"50\" type=\"text\" id=\"\" name=\"\" value=\"" + TEXTO + "\"> </textarea>",//Lej 13.09.2018
+        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;width:150px;\" maxlength=\"50\" type=\"text\" id=\"\" name=\"\" value=\"" + TEXTO + "\"></textarea>",//Lej 13.09.2018
         TOTAL,//"<input " + disabled + " class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + TOTAL + "\">"
         check //MGC 03-10-2018 solicitud con orden de compra
     );
@@ -2661,7 +2658,7 @@ $('body').on('focusout', '.extrasC', function (e) {
             _nnm = _nnm.replace('$', '').replace(',', '');
         }
         _nnm = parseFloat(_nnm);
-        
+
     }
 
     if (_nnm !== "") {

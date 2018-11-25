@@ -6688,12 +6688,20 @@ namespace WFARTHA.Controllers
         [HttpPost]
         public JsonResult getPedidos(string Prefix, string lifnr)
         {
-            var c = (from N in db.EKKO_DUMM
-                     where (N.LIFNR == lifnr)// & N.EBELN.Contains(Prefix))
-                     select new { N.EBELN }).ToList();
+            try
+            {
+                var c = (from N in db.EKKO_DUMM
+                         where (N.LIFNR == lifnr)// & N.EBELN.Contains(Prefix))
+                         select new { N.EBELN }).ToList();
 
-            JsonResult jc = Json(c, JsonRequestBehavior.AllowGet);
-            return jc;
+                JsonResult jc = Json(c, JsonRequestBehavior.AllowGet);
+                return jc;
+            }
+            catch (Exception e)
+            {
+                JsonResult jc = Json("", JsonRequestBehavior.AllowGet);
+                return jc;
+            }
         }
         [HttpPost]
         public JsonResult getPedidosPos(string ebeln)
