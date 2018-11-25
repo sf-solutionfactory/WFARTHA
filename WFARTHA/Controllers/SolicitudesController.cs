@@ -943,7 +943,7 @@ namespace WFARTHA.Controllers
             "AGENTE_ACTUAL,FECHA_PASO_ACTUAL,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,FECHACON,FECHA_BASE,REFERENCIA," +
             "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,DOCUMENTOA_TAB,Anexo")] Models.DOCUMENTO_MOD doc, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc,
             //MGC 02-10-2018 Cadenas de autorización
-            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr, string FECHADO, string Uuid)
+            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string mtTot, string DETTA_USUARIOA_ID, string borr, string FECHADO, string Uuid)
         {
             int pagina = 202; //ID EN BASE DE DATOS
             string errorString = "";
@@ -989,12 +989,9 @@ namespace WFARTHA.Controllers
                     //LEJGG 10-10-2018------------------------>
                     try
                     {
-                        decimal _m = 0;
-                        for (int _i = 0; _i < doc.DOCUMENTOP.Count; _i++)
-                        {
-                            _m = doc.DOCUMENTOP[_i].TOTAL;
-                        }
-                        dOCUMENTO.MONTO_DOC_MD = _m;
+                        var _t = mtTot.Replace("$", "");
+                        _t = _t.Replace(",", "");
+                        dOCUMENTO.MONTO_DOC_MD = decimal.Parse(_t);
                     }
                     catch (Exception e)
                     {

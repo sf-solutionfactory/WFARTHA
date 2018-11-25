@@ -2569,6 +2569,7 @@ function updateFooter() {
     $('#total_info').text(toShow(totalinicio));
     $('#MONTO_DOC_MD').val(toShow(total));//Lej 18.09.2018
     $('#total_info1').text(toShow(total));//FRT22112018
+    $('#mtTot').val($('#MONTO_DOC_MD').val());//Lej 29.09.2018
 }
 
 //Pestaña soporte
@@ -3053,18 +3054,20 @@ function copiarTableInfoControl() {
             //var imputacion = $(this).find("td.IMPUTACION").text(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var ccosto = $(this).find("td.CCOSTO input").val(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var impuesto = $(this).find("td.IMPUESTO input").val();
-            var monto1 = $(this).find("td.MONTO input").val().replace(',', '');
+            var monto1 = $(this).find("td.MONTO input").val().replace('$', '').replace(',', '');
             while (monto1.indexOf(',') > -1) {
                 monto1 = monto1.replace('$', '').replace(',', '');
             }
             monto1 = monto1.replace(/\s/g, '');
             var monto = toNum(monto1);
-            var iva1 = $(this).find("td.IVA input").val().replace(',', '');
+            monto = parseFloat(monto);
+            var iva1 = $(this).find("td.IVA input").val().replace('$', '').replace(',', '');
             while (iva1.indexOf(',') > -1) {
                 iva1 = iva1.replace('$', '').replace(',', '');
             }
             iva1 = iva1.replace(/\s/g, '');
             var iva = toNum(iva1);
+            iva = parseFloat(iva);
             var total1 = $(this).find("td.TOTAL input").val().replace(',', '');
             while (total1.indexOf(',') > -1) {
                 total1 = total1.replace('$', '').replace(',', '');
@@ -3073,6 +3076,7 @@ function copiarTableInfoControl() {
             var texto = $(this).find("td.TEXTO textarea").val();//LEJGG 13.11.2018
             total1 = total1.replace(/\s/g, '');
             var total = toNum(total1);
+            total = parseFloat(total);
             //Para anexos
             //-----------------------
 
