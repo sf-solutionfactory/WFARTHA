@@ -244,7 +244,7 @@ $(document).ready(function () {
             }
             //END FRT06112018.3
             //LEJGG 24112018 Para validar el Monto contra las F
-            if (tRet[0] != null) {
+            if (tRet2[0] != null) {
                 monto = parseFloat(monto);
                 var lengthT1 = $("table#table_ret tbody tr[role='row']").length;
                 $("#table_info tbody tr[role='row']").each(function () {
@@ -257,7 +257,7 @@ $(document).ready(function () {
                         var montobase = parseFloat(_montobase);
 
                         if (monto < montobase) {
-                            msgerror = "Monto base de retencion (" + monto + ") no debe ser mayor al monto antes de IVA (" + montobase + ")";
+                            msgerror = "Monto base de retencion (" + monto + ") no debe ser mayor al monto antes de IVA (" + montobase + ") posición " + _rni + " ";
                             _m = false;
                             break
                         } else {
@@ -280,7 +280,7 @@ $(document).ready(function () {
             ct = parseFloat(ct)
             if (ct < 50) {
                 _b = false;
-                msgerror = "Faltan Caracteres en el renglon " + _rni + " ";
+                msgerror = "Falta explicación en posición  " + _rni + " ";
             } else {
                 _b = true;
             }
@@ -389,7 +389,7 @@ $(document).ready(function () {
         ct1 = parseFloat(ct1);
         if (ct1 < 50) {
             _ct = false;
-            msgerror = "El texto de Explicacion no contiene los 50 caracteres solicitados";
+            msgerror = "Falta explicación en cabecera";
         } else {
             _ct = true;
         }
@@ -772,6 +772,8 @@ $(document).ready(function () {
         }
     });
 
+ 
+
     $('#table_anexa tbody').on('click', 'td.select_row', function () {
         //var t = $('#table_anexa').DataTable();
         var tr = $(this).closest('tr');
@@ -840,6 +842,8 @@ $(window).on('load', function () {
         $("#DETTA_USUARIOA_ID").val(dataj.USUARIOA_ID);
 
     });
+
+    $('.materialize-textarea').css("height", "0px");
 
 });
 
@@ -1620,7 +1624,7 @@ function copiarTableInfoControl() {
             var iva = toNum(iva1);
             iva = parseFloat(iva);
             var total1 = $(this).find("td.TOTAL input").val();
-            var texto = $(this).find("td.TEXTO textarea").val();//FRT20112018 
+            var texto = $(this).find("td.TEXTO Textarea").val();//FRT20112018 
             while (total1.indexOf(',') > -1) {
                 total1 = total1.replace('$', '').replace(',', '');
             }
@@ -2227,8 +2231,8 @@ function armarTablaInfo(datos) {
     }
 
     for (i = 0; i < tRet2.length; i++) {//Agregare las columnas extras
-        $("#table_info>thead>tr").append("<th class=\"\">" + tRet2[i] + "B. I.</th>");
-        $("#table_info>thead>tr").append("<th class=\"\">" + tRet2[i] + "I. R.</th>");
+        $("#table_info>thead>tr").append("<th class=\"bi" + tRet2[i] + "\">" + tRet2[i] + "B. I.</th>");
+        $("#table_info>thead>tr").append("<th class=\"ir" + tRet2[i] + "\">" + tRet2[i] + "I. R.</th>");
         colspan++;
         colspan++;
     }
@@ -2411,10 +2415,11 @@ function addRowInfo(t, POS, NumAnexo, NumAnexo2, NumAnexo3, NumAnexo4, NumAnexo5
         TIPOIMP,
         IMPUTACION,
         ceco,
-        "<input " + disabled + " class=\"MONTO OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO + "\">",
+        "<input " + disabled + " class=\"MONTO OPER\" style=\"font-size:12px;width:70px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO + "\">",
         "",
-        "<input disabled class=\"IVA\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + IVA + "\">",
-        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;width:100px;height:91px;\" maxlength=\"50\" type=\"text\" id=\"TEXTO\" name=\"TEXTO\" value=\"" + TEXTO + "\"> " + TEXTO + "</textarea>",//Lej 13.09.2018//FRT20112018 
+        "<input disabled class=\"IVA\" style=\"font-size:12px;width:70px;\" type=\"text\" id=\"\" name=\"\" value=\"" + IVA + "\">",
+        "<textarea " + disabled + " class=\"materialize-textarea\" style=\"font-size:12px;width:100px;height:0px;\" maxlength=\"50\" type=\"text\" id=\"TEXTO\" name=\"TEXTO\" value=\"" + TEXTO + "\"> " + TEXTO + "</textarea>",//Lej 13.09.2018//FRT20112018 
+        //"<input " + disabled + " style=\"font-size:12px;width:100px;height:91px;\" maxlength=\"50\" type=\"text\" id=\"TEXTO\" name=\"TEXTO\" value=\"" + TEXTO + "\">",//Lej 13.09.2018//FRT20112018 
         TOTAL,
         check, //MGC 03-10-2018 solicitud con orden de compra
         colsBIIR
@@ -2433,11 +2438,11 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
             colstoAdd += '<td class=\"ImpRet' + tRet2[i] + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td>';
         }
         else {
-            colstoAdd += '<td class=\"BaseImp' + tRet2[i] + '\"><input class=\"extrasC BaseImp' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[i].BIMPONIBLE) + '\"></td>';
-            colstoAdd += '<td class=\"ImpRet' + tRet2[i] + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[i].IMPORTE_RET) + '\"></td>';
+            colstoAdd += '<td class=\"BaseImp' + tRet2[i] + '\"><input class=\"extrasC BaseImp' + i + '\" style=\"font-size:12px;width:75px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[i].BIMPONIBLE) + '\"></td>';
+            colstoAdd += '<td class=\"ImpRet' + tRet2[i] + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;width:75px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[i].IMPORTE_RET) + '\"></td>';
         }
     }
-    colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"
+    colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;width:77px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"
         + "<td><p><label><input type=\"checkbox\" checked=\"" + check + "\" /><span></span></label></p></td>";//MGC 03 - 10 - 2018 solicitud con orden de compra
     var table_rows = '<tr><td></td><td>' + pos + '</td><td><input class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td>' +
         '<td> ' + texto + '</td><td>' + ca + '</td><td>' + factura + '</td><td>' + tipo_concepto
@@ -2723,8 +2728,27 @@ function asignarValConC(val) {
 function tamanosRenglones() {
     //TEXTO
     var t_ret = $("#table_info>thead>tr").find('th.TEXTO');
-    //var t_ret = $(this).find("th.TEXTO");
     t_ret.css("text-align", "center");
+    //Monto
+    var t_mt = $("#table_info>thead>tr").find('th.MONTO');
+    t_mt.css("text-align", "center");
+    // t_mt.css("width", "100px");
+    //IVA
+    var t_iva = $("#table_info>thead>tr").find('th.IVA');
+    t_iva.css("text-align", "center");
+    //t_iva.css("width", "100px");
+    //reviso si tiene retenciones para agregarles nueva medidas
+    if (tRet2.length > 0) {
+        for (var i = 0; i < tRet2.length; i++) {
+            var _cex = $("#table_info>thead>tr").find("th.bi" + tRet2[i]);
+            _cex.css("text-align", "center");
+            var _cex2 = $("#table_info>thead>tr").find("th.ir" + tRet2[i]);
+            _cex2.css("text-align", "center");
+        }
+    }
+    //total
+    var t_tot = $("#table_info>thead>tr").find('th.TOTAL');
+    t_tot.css("text-align", "center");
 }
 
 

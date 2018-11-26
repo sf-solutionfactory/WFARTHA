@@ -808,138 +808,139 @@
                                 {
                                     for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
                                     {
-                                        <tr>
-                                            @*@if (colsret.Count == 0)
-                                {
+                                <tr>
+                                    @*@if (colsret.Count == 0)
+        {
+            <td></td>
+        }*@
                                     <td></td>
-                                }*@
-                                            <td></td>
-                                            <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
-                                            @if (@Model.D.Anexo != null)
-                                            {
-                                                <td>@Model.D.Anexo[i].a1</td>
-                                                <td>@Model.D.Anexo[i].a2</td>
-                                                <td>@Model.D.Anexo[i].a3</td>
-                                                <td>@Model.D.Anexo[i].a4</td>
-                                                <td>@Model.D.Anexo[i].a5</td>
-                                            }
-                                            else
-                                            {
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            }
+                                    <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
+                                    @if (@Model.D.Anexo != null)
+                                    {
+                                        <td>@Model.D.Anexo[i].a1</td>
+                                        <td>@Model.D.Anexo[i].a2</td>
+                                        <td>@Model.D.Anexo[i].a3</td>
+                                        <td>@Model.D.Anexo[i].a4</td>
+                                        <td>@Model.D.Anexo[i].a5</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    }
 
 
-                                            @if (Model.D.DOCUMENTOPSTR[i].TEXTO != null)
-                                            {
-                                                <td> <textarea class="materialize-textarea" style="font-size:12px;width:150px;height:0px;" type="text" value="" disabled>@Model.D.DOCUMENTOPSTR[i].TEXTO </textarea></td>
-                                            }
-                                            else
-                                            {
-                                                <td></td>
-                                            }
+                                    @if (Model.D.DOCUMENTOPSTR[i].TEXTO != null)
+                                    {
+                                        <td> <textarea class="materialize-textarea" style="font-size:12px;width:150px;height:0px;" type="text" value="" disabled>@Model.D.DOCUMENTOPSTR[i].TEXTO </textarea></td>
+                                        
+                                                            }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
 
 
-                                            @if (Model.D.DOCUMENTOPSTR[i].ACCION != null)
-                                            {
-                                                <td>@Model.D.DOCUMENTOPSTR[i].ACCION</td> }
-                                            else
-                                            {
-                                                <td></td>}
+                                    @if (Model.D.DOCUMENTOPSTR[i].ACCION != null)
+                                    {
+                                        <td>@Model.D.DOCUMENTOPSTR[i].ACCION</td> }
+                                    else
+                                    {
+                                        <td></td>                    }
 
-                                            @if (Model.D.DOCUMENTOPSTR[i].FACTURA != null)
-                                            {
-                                                <td>@Model.D.DOCUMENTOPSTR[i].FACTURA</td> }
-                                            else
-                                            {
-                                                <td></td>}
+                                    @if (Model.D.DOCUMENTOPSTR[i].FACTURA != null)
+                                    {
+                                        <td>@Model.D.DOCUMENTOPSTR[i].FACTURA</td> }
+                                    else
+                                    {
+                                        <td></td>                    }
 
-                                            <td> @Model.D.DOCUMENTOPSTR[i].TCONCEPTO@Model.D.DOCUMENTOPSTR[i].GRUPO</td>
+                                    <td> @Model.D.DOCUMENTOPSTR[i].TCONCEPTO@Model.D.DOCUMENTOPSTR[i].GRUPO</td>
 
-                                            @if (Model.D.DOCUMENTOPSTR[i].CUENTA != null)
-                                            {
-                                                <td>@Model.D.DOCUMENTOPSTR[i].CUENTA</td> }
-                                            else
-                                            {
-                                                <td></td>}
-
-
-                                            @if (Model.D.DOCUMENTOPSTR[i].CCOSTO != null)
-                                            {
-                                                <td>@Model.D.DOCUMENTOPSTR[i].CCOSTO</td> }
-                                            else
-                                            {
-                                                <td></td>}
+                                    @if (Model.D.DOCUMENTOPSTR[i].CUENTA != null)
+                                    {
+                                        <td>@Model.D.DOCUMENTOPSTR[i].CUENTA</td> }
+                                    else
+                                    {
+                                        <td></td>                    }
 
 
-                                            @if (Model.D.DOCUMENTOPSTR[i].NOMCUENTA != null)
-                                            {
-                                                <td>@Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td> }
-                                            else
-                                            {
-                                                <td></td>}
-
-                                            @if (Model.D.DOCUMENTOPSTR[i].TIPOIMP != null)
-                                            {
-                                                <td>@Model.D.DOCUMENTOPSTR[i].TIPOIMP</td> }
-                                            else
-                                            {
-                                                <td></td>}
+                                    @if (Model.D.DOCUMENTOPSTR[i].CCOSTO != null)
+                                    {
+                                        <td>@Model.D.DOCUMENTOPSTR[i].CCOSTO</td> }
+                                    else
+                                    {
+                                        <td></td>                    }
 
 
+                                    @if (Model.D.DOCUMENTOPSTR[i].NOMCUENTA != null)
+                                    {
+                                        <td>@Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td> }
+                                    else
+                                    {
+                                        <td></td>                    }
 
-
-                                            @if (Model.D.DOCUMENTOPSTR[i].IMPUTACION != null)
-                                            {
-                                                <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td> }
-                                            else
-                                            {
-                                                <td></td>}
-
-
-                                            @if (Model.D.DOCUMENTOPSTR[i].MONTO != null)
-                                            {
-                                                <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td> }
-                                            else
-                                            {
-                                                <td></td>}
+                                    @if (Model.D.DOCUMENTOPSTR[i].TIPOIMP != null)
+                                    {
+                                        <td>@Model.D.DOCUMENTOPSTR[i].TIPOIMP</td> }
+                                    else
+                                    {
+                                        <td></td>                    }
 
 
 
-                                            @if (Model.D.DOCUMENTOPSTR[i].IMPUESTOT != null)
-                                            {
-                                                <td>@Model.D.DOCUMENTOPSTR[i].IMPUESTOT</td> }
-                                            else
-                                            {
-                                                <td></td>}
+
+                                    @if (Model.D.DOCUMENTOPSTR[i].IMPUTACION != null)
+                                    {
+                                        <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td> }
+                                    else
+                                    {
+                                        <td></td>                    }
 
 
-                                            @if (Model.D.DOCUMENTOPSTR[i].IVA != null)
-                                            {
-                                                <td>@Model.D.DOCUMENTOPSTR[i].IVA</td> }
-                                            else
-                                            {
-                                                <td></td>}
+                                    @if (Model.D.DOCUMENTOPSTR[i].MONTO != null)
+                                    {
+                                        <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td> }
+                                    else
+                                    {
+                                        <td></td>                    }
 
 
-                                            @for (int y = 0; y < colsret.Count; y++)
-                                            {
-                                                <td>
-                                                    @{var _v = colsret[y]; }
-                                                    @{decimal imp = 0; try { imp = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().BIMPONIBLE.ToString()); } catch (Exception e) { }; string bim = formatoc.toShow(imp, deci);}
-                                                    @bim
-                                                </td>
-                                                <td>
-                                                    @{decimal imp2 = 0; try { imp2 = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().IMPORTE_RET.ToString()); } catch (Exception e) { }; string bim2 = formatoc.toShow(imp2, deci);}
-                                                    @bim2
-                                                </td>
-                                            }
-                                            <td> @Model.D.DOCUMENTOPSTR[i].TOTAL</td>
 
-                                        </tr>
+                                    @if (Model.D.DOCUMENTOPSTR[i].IMPUESTOT != null)
+                                    {
+                                        <td>@Model.D.DOCUMENTOPSTR[i].IMPUESTOT</td> }
+                                    else
+                                    {
+                                        <td></td>                    }
+
+
+                                    @if (Model.D.DOCUMENTOPSTR[i].IVA != null)
+                                    {
+                                        <td>@Model.D.DOCUMENTOPSTR[i].IVA</td> }
+                                    else
+                                    {
+                                        <td></td>                    }
+
+
+                                    @for (int y = 0; y < colsret.Count; y++)
+                                    {
+                                        <td>
+                                            @{var _v = colsret[y]; }
+                                            @{decimal imp = 0; try { imp = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().BIMPONIBLE.ToString()); } catch (Exception e) { }; string bim = formatoc.toShow(imp, deci);}
+                                            @bim
+                                        </td>
+                                        <td>
+                                            @{decimal imp2 = 0; try { imp2 = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().IMPORTE_RET.ToString()); } catch (Exception e) { }; string bim2 = formatoc.toShow(imp2, deci);}
+                                            @bim2
+                                        </td>
+                                    }
+                                    <td> @Model.D.DOCUMENTOPSTR[i].TOTAL</td>
+
+                                </tr>
                                     }
                                 }
                             </tbody>
