@@ -131,6 +131,12 @@ $(document).ready(function () {
 });
 
 
+$(window).on('load', function () {
+
+    $('.materialize-textarea').css("height", "0px");
+
+});
+
 function formatoTabla() {
     var colsArray = [
         {//MGC 30-10-2018 Tipo de presupuesto
