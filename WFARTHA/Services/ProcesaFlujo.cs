@@ -1723,7 +1723,7 @@ namespace WFARTHA.Services
         public ContabilizarRes nextContabilizar(FLUJO f, string user)
         {
             WFARTHAEntities db = new WFARTHAEntities();
-
+            string festatus = f.ESTATUS; //MGC 26-11-2018 nO ACTUALIZAR ESTATUS A FLUJO
             //Cambio a A en la vista details
             f.ESTATUS = "A";
 
@@ -1745,6 +1745,9 @@ namespace WFARTHA.Services
             //Simular el pf.procesa
             ContabilizarRes res = new ContabilizarRes();
             res = procesaConta(flujo);
+
+            //Regresar el estatus original
+            f.ESTATUS = festatus;//MGC 26-11-2018 nO ACTUALIZAR ESTATUS A FLUJO
 
             return res;
         }
