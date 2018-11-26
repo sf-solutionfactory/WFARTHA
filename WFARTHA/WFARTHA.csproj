@@ -645,6 +645,7 @@
     <Content Include="Scripts\create_orden.js" />
     <Content Include="Scripts\datatables.min.js" />
     <Content Include="Scripts\details.js" />
+    <Content Include="Scripts\disenarVistas.js" />
     <Content Include="Scripts\edit - antes.js" />
     <Content Include="Scripts\edit.js" />
     <Content Include="Scripts\createa.js" />
