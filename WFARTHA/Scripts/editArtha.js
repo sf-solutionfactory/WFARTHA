@@ -23,7 +23,11 @@ $(document).ready(function () {
         tamanosRenglones();
     });
 
-    $('#Contable_cont').change(function () {
+    $('#tab_enc').on('click', function () {
+        tamanosRenglones();
+    });    
+
+    $('.tabDet').on('click', function () {
         tamanosRenglones();
     });
 
@@ -45,7 +49,7 @@ $(document).ready(function () {
     $('#table_anexa').DataTable({
         language: {
             //"url": "../Scripts/lang/@Session["spras"].ToString()" + ".json"
-            "url": "../Scripts/lang/ES.json"
+            "url": "../../Scripts/lang/ES.json"
         },
         "paging": false,
         "info": false,
@@ -92,10 +96,8 @@ $(document).ready(function () {
 
     //Tabla de Retenciones
     $('#table_ret').DataTable({
-        scrollX: true,
-        scrollCollapse: true,
         language: {
-            "url": "../Scripts/lang/ES.json"
+            "url": "../../Scripts/lang/ES.json"
         },
         "paging": false,
         "info": false,
@@ -137,6 +139,12 @@ $(document).ready(function () {
                 "name": 'IMPRET',
                 "className": 'IMPRET',
                 "orderable": false
+            }
+        ],
+        columnDefs: [
+            {
+                targets: [0, 1, 2, 3, 4],
+                className: 'mdl-data-table__cell--non-numeric'
             }
         ]
     });
@@ -376,7 +384,10 @@ $(document).ready(function () {
                 _b = true;
             }
         });
-
+        var rn = $("table#table_info tbody tr[role='row']").length;
+        if (rn == 0) {
+            msgerror = "No hay renglones";
+        }
 
         //FRT21112018 Para validar cantidad de anexos solamente al enviar
         var lengthT = $("table#table_anexa tbody tr[role='row']").length;
@@ -781,8 +792,6 @@ $(document).ready(function () {
         }
     });
 
-
-
     $('#table_anexa tbody').on('click', 'td.select_row', function () {
         //var t = $('#table_anexa').DataTable();
         var tr = $(this).closest('tr');
@@ -831,7 +840,7 @@ $(document).ready(function () {
 //Obtener los datos de la cadena seleccionada
 //Cuando se termina de cargar la página
 $(window).on('load', function () {
-
+    
     //$("#list_detaa").change();
 
     //var val3 = $(this).val();
@@ -842,18 +851,17 @@ $(window).on('load', function () {
     val3 = val3.replace(/\,/g, "\" , \"");
     val3 = val3.replace(/\=/g, "\" : \"");
     val3 = val3.replace(/\ /g, "");
-    var jsval = $.parseJSON(val3)
+    var jsval = $.parseJSON(val3);
 
     $.each(jsval, function (i, dataj) {
         $("#DETTA_VERSION").val(dataj.VERSION);
         $("#DETTA_USUARIOC_ID").val(dataj.USUARIOC_ID);
         $("#DETTA_ID_RUTA_AGENTE").val(dataj.ID_RUTA_AGENTE);
         $("#DETTA_USUARIOA_ID").val(dataj.USUARIOA_ID);
-
     });
 
     $('.materialize-textarea').css("height", "0px");
-
+    tamanosRenglones();
 });
 
 //Cadena de autorización
@@ -2000,6 +2008,9 @@ function llenarRetencionesIRet() {
             if ($(this).find("td." + _v2 + " input").hasClass(_var)) {
                 centi = x;
                 var colex = $(this).find("td." + _v2 + " input").val().replace("$", "").replace(',', '');
+                if (colex === "") {
+                    colex = parseFloat("0.0");
+                }
                 while (colex.indexOf(',') > -1) {
                     colex = colex.replace('$', '').replace(',', '');
                 }
@@ -2026,6 +2037,9 @@ function llenarRetencionesBImp() {
             _v2 = "BaseImp" + tRet2[x];
             if ($(this).find("td." + _v2 + " input").hasClass(_var)) {
                 var colex = $(this).find("td." + _v2 + " input").val().replace("$", "").replace(',', '');
+                if (colex === "") {
+                    colex = parseFloat("0.0");
+                }
                 while (colex.indexOf(',') > -1) {
                     colex = colex.replace('$', '').replace(',', '');
                 }
@@ -2280,8 +2294,7 @@ function armarTablaInfo(datos) {
     //Lej 17.09.18
     extraCols = tRet2.length;
     $('#table_info').DataTable({
-        scrollX: true,
-        scrollCollapse: true,
+        
         language: {
             "url": "../../Scripts/lang/ES.json"
         },
@@ -2455,7 +2468,7 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
             colstoAdd += '<td class=\"ImpRet' + tRet2[i] + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;width:75px;\" type=\"text\" id=\"\" name=\"\" value=\"' + toShow(_dExtra[i].IMPORTE_RET) + '\"></td>';
         }
     }
-    colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;width:77px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"
+    colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;width:80px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"
         + "<td><p><label><input type=\"checkbox\" checked=\"" + check + "\" /><span></span></label></p></td>";//MGC 03 - 10 - 2018 solicitud con orden de compra
     var table_rows = '<tr><td></td><td>' + pos + '</td><td><input class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td>' +
         '<td> ' + texto + '</td><td>' + ca + '</td><td>' + factura + '</td><td>' + tipo_concepto
@@ -2767,6 +2780,7 @@ function tamanosRenglones() {
     //total
     var t_tot = $("#table_info>thead>tr").find('th.TOTAL');
     t_tot.css("text-align", "center");
+    $(window).resize();
 }
 
 
@@ -2967,5 +2981,3 @@ function sumarizarTodoRow(_this) {
     updateFooter();
 
 }
-
-

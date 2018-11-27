@@ -117,8 +117,6 @@ $(document).ready(function () {
 
     //Tabla de Retenciones
     $('#table_ret').DataTable({
-        scrollX: true,
-        scrollCollapse: true,
         language: {
             "url": "../Scripts/lang/ES.json"
         },
@@ -162,6 +160,12 @@ $(document).ready(function () {
                 "name": 'IMPRET',
                 "className": 'IMPRET',
                 "orderable": false
+            }
+        ],
+        columnDefs: [
+            {
+                targets: [0, 1, 2, 3, 4],
+                className: 'mdl-data-table__cell--non-numeric'
             }
         ]
     });
@@ -405,8 +409,6 @@ function formatoTabla() {
     });
     //Tabla de Información
     $('#table_info').DataTable({
-        scrollX: true,
-        scrollCollapse: true,
         language: {
             //"url": "../Scripts/lang/@Session["spras"].ToString()" + ".json"
             "url": "../../Scripts/lang/ES.json"
@@ -631,7 +633,7 @@ function datosCadena(nDoc) {
         dataType: "json",
         success: function (data) {
             if (data !== null || data !== "") {
-                obtenerCadena(data[5],data[4],data[2],data[3],data[1],data[0]);
+                obtenerCadena(data[5], data[4], data[2], data[3], data[1], data[0]);
             }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {

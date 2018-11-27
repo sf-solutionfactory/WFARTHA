@@ -67,11 +67,17 @@
             scrollX: "50vh",
             scrollY: "50vh",
             scrollCollapse: true,
-            @*language: {
+            language: {
                 //"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-                "url": "../Scripts/lang/@Session["spras"].ToString()"+".json"
-            },*@
+                "url": "../../Scripts/lang/ES.json"
+            },
             order: [[1, "asc"]],
+            columnDefs: [
+                {
+                    targets: [0,1,2],
+                    className: 'mdl-data-table__cell--non-numeric'
+                }
+            ],
             initComplete: function () {
                 this.api().columns().every(function () {
                     var column = this;
@@ -137,5 +143,8 @@
 
     .dataTables_scrollHeadInner, .mdl-data-table {
         width: 100%;
+    }
+    thead, th {
+        text-align: left;
     }
 </style>

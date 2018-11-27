@@ -147,7 +147,6 @@
         .selectImpuesto {
             font-size: 12px;
         }
-
         /*div.dataTables_wrapper {
             width: 800px;
             margin: 0 auto;
@@ -492,35 +491,36 @@
                         </div>
                         <h5 id="head_flinea">Retenciones</h5>
                         <div class="row leftAlignement" style="margin-bottom:0">
-                            <table class="table display mdl-data-table striped" id="table_ret" style="width:100%;">
-                                <thead>
-                                    <tr>
-                                        <th class="lbl_socret">
-                                            Sociedad Retención
-                                        </th>
-                                        <th class="lbl_provret">
-                                            Proveedor Retención
-                                        </th>
-                                        <th class="lbl_tret">
-                                            Tipo Retención
-                                        </th>
-                                        <th class="lbl_descret">
-                                            Descripción Retención
-                                        </th>
-                                        <th class="lbl_indret">
-                                            Indicador de Retención
-                                        </th>
-                                        <th class="lbl_bimponible">
-                                            Base Imponible
-                                        </th>
-                                        <th id="lbl_impret">
-                                            Importe de Retención
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-
+                            <div style="overflow:auto;">
+                                <table class="table display mdl-data-table striped" id="table_ret" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th class="lbl_socret">
+                                                Sociedad Retención
+                                            </th>
+                                            <th class="lbl_provret">
+                                                Proveedor Retención
+                                            </th>
+                                            <th class="lbl_tret">
+                                                Tipo Retención
+                                            </th>
+                                            <th class="lbl_descret">
+                                                Descripción Retención
+                                            </th>
+                                            <th class="lbl_indret">
+                                                Indicador de Retención
+                                            </th>
+                                            <th class="lbl_bimponible">
+                                                Base Imponible
+                                            </th>
+                                            <th id="lbl_impret">
+                                                Importe de Retención
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
                             <table class="table display mdl-data-table striped" id="table_reth" style="width:100%; display:none">
                                 <thead>
                                     <tr>
@@ -1049,7 +1049,7 @@
         <div id="Informacion_cont" class="col s12" style="font-size:12px;">
             <div class="row">
                 @*MGC 02-10-2018 Cadena de autorización -->*@
-                <div class="col s12" style="padding:0px">
+                <div class="col s12">
                     <div class="card-panel">
                         <h5 id="head_cabecera">Autorización</h5>
                         <div class="row" style="margin-bottom:0">
@@ -1138,7 +1138,7 @@
             @*MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->*@
 
             <div class="row" style="font-size:12px;">
-                <div class="col s12" style="padding:0px">
+                <div class="col s12">
                     <div class="card-panel">
                         <div class="row" style="margin-bottom:0">
                             <h5>Cadena de Autorizadores</h5>
