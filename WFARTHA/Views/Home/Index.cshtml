@@ -797,8 +797,8 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
                             </td>
-                            <td></td>
-                            <td></td>
+                            <td style="text-align:left;"> @Html.DisplayFor(modelItem => item.PAYER_ID)</td>@*Lejgg 26-11-2018*@
+                            <td> @Html.DisplayFor(modelItem => item.ID_PSPNR)</td>@*Lejgg 26-11-2018*@
                             <td>
                                 @item.USUARIOC_ID
                             </td>
@@ -847,14 +847,13 @@
             },
             columnDefs: [
                 {
-                    targets: [2, 3, 4, 5, 7, 9],
+                    targets: [2, 3, 4, 5, 6, 7, 8, 9],
                     className: 'mdl-data-table__cell--non-numeric'
                 }
             ],
             initComplete: function () {
                 this.api().columns().every(function () {
                     var column = this;
-                    //var div = $('<div class="inputa-field col s12">').appendTo($(column.footer()).empty());
                     var select = $('<select style="display:initial;" class="browser-default"><option value=""></option></select>')
                         //var select = $('<select ><option value=""></option></select>')
                         //.appendTo($(div))
@@ -1019,6 +1018,9 @@
 
             .dataTables_scrollHeadInner, .mdl-data-table {
                 width: 100%;
+            }
+            thead, th {
+                text-align: left;
             }
         </style>
     </div>

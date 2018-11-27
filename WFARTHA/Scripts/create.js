@@ -198,40 +198,46 @@ $(document).ready(function () {
         "columns": [
             {
                 "name": 'SOCRET',
-                "className": 'SOCRET leftAlignement',
+                "className": 'SOCRET',
                 "orderable": false,
                 "visible": false
             },
             {
                 "name": 'PROVRET',
-                "className": 'PROVRET leftAlignement',
+                "className": 'PROVRET',
                 "orderable": false,
                 "visible": false
             },
             {
                 "name": 'TRET',
-                "className": 'TRET leftAlignement',
+                "className": 'TRET',
                 "orderable": false
             },
             {
                 "name": 'DESCRET',
-                "className": 'DESCTRET leftAlignement',
+                "className": 'DESCTRET ',
                 "orderable": false
             },
             {
                 "name": 'INDRET',
-                "className": 'INDRET leftAlignement',
+                "className": 'INDRET ',
                 "orderable": false
             },
             {
                 "name": 'BIMPONIBLE',
-                "className": 'BIMPONIBLE leftAlignement',
+                "className": 'BIMPONIBLE ',
                 "orderable": false
             },
             {
                 "name": 'IMPRET',
-                "className": 'IMPRET leftAlignement',
+                "className": 'IMPRET ',
                 "orderable": false
+            }
+        ],
+        columnDefs: [
+            {
+                targets: [0, 1, 2, 3, 4],
+                className: 'mdl-data-table__cell--non-numeric'
             }
         ]
     });
@@ -572,6 +578,7 @@ $(document).ready(function () {
         //$("#table_info > tbody  > tr[role='row']").each(function () { //MGC 24-10-2018 Conflicto Enrique-Rogelio
         var t = $('#table_info').DataTable();
         var tabble = "table_info";
+
         if ($("table#table_info tbody tr[role='row']").length === 0) { tabble = "table_infoP"; }
         $("#" + tabble + " > tbody  > tr[role='row']").each(function () {
 
@@ -758,8 +765,10 @@ $(document).ready(function () {
                 _b = true;
             }
         });
-
-
+        var rn = $("table#table_info tbody tr[role='row']").length;
+        if (rn == 0) {
+            msgerror = "No hay renglones";
+        }
         //FRT08112018 Valida con otra letra para evitar error
         //FRT04112018.2 Se realizara validación del monto > 0s
         var proveedor = $("#PAYER_ID").val();
@@ -1652,6 +1661,8 @@ function obtenerRetenciones(flag) {
             var imp = toShow(agRowRet[i].dataj.IMPORTE_RET);
             addRowRet(t, agRowRet[i].dataj.BUKRS, agRowRet[i].dataj.LIFNR, agRowRet[i].dataj.WITHT, agRowRet[i].dataj.DESC, agRowRet[i].dataj.WT_WITHCD, bimp, imp);
         }
+        //Mandar llamar un metodo para que realinie los renglones a la izquierda
+
         //Lej 26-11-18----------------------------------------------------<
         //Lej 12.09.18-------------------------------------------------------
         //Aqui se agregaran las columnas extras a la tabla de detalle
@@ -3422,6 +3433,9 @@ function llenarRetencionesIRet() {
             if ($(this).find("td." + _v2 + " input").hasClass(_var)) {
                 centi = x;
                 var colex = $(this).find("td." + _v2 + " input").val().replace("$", "").replace(',', '');
+                if (colex === "") {
+                    colex = parseFloat("0.0");
+                }
                 while (colex.indexOf(',') > -1) {
                     colex = colex.replace('$', '').replace(',', '');
                 }
@@ -3461,6 +3475,12 @@ function llenarRetencionesBImp() {
             _v2 = "BaseImp" + tRet2[x];
             if ($(this).find("td." + _v2 + " input").hasClass(_var)) {
                 var colex = $(this).find("td." + _v2 + " input").val().replace("$", "").replace(',', '');
+                if (colex === "") {
+                    colex = parseFloat("0.0");
+                }
+                while (colex.indexOf(',') > -1) {
+                    colex = colex.replace('$', '').replace(',', '');
+                }
                 var txbi = $.trim(colex);
                 var sum = parseFloat(txbi);
                 _t[x] = parseFloat(_t[x]) + sum;
@@ -3717,3 +3737,4 @@ function asignarVal(val) {
 
 
 //END FRT14112018
+
