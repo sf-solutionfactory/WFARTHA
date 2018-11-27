@@ -48,23 +48,23 @@
 
 <div class="row" style="margin-bottom:0">
 
-    @{WFARTHA.Entities.USUARIO us = ViewBag.usuario;
+    @*@{WFARTHA.Entities.USUARIO us = ViewBag.usuario;
 
-        <div class="col s12 m3 l2">
-            <div class="row" style="margin-bottom:0">
-                <div class="input-field col s12">
-                    @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
-                    @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
+            <div class="col s12 m3 l2">
+                <div class="row" style="margin-bottom:0">
+                    <div class="input-field col s12">
+                        @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
+                        @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col s12 m4 l2">
-            <div class="input-field col s6">
-                <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
-                <label for="txt_status" id="lbl_status">Estatus</label>
+            <div class="col s12 m4 l2">
+                <div class="input-field col s6">
+                    <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
+                    <label for="txt_status" id="lbl_status">Estatus</label>
+                </div>
             </div>
-        </div>
-    }
+        }*@
 
     <style>
         .anchoTxt {
@@ -88,7 +88,6 @@
         }
 
         .ncCss {
-          
         }
 
         .hr_bw {
@@ -162,7 +161,7 @@
         }*/
     </style>
 
-    <div class="col s8 right-align">
+    <div class="col s12 right-align">
         <a id="btn_borradorh" class="btn btn-small">Guardar Borrador</a>
 
         @{string b = ViewBag.borradore + "";
@@ -176,23 +175,15 @@
         }
         <a href="@Url.Action("Index", "Home" )" class="btn btn-small">Cancelar</a>
         <a id="btn_guardarh" class="btn btn-small">Enviar</a>
-        <script>
-            //function guardah() {
-            //    //alert("uno")
-            //    M.toast({ html: "Guardando" })
-            //    document.getElementById("loader").style.display = "flex";//RSG 26.04.2018
-            //    document.getElementById("btn_guardarh").classList.add("disabled");//RSG 26.04.2018
-            //}
-        </script>
+    </div>
+    <div class="col s12" style="display:inline;">
         @*FRT 02112018 Agregar titulos*@
         <div>
-            <br />
             <h5 id="head_cabecera" style="display:inline-block">@ViewBag.pid - </h5>
             <h5 id="head_cabecera" style="display:inline-block">@ViewBag.PrSl</h5>
 
         </div>
     </div>
-
     <div class="div_bottom">
         <hr class="hr_bw" />
         <hr class="hr_color #4e342e brown darken-3" />
@@ -245,7 +236,7 @@
                             <div class="form-group col s3">
                                 @Html.LabelFor(model => model.FECHAD, "Fecha Documento", htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.FECHAD, new { htmlAttributes = new { @class = "form-control fechaVal input_fe",@disabled="disabled" } })@*LEJ 04.09.2018*@
+                                    @Html.EditorFor(model => model.FECHAD, new { htmlAttributes = new { @class = "form-control fechaVal input_fe", @disabled = "disabled" } })@*LEJ 04.09.2018*@
                                     <input type="hidden" id="FECHADO" name="FECHADO" />
                                 </div>
                             </div>
@@ -735,11 +726,11 @@
                                         </thead>
                                         <tbody></tbody>
                                         @*<tfoot id="tfoot_info" style="overflow:auto;">
-                                            <tr>
-                                                <th colspan="17" style="text-align:right"></th>
-                                                <th id="total_info"></th>
-                                            </tr>
-                                        </tfoot>*@
+                                                <tr>
+                                                    <th colspan="17" style="text-align:right"></th>
+                                                    <th id="total_info"></th>
+                                                </tr>
+                                            </tfoot>*@
                                     </table>
                                 </div>
                                 <table class="table display mdl-data-table striped" id="table_infoh" style="width:100%; display:none">
@@ -915,11 +906,11 @@
                                         </thead>
                                         <tbody></tbody>
                                         @*<tfoot id="tfoot_info" style="overflow:auto;">
-                                            <tr>
-                                                <th colspan="17" style="text-align:right"></th>
-                                                <th id="total_infoP"></th>
-                                            </tr>
-                                        </tfoot>*@
+                                                <tr>
+                                                    <th colspan="17" style="text-align:right"></th>
+                                                    <th id="total_infoP"></th>
+                                                </tr>
+                                            </tfoot>*@
                                     </table>
                                 </div>
                                 <table class="table display mdl-data-table striped" id="table_infoPh" style="width:100%; display:none">
@@ -1002,7 +993,7 @@
                             <label id="lbl_status">Total:</label>
                             <label id="total_info1"></label>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -1057,9 +1048,8 @@
         @*Soporte Contable*@
         <div id="Informacion_cont" class="col s12" style="font-size:12px;">
             <div class="row">
-
                 @*MGC 02-10-2018 Cadena de autorización -->*@
-                <div class="col s12">
+                <div class="col s12" style="padding:0px">
                     <div class="card-panel">
                         <h5 id="head_cabecera">Autorización</h5>
                         <div class="row" style="margin-bottom:0">

@@ -1596,6 +1596,7 @@ function obtenerRetenciones(flag) {
         docsenviar = JSON.stringify({ 'items': jsonObjDocs, "bukrs": sociedad_id, "lifnr": proveedor });
         var t = $('#table_ret').DataTable();
         t.rows().remove().draw(false);
+        var agRowRet = [];
         $.ajax({
             type: "POST",
             url: 'getRetenciones',
@@ -1607,7 +1608,8 @@ function obtenerRetenciones(flag) {
                         var bimp = toShow(dataj.BIMPONIBLE);
                         var imp = toShow(dataj.IMPORTE_RET);
                         tRet.push(dataj.WITHT);//Lej 12.09.18
-                        var addedRowRet = addRowRet(t, dataj.BUKRS, dataj.LIFNR, dataj.WITHT, dataj.DESC, dataj.WT_WITHCD, bimp, imp);
+                        //agRowRet.push(addRowRet(t, dataj.BUKRS, dataj.LIFNR, dataj.WITHT, dataj.DESC, dataj.WT_WITHCD, bimp, imp));
+                        agRowRet.push({ t, dataj });
                     }); //Fin de for
                 }
 
@@ -1617,7 +1619,40 @@ function obtenerRetenciones(flag) {
             },
             async: false
         });
-
+        //Lej 26-11-18---------------------------------------------------->
+        //Para quitar las ligadas
+        for (var i = 0; i < agRowRet.length; i++) {
+            $.ajax({
+                type: "POST",
+                url: 'getRetLigadas',
+                data: { 'id': agRowRet[i].dataj.WITHT },
+                dataType: "json",
+                success: function (data) {
+                    if (data !== null || data !== "") {
+                        if (data != "Null") {
+                            for (var a = 0; a < agRowRet.length; a++) {
+                                if (agRowRet[a].dataj.WITHT == data) {
+                                    agRowRet.splice($.inArray(agRowRet[a], agRowRet), 1);
+                                }
+                            }
+                        }
+                        else {
+                        }
+                    }
+                },
+                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                    M.toast({ html: httpStatusMessage });
+                },
+                async: false
+            });
+        }
+        //Para agregar los renglones de retenciones
+        for (var i = 0; i < agRowRet.length; i++) {
+            var bimp = toShow(agRowRet[i].dataj.BIMPONIBLE);
+            var imp = toShow(agRowRet[i].dataj.IMPORTE_RET);
+            addRowRet(t, agRowRet[i].dataj.BUKRS, agRowRet[i].dataj.LIFNR, agRowRet[i].dataj.WITHT, agRowRet[i].dataj.DESC, agRowRet[i].dataj.WT_WITHCD, bimp, imp);
+        }
+        //Lej 26-11-18----------------------------------------------------<
         //Lej 12.09.18-------------------------------------------------------
         //Aqui se agregaran las columnas extras a la tabla de detalle
         //$('#table_info').DataTable().clear().draw();//Reinicio la tabla
