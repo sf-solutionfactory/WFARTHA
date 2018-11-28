@@ -3978,59 +3978,72 @@ namespace WFARTHA.Controllers
 
                     //FRT25112018 AQUI QUITE LOS ANEXOS
 
+                    //FRT27112018
 
+                    if (Uuid != string.Empty)
+                    {
+                        var pos = db.DOCUMENTOUUIDs.ToList();
+                        DOCUMENTOUUID duid = new DOCUMENTOUUID();
+                        duid.NUM_DOC = dOCUMENTO.NUM_DOC;
+                        duid.POS = pos.Count + 1;
+                        duid.DOCUMENTO_SAP = "";
+                        duid.UUID = Uuid;
+                        duid.ESTATUS = true;
+                        db.DOCUMENTOUUIDs.Add(duid);
+                        db.SaveChanges();
+                    }
 
 
                     //Lejgg 26.10.2018----------------------------------------<
                     //Lejgg 05.11.2018---------------------------------------->
-                    if (Uuid != string.Empty)
-                    {
-                        //reviso si existe ese uuid
-                        var _uuid = db.DOCUMENTOUUIDs.Where(u => u.UUID == Uuid).FirstOrDefault();
-                        if (_uuid == null)//si es null, no existe,osea que se crea.
-                        {
-                            //
-                            var pos = db.DOCUMENTOUUIDs.ToList();
-                            DOCUMENTOUUID duid = new DOCUMENTOUUID();
-                            duid.NUM_DOC = dOCUMENTO.NUM_DOC;
-                            duid.POS = pos.Count + 1;
-                            duid.DOCUMENTO_SAP = "";
-                            duid.UUID = Uuid;
-                            duid.ESTATUS = true;
-                            db.DOCUMENTOUUIDs.Add(duid);
-                            db.SaveChanges();
-                        }
-                        else//sino, se revisa si ese numdoc tiene ya un uuid
-                        {
-                            var _uuid2 = db.DOCUMENTOUUIDs.Where(u => u.NUM_DOC == _ndoc).FirstOrDefault();
-                            if (_uuid2 == null)//sino se crea
-                            {
-                                //
-                                var pos = db.DOCUMENTOUUIDs.ToList();
-                                DOCUMENTOUUID duid = new DOCUMENTOUUID();
-                                duid.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                duid.POS = pos.Count + 1;
-                                duid.DOCUMENTO_SAP = "";
-                                duid.UUID = Uuid;
-                                duid.ESTATUS = true;
-                                db.DOCUMENTOUUIDs.Add(duid);
-                                db.SaveChanges();
-                            }
-                            else//sino se modifica
-                            {
-                                //
-                                var pos = db.DOCUMENTOUUIDs.ToList();
-                                DOCUMENTOUUID duid = _uuid2;
-                                duid.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                duid.POS = pos.Count + 1;
-                                duid.DOCUMENTO_SAP = "";
-                                duid.UUID = Uuid;
-                                duid.ESTATUS = true;
-                                db.Entry(duid).State = EntityState.Modified;
-                                db.SaveChanges();
-                            }
-                        }
-                    }
+                    //if (Uuid != string.Empty)
+                    //{
+                    //    //reviso si existe ese uuid
+                    //    var _uuid = db.DOCUMENTOUUIDs.Where(u => u.UUID == Uuid).FirstOrDefault();
+                    //    if (_uuid == null)//si es null, no existe,osea que se crea.
+                    //    {
+                    //        //
+                    //        var pos = db.DOCUMENTOUUIDs.ToList();
+                    //        DOCUMENTOUUID duid = new DOCUMENTOUUID();
+                    //        duid.NUM_DOC = dOCUMENTO.NUM_DOC;
+                    //        duid.POS = pos.Count + 1;
+                    //        duid.DOCUMENTO_SAP = "";
+                    //        duid.UUID = Uuid;
+                    //        duid.ESTATUS = true;
+                    //        db.DOCUMENTOUUIDs.Add(duid);
+                    //        db.SaveChanges();
+                    //    }
+                    //    else//sino, se revisa si ese numdoc tiene ya un uuid
+                    //    {
+                    //        var _uuid2 = db.DOCUMENTOUUIDs.Where(u => u.NUM_DOC == _ndoc).FirstOrDefault();
+                    //        if (_uuid2 == null)//sino se crea
+                    //        {
+                    //            //
+                    //            var pos = db.DOCUMENTOUUIDs.ToList();
+                    //            DOCUMENTOUUID duid = new DOCUMENTOUUID();
+                    //            duid.NUM_DOC = dOCUMENTO.NUM_DOC;
+                    //            duid.POS = pos.Count + 1;
+                    //            duid.DOCUMENTO_SAP = "";
+                    //            duid.UUID = Uuid;
+                    //            duid.ESTATUS = true;
+                    //            db.DOCUMENTOUUIDs.Add(duid);
+                    //            db.SaveChanges();
+                    //        }
+                    //        else//sino se modifica
+                    //        {
+                    //            //
+                    //            var pos = db.DOCUMENTOUUIDs.ToList();
+                    //            DOCUMENTOUUID duid = _uuid2;
+                    //            duid.NUM_DOC = dOCUMENTO.NUM_DOC;
+                    //            duid.POS = pos.Count + 1;
+                    //            duid.DOCUMENTO_SAP = "";
+                    //            duid.UUID = Uuid;
+                    //            duid.ESTATUS = true;
+                    //            db.Entry(duid).State = EntityState.Modified;
+                    //            db.SaveChanges();
+                    //        }
+                    //    }
+                    //}
                     //Lejgg 05.11.2018----------------------------------------<
                 }
                 catch (Exception e)
@@ -5815,6 +5828,34 @@ namespace WFARTHA.Controllers
             return cc;
         }
 
+
+        [HttpPost]//FRT27112018
+        public JsonResult deleteUuid(decimal num_doc)
+        {
+
+            var st = false;
+
+            string displayName = null;
+            var keyValue = db.DOCUMENTOUUIDs.FirstOrDefault(a => a.NUM_DOC == num_doc && a.ESTATUS == true);
+            if (keyValue != null)
+            {
+
+                var _uuid2 = db.DOCUMENTOUUIDs.Where(u => u.NUM_DOC == num_doc && u.ESTATUS == true).FirstOrDefault();
+                DOCUMENTOUUID duid = _uuid2;
+                duid.NUM_DOC = num_doc;
+                duid.POS = _uuid2.POS;
+                duid.DOCUMENTO_SAP = "";
+                duid.UUID = _uuid2.UUID;
+                duid.ESTATUS = false;
+                db.Entry(duid).State = EntityState.Modified;
+                db.SaveChanges();
+                st = true;
+            }
+ 
+            JsonResult jc = Json(st, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
         [HttpPost]
         public string getCondicionT(string cond)
         {
@@ -5994,10 +6035,12 @@ namespace WFARTHA.Controllers
             return jc;
         }
 
+
+        //FRT27112018
         [HttpPost]
         public JsonResult getUuid(string id)
         {
-            var ret = db.DOCUMENTOUUIDs.Where(x => x.UUID == id).FirstOrDefault();
+            var ret = db.DOCUMENTOUUIDs.Where(x => x.UUID == id && x.ESTATUS == true).FirstOrDefault();
             var st = "";
             //Significa que no hay coincidencia
             if (ret == null)

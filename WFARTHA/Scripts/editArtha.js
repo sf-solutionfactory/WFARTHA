@@ -530,7 +530,7 @@ $(document).ready(function () {
                     var file = $(this).get(0).files[i];
                     var fileName = file.name;
                     var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-                    tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
+                    tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
                     //Lejgg 22-10-2018
                     if (fileNameExt.toLowerCase() === "xml") {
                         var data = new FormData();
@@ -652,7 +652,7 @@ $(document).ready(function () {
                         var _fbool = false;
                         //Si ban es false, no hay ningun otro archivo xml, entonces metere el registro
                         if (!_ban) {
-                            tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
+                            tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
                             var data = new FormData();
                             var _resVu = false;
                             data.append('file', file);
@@ -744,7 +744,7 @@ $(document).ready(function () {
                     }
                     //LEJGG23/10/18----------------------------------------------------<
                     else {
-                        tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
+                        tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
                         _tab.row.add(
                             $(tdata)
                         ).draw(false).node();
@@ -817,6 +817,7 @@ $(document).ready(function () {
         updateFooter();
         event.returnValue = false;
         event.cancel = true;
+        
         if (tRet2.length > 0) {
             updateTableRet();
         }
@@ -824,9 +825,32 @@ $(document).ready(function () {
 
     $('#delRowAnex').click(function (e) {
         var t = $('#table_anexa').DataTable();
+
+        //FRT27112018 ----------------->
+        var tr = $(this);
+        var indexopc = t.row(tr).index();
+        var num_doc = $('#NUM_DOC').val();
+        var type = t.row(indexopc).data()[4];
+
+        if (type == "xml") {
+            $.ajax({
+                type: "POST",
+                url: '../deleteUuid',
+                data: { "num_doc": num_doc },
+                success: function () {
+                    
+                },
+                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                    M.toast({ html: httpStatusMessage });
+                },
+                async: false
+            });
+        }
+        //FRT27112018------------------------------<
         t.rows('.selected').remove().draw(false);
         event.returnValue = false;
         event.cancel = true;//FRT 12112018  Para recorrer los numero borrados de los anexos
+
         var _num = t.rows().count();
         for (i = 1; i < _num + 1; i++) {
             document.getElementById("table_anexa").rows[i].cells[1].innerHTML = i;

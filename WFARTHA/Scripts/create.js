@@ -933,7 +933,7 @@ $(document).ready(function () {
                     var file = $(this).get(0).files[i];
                     var fileName = file.name;
                     var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-                    tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                    tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
                     //Lejgg 22-10-2018
                     if (fileNameExt.toLowerCase() === "xml") {
                         var data = new FormData();
@@ -1052,7 +1052,7 @@ $(document).ready(function () {
                         var _fbool = false;
                         //Si ban es false, no hay ningun otro archivo xml, entonces metere el registro
                         if (!_ban) {
-                            tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                            tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
                             var data = new FormData();
                             var _resVu = false;
                             data.append('file', file);
@@ -1147,7 +1147,7 @@ $(document).ready(function () {
                     }
                     //LEJGG23/10/18----------------------------------------------------<
                     else {
-                        tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                        tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
                         _tab.row.add(
                             $(tdata)
                         ).draw(false).node();
