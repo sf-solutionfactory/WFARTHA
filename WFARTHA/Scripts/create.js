@@ -235,7 +235,7 @@ $(document).ready(function () {
         ],
         columnDefs: [
             {
-                targets: [0, 1, 2, 3, 4],
+                targets: [0, 1, 2, 3, 4, 5, 6],
                 className: 'mdl-data-table__cell--non-numeric'
             }
         ]
@@ -1888,6 +1888,28 @@ function obtenerRetenciones(flag) {
     } else {
         //Enviar mensaje de error true
     }
+    alinearEstiloR();
+}
+
+
+function alinearEstiloR() {
+    $("#table_ret > tbody  > tr[role='row']").each(function () {
+        //1
+        var R1 = $(this).find("td.TRET");
+        R1.css("text-align", "left");
+        //2
+        var R2 = $(this).find("td.DESCTRET");
+        R2.css("text-align", "left");
+        //3
+        var R3 = $(this).find("td.INDRET");
+        R3.css("text-align", "left");
+        //4
+        var R4 = $(this).find("td.BIMPONIBLE");
+        R4.css("text-align", "left");
+        //5
+        var R5 = $(this).find("td.IMPRET");
+        R5.css("text-align", "left");
+    });
 }
 
 function addRowRet(t, SOCIEDAD, PROVEEDOR, TRET, DESCRET, INDRET, BIMPONIBLE, IMPRET) {

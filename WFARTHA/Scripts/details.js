@@ -445,6 +445,12 @@ function formatoTabla() {
         scrollX: "50vh",
         scrollY: "50vh",
         scrollCollapse: true,
+        columnDefs: [
+            {
+                targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                className: 'mdl-data-table__cell--non-numeric'
+            }
+        ],
         "paging": false,
         "info": false,
         "searching": false,
@@ -605,11 +611,40 @@ function asigF(fir) {
 
 //LEJGG 13/11/2018
 function tamanosRenglones() {
+    if (tRet2.length == 0) {
+        //TEXTO
+        $('.materialize-textarea').css("width", "100%");
+    }
     //TEXTO
-    var t_ret = $("#table_info>thead>tr").find('th.TXTPOS');
-    //var t_ret = $(this).find("th.TEXTO");
-    t_ret.css("text-align", "center");
-    t_ret.css("width", "150px");
+    var t_ret = $("#table_info>thead>tr").find('th.TEXTO');
+    t_ret.css("text-align", "left");
+    //Monto
+    var t_mt = $("#table_info>thead>tr").find('th.MONTO');
+    t_mt.css("text-align", "left");
+    //total
+    var t_fac = $("#table_info>thead>tr").find('th.FACTURA');
+    t_fac.css("text-align", "left");
+    //grupo
+    var tg = $("#table_info>thead>tr").find('th.GRUPO');
+    tg.css("text-align", "left");
+    //IVA
+    var t_iva = $("#table_info>thead>tr").find('th.IVA');
+    t_iva.css("text-align", "left");
+    //SELECT IMPUESTO
+    var t_imps = $("#table_info>thead>tr").find('th.IMPUESTO_SELECT');
+    t_imps.css("text-align", "left");
+    //reviso si tiene retenciones para agregarles nueva medidas
+    if (tRet2.length > 0) {
+        for (var i = 0; i < tRet2.length; i++) {
+            var _cex = $("#table_info>thead>tr").find("th.bi" + tRet2[i]);
+            _cex.css("text-align", "left");
+            var _cex2 = $("#table_info>thead>tr").find("th.ir" + tRet2[i]);
+            _cex2.css("text-align", "left");
+        }
+    }
+    //total
+    var t_tot = $("#table_info>thead>tr").find('th.TOTAL');
+    t_tot.css("text-align", "center");
 }
 //LEJGG 21-11-2018 Cadena de autorización----------------------------------------------------------------------------->
 //Al seleccionar un solicitante, obtener la cadena para mostrar

@@ -110,6 +110,7 @@ namespace WFARTHA.Controllers
             var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us)) & (a.ESTATUS != "A" & a.ESTATUS_C != "C")).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();
             //var dOCUMENTOVs = db.DOCUMENTOVs.Where(a => a.USUARIOA_ID.Equals(us)).ToList();
             var dOCUMENTOVs = db.DOCUMENTOVs.Where(a => a.USUARIOA_ID.Equals(us)).ToList();
+           
             var tsol = db.TSOLs.ToList();
             foreach (DOCUMENTOV v in dOCUMENTOVs)
             {
@@ -131,6 +132,7 @@ namespace WFARTHA.Controllers
                 //d.ESTADO = db.STATES.Where(a => a.ID.Equals(v.ESTADO)).FirstOrDefault().NAME;
                 //d.CIUDAD = db.CITIES.Where(a => a.ID.Equals(v.CIUDAD)).FirstOrDefault().NAME;
                 //dOCUMENTOes.Add(d);
+                d.ID_PSPNR= db.DOCUMENTOes.Where(a => a.NUM_DOC.Equals(v.NUM_DOC)).FirstOrDefault().ID_PSPNR;
                 d.FLUJOes = db.FLUJOes.Where(a => a.NUM_DOC.Equals(d.NUM_DOC)).ToList();
                 d.DOCUMENTOPREs = db.DOCUMENTOPREs.Where(docpr => docpr.NUM_DOC.Equals(d.NUM_DOC)).ToList();
                 dOCUMENTOes.Add(d);
