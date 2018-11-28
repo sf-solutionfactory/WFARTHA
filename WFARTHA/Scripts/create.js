@@ -2856,7 +2856,7 @@ function sumarizarTodoRow(_this) {
     //var t = $('#table_info').DataTable();
     var tr = _this.closest('tr'); //Obtener el row 
     //Obtener el valor del impuesto
-    var imp = tr.find("td.IMPUESTO input").val();
+    var imp = tr.find("td.IMPUESTO select").val();
     //Calcular impuesto y subtotal
     var impimp = impuestoVal(imp);
     impimp = parseFloat(impimp);
@@ -3101,7 +3101,8 @@ function copiarTableInfoControl() {
 
             //var imputacion = $(this).find("td.IMPUTACION").text(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var ccosto = $(this).find("td.CCOSTO input").val(); //MGC 11-10-2018 Obtener valor de columnas oculta
-            var impuesto = $(this).find("td.IMPUESTO input").val();
+            //var impuesto = $(this).find("td.IMPUESTO input").val();
+            var impuesto = tr.find("td.IMPUESTO select").val();
             var monto1 = $(this).find("td.MONTO input").val().replace('$', '').replace(',', '');
             while (monto1.indexOf(',') > -1) {
                 monto1 = monto1.replace('$', '').replace(',', '');
