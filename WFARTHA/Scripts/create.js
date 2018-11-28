@@ -43,7 +43,6 @@ $(document).ready(function () {
 
     //Tabla de Información
     $('#table_info').DataTable({
-
         language: {
             //"url": "../Scripts/lang/@Session["spras"].ToString()" + ".json"
             "url": "../Scripts/lang/ES.json"
@@ -378,11 +377,19 @@ $(document).ready(function () {
     });
 
     $('#div-menu').on('click', function () {
-        obtenerRetenciones(99);
+        $(window).resize();
     });
 
     $('#cerrar-menu').on('click', function () {
-        obtenerRetenciones(99);
+        $(window).resize();
+    });
+
+    //se ocupa un ciclo for con minimo 2 veces que se ejecute el metodo para que lo haga,ó ue e le de 2 clicks a tab_con para que lo haga.
+    //Lejgg 27-11-2018
+    $('#tab_con').on('click', function () {
+        for (var i = 0; i < 2; i++) {
+            $(window).resize();
+        }
     });
 
     $('#delRowInfo').click(function (e) {
@@ -510,18 +517,8 @@ $(document).ready(function () {
 
     $('#btn_guardarh').on("click", function (e) {
 
-        //M.toast({ html: "Guardando" })
-        //document.getElementById("loader").style.display = "flex";//RSG 26.04.2018
-        //document.getElementById("btn_guardarh").classList.add("disabled");//RSG 26.04.2018
-
         var _miles = $("#miles").val();
         var _decimales = $("#dec").val();
-
-        //FRT06112018.3 Se comentan las lineas se pasan a ejecucion despues de validar los valores
-        //copiarTableInfoControl();
-        //copiarTableInfoPControl();
-        //copiarTableRet();
-        //end FRT06112018.3 
 
         //CODIGO
         //dar formato al monto
@@ -598,7 +595,7 @@ $(document).ready(function () {
             var tipoimp = t.row(indexopc).data()[14];
 
             if (tipoimp == "K" & (ceco == "" | ceco == null)) {
-                msgerror = "Falta ingresar Centro de Costo";
+                msgerror = "Fila " + _rni + ": Falta ingresar Centro de Costo";
                 _b = false;
             } else {
                 _b = true;
@@ -612,7 +609,7 @@ $(document).ready(function () {
             var concepto = $(this).find("td.GRUPO input").val(); //FRT21112018
 
             if (concepto == "" | concepto == null) {
-                msgerror = "Falta ingresar Conecepto";
+                msgerror = "Fila " + _rni + ": Falta ingresar Concepto";
                 _b = false;
             } else {
                 _b = true;
@@ -630,7 +627,7 @@ $(document).ready(function () {
             }
 
             if (monto == " 0.00" | monto == null | monto == "") { //MGC 07-11-2018 Validación en el monto
-                msgerror = "El monto debe ser MAYOR a cero";
+                msgerror = "Fila " + _rni + ": El monto debe ser mayor a cero";
                 _b = false;
             } else {
                 _b = true;
@@ -661,7 +658,7 @@ $(document).ready(function () {
                             var montobase = parseFloat(_montobase);
 
                             if (monto < montobase) {
-                                msgerror = "Monto base de retencion (" + monto + ") no debe ser mayor al monto antes de IVA (" + montobase + ") posición " + _rni + " ";
+                                msgerror = "Fila " + _rni + ": Monto base de retencion (" + montobase + ") no debe ser mayor al monto antes de IVA (" + monto + ")";
                                 _m = false;
                                 break;
                             } else {
@@ -688,10 +685,10 @@ $(document).ready(function () {
             //FRT2311208 PARA VALIDACION DE 50 CARACTERES
             var texto = $(this).find("td.TEXTO textarea").val().trim();
             var ct = texto.length;
-            ct = parseFloat(ct)
+            ct = parseFloat(ct);
             if (ct < 50) {
                 _b = false;
-                msgerror = "Falta explicación en posición " + _rni + " ";
+                msgerror = "Fila " + _rni + ": Falta explicación del egreso en texto";
             } else {
                 _b = true;
             }
@@ -707,7 +704,7 @@ $(document).ready(function () {
                         break;
                     } else {
                         _b = false;
-                        msgerror = "Error en el renglon " + _rni + " valor: " + na1 + " Columna 2";
+                        msgerror = "Fila " + _rni + " valor: " + na1 + " Columna 2";
                     }
                 }
                 if (_b === false) {
@@ -719,7 +716,7 @@ $(document).ready(function () {
                         break;
                     } else {
                         _b = false;
-                        msgerror = "Error en el renglon " + _rni + " valor: " + na2 + " Columna 3";
+                        msgerror = "Fila " + _rni + " valor: " + na2 + " Columna 3";
                     }
                 }
                 if (_b === false) {
@@ -731,7 +728,7 @@ $(document).ready(function () {
                         break;
                     } else {
                         _b = false;
-                        msgerror = "Error en el renglon " + _rni + " valor: " + na3 + " Columna 4";
+                        msgerror = "Fila " + _rni + " valor: " + na3 + " Columna 4";
                     }
                 }
                 if (_b === false) {
@@ -743,7 +740,7 @@ $(document).ready(function () {
                         break;
                     } else {
                         _b = false;
-                        msgerror = "Error en el renglon " + _rni + " valor: " + na4 + " Columna 5";
+                        msgerror = "Fila " + _rni + " valor: " + na4 + " Columna 5";
                     }
                 }
                 if (_b === false) {
@@ -755,7 +752,7 @@ $(document).ready(function () {
                         break;
                     } else {
                         _b = false;
-                        msgerror = "Error en el renglon " + _rni + " valor: " + na5 + " Columna 6";
+                        msgerror = "Fila " + _rni + " valor: " + na5 + " Columna 6";
                     }
                 }
                 if (_b === false) {
@@ -767,7 +764,7 @@ $(document).ready(function () {
         });
         var rn = $("table#table_info tbody tr[role='row']").length;
         if (rn == 0) {
-            msgerror = "No hay renglones";
+            msgerror = "Sin Filas";
         }
         //FRT08112018 Valida con otra letra para evitar error
         //FRT04112018.2 Se realizara validación del monto > 0s
@@ -1311,6 +1308,7 @@ $(window).on('load', function () {
     //MGC 03-10-2018 solicitud con orden de compra
     //Si load = "load" solo se ocultan o muestran campos
     $("#tsol").trigger("change", ["load"]);
+    $(window).resize();
 });
 
 $('body').on('click', '#table_info tbody td.select_row', function () {
@@ -1878,8 +1876,6 @@ function obtenerRetenciones(flag) {
         //Lej 17.09.18
         extraCols = tRet2.length;
         $('#table_info').DataTable({
-            scrollX: true,
-            scrollCollapse: true,
             language: {
                 "url": "../Scripts/lang/ES.json"
             },
@@ -2014,7 +2010,9 @@ $('body').on('change', '.IMPUESTO_SELECT', function (event, param1) {
         var tr = $(this).closest('tr'); //Obtener el row 
 
         //Obtener el valor del impuesto
-        var imp = tr.find("td.IMPUESTO input").val();
+        //Los 2 lineas sigus funcionan.
+        //var imp = tr.find("td.IMPUESTO select").val();
+        var imp = tr.find("td.IMPUESTO option:selected").text();
 
         //Calcular impuesto y subtotal
         var impimp = impuestoVal(imp);
@@ -2074,8 +2072,8 @@ $('body').on('focusout', '.OPER', function (e) {
     var tr = $(this).closest('tr'); //Obtener el row 
 
     //Obtener el valor del impuesto
-    var imp = tr.find("td.IMPUESTO input").val();
-
+    //var imp = tr.find("td.IMPUESTO input").val();
+    var imp = tr.find("td.IMPUESTO option:selected").text();
     //Calcular impuesto y subtotal
     var impimp = impuestoVal(imp);
     impimp = parseFloat(impimp);
@@ -2261,7 +2259,7 @@ function addSelectImpuesto(addedRowInfo, imp, idselect, disabled, clase) {
     var ar = $(addedRowInfo).find("td.IMPUESTO");
 
 
-    var sel = $("<select class = \"IMPUESTO_SELECT\" id = \"" + idselect + "\"> ").appendTo(ar);
+    var sel = $("<select class = \"IMPUESTO_SELECT browser-default\" id = \"" + idselect + "\"> ").appendTo(ar);
     $("#IMPUESTO option").each(function () {
         var _valor = $(this).val();//lej 19.09.2018
         var _texto = $(this).text();//lej 19.09.2018
@@ -2279,8 +2277,8 @@ function addSelectImpuesto(addedRowInfo, imp, idselect, disabled, clase) {
     }
 
     //Iniciar el select agregado
-    var elem = document.getElementById(idselect);
-    var instance = M.Select.init(elem, []);
+    // var elem = document.getElementById(idselect);
+    //var instance = M.Select.init(elem, []);
     $(".IMPUESTO_SELECT").trigger("change");
 }
 
@@ -2380,7 +2378,7 @@ function updRowInfoH() {
 
             //Seleccionar el valor
             //$("#" + idselect + "").val(imp).change();
-            $("#" + idselect + "").val(imp).trigger("change", ["tr"])
+            $("#" + idselect + "").val(imp).trigger("change", ["tr"]);
             $("#" + idselect + "").siblings(".select-dropdown").css("font-size", "12px");
 
             $("#" + idselect + "").prop('disabled', 'disabled');
@@ -2525,7 +2523,7 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
         colstoAdd += '<td class=\"BaseImp' + tRet2[i] + '\"><input class=\"extrasC BaseImp' + i + '\" style=\"font-size:12px;width:75px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td>';
         colstoAdd += '<td class=\"ImpRet' + tRet2[i] + '\"><input class=\"extrasC2 ImpRet' + i + '\" style=\"font-size:12px;width:75px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td>';
     }
-    colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;width:77px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"
+    colstoAdd += "<td><input disabled class=\"TOTAL OPER\" style=\"font-size:12px;width:80px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\"></td>"
         //+ "<td><input class=\"CHECK\" style=\"font-size:12px;\" type=\"checkbox\" id=\"\" name=\"\" value=\"" + check + "\"></td>" //MGC 03 - 10 - 2018 solicitud con orden de compra
         + "<td><p><label><input type=\"checkbox\" checked=\"" + check + "\" /><span></span></label></p></td>";//MGC 03 - 10 - 2018 solicitud con orden de compra
     var table_rows = '<tr><td></td><td>' + pos + '</td><td><input class=\"NumAnexo\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo2\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo3\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td><input class=\"NumAnexo5\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td>' +
