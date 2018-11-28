@@ -118,7 +118,7 @@ $(document).ready(function () {
     //Tabla de Retenciones
     $('#table_ret').DataTable({
         language: {
-            "url": "../Scripts/lang/ES.json"
+            "url": "../../Scripts/lang/ES.json"
         },
         "paging": false,
         "info": false,
@@ -164,20 +164,27 @@ $(document).ready(function () {
         ],
         columnDefs: [
             {
-                targets: [0, 1, 2, 3, 4],
+                targets: [0, 1, 2, 3, 4, 5, 6],
                 className: 'mdl-data-table__cell--non-numeric'
             }
         ]
     });
 
     $('#div-menu').on('click', function () {
-
+        $(window).resize();
     });
 
     $('#cerrar-menu').on('click', function () {
-
+        $(window).resize();
     });
 
+    //se ocupa un ciclo for con minimo 2 veces que se ejecute el metodo para que lo haga,ó ue e le de 2 clicks a tab_con para que lo haga.
+    //Lejgg 27-11-2018
+    $('#tab_con').on('click', function () {
+        for (var i = 0; i < 2; i++) {
+            $(window).resize();
+        }
+    });
     formatoMon();
 
     var val3 = $('#tsol').val();
@@ -188,8 +195,30 @@ $(document).ready(function () {
 $(window).on('load', function () {
 
     $('.materialize-textarea').css("height", "0px");
+    //Lejgg28/11/2018
+    alinearIzq();
 
 });
+function alinearIzq() {
+    $("#table_ret > tbody  > tr[role='row']").each(function () {
+        //1
+        var R1 = $(this).find("td.TRET");
+        R1.css("text-align", "left");
+        //2
+        var R2 = $(this).find("td.DESCTRET");
+        R2.css("text-align", "left");
+        //3
+        var R3 = $(this).find("td.INDRET");
+        R3.css("text-align", "left");
+        //4
+        var R4 = $(this).find("td.BIMPONIBLE");
+        R4.css("text-align", "left");
+        //5
+        var R5 = $(this).find("td.IMPRET");
+        R5.css("text-align", "left");
+    });
+}
+
 function formatoTabla() {
     var colsArray = [
         {//MGC 30-10-2018 Tipo de presupuesto
@@ -413,6 +442,9 @@ function formatoTabla() {
             //"url": "../Scripts/lang/@Session["spras"].ToString()" + ".json"
             "url": "../../Scripts/lang/ES.json"
         },
+        scrollX: "50vh",
+        scrollY: "50vh",
+        scrollCollapse: true,
         "paging": false,
         "info": false,
         "searching": false,
@@ -429,7 +461,7 @@ function showHide(tsol) {
     val3 = val3.replace(/\,/g, "\" , \"");
     val3 = val3.replace(/\=/g, "\" : \"");
     val3 = val3.replace(/\ /g, "");
-    var jsval = $.parseJSON(val3)
+    var jsval = $.parseJSON(val3);
 
     $.each(jsval, function (i, dataj) {
         ocultarCampos(dataj.EDITDET, param1);

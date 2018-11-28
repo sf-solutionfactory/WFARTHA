@@ -25,7 +25,7 @@ $(document).ready(function () {
 
     $('#tab_enc').on('click', function () {
         tamanosRenglones();
-    });    
+    });
 
     $('.tabDet').on('click', function () {
         tamanosRenglones();
@@ -143,7 +143,7 @@ $(document).ready(function () {
         ],
         columnDefs: [
             {
-                targets: [0, 1, 2, 3, 4],
+                targets: [0, 1, 2, 3, 4, 5, 6],
                 className: 'mdl-data-table__cell--non-numeric'
             }
         ]
@@ -530,7 +530,9 @@ $(document).ready(function () {
                     var file = $(this).get(0).files[i];
                     var fileName = file.name;
                     var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-                    tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
+
+                    tdata = "<tr><td></td><td style=\"text - align: left\">" + (i + 1) + "</td><td style=\"text - align: left\">OK</td><td style=\"text - align: left\">" + file.name + "</td><td style=\"text - align: left\">" + fileNameExt.toLowerCase() + "</td><td style=\"text - align: left\"><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
+
                     //Lejgg 22-10-2018
                     if (fileNameExt.toLowerCase() === "xml") {
                         var data = new FormData();
@@ -858,13 +860,14 @@ $(document).ready(function () {
     });
 
     tamanoTextArea();
+    alinearEstilo();
 });
 
 //MGC 03-11-2018 Cadena de autorización
 //Obtener los datos de la cadena seleccionada
 //Cuando se termina de cargar la página
 $(window).on('load', function () {
-    
+
     //$("#list_detaa").change();
 
     //var val3 = $(this).val();
@@ -1649,7 +1652,7 @@ function copiarTableInfoControl() {
 
             //var imputacion = $(this).find("td.IMPUTACION").text(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var ccosto = $(this).find("td.CCOSTO input").val(); //MGC 11-10-2018 Obtener valor de columnas oculta
-           // var impuesto = $(this).find("td.IMPUESTO input").val();
+            // var impuesto = $(this).find("td.IMPUESTO input").val();
             var impuesto = tr.find("td.IMPUESTO select").val();
             var monto1 = $(this).find("td.MONTO input").val();
             while (monto1.indexOf(',') > -1) {
@@ -2319,7 +2322,7 @@ function armarTablaInfo(datos) {
     //Lej 17.09.18
     extraCols = tRet2.length;
     $('#table_info').DataTable({
-        
+
         language: {
             "url": "../../Scripts/lang/ES.json"
         },
@@ -2522,7 +2525,7 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
             monto,
             impuesto,
             iva,
-            "<input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\">",
+            "<input disabled class=\"TOTAL OPER\" style=\"font-size:12px;width:80px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\">",
             "<input class=\"CHECK\" style=\"font-size:12px;\" type=\"checkbox\" id=\"\" name=\"\" value=\"" + check + "\">" //MGC 03 - 10 - 2018 solicitud con orden de compra
         ]).draw(false).node();
     } else {
@@ -3005,4 +3008,54 @@ function sumarizarTodoRow(_this) {
     //Fin de codigo que sumariza
     updateFooter();
 
+}
+
+function alinearEstilo() {
+    $("#table_ret > tbody  > tr[role='row']").each(function () {
+        //1
+        var R1 = $(this).find("td.TRET");
+        R1.css("text-align", "left");
+        //2
+        var R2 = $(this).find("td.DESCTRET");
+        R2.css("text-align", "left");
+        //3
+        var R3 = $(this).find("td.INDRET");
+        R3.css("text-align", "left");
+        //4
+        var R4 = $(this).find("td.BIMPONIBLE");
+        R4.css("text-align", "left");
+        //5
+        var R5 = $(this).find("td.IMPRET");
+        R5.css("text-align", "left");
+    });
+    //--------
+    //Para los titulos
+    var tpo = $("#table_anexa>thead>tr").find('th.POS');
+    tpo.css("text-align", "left");
+    var ts = $("#table_anexa>thead>tr").find('th.STAT');
+    ts.css("text-align", "left");
+    var tn = $("#table_anexa>thead>tr").find('th.NAME');
+    tn.css("text-align", "left");
+    var tt = $("#table_anexa>thead>tr").find('th.TYPE');
+    tt.css("text-align", "left");
+    var tde = $("#table_anexa>thead>tr").find('th.DESC');
+    tde.css("text-align", "left");
+    //--------
+    $("#table_anexa > tbody  > tr[role='row']").each(function () {
+        //1
+        var R1 = $(this).find("td.POS");
+        R1.css("text-align", "left");
+        //2
+        var R2 = $(this).find("td.STAT");
+        R2.css("text-align", "left");
+        //3
+        var R3 = $(this).find("td.NAME");
+        R3.css("text-align", "left");
+        //4
+        var R4 = $(this).find("td.TYPE");
+        R4.css("text-align", "left");
+        //5
+        var R5 = $(this).find("td.DESC");
+        R5.css("text-align", "left");
+    });
 }
