@@ -790,7 +790,13 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
                                 </td>
-                                <td style="text-align:left;">@{var nProv = db.PROVEEDORs.Where(x => x.LIFNR == item.PAYER_ID).FirstOrDefault().NAME1;}  @nProv</td>@*Lejgg 26-11-2018*@
+                                <td style="text-align:left;">
+                                    @{var nProv = ""; try
+                                        { nProv = db.PROVEEDORs.Where(x => x.LIFNR == item.PAYER_ID).FirstOrDefault().NAME1; }
+                                        catch (Exception e)
+                                        { nProv = ""; }}
+                                    @nProv
+                                </td>@*Lejgg 26-11-2018*@
                                 <td>
                                     @item.USUARIOC_ID
                                 </td>
@@ -839,7 +845,7 @@
             },
             columnDefs: [
                 {
-                    targets: [2, 3, 4, 5, 6, 7, 8, 9],
+                    targets: [0,1,2, 3, 4, 5, 6, 7, 8, 9],
                     className: 'mdl-data-table__cell--non-numeric'
                 }
             ],

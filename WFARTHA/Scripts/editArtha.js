@@ -654,7 +654,7 @@ $(document).ready(function () {
                         var _fbool = false;
                         //Si ban es false, no hay ningun otro archivo xml, entonces metere el registro
                         if (!_ban) {
-                            tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
+                            tdata = "<tr><td></td><td style=\"text - align: left\">" + (nr + 1) + "</td><td style=\"text - align: left\">OK</td><td style=\"text - align: left\">" + file.name + "</td><td style=\"text - align: left\">" + fileNameExt.toLowerCase() + "</td><td style=\"text - align: left\"><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
                             var data = new FormData();
                             var _resVu = false;
                             data.append('file', file);
@@ -746,7 +746,7 @@ $(document).ready(function () {
                     }
                     //LEJGG23/10/18----------------------------------------------------<
                     else {
-                        tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
+                        tdata = "<tr><td></td><td style=\"text - align: left\">" + (nr + 1) + "</td><td style=\"text - align: left\">OK</td><td style=\"text - align: left\">" + file.name + "</td><td style=\"text - align: left\">" + fileNameExt.toLowerCase() + "</td><td style=\"text - align: left\"><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
                         _tab.row.add(
                             $(tdata)
                         ).draw(false).node();
@@ -792,6 +792,7 @@ $(document).ready(function () {
                 }
             }
         }
+        alinearEstilo();
     });
 
     $('#table_anexa tbody').on('click', 'td.select_row', function () {
