@@ -30,43 +30,45 @@
 <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
 <link href="~/Content/dataTable.css" rel="stylesheet" />
 <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
-<table class="table mdl-data-table striped" id="table" style="width:100%;">
-    <thead>
-        <tr>
-            <th id="thper">
-                @Html.DisplayNameFor(model => model.ID_PSPNR)
-            </th>
-            <th id="thdes">
-                @Html.DisplayNameFor(model => model.NOMBRE)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<script src="~/Scripts/Homescript.js"></script>
+<div style="overflow:auto;">
+    <table class="table mdl-data-table striped" id="table" style="width:100%;">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ID_PSPNR)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NOMBRE)
-                </td>
-                <td>
-                    <a data-form-method="post" href="@Url.Action("SelProv", "Home", new {prov=item.NOMBRE, id=item.ID_PSPNR,returnUrl = ViewBag.returnUrl})">
-                        <i class='material-icons green-text'>edit</i>
-                    </a>
-                </td>
+                <th id="thper">
+                    @Html.DisplayName("SOCIEDAD/PROYECTO")
+                </th>
+                <th id="thdes">
+                    @Html.DisplayNameFor(model => model.NOMBRE)
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ID_PSPNR)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NOMBRE)
+                    </td>
+                    <td>
+                        <a data-form-method="post" href="@Url.Action("SelProv", "Home", new {prov=item.NOMBRE, id=item.ID_PSPNR,returnUrl = ViewBag.returnUrl})">
+                            <i class='material-icons green-text'>edit</i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 <script>
     $(document).ready(function () {
         var table = $('#table').DataTable({
             scrollX: "50vh",
             scrollY: "50vh",
-            scrollCollapse: true,
             language: {
                 //"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
                 "url": "../../Scripts/lang/ES.json"
