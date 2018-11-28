@@ -920,7 +920,7 @@ $('body').on('change', '.IMPUESTO_SELECT', function (event, param1) {
         var tr = $(this).closest('tr'); //Obtener el row 
 
         //Obtener el valor del impuesto
-        var imp = tr.find("td.IMPUESTO input").val();
+        var imp = tr.find("td.IMPUESTO option:selected").text();
 
         //Calcular impuesto y subtotal
         var impimp = impuestoVal(imp);
@@ -976,7 +976,7 @@ $('body').on('focusout', '.OPER', function (e) {
     var tr = $(this).closest('tr'); //Obtener el row 
 
     //Obtener el valor del impuesto
-    var imp = tr.find("td.IMPUESTO input").val();
+    var imp = tr.find("td.IMPUESTO option:selected").text();
 
     //Calcular impuesto y subtotal
     var impimp = impuestoVal(imp);
@@ -1512,7 +1512,7 @@ function addSelectImpuesto(addedRowInfo, imp, idselect, disabled, clase) {
     var ar = $(addedRowInfo).find("td.IMPUESTO");
 
 
-    var sel = $("<select class = \"IMPUESTO_SELECT\" id = \"" + idselect + "\"> ").appendTo(ar);
+    var sel = $("<select class = \"IMPUESTO_SELECT  browser-default\" id = \"" + idselect + "\"> ").appendTo(ar);
     $("#IMPUESTO option").each(function () {
         var _valor = $(this).val();//lej 19.09.2018
         var _texto = $(this).text();//lej 19.09.2018
@@ -1528,8 +1528,8 @@ function addSelectImpuesto(addedRowInfo, imp, idselect, disabled, clase) {
     }
 
     //Iniciar el select agregado
-    var elem = document.getElementById(idselect);
-    var instance = M.Select.init(elem, []);
+    //var elem = document.getElementById(idselect);
+    //var instance = M.Select.init(elem, []);
     $(".IMPUESTO_SELECT").trigger("change");
 }
 
@@ -1625,7 +1625,8 @@ function copiarTableInfoControl() {
 
             //var imputacion = $(this).find("td.IMPUTACION").text(); //MGC 11-10-2018 Obtener valor de columnas oculta
             var ccosto = $(this).find("td.CCOSTO input").val(); //MGC 11-10-2018 Obtener valor de columnas oculta
-            var impuesto = $(this).find("td.IMPUESTO input").val();
+           // var impuesto = $(this).find("td.IMPUESTO input").val();
+            var impuesto = tr.find("td.IMPUESTO select").val();
             var monto1 = $(this).find("td.MONTO input").val();
             while (monto1.indexOf(',') > -1) {
                 monto1 = monto1.replace('$', '').replace(',', '');
@@ -2929,7 +2930,7 @@ function sumarizarTodoRow(_this) {
     //var t = $('#table_info').DataTable();
     var tr = _this.closest('tr'); //Obtener el row 
     //Obtener el valor del impuesto
-    var imp = tr.find("td.IMPUESTO input").val();
+    var imp = tr.find("td.IMPUESTO select").val();
     //Calcular impuesto y subtotal
     var impimp = impuestoVal(imp);
     impimp = parseFloat(impimp);
