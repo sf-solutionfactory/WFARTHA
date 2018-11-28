@@ -863,19 +863,12 @@ $(document).ready(function () {
         }
     });
 
-    //MGC 04092018 Conceptos
-    $('#tab_con').on("click", function (e) {
-
-        ////Definir si se va a agregar un nuevo renglón H o se va a actualizar
-        //var newr = false;
-        //newr = verificarRowH(); //False quiere decir que ya existe
-        ////MGC 04092018 Conceptos
-        //if (newr) {
-        //    addRowInfoH();    //--Codigolej
-        //} else {
-        //    updRowInfoH();    //--Codigolej
-        //}
-
+    $('#tab_enc').on("click", function (e) {
+        //se ocupa un ciclo for con minimo 2 veces que se ejecute el metodo para que lo haga,ó ue e le de 2 clicks a tab_con para que lo haga.
+        //Lejgg 27-11-2018      
+        for (var i = 0; i < 2; i++) {
+            $(window).resize();
+        }
     });
 
     $('#file_sopAnexar').change(function () {
@@ -2553,7 +2546,7 @@ function addRowl(t, pos, nA, nA2, nA3, nA4, nA5, ca, factura, tipo_concepto, gru
             monto,
             impuesto,
             iva,
-            "<input disabled class=\"TOTAL OPER\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\">",
+            "<input disabled class=\"TOTAL OPER\" style=\"font-size:12px;width:80px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\">",
             "<input class=\"CHECK\" style=\"font-size:12px;\" type=\"checkbox\" id=\"\" name=\"\" value=\"" + check + "\">" //MGC 03 - 10 - 2018 solicitud con orden de compra
         ]).draw(false).node();
     } else {
