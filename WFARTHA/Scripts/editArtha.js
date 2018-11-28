@@ -386,7 +386,7 @@ $(document).ready(function () {
         });
         var rn = $("table#table_info tbody tr[role='row']").length;
         if (rn == 0) {
-            msgerror = "No hay renglones";
+            msgerror = "Sin Filas";
         }
 
         //FRT21112018 Para validar cantidad de anexos solamente al enviar
