@@ -83,7 +83,7 @@
                 </div>
             </div>
         }*@
-    
+
     <style>
         div.dataTables_wrapper {
             margin: 0 auto;
@@ -163,7 +163,7 @@
     <div class="col s12 right-align">
         <a href="@Url.Action("Index", "Home" )" class="btn btn-small">Cancelar</a>
         <a id="btn_guardarh" class="btn btn-small">Enviar</a>
-    </div>   
+    </div>
     <div class="col s12" style="display:inline;">
         @*FRT 02112018 Agregar titulos*@
         <div>
@@ -238,7 +238,7 @@
                                 <div class="form-group col s3">
                                     @Html.LabelFor(model => model.FECHAD, "Fecha Documento", htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.EditorFor(model => model.FECHAD, new { htmlAttributes = new { @class = "form-control fechaVal input_fe",@disabled="disabled" } })@*LEJ 04.09.2018*@
+                                        @Html.EditorFor(model => model.FECHAD, new { htmlAttributes = new { @class = "form-control fechaVal input_fe", @disabled = "disabled" } })  @*LEJ 04.09.2018*@
                                     </div>
                                 </div>
                                 <div class="form-group col s3">
@@ -477,107 +477,107 @@
                         </div>
                     </div>
                     @*<div class="col s12">*@
-                        <div class="card-panel">
-                            <div id="file_facturat" class="file-field input-field" style="display:none">
-                                <div class="btn">
-                                    <span id="span_filefact">File</span> @*B20180801 MGC Textos*@
-                                    <input type="file" class="file_sop" id="file_sopp">
-                                </div>
-                                <div class="file-path-wrapper">
-                                    <input class="file-path validate file_sop" type="text">
-                                </div>
+                    <div class="card-panel">
+                        <div id="file_facturat" class="file-field input-field" style="display:none">
+                            <div class="btn">
+                                <span id="span_filefact">File</span> @*B20180801 MGC Textos*@
+                                <input type="file" class="file_sop" id="file_sopp">
                             </div>
-                            <h5 id="head_flinea">Retenciones </h5>
-                            <div class="row" style="margin-bottom:0">
-                                <table class="table display mdl-data-table striped" id="table_ret" style="width:100%;">
-                                    <thead>
-                                        <tr>
-                                            <th class="lbl_socret leftAlignement">
-                                                Sociedad Retención
-                                            </th>
-                                            <th class="lbl_provret leftAlignement">
-                                                Proveedor Retención
-                                            </th>
-                                            <th class="lbl_tret leftAlignement">
-                                                Tipo Retención
-                                            </th>
-                                            <th class="lbl_descret leftAlignement">
-                                                Descripción Retención
-                                            </th>
-                                            <th class="lbl_indret leftAlignement">
-                                                Indicador de Retención
-                                            </th>
-                                            <th class="lbl_bimponible leftAlignement">
-                                                Base Imponible
-                                            </th>
-                                            <th id="lbl_impret" class="leftAlignement">
-                                                Importe de Retención
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @*Obtener los decimales*@
-                                        @{ string deci = ViewBag.dec; if (deci == null | deci == "") { deci = ""; } }
-                                        @if (drets != null)
-                                        {
-                                            for (var i = 0; i < drets.Count; i++)
-                                            {
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td class="leftAlignement">
-                                                        @Html.DisplayFor(m => drets[i].WITHT)
-                                                    </td>
-                                                    <td class="leftAlignement">
-                                                        @Html.DisplayFor(m => drets[i].DESC)
-                                                    </td>
-                                                    <td class="leftAlignement">
-                                                        @Html.DisplayFor(m => drets[i].WT_WITHCD)
-                                                    </td>
-                                                    <td class="leftAlignement">
-                                                        @{ decimal bi = 0; try { bi = Convert.ToDecimal(drets[i].BIMPONIBLE); } catch (Exception) { }; string bim = formatoc.toShow(bi, deci);}
-                                                        @bim
-                                                    </td>
-                                                    <td class="leftAlignement">
-                                                        @{ decimal im = 0; try { im = Convert.ToDecimal(drets[i].IMPORTE_RET); } catch (Exception) { }; string ims = formatoc.toShow(im, deci);}
-                                                        @ims
-                                                    </td>
-                                                </tr>
-                                            }
-                                        }
-                                    </tbody>
-                                </table>
-
-                                <table class="table display mdl-data-table striped" id="table_reth" style="width:100%; display:none">
-                                    <thead>
-                                        <tr>
-                                            <th class="lbl_socret">
-                                                Sociedad Retención
-                                            </th>
-                                            <th class="lbl_provret">
-                                                Proveedor Retención
-                                            </th>
-                                            <th class="lbl_tret">
-                                                Tipo Retención
-                                            </th>
-                                            <th class="lbl_descret">
-                                                Descripción Retención
-                                            </th>
-                                            <th class="lbl_indret">
-                                                Indicador de Retención
-                                            </th>
-                                            <th class="lbl_bimponible">
-                                                Base Imponible
-                                            </th>
-                                            <th id="lbl_impret">
-                                                Importe de Retención
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate file_sop" type="text">
                             </div>
                         </div>
+                        <h5 id="head_flinea">Retenciones </h5>
+                        <div class="row" style="margin-bottom:0">
+                            <table class="table display mdl-data-table striped" id="table_ret" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th class="lbl_socret leftAlignement">
+                                            Sociedad Retención
+                                        </th>
+                                        <th class="lbl_provret leftAlignement">
+                                            Proveedor Retención
+                                        </th>
+                                        <th class="lbl_tret leftAlignement">
+                                            Tipo Retención
+                                        </th>
+                                        <th class="lbl_descret leftAlignement">
+                                            Descripción Retención
+                                        </th>
+                                        <th class="lbl_indret leftAlignement">
+                                            Indicador de Retención
+                                        </th>
+                                        <th class="lbl_bimponible leftAlignement">
+                                            Base Imponible
+                                        </th>
+                                        <th id="lbl_impret" class="leftAlignement">
+                                            Importe de Retención
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @*Obtener los decimales*@
+                                    @{ string deci = ViewBag.dec; if (deci == null | deci == "") { deci = ""; } }
+                                    @if (drets != null)
+                                    {
+                                        for (var i = 0; i < drets.Count; i++)
+                                        {
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td class="leftAlignement">
+                                                    @Html.DisplayFor(m => drets[i].WITHT)
+                                                </td>
+                                                <td class="leftAlignement">
+                                                    @Html.DisplayFor(m => drets[i].DESC)
+                                                </td>
+                                                <td class="leftAlignement">
+                                                    @Html.DisplayFor(m => drets[i].WT_WITHCD)
+                                                </td>
+                                                <td class="leftAlignement">
+                                                    @{ decimal bi = 0; try { bi = Convert.ToDecimal(drets[i].BIMPONIBLE); } catch (Exception) { }; string bim = formatoc.toShow(bi, deci);}
+                                                    @bim
+                                                </td>
+                                                <td class="leftAlignement">
+                                                    @{ decimal im = 0; try { im = Convert.ToDecimal(drets[i].IMPORTE_RET); } catch (Exception) { }; string ims = formatoc.toShow(im, deci);}
+                                                    @ims
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                            <table class="table display mdl-data-table striped" id="table_reth" style="width:100%; display:none">
+                                <thead>
+                                    <tr>
+                                        <th class="lbl_socret">
+                                            Sociedad Retención
+                                        </th>
+                                        <th class="lbl_provret">
+                                            Proveedor Retención
+                                        </th>
+                                        <th class="lbl_tret">
+                                            Tipo Retención
+                                        </th>
+                                        <th class="lbl_descret">
+                                            Descripción Retención
+                                        </th>
+                                        <th class="lbl_indret">
+                                            Indicador de Retención
+                                        </th>
+                                        <th class="lbl_bimponible">
+                                            Base Imponible
+                                        </th>
+                                        <th id="lbl_impret">
+                                            Importe de Retención
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                     @*</div>*@
                 </div>
             </div>
@@ -604,8 +604,7 @@
                                 <a class="btn"><i class="material-icons left">clear</i><span id="delRowInfo">ELIMINAR FILA</span></a>
                             </div>
                             <div style="overflow:auto;">
-                                <table class="table display mdl-data-table striped" id="table_info" style="width:100%;">
-                                </table>
+                                <table class="table display mdl-data-table striped" id="table_info" style="width:100%;"></table>
                             </div>
                             <table class="table display mdl-data-table striped" id="table_infoh" style="width:100%; display:none">
                                 <thead>
@@ -682,8 +681,8 @@
                             </table>
                         </div>
                         <div style="text-align:right">
-                            <label id="lbl_status">Total:</label>
-                            <label id="total_info1"></label>
+                            <label id="lbl_status" style="font-size: 1.1rem; font-weight: bold;">Total:</label>
+                            <label id="total_info1" style="font-size: 1.1rem;font-weight: bold;"></label>
                         </div>
                     </div>
                 </div>
@@ -974,17 +973,18 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if(ViewBag.LogSap.Count != 0){
-                                                    for (int i = 0; i < ViewBag.LogSap.Count; i++)
+                                                    @if (ViewBag.LogSap.Count != 0)
                                                     {
-                                                        <tr>
-                                                            <td width="">@ViewBag.LogSap[i].NUM_DOC</td>
-                                                            <td width="">@ViewBag.LogSap[i].TYPE</td>
-                                                            <td width="">@ViewBag.LogSap[i].NUMBER</td>
-                                                            <td width="">@ViewBag.LogSap[i].MESSAGE</td>
-                                                            <td width="">@ViewBag.LogSap[i].FECHA</td>
-                                                        </tr>
-                                                    }
+                                                        for (int i = 0; i < ViewBag.LogSap.Count; i++)
+                                                        {
+                                                            <tr>
+                                                                <td width="">@ViewBag.LogSap[i].NUM_DOC</td>
+                                                                <td width="">@ViewBag.LogSap[i].TYPE</td>
+                                                                <td width="">@ViewBag.LogSap[i].NUMBER</td>
+                                                                <td width="">@ViewBag.LogSap[i].MESSAGE</td>
+                                                                <td width="">@ViewBag.LogSap[i].FECHA</td>
+                                                            </tr>
+                                                        }
                                                     }
                                                 </tbody>
                                             </table>

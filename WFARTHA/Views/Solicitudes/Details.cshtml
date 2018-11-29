@@ -433,7 +433,6 @@
                             @Html.LabelFor(model => model.D.FECHAD, "Fecha Documento", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.EditorFor(model => model.D.FECHAD, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
-
                             </div>
                         </div>
 
@@ -929,8 +928,8 @@
                         </div>
                     </div>
                     <div style="text-align:right">
-                        <label id="lbl_status">Total:</label>
-                        <label id="total_info1">@ViewBag.totalt</label>
+                        <label id="lbl_status" style="font-size: 1.1rem; font-weight: bold;">Total:</label>
+                        <label id="total_info1" style="font-size: 1.1rem;font-weight: bold;">@ViewBag.totalt</label>
                     </div>
                 </div>
             </div>

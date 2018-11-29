@@ -10,6 +10,11 @@ $(document).ready(function () {
         tamanosRenglones();
     });
 
+    //---
+    var _fd = $('#FECHAD').val().split(' ');
+    $('#FECHAD').val(_fd[0]);
+    //---
+
     //Lejgg 21-11-2018---------------------->
     //Nombre del autorizador ya establecido
     //MGC 22-11-2018.2 Cadena de autorización----------------------------------------------------------------------->
