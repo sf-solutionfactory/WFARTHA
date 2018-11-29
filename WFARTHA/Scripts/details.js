@@ -447,7 +447,7 @@ function formatoTabla() {
         scrollCollapse: true,
         columnDefs: [
             {
-                targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                targets: [0, 1, 2, 3, 4, 5, 6,  8, 9, 10, 11, 12, 13, 14, 15, 16],
                 className: 'mdl-data-table__cell--non-numeric'
             }
         ],
@@ -616,8 +616,8 @@ function tamanosRenglones() {
         $('.materialize-textarea').css("width", "100%");
     }
     //TEXTO
-    var t_ret = $("#table_info>thead>tr").find('th.TEXTO');
-    t_ret.css("text-align", "left");
+    var t_ret = $("#table_info>thead>tr").find('th.TXTPOS');
+    t_ret.css("text-align", "center");
     //Monto
     var t_mt = $("#table_info>thead>tr").find('th.MONTO');
     t_mt.css("text-align", "left");
