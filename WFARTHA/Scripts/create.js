@@ -350,6 +350,11 @@ $(document).ready(function () {
                 "className": 'DESC',
                 "orderable": false
             }
+        ], columnDefs: [
+            {
+                targets: [0, 1, 2, 3, 4, 5],
+                className: 'mdl-data-table__cell--non-numeric'
+            }
         ]
     });
 
@@ -1200,6 +1205,7 @@ $(document).ready(function () {
                 }
             }
         }
+        alinearEstilo();
     });
 
     //Cadena de autorización
@@ -1908,6 +1914,39 @@ function alinearEstiloR() {
         R4.css("text-align", "left");
         //5
         var R5 = $(this).find("td.IMPRET");
+        R5.css("text-align", "left");
+    });
+}
+
+function alinearEstilo() {
+    //--------
+    //Para los titulos
+    var tpo = $("#table_anexa>thead>tr").find('th.POS');
+    tpo.css("text-align", "left");
+    var ts = $("#table_anexa>thead>tr").find('th.STAT');
+    ts.css("text-align", "left");
+    var tn = $("#table_anexa>thead>tr").find('th.NAME');
+    tn.css("text-align", "left");
+    var tt = $("#table_anexa>thead>tr").find('th.TYPE');
+    tt.css("text-align", "left");
+    var tde = $("#table_anexa>thead>tr").find('th.DESC');
+    tde.css("text-align", "left");
+    //--------
+    $("#table_anexa > tbody  > tr[role='row']").each(function () {
+        //1
+        var R1 = $(this).find("td.POS");
+        R1.css("text-align", "left");
+        //2
+        var R2 = $(this).find("td.STAT");
+        R2.css("text-align", "left");
+        //3
+        var R3 = $(this).find("td.NAME");
+        R3.css("text-align", "left");
+        //4
+        var R4 = $(this).find("td.TYPE");
+        R4.css("text-align", "left");
+        //5
+        var R5 = $(this).find("td.DESC");
         R5.css("text-align", "left");
     });
 }
