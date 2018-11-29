@@ -8,6 +8,11 @@ var tRet2 = [];
 $(document).ready(function () {
     var elem = document.querySelectorAll('select');
     var instance = M.Select.init(elem, []);
+
+    //---
+    var _fd = $('#FECHAD').val().split(' ');
+    $('#FECHAD').val(_fd[0]);
+    //---
     $("#list_detaa").trigger("change");
     //Formato a campo tipo_cambio
     var _Tc = $('#TIPO_CAMBIO').val();
@@ -820,7 +825,7 @@ $(document).ready(function () {
         updateFooter();
         event.returnValue = false;
         event.cancel = true;
-        
+
         if (tRet2.length > 0) {
             updateTableRet();
         }
@@ -841,7 +846,7 @@ $(document).ready(function () {
                 url: '../deleteUuid',
                 data: { "num_doc": num_doc },
                 success: function () {
-                    
+
                 },
                 error: function (xhr, httpStatusMessage, customErrorMessage) {
                     M.toast({ html: httpStatusMessage });
