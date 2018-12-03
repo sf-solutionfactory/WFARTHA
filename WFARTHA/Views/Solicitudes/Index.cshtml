@@ -467,11 +467,22 @@
                                 @*<span class="new badge @color white-text" data-badge-caption=" ">@estatus</span>*@ @*MGC 10-11-2018 Sin color y letra color negra*@
                                 @estatus
                             </td>
-                            <td>@{var nPro = db.PROYECTOes.Where(x => x.ID_PSPNR == item.ID_PSPNR).FirstOrDefault().NOMBRE;} @nPro</td>@*Lejgg 26-11-2018*@
+                            <td>
+                                @{var nPro = ""; try
+                                    { nPro = db.PROYECTOes.Where(x => x.ID_PSPNR == item.ID_PSPNR).FirstOrDefault().NOMBRE; }
+                                    catch (Exception e) { nPro = ""; }}
+                                @nPro
+                            </td>@*Lejgg 26-11-2018*@
                             <td>
                                 @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
                             </td>
-                            <td style="text-align:left;">@{var nProv = db.PROVEEDORs.Where(x => x.LIFNR == item.PAYER_ID).FirstOrDefault().NAME1;}  @nProv</td>@*Lejgg 26-11-2018*@
+                            <td style="text-align:left;">
+                                @{var nProv = ""; try
+                                    { nProv = db.PROVEEDORs.Where(x => x.LIFNR == item.PAYER_ID).FirstOrDefault().NAME1; }
+                                    catch (Exception e)
+                                    { nProv = ""; }}
+                                @nProv
+                            </td>@*Lejgg 26-11-2018*@
                             <td class="textAl">
                                 @Html.DisplayFor(modelItem => item.USUARIOC_ID)
                             </td>
@@ -499,7 +510,7 @@
             ],
             scrollX: "50vh",
             scrollY: "50vh",
-            order: [[3, "desc"], [4, "desc"]],
+            order: [[3, "asc"]],
             scrollCollapse: true,
             initComplete: function () {
                 this.api().columns().every(function () {
