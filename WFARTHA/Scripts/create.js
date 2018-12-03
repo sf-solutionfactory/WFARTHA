@@ -379,7 +379,7 @@ $(document).ready(function () {
         updateFooter();
         event.returnValue = false;
         event.cancel = true;
-        //tamanosRenglones();
+        tamanosRenglones();
     });
 
     $('#div-menu').on('click', function () {
@@ -1958,10 +1958,16 @@ function obtenerRetenciones(flag) {
             "paging": false,
             "info": false,
             "searching": false,
-            "columns": arrCols
+            "columns": arrCols,
+            columnDefs: [
+                {
+                    targets: [17,19],
+                    className: 'mdl-data-table__cell--non-numeric'
+                }
+            ]
         });
 
-        tamanosRenglones();
+        //tamanosRenglones();
         //MGC 22-10-2018 Etiquetas------------------------------------------>
         //Columna tipo de concepto y columna tipo imputación ocultarlas
 
@@ -1970,6 +1976,7 @@ function obtenerRetenciones(flag) {
     } else {
         //Enviar mensaje de error true
     }
+    tamanosRenglones();
     alinearEstiloR();
 }
 
@@ -3664,6 +3671,15 @@ function tamanosRenglones() {
     //total
     var t_fac = $("#table_info>thead>tr").find('th.FACTURA');
     t_fac.css("text-align", "center");
+    //grupo
+    var t_gp = $("#table_info>thead>tr").find('th.GRUPO');
+    t_gp.css("text-align", "center");
+    //ccosto
+    var TCC = $("#table_info>thead>tr").find('th.CCOSTO');
+    TCC.css("text-align", "center");
+    //impuesto
+    var timp = $("#table_info>thead>tr").find('th.CCOSTO');
+    timp.css("text-align", "center");
     //IVA
     var t_iva = $("#table_info>thead>tr").find('th.IVA');
     t_iva.css("text-align", "center");

@@ -739,23 +739,12 @@
                                 <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
                                     @item.NUM_DOC
                                 </td>
+
                             }
                         }
                         else
                         {
-                            //MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B, solamente el usuario creador
-                            if (item.ESTATUS.Equals("B") & ViewBag.usuario.ID == item.USUARIOC_ID)
-                            {
-                                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
-                                    @item.NUM_DOC
-                                </td>
-                            }
-                            else
-                            {
-                                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-                                    @item.NUM_DOC
-                                </td>
-                            }
+                           
                         }
 
                         <td style="">
@@ -786,7 +775,12 @@
                         </td>
 
                         @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@
-                        <td>@{var nPro = db.PROYECTOes.Where(x => x.ID_PSPNR == item.ID_PSPNR).FirstOrDefault().NOMBRE;} @nPro</td>@*Lejgg 26-11-2018  frt02120218*@
+                         <td>
+                                    @{var nPro = ""; try
+                                        { nPro = db.PROYECTOes.Where(x => x.ID_PSPNR == item.ID_PSPNR).FirstOrDefault().NOMBRE; }
+                                        catch (Exception e) { nPro = ""; }}
+                                    @nPro
+                                </td>@*Lejgg 26-11-2018*@
                         <td>
                             @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
                         </td>
@@ -830,7 +824,7 @@
             scrollX: "50vh",
             scrollY: "50vh",
             scrollCollapse: true,
-            order: [[3, "desc"],[4, "desc"], [5, "desc"], [1, "desc"]],
+            order: [[3, "asc"]],
             language: {
                 //"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
                 "url": "../Scripts/lang/@Session["spras"].ToString()"+".json"
