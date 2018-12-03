@@ -86,7 +86,7 @@
         </div>
     }
 
-    <style>
+        <style>
         .anexosWidth {
             width: 8px;
         }
@@ -160,7 +160,14 @@
             border-collapse: collapse;
             table-layout: fixed;
         }
-    </style>
+
+        /*MGC 26-11-2018 Visualizar caratula --------------------------------------------------->*/
+        .row#div_caratula{
+            margin-bottom: 5px;
+        }
+        /*MGC 26-11-2018 Visualizar caratula ---------------------------------------------------<*/
+
+        </style>
     @*MGC 04-10-2018 Botones para acciones -->*@
     <div class="row" style="margin-bottom:0">
         <div class="col s12 m5 l5">
@@ -441,6 +448,16 @@
     {
         @Html.AntiForgeryToken()*@
 <div class="form-horizontal">
+
+    @*//MGC 26-11-2018 Visualizar caratula --------------------------------------------------->*@
+
+    <div class="row right-align" id="div_caratula">
+        @*<a class="btn-small" href="#" onClick="fcaratula(this)" data-assigned-id="@Model.D.NUM_DOC"><si style="cursor:pointer" class="material-icons right">print</si>Caratula</a>*@
+        <a target="_blank" id="ReportUrl_Performance" class="btn-small" href="@Url.Action("ReportTemplate", "Report", new { id = @Model.D.NUM_DOC })"><si style="cursor:pointer" class="material-icons right">print</si>Caratula</a>
+    </div>
+
+    @*//MGC 26-11-2018 Visualizar caratula ---------------------------------------------------<*@
+
     @*Encabezado*@
     <div id="Encabezado_cont" class="col s12" style="font-size:12px;">
         <div class="row">
@@ -459,7 +476,7 @@
                             @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Sociedad", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @disabled = "disabled", @class = "form-control" })
-                                
+
                             </div>
                         </div>
                     </div>
@@ -579,7 +596,7 @@
                             @Html.LabelFor(model => model.D.PAYER_ID, "Proveedor", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
                                 @Html.EditorFor(model => model.D.PAYER_ID, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
-                                <input type="hidden" id="pid" value="@Model.D.PAYER_ID"/>
+                                <input type="hidden" id="pid" value="@Model.D.PAYER_ID" />
                             </div>
                         </div>
                         @{string rfc = ""; string name = ""; }
@@ -610,7 +627,7 @@
                             @Html.LabelFor(model => model.D.REFERENCIA, "Referencia", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10col s2">
                                 @Html.EditorFor(model => model.D.REFERENCIA, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control" } })
-                                <input type="hidden" id="refHd" value="@Model.D.REFERENCIA"/>
+                                <input type="hidden" id="refHd" value="@Model.D.REFERENCIA" />
                             </div>
                         </div>
 
@@ -808,139 +825,139 @@
                                 {
                                     for (int i = 0; i < @Model.D.DOCUMENTOPSTR.Count; i++)
                                     {
-                                <tr>
-                                    @*@if (colsret.Count == 0)
-        {
-            <td></td>
-        }*@
-                                    <td></td>
-                                    <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
-                                    @if (@Model.D.Anexo != null)
-                                    {
-                                        <td>@Model.D.Anexo[i].a1</td>
-                                        <td>@Model.D.Anexo[i].a2</td>
-                                        <td>@Model.D.Anexo[i].a3</td>
-                                        <td>@Model.D.Anexo[i].a4</td>
-                                        <td>@Model.D.Anexo[i].a5</td>
-                                    }
-                                    else
-                                    {
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    }
+                                        <tr>
+                                            @*@if (colsret.Count == 0)
+                                                {
+                                                    <td></td>
+                                                }*@
+                                            <td></td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].POS</td>
+                                            @if (@Model.D.Anexo != null)
+                                            {
+                                                <td>@Model.D.Anexo[i].a1</td>
+                                                <td>@Model.D.Anexo[i].a2</td>
+                                                <td>@Model.D.Anexo[i].a3</td>
+                                                <td>@Model.D.Anexo[i].a4</td>
+                                                <td>@Model.D.Anexo[i].a5</td>
+                                            }
+                                            else
+                                            {
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            }
 
 
-                                    @if (Model.D.DOCUMENTOPSTR[i].TEXTO != null)
-                                    {
-                                        <td> <textarea class="materialize-textarea" style="font-size:12px;width:150px;height:0px;" type="text" value="" disabled>@Model.D.DOCUMENTOPSTR[i].TEXTO </textarea></td>
-                                        
-                                                            }
-                                    else
-                                    {
-                                        <td></td>
-                                    }
+                                            @if (Model.D.DOCUMENTOPSTR[i].TEXTO != null)
+                                            {
+                                                <td> <textarea class="materialize-textarea" style="font-size:12px;width:150px;height:0px;" type="text" value="" disabled>@Model.D.DOCUMENTOPSTR[i].TEXTO </textarea></td>
+
+                                            }
+                                            else
+                                            {
+                                                <td></td>
+                                            }
 
 
-                                    @if (Model.D.DOCUMENTOPSTR[i].ACCION != null)
-                                    {
-                                        <td>@Model.D.DOCUMENTOPSTR[i].ACCION</td> }
-                                    else
-                                    {
-                                        <td></td>                    }
+                                            @if (Model.D.DOCUMENTOPSTR[i].ACCION != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].ACCION</td> }
+                                            else
+                                            {
+                                                <td></td>}
 
-                                    @if (Model.D.DOCUMENTOPSTR[i].FACTURA != null)
-                                    {
-                                        <td>@Model.D.DOCUMENTOPSTR[i].FACTURA</td> }
-                                    else
-                                    {
-                                        <td></td>                    }
+                                            @if (Model.D.DOCUMENTOPSTR[i].FACTURA != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].FACTURA</td> }
+                                            else
+                                            {
+                                                <td></td>}
 
-                                    <td> @Model.D.DOCUMENTOPSTR[i].TCONCEPTO@Model.D.DOCUMENTOPSTR[i].GRUPO</td>
+                                            <td> @Model.D.DOCUMENTOPSTR[i].TCONCEPTO@Model.D.DOCUMENTOPSTR[i].GRUPO</td>
 
-                                    @if (Model.D.DOCUMENTOPSTR[i].CUENTA != null)
-                                    {
-                                        <td>@Model.D.DOCUMENTOPSTR[i].CUENTA</td> }
-                                    else
-                                    {
-                                        <td></td>                    }
-
-
-                                    @if (Model.D.DOCUMENTOPSTR[i].CCOSTO != null)
-                                    {
-                                        <td>@Model.D.DOCUMENTOPSTR[i].CCOSTO</td> }
-                                    else
-                                    {
-                                        <td></td>                    }
+                                            @if (Model.D.DOCUMENTOPSTR[i].CUENTA != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].CUENTA</td> }
+                                            else
+                                            {
+                                                <td></td>}
 
 
-                                    @if (Model.D.DOCUMENTOPSTR[i].NOMCUENTA != null)
-                                    {
-                                        <td>@Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td> }
-                                    else
-                                    {
-                                        <td></td>                    }
-
-                                    @if (Model.D.DOCUMENTOPSTR[i].TIPOIMP != null)
-                                    {
-                                        <td>@Model.D.DOCUMENTOPSTR[i].TIPOIMP</td> }
-                                    else
-                                    {
-                                        <td></td>                    }
+                                            @if (Model.D.DOCUMENTOPSTR[i].CCOSTO != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].CCOSTO</td> }
+                                            else
+                                            {
+                                                <td></td>}
 
 
+                                            @if (Model.D.DOCUMENTOPSTR[i].NOMCUENTA != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].NOMCUENTA</td> }
+                                            else
+                                            {
+                                                <td></td>}
 
-
-                                    @if (Model.D.DOCUMENTOPSTR[i].IMPUTACION != null)
-                                    {
-                                        <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td> }
-                                    else
-                                    {
-                                        <td></td>                    }
-
-
-                                    @if (Model.D.DOCUMENTOPSTR[i].MONTO != null)
-                                    {
-                                        <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td> }
-                                    else
-                                    {
-                                        <td></td>                    }
+                                            @if (Model.D.DOCUMENTOPSTR[i].TIPOIMP != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].TIPOIMP</td> }
+                                            else
+                                            {
+                                                <td></td>}
 
 
 
-                                    @if (Model.D.DOCUMENTOPSTR[i].IMPUESTOT != null)
-                                    {
-                                        <td>@Model.D.DOCUMENTOPSTR[i].IMPUESTOT</td> }
-                                    else
-                                    {
-                                        <td></td>                    }
+
+                                            @if (Model.D.DOCUMENTOPSTR[i].IMPUTACION != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].IMPUTACION</td> }
+                                            else
+                                            {
+                                                <td></td>}
 
 
-                                    @if (Model.D.DOCUMENTOPSTR[i].IVA != null)
-                                    {
-                                        <td>@Model.D.DOCUMENTOPSTR[i].IVA</td> }
-                                    else
-                                    {
-                                        <td></td>                    }
+                                            @if (Model.D.DOCUMENTOPSTR[i].MONTO != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].MONTO</td> }
+                                            else
+                                            {
+                                                <td></td>}
 
 
-                                    @for (int y = 0; y < colsret.Count; y++)
-                                    {
-                                        <td>
-                                            @{var _v = colsret[y]; }
-                                            @{decimal imp = 0; try { imp = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().BIMPONIBLE.ToString()); } catch (Exception e) { }; string bim = formatoc.toShow(imp, deci);}
-                                            @bim
-                                        </td>
-                                        <td>
-                                            @{decimal imp2 = 0; try { imp2 = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().IMPORTE_RET.ToString()); } catch (Exception e) { }; string bim2 = formatoc.toShow(imp2, deci);}
-                                            @bim2
-                                        </td>
-                                    }
-                                    <td> @Model.D.DOCUMENTOPSTR[i].TOTAL</td>
 
-                                </tr>
+                                            @if (Model.D.DOCUMENTOPSTR[i].IMPUESTOT != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].IMPUESTOT</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+
+                                            @if (Model.D.DOCUMENTOPSTR[i].IVA != null)
+                                            {
+                                                <td>@Model.D.DOCUMENTOPSTR[i].IVA</td> }
+                                            else
+                                            {
+                                                <td></td>}
+
+
+                                            @for (int y = 0; y < colsret.Count; y++)
+                                            {
+                                                <td>
+                                                    @{var _v = colsret[y]; }
+                                                    @{decimal imp = 0; try { imp = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().BIMPONIBLE.ToString()); } catch (Exception e) { }; string bim = formatoc.toShow(imp, deci);}
+                                                    @bim
+                                                </td>
+                                                <td>
+                                                    @{decimal imp2 = 0; try { imp2 = decimal.Parse(lstDrp.Where(p => p.POS == (i + 1) && p.WITHT == _v).FirstOrDefault().IMPORTE_RET.ToString()); } catch (Exception e) { }; string bim2 = formatoc.toShow(imp2, deci);}
+                                                    @bim2
+                                                </td>
+                                            }
+                                            <td> @Model.D.DOCUMENTOPSTR[i].TOTAL</td>
+
+                                        </tr>
                                     }
                                 }
                             </tbody>
@@ -1125,19 +1142,20 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if (ViewBag.LogSap.Count != 0){
-                                           for (int i = 0; i < ViewBag.LogSap.Count; i++)
+                                            @if (ViewBag.LogSap.Count != 0)
                                             {
-                                            <tr>
-                                                <td width="">@ViewBag.LogSap[i].NUM_DOC</td>
-                                                <td width="">@ViewBag.LogSap[i].TYPE</td>
-                                                <td width="">@ViewBag.LogSap[i].NUMBER</td>
-                                                <td width="">@ViewBag.LogSap[i].MESSAGE</td>
-                                                <td width="">@ViewBag.LogSap[i].FECHA</td>
-                                            </tr>
+                                                for (int i = 0; i < ViewBag.LogSap.Count; i++)
+                                                {
+                                                    <tr>
+                                                        <td width="">@ViewBag.LogSap[i].NUM_DOC</td>
+                                                        <td width="">@ViewBag.LogSap[i].TYPE</td>
+                                                        <td width="">@ViewBag.LogSap[i].NUMBER</td>
+                                                        <td width="">@ViewBag.LogSap[i].MESSAGE</td>
+                                                        <td width="">@ViewBag.LogSap[i].FECHA</td>
+                                                    </tr>
+                                                }
                                             }
-                                            }
-                                          
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -1294,6 +1312,9 @@
 
                 }
 
+
+
+
                 //MGC 18-10-2018 Firma del usuario -------------------------------------------------->
                 //Validar la firma del usuario
                 //$("#form_procesa").submit(function (e) {
@@ -1388,6 +1409,16 @@
 
     }
     @*MGC 04-10-2018 Botones para acciones WF<--*@
+
+    @*//MGC 26-11-2018 Visualizar caratula --------------------------------------------------->*@
+    <script>
+        function fcaratula(elem) {
+            var id = $(elem).data('assigned-id'); //Obtiene el id de la solicitud
+
+
+        }
+    </script>
+    @*//MGC 26-11-2018 Visualizar caratula ---------------------------------------------------<*@
 
     <input id="num_doc_send" type="text" value="@Model.D.NUM_DOC" style="display:none" />
 </div>
