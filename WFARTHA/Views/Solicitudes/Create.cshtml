@@ -158,7 +158,7 @@
             <a id="btn_borradore" class="btn btn-small" style="display :@display">Descartar Borrador</a>
             <input type="text" id="borradore" name="borradore" value="@ViewBag.borradore" hidden />
         }
-        <a href="@Url.Action("Index", "Home" )" class="btn btn-small">Cancelar</a>
+        <a id="btn_cancelar" href="@Url.Action("Index", "Home" )" onclick="return confirm('Deseas salir sin guardar o enviar');" class="btn btn-small">Cancelar</a>@*FRT02122018 Para poder mostrar mensaje*@
         <a id="btn_guardarh" class="btn btn-small">Enviar</a>
     </div>
     <div class="col s12" style="display:inline;">
@@ -178,8 +178,8 @@
 <div class="row">
     <div class="col s12">
         <ul class="tabs" id="tabs">
-            <li class="tab col s2 tabs_menu"><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado</a></li>
-            <li class="tab col s3 tabs_menu"><a id="tab_con" href="#Contable_cont">Detalle</a></li>
+            <li class="tab col s2 tabs_menu" ><a id="tab_enc" href="#Encabezado_cont" class="">Encabezado</a></li>
+            <li class="tab col s3 tabs_menu" ><a id="tab_con" href="#Contable_cont" >Detalle</a></li>
             <li class="tab col s3 tabs_menu"><a id="tab_sop" href="#Informacion_cont">Autorización</a></li>
         </ul>
     </div>

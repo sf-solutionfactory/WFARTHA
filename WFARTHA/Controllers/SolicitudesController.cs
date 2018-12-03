@@ -30,6 +30,7 @@ namespace WFARTHA.Controllers
         private WFARTHAEntities db = new WFARTHAEntities();
 
         // GET: Solicitudes
+
         public ActionResult Index()
         {
             int pagina = 201; //ID EN BASE DE DATOS
@@ -5429,6 +5430,10 @@ namespace WFARTHA.Controllers
 
             WFARTHAEntities db = new WFARTHAEntities();
 
+            ////FRT02122018 pARA VALIDAR MAYUSCULAS MINUSCULAS
+            Prefix = Prefix.ToUpper();
+            ////ENDFRT02122018
+
             //Obtener el tipo de operación de usuario
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).Include(usr => usr.DET_TIPOPRESUPUESTO).FirstOrDefault();
@@ -5809,6 +5814,11 @@ namespace WFARTHA.Controllers
             if (Prefix == null)
                 Prefix = "";
 
+
+            ////FRT02122018 pARA VALIDAR MAYUSCULAS MINUSCULAS
+            Prefix = Prefix.ToUpper();
+            ////ENDFRT02122018
+
             WFARTHAEntities db = new WFARTHAEntities();
 
             var cond = from con in db.CONDICIONES_PAGO where con.COND_PAGO.Contains(Prefix) select new { COND_PAGO = con.COND_PAGO.ToString(), TEXT = con.TEXT.ToString() };
@@ -5923,6 +5933,11 @@ namespace WFARTHA.Controllers
 
             //SOCIEDAD c = db.SOCIEDADs.Where(soc => soc.BUKRS == bukrs).Include(s => s.PROVEEDORs).FirstOrDefault();//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
 
+            //FRT02122018 pARA VALIDAR MAYUSCULAS MINUSCULAS
+            Prefix = Prefix.ToUpper();
+            //ENDFRT02122018
+
+
             var pp = db.DET_PROVEEDOR.Where(soc => soc.ID_BUKRS == bukrs).Select(pp1 => new { pp1.ID_LIFNR }).Distinct().ToList();//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
 
             //List<PROVEEDOR> prov = new List<PROVEEDOR>();//MGC 25-10-2018 Modificación a la relación de proveedores-sociedad
@@ -6034,6 +6049,15 @@ namespace WFARTHA.Controllers
             JsonResult jc = Json(ret, JsonRequestBehavior.AllowGet);
             return jc;
         }
+
+        //FRT02122018 Para mensaje al cancelar
+
+        [HttpPost]
+        public ActionResult getIndex()
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        //ENDFRT02122018 Para mensaje al candelar
 
 
         //FRT27112018
@@ -6926,6 +6950,12 @@ namespace WFARTHA.Controllers
                 Prefix = "";
 
             WFARTHAEntities db = new WFARTHAEntities();
+
+
+            ////FRT02122018 pARA VALIDAR MAYUSCULAS MINUSCULAS
+            Prefix = Prefix.ToUpper();
+            ////ENDFRT02122018
+
 
             SOCIEDAD c = db.SOCIEDADs.Where(soc => soc.BUKRS == bukrs).FirstOrDefault();
             //List<PROVEEDOR> lprov = new List<PROVEEDOR>();
