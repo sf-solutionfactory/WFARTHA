@@ -786,7 +786,12 @@
                                 </td>
 
                                 @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@
-                                <td>@{var nPro = db.PROYECTOes.Where(x => x.ID_PSPNR == item.ID_PSPNR).FirstOrDefault().NOMBRE;} @nPro</td>@*Lejgg 26-11-2018*@
+                                <td>
+                                    @{var nPro = ""; try
+                                        { nPro = db.PROYECTOes.Where(x => x.ID_PSPNR == item.ID_PSPNR).FirstOrDefault().NOMBRE; }
+                                        catch (Exception e) { nPro = ""; }}
+                                    @nPro
+                                </td>@*Lejgg 26-11-2018*@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
                                 </td>
@@ -830,7 +835,7 @@
             scrollX: "50vh",
             scrollY: "50vh",
             scrollCollapse: true,
-            order: [[3, "desc"],[4, "desc"], [5, "desc"], [1, "desc"]],
+            order: [[3, "asc"]],
             language: {
                 //"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
                 "url": "../Scripts/lang/@Session["spras"].ToString()"+".json"

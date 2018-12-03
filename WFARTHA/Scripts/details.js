@@ -10,11 +10,6 @@ $(document).ready(function () {
         tamanosRenglones();
     });
 
-    //---
-    var _fd = $('#FECHAD').val().split(' ');
-    $('#FECHAD').val(_fd[0]);
-    //---
-
     //Lejgg 21-11-2018---------------------->
     //Nombre del autorizador ya establecido
     //MGC 22-11-2018.2 Cadena de autorización----------------------------------------------------------------------->
@@ -202,7 +197,10 @@ $(window).on('load', function () {
     $('.materialize-textarea').css("height", "0px");
     //Lejgg28/11/2018
     alinearIzq();
-
+    //---
+    var _fd = $('#D_FECHAD').val().split(' ');
+    $('#D_FECHAD').val(_fd[0]);
+    //---
 });
 function alinearIzq() {
     $("#table_ret > tbody  > tr[role='row']").each(function () {
@@ -452,7 +450,7 @@ function formatoTabla() {
         scrollCollapse: true,
         columnDefs: [
             {
-                targets: [0, 1, 2, 3, 4, 5, 6,  8, 9, 10, 11, 12, 13, 14, 15, 16],
+                targets: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16],
                 className: 'mdl-data-table__cell--non-numeric'
             }
         ],
@@ -624,17 +622,17 @@ function tamanosRenglones() {
     var t_ret = $("#table_info>thead>tr").find('th.TXTPOS');
     t_ret.css("text-align", "center");
     //Monto
-    var t_mt = $("#table_info>thead>tr").find('th.MONTO');
-    t_mt.css("text-align", "left");
+    var t_mt = $("#table_info>thead>tr").find('th.CCOSTO');
+    t_mt.css("text-align", "center");
     //total
     var t_fac = $("#table_info>thead>tr").find('th.FACTURA');
     t_fac.css("text-align", "left");
     //grupo
     var tg = $("#table_info>thead>tr").find('th.GRUPO');
-    tg.css("text-align", "left");
+    tg.css("text-align", "center");
     //IVA
     var t_iva = $("#table_info>thead>tr").find('th.IVA');
-    t_iva.css("text-align", "left");
+    t_iva.css("text-align", "center");
     //SELECT IMPUESTO
     var t_imps = $("#table_info>thead>tr").find('th.IMPUESTO_SELECT');
     t_imps.css("text-align", "left");
