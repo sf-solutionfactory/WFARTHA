@@ -214,7 +214,8 @@ namespace WFARTHA.Services
                     nuevo.WF_POS = next.POS;
                     nuevo.NUM_DOC = actual.NUM_DOC;
                     nuevo.POS = actual.POS + 1;
-                    nuevo.LOOP = 1;
+                    //nuevo.LOOP = 1;//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                    nuevo.LOOP = actual.LOOP;//MGC 03-12-2018 Loop para firmas y obtener el más actual
                     //nuevo.STEP_AUTO = next.ACCION_ID;
 
                     //Agregar autorización MGC
@@ -429,10 +430,12 @@ namespace WFARTHA.Services
                 {
                     var wf = actual.WORKFP;
                     actual.ESTATUS = f.ESTATUS;
-                    actual.FECHAM = f.FECHAM;
+                    //actual.FECHAM = f.FECHAM; //MGC 03-12-2018 Loop para firmas y obtener el más actual
+                    actual.FECHAM = DateTime.Now; ; //MGC 03-12-2018 Loop para firmas y obtener el más actual
                     actual.COMENTARIO = f.COMENTARIO;
                     actual.USUARIOA_ID = f.USUARIOA_ID;
                     db.Entry(actual).State = EntityState.Modified;
+                    db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
 
                     //MGC 09-10-2018 Envío de correos
                     if (actual.WORKFP.EMAIL == "X")
@@ -502,7 +505,8 @@ namespace WFARTHA.Services
                                 nuevo.WF_POS = next.POS;
                                 nuevo.NUM_DOC = actual.NUM_DOC;
                                 nuevo.POS = actual.POS + 1;
-                                nuevo.LOOP = 1;//-----------------------------------cc
+                                //nuevo.LOOP = 1;//-----------------------------------cc//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                                nuevo.LOOP = actual.LOOP;//-----------------------------------cc//MGC 03-12-2018 Loop para firmas y obtener el más actual
                                                //                                   //int loop = db.FLUJOes.Where(a => a.WORKF_ID.Equals(next.ID) & a.WF_VERSION.Equals(next.VERSION) & a.WF_POS == next.POS & a.NUM_DOC.Equals(actual.NUM_DOC) & a.ESTATUS.Equals("A")).Count();
                                                //                                   //if (loop >= next.LOOPS)
                                                //                                   //{
@@ -617,7 +621,8 @@ namespace WFARTHA.Services
                                         nuevo.WF_POS = next.POS + detA.POS;
                                         nuevo.NUM_DOC = actual.NUM_DOC;
                                         nuevo.POS = actual.POS + 1;
-                                        nuevo.LOOP = 1;//-----------------------------------
+                                        //nuevo.LOOP = 1;//-----------------------------------//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                                        nuevo.LOOP = actual.LOOP;//-----------------------------------//MGC 03-12-2018 Loop para firmas y obtener el más actual
 
                                         //FLUJO detA = determinaAgente(d, actual.USUARIOA_ID, actual.USUARIOD_ID, 0);
                                         //nuevo.USUARIOA_ID = "admin";
@@ -672,6 +677,7 @@ namespace WFARTHA.Services
                                         }
 
                                         db.FLUJOes.Add(nuevo);
+                                        db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
                                         if (paso_a.EMAIL != null)
                                         {
                                             if (paso_a.EMAIL.Equals("X"))
@@ -692,6 +698,7 @@ namespace WFARTHA.Services
                                     nuevo.WF_POS = nuevo.WF_POS + detA.POS;
 
                                     db.FLUJOes.Add(nuevo);
+                                    db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
                                     if (paso_a.EMAIL != null)
                                     {
                                         if (paso_a.EMAIL.Equals("X"))
@@ -703,6 +710,7 @@ namespace WFARTHA.Services
                                 if (nuevo.DETPOS.Equals(98))
                                     d.ESTATUS_WF = "S";
                                 db.Entry(d).State = EntityState.Modified;
+                                db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
                                 correcto = "1";
 
 
@@ -725,6 +733,7 @@ namespace WFARTHA.Services
                                     DOCUMENTO dcc = db.DOCUMENTOes.Find(f.NUM_DOC);
                                     dcc.ESTATUS = "C";
                                     db.Entry(dcc).State = EntityState.Modified;
+                                    db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
 
                                     ////MGC 08-10-2018 Modificación para mensaje por contabilizar
                                     ////Guardar Mensaje en tabla
@@ -790,6 +799,7 @@ namespace WFARTHA.Services
                                         nuevo.FECHAM = DateTime.Now;
 
                                         db.FLUJOes.Add(nuevo);
+                                        db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
 
 
                                     }
@@ -1029,7 +1039,8 @@ namespace WFARTHA.Services
 
                 correcto = "3";
                 actual.ESTATUS = f.ESTATUS;
-                actual.FECHAM = f.FECHAM;
+                //actual.FECHAM = f.FECHAM;//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                actual.FECHAM = DateTime.Now;//MGC 03-12-2018 Loop para firmas y obtener el más actual
                 actual.COMENTARIO = f.COMENTARIO;
 
                 FLUJO nuevo = new FLUJO();
@@ -1040,13 +1051,15 @@ namespace WFARTHA.Services
                 nuevo.POS = actual.POS + 1;
                 nuevo.DETPOS = 1;
                 nuevo.DETVER = actual.DETVER;
-                nuevo.LOOP = 1;//-----------------------------------
+                nuevo.LOOP = actual.LOOP + 1;//-----------------------------------//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                //nuevo.LOOP = 1;//-----------------------------------//MGC 03-12-2018 Loop para firmas y obtener el más actual
                 //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC); //MGC 09-10-2018 Envío de correos
 
                 //MGC 
                 //nuevo.USUARIOD_ID = d.USUARIOD_ID;
                 //Datos del flujo
-                nuevo.USUARIOD_ID = d.USUARIOC_ID;
+                //nuevo.USUARIOD_ID = d.USUARIOC_ID;//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                nuevo.USUARIOD_ID = d.USUARIOD_ID;//MGC 03-12-2018 Loop para firmas y obtener el más actual
                 nuevo.USUARIOA_ID = d.USUARIOC_ID;
 
                 //Datos del flujo versiones
@@ -1059,20 +1072,23 @@ namespace WFARTHA.Services
                 if (del != null)
                     nuevo.USUARIOA_ID = del.USUARIOD_ID;
                 else
-                    nuevo.USUARIOA_ID = nuevo.USUARIOD_ID;
+                    nuevo.USUARIOA_ID = nuevo.USUARIOA_ID;
                 //nuevo.USUARIOD_ID
                 nuevo.ESTATUS = "P";
                 nuevo.FECHAC = DateTime.Now;
                 nuevo.FECHAM = DateTime.Now;
 
                 db.FLUJOes.Add(nuevo);//MGC Cancelar Preliminar
+                db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
 
                 db.Entry(actual).State = EntityState.Modified;
+                db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
                 //d.ESTATUS_WF = "R";
                 //MGC 30-10-2018 Cambiar estatus en la solicitud
                 d.ESTATUS_WF = "R";
                 d.ESTATUS = "F";
                 db.Entry(d).State = EntityState.Modified;//MGC 11-10-2018 No enviar correos
+                db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
                 if (next.ACCION.TIPO == "S")
                 {
                     d.ESTATUS = "R";
