@@ -544,7 +544,7 @@ $(document).ready(function () {
 
     $('#btn_cancelar').on("click", function (e) {
         if (statSend) {
-            alert("El formulario ya se esta enviando...");
+            alert("Favor de esperar. Se esta generando Solicitud...");
         }
 
     });
@@ -577,6 +577,7 @@ $(document).ready(function () {
             //FRT 05112018
 
             var _b = false;
+            var _m = true;
             var _vs = [];
             var msgerror = "";
             var _rni = 0;
@@ -609,7 +610,7 @@ $(document).ready(function () {
 
             }
 
-
+            var borrador = $("#borr").val();
             //$("#table_info > tbody  > tr[role='row']").each(function () { //MGC 24-10-2018 Conflicto Enrique-Rogelio
             var t = $('#table_info').DataTable();
             var tabble = "table_info";
@@ -626,69 +627,86 @@ $(document).ready(function () {
                 var na5 = $(this).find("td.NumAnexo5 input").val();
 
                 //frt05112018 validacion de CECOS vacion en Tipo Imp. "K"
-                var ceco = $(this).find("td.CCOSTO input").val();
-                var tr = $(this);
-                var indexopc = t.row(tr).index();
 
-                var tipoimp = t.row(indexopc).data()[14];
+                if (borrador != "B") {
+                    var ceco = $(this).find("td.CCOSTO input").val();
+                    var tr = $(this);
+                    var indexopc = t.row(tr).index();
 
-                if (tipoimp == "K" & (ceco == "" | ceco == null)) {
-                    msgerror = "Fila " + _rni + ": Falta ingresar Centro de Costo";
-                    _b = false;
-                } else {
-                    _b = true;
+                    var tipoimp = t.row(indexopc).data()[14];
+
+                    if (tipoimp == "K" & (ceco == "" | ceco == null)) {
+                        statSend = false;
+                        msgerror = "Fila " + _rni + ": Falta ingresar Centro de Costo";
+                        _b = false;
+                    } else {
+                        _b = true;
+                    }
+                    if (_b === false) {
+                        return false;
+                    }
+
                 }
-                if (_b === false) {
-                    return false;
-                }
-
+                
                 //FRT02122018 PARA VALIDAR QUE LA FACTURA NO ESTE VACIA
+                if (borrador != "B") {
+                    var factura = $(this).find("td.FACTURA input").val();
 
-                var factura = $(this).find("td.FACTURA input").val();
-
-                if (factura == "" | factura == null) {
-                    msgerror = "Fila " + _rni + ": Falta ingresar Factura";
-                    _b = false;
-                } else {
-                    _b = true;
+                    if (factura == "" | factura == null) {
+                        statSend = false;
+                        msgerror = "Fila " + _rni + ": Falta ingresar numero de factura";
+                        _b = false;
+                    } else {
+                        _b = true;
+                    }
+                    if (_b === false) {
+                        return false;
+                    }
                 }
-                if (_b === false) {
-                    return false;
-                }
+                
                 //ENDFRT02122018 PAA VALIDAR QUE LA FACTURA NO ESTE VACIA
 
 
                 //FRT20112018 iNGRESAR VALIDACION DE CONCEPTO
                 //var concepto = t.row(indexopc).data()[13];
-                var concepto = $(this).find("td.GRUPO input").val(); //FRT21112018
 
-                if (concepto == "" | concepto == null) {
-                    msgerror = "Fila " + _rni + ": Falta ingresar Concepto";
-                    _b = false;
-                } else {
-                    _b = true;
+                if (borrador != "B") {
+                    var concepto = $(this).find("td.GRUPO input").val(); //FRT21112018
+
+                    if (concepto == "" | concepto == null) {
+                        statSend = false;
+                        msgerror = "Fila " + _rni + ": Falta ingresar Concepto";
+                        _b = false;
+                    } else {
+                        _b = true;
+                    }
+                    if (_b === false) {
+                        return false;
+                    }
                 }
-                if (_b === false) {
-                    return false;
-                }
+                
                 //ENDFRT20112018 iNGRESAR VALIDACION DE CONCEPTO
 
                 //FRT06112018.3 Se realizara validación del monto > 0
                 var monto = $(this).find("td.MONTO input").val().replace('$', '').replace(',', '');
-
                 while (monto.indexOf(',') > -1) {
                     monto = monto.replace('$', '').replace(',', '');
                 }
+                if (borrador != "B") {
+                   
+                    if (monto == " 0.00" | monto == null | monto == "") { //MGC 07-11-2018 Validación en el monto
+                        statSend = false;
+                        msgerror = "Fila " + _rni + ": El monto debe ser mayor a cero";
+                        _b = false;
+                    } else {
+                        _b = true;
+                    }
+                    if (_b === false) {
+                        return false;
+                    }
+                }
 
-                if (monto == " 0.00" | monto == null | monto == "") { //MGC 07-11-2018 Validación en el monto
-                    msgerror = "Fila " + _rni + ": El monto debe ser mayor a cero";
-                    _b = false;
-                } else {
-                    _b = true;
-                }
-                if (_b === false) {
-                    return false;
-                }
+               
                 //END FRT06112018.3
 
 
@@ -712,6 +730,7 @@ $(document).ready(function () {
                                 var montobase = parseFloat(_montobase);
 
                                 if (monto < montobase) {
+                                    statSend = false;
                                     msgerror = "Fila " + _rni + ": Monto base de retencion (" + montobase + ") no debe ser mayor al monto antes de IVA (" + monto + ")";
                                     _m = false;
                                     break;
@@ -737,109 +756,134 @@ $(document).ready(function () {
 
 
                 //FRT2311208 PARA VALIDACION DE 50 CARACTERES
-                var texto = $(this).find("td.TEXTO textarea").val().trim();
-                var ct = texto.length;
-                ct = parseFloat(ct);
-                if (ct < 50) {
-                    _b = false;
-                    msgerror = "Fila " + _rni + ": Falta explicación del egreso en texto";
-                } else {
-                    _b = true;
-                }
-                if (_b === false) {
-                    return false;
-                }
-                //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
 
-                if (_vs.length > 0) {
-                    for (var i = 0; i < _vs.length; i++) {
-                        if (na1 === _vs[i] || na1 === "") {
-                            _b = true;
-                            break;
-                        } else {
-                            _b = false;
-                            msgerror = "Fila " + _rni + " valor: " + na1 + " Columna 2";
-                        }
+                if (borrador != "B") {
+                    var texto = $(this).find("td.TEXTO textarea").val().trim();
+                    var ct = texto.length;
+                    ct = parseFloat(ct);
+                    if (ct < 50) {
+                        _b = false;
+                        statSend = false;
+                        msgerror = "Fila " + _rni + ": Falta explicación del egreso en texto";
+                    } else {
+                        _b = true;
                     }
                     if (_b === false) {
                         return false;
                     }
-                    for (var i2 = 0; i2 < _vs.length; i2++) {
-                        if (na2 === _vs[i2] || na2 === "") {
-                            _b = true;
-                            break;
-                        } else {
-                            _b = false;
-                            msgerror = "Fila " + _rni + " valor: " + na2 + " Columna 3";
-                        }
-                    }
-                    if (_b === false) {
-                        return false;
-                    }
-                    for (var i3 = 0; i3 < _vs.length; i3++) {
-                        if (na3 === _vs[i3] || na3 === "") {
-                            _b = true;
-                            break;
-                        } else {
-                            _b = false;
-                            msgerror = "Fila " + _rni + " valor: " + na3 + " Columna 4";
-                        }
-                    }
-                    if (_b === false) {
-                        return false;
-                    }
-                    for (var i4 = 0; i4 < _vs.length; i4++) {
-                        if (na4 === _vs[i4] || na4 === "") {
-                            _b = true;
-                            break;
-                        } else {
-                            _b = false;
-                            msgerror = "Fila " + _rni + " valor: " + na4 + " Columna 5";
-                        }
-                    }
-                    if (_b === false) {
-                        return false;
-                    }
-                    for (var i5 = 0; i5 < _vs.length; i5++) {
-                        if (na5 === _vs[i5] || na5 === "") {
-                            _b = true;
-                            break;
-                        } else {
-                            _b = false;
-                            msgerror = "Fila " + _rni + " valor: " + na5 + " Columna 6";
-                        }
-                    }
-                    if (_b === false) {
-                        return false;
-                    }
-                } else {
-                    _b = true;
                 }
+               
+                //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
+                if (borrador != "B") {
+                    if (_vs.length > 0) {
+                        for (var i = 0; i < _vs.length; i++) {
+                            if (na1 === _vs[i] || na1 === "") {
+                                _b = true;
+                                break;
+                            } else {
+                                _b = false;
+                                statSend = false;
+                                msgerror = "Fila " + _rni + " valor: " + na1 + " Columna 2";
+                            }
+                        }
+                        if (_b === false) {
+                            return false;
+                        }
+                        for (var i2 = 0; i2 < _vs.length; i2++) {
+                            if (na2 === _vs[i2] || na2 === "") {
+                                _b = true;
+                                break;
+                            } else {
+                                _b = false;
+                                statSend = false;
+                                msgerror = "Fila " + _rni + " valor: " + na2 + " Columna 3";
+                            }
+                        }
+                        if (_b === false) {
+                            return false;
+                        }
+                        for (var i3 = 0; i3 < _vs.length; i3++) {
+                            if (na3 === _vs[i3] || na3 === "") {
+                                _b = true;
+                                break;
+                            } else {
+                                _b = false;
+                                statSend = false;
+                                msgerror = "Fila " + _rni + " valor: " + na3 + " Columna 4";
+                            }
+                        }
+                        if (_b === false) {
+                            return false;
+                        }
+                        for (var i4 = 0; i4 < _vs.length; i4++) {
+                            if (na4 === _vs[i4] || na4 === "") {
+                                _b = true;
+                                break;
+                            } else {
+                                _b = false;
+                                statSend = false;
+                                msgerror = "Fila " + _rni + " valor: " + na4 + " Columna 5";
+                            }
+                        }
+                        if (_b === false) {
+                            return false;
+                        }
+                        for (var i5 = 0; i5 < _vs.length; i5++) {
+                            if (na5 === _vs[i5] || na5 === "") {
+                                _b = true;
+                                break;
+                            } else {
+                                _b = false;
+                                statSend = false;
+                                msgerror = "Fila " + _rni + " valor: " + na5 + " Columna 6";
+                            }
+                        }
+                        if (_b === false) {
+                            return false;
+                        }
+                    } else {
+                        _b = true;
+                    }
+                }
+
+                
             });
             var rn = $("table#table_info tbody tr[role='row']").length;
             if (rn == 0) {
+                statSend = false;
+                _f = true;
                 msgerror = "Sin Filas";
+            } else {
+                _f = false;
             }
             //FRT08112018 Valida con otra letra para evitar error
             //FRT04112018.2 Se realizara validación del monto > 0s
-            var proveedor = $("#PAYER_ID").val();
-            if (proveedor == "" | proveedor == null) {
-                //mensaje de error
-                msgerror = "No se ha seleccionado proveedor";
-                _p = false;
-            } else {
-                _p = true;
+
+            if (borrador != "B") {
+                var proveedor = $("#PAYER_ID").val();
+                if (proveedor == "" | proveedor == null) {
+                    //mensaje de error
+                    statSend = false;
+                    msgerror = "No se ha seleccionado proveedor";
+                    _p = false;
+                } else {
+                    _p = true;
+                }
             }
+
+
+            
             //update codigo fer
             //END FRT04112018.2
 
 
             //FRT21112018 Para validar cantidad de anexos solamente al enviar
-            var borrador = $("#borr").val();
+            
             var lengthT = $("table#table_anexa tbody tr[role='row']").length;
             _a = true;
             if (borrador != "B") {
                 if (lengthT == 0) {
+                    statSend = false;
                     msgerror = "Es necesario agregar por lo menos 1 Anexo";
                     _a = false;
                 } else {
@@ -851,60 +895,72 @@ $(document).ready(function () {
 
 
             //FRT2311208 PARA VALIDACION DE 50 CARACTERES
-            var texto1 = $("#CONCEPTO").val();
-            var ct1 = texto1.length;
-            ct1 = parseFloat(ct1);
-            if (ct1 < 50) {
-                _ct = false;
-                msgerror = "Falta explicación en cabecera";
-            } else {
-                _ct = true;
+            if (borrador != "B") {
+                var texto1 = $("#CONCEPTO").val();
+                var ct1 = texto1.length;
+                ct1 = parseFloat(ct1);
+                if (ct1 < 50) {
+                    _ct = false;
+                    statSend = false;
+                    msgerror = "Falta explicación en cabecera";
+                } else {
+                    _ct = true;
+                }
             }
+            
             //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
 
             //FRT02122018 PARA ELIMINAR VALIDACIONES EN EL BORRADOR
-            if (borrador != "B") {
-                if (_p) {
-                    if (_b) {
-                        if (_m) {
-                            if (_a) {
-                                if (_ct) {
-                                    //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
-                                    copiarTableInfoControl();
-                                    copiarTableInfoPControl();
-                                    copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
-                                    copiarTableRet();
-                                    //end FRT06112018.3 
-                                    $('#btn_guardar').trigger("click");
-                                }
-                                else {
+   
+                if (_m) {
+                    if (borrador != "B") {
+                        if (_p) {
+                            if (_b) {
+                                if (_a) {
+                                    if (_ct) {
+                                        //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
+                                        copiarTableInfoControl();
+                                        copiarTableInfoPControl();
+                                        copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
+                                        copiarTableRet();
+                                        //end FRT06112018.3 
+                                        $('#btn_guardar').trigger("click");
+                                    }
+                                    else {
+                                        statSend = false;
+                                        M.toast({ html: msgerror });
+                                    }
+                                } else {
                                     statSend = false;
                                     M.toast({ html: msgerror });
                                 }
                             } else {
-                              statSend = false;
+                                statSend = false;
                                 M.toast({ html: msgerror });
                             }
                         } else {
-                          statSend = false;
+                            statSend = false;
                             M.toast({ html: msgerror });
                         }
                     } else {
-                      statSend = false;
-                        M.toast({ html: msgerror });
+                        copiarTableInfoControl();
+                        copiarTableInfoPControl();
+                        copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
+                        copiarTableRet();
+                        //end FRT06112018.3 
+                        $('#btn_guardar').trigger("click");
                     }
+
                 } else {
-                  statSend = false;
+                    statSend = false;
                     M.toast({ html: msgerror });
                 }
-            } else {
-                copiarTableInfoControl();
-                copiarTableInfoPControl();
-                copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
-                copiarTableRet();
-                //end FRT06112018.3 
-                $('#btn_guardar').trigger("click");
-            }
+          
+
+            
+
+
+            
             //ENDFRT02122018 VALIDACIONES EN EL BORRADOR
 
 
@@ -912,7 +968,7 @@ $(document).ready(function () {
 
             ///FRT08112018
         } else {
-            alert("El formulario ya se esta enviando...");
+            alert("Favor de esperar. Se esta generando Solicitud...");
 
         }
 

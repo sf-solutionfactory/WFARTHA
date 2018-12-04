@@ -181,7 +181,7 @@ $(document).ready(function () {
 
     $('#btn_cancelar').on("click", function (e) {
         if (statSend) {
-            alert("El formulario ya se esta enviando...");
+            alert("Favor de esperar. Se esta generando Solicitud...");
         }
 
     });
@@ -292,7 +292,7 @@ $(document).ready(function () {
 
                 
                 if (factura == "" | factura == null) {
-                    msgerror = "Fila " + _rni + ": Falta ingresar Factura";
+                    msgerror = "Fila " + _rni + ": Falta ingresar numero de factura";
                     _b = false;
                 } else {
                     _b = true;
@@ -442,15 +442,22 @@ $(document).ready(function () {
             }
 
             //FRT21112018 Para validar cantidad de anexos solamente al enviar
+
+            var borra = $("#borr").val(); //FRT03122018 para calidar anexos solamente en Enviar
+
             var lengthT = $("table#table_anexa tbody tr[role='row']").length;
             _a = true;
-
-            if (lengthT == 0) {
-                msgerror = "Es necesario agregar por lo menos 1 Anexo";
-                _a = false;
-            } else {
-                _a = true;
+            if (borra != "B") {
+                if (lengthT == 0) {
+                    msgerror = "Es necesario agregar por lo menos 1 Anexo";
+                    _a = false;
+                } else {
+                    _a = true;
+                }
             }
+
+
+         
 
 
             //ENDFRT21112018
@@ -469,34 +476,48 @@ $(document).ready(function () {
 
             //FRT02122018 para validar solamente en borrador
 
- 
-                if (_b) {
-                    if (_m) {
-                        if (_a) {
-                            if (_ct) {
-                                //Guardar los valores de la tabla en el modelo para enviarlos al controlador
-                                copiarTableInfoControl(); //copiarTableInfoPControl();
-                                //copiarTableSopControl();
-                                copiarTableRet();
-                                $('#btn_guardar').trigger("click");
+            if (_m) {
+                if (borra != "B") {
+                    if (_b) {
+                            if (_a) {
+                                if (_ct) {
+                                    //Guardar los valores de la tabla en el modelo para enviarlos al controlador
+                                    copiarTableInfoControl(); //copiarTableInfoPControl();
+                                    //copiarTableSopControl();
+                                    copiarTableRet();
+                                    $('#btn_guardar').trigger("click");
+                                } else {
+                                    statSend = false
+                                    M.toast({ html: msgerror });
+                                }
                             } else {
-                           statSend = false
+                                statSend = false
                                 M.toast({ html: msgerror });
                             }
-                        } else {
-                         statSend = false
-                            M.toast({ html: msgerror });
-                        }
-
-
                     } else {
-                    statSend = false
+                        statSend = false
                         M.toast({ html: msgerror });
                     }
                 } else {
-                statSend = false
-                    M.toast({ html: msgerror });
+                    //Guardar los valores de la tabla en el modelo para enviarlos al controlador
+                    copiarTableInfoControl(); //copiarTableInfoPControl();
+                    //copiarTableSopControl();
+                    copiarTableRet();
+                    $('#btn_guardar').trigger("click");
                 }
+
+            } else {
+                statSend = false
+                M.toast({ html: msgerror });
+
+            }
+
+
+
+
+
+           
+
 
         //ENDFRT02122018 para validar solamente eb el borrador
 
@@ -505,11 +526,27 @@ $(document).ready(function () {
         // $('#btn_guardar').click();
 
         } else {
-            alert("El formulario ya se esta enviando...");
+            alert("Favor de esperar. Se esta generando Solicitud...");
 
         }
       
     });
+
+
+    //FRT03122018 para poder validar el guardado de borrador
+    $('#btn_borradorh').on("click", function (e) {
+        document.getElementById("loader").style.display = "initial";
+        guardarBorrador(false);
+        document.getElementById("loader").style.display = "none";
+    });
+
+
+    function guardarBorrador(asyncv) {
+        $("#borr").val('B');
+        $('#btn_guardarh').trigger("click");
+    }
+
+    //ENDFRT03122018 Para poder guardar el borrador
 
     $('#addRowInfo').on('click', function () {
 
@@ -1642,7 +1679,7 @@ function copiarTableInfoControl() {
         jsonObjDocs = [];
         jsonObjDocs2 = [];
         jsonObjDocs3 = [];//lej01.10.2018
-        jsonObjDocs4 = [];//lejgg02.11.2018
+        //jsonObjDocs4 = [];//lejgg02.11.2018  frt03122018 se mueve para validar
         var i = 1;
         var t = $('#table_info').DataTable();
         //Lej 14.09.18---------------------
@@ -1872,45 +1909,53 @@ function copiarTableInfoControl() {
             },
             async: false
         });
-        //Para mandar la tabla y comparar
-        $("#table_anexa > tbody  > tr[role='row']").each(function () {
-            //Obtener el row para el plugin
-            var tr = $(this);
-            var pos = $(this).find("td.POS").text();
-            var nombre = $(this).find("td.NAME").text();
-            var tipo = $(this).find("td.TYPE").text();
-            var desc = $(this).find("td.DESC").text();
-            if (desc === "") {
-                desc = $(this).find("td.DESC input").val();
-            }
-            var item4 = {};
-            item4["TIPO"] = tipo;
-            item4["DESC"] = desc;
-            item4["NAME"] = nombre;
-            item4["PATH"] = nombre;
-            jsonObjDocs4.push(item4);
-            item4 = "";
-        });
-        docsenviar4 = JSON.stringify({ 'docs': jsonObjDocs4, 'nd': _numdoc });
 
-        $.ajax({
-            type: "POST",
-            url: '../getPartialCon4',
-            contentType: "application/json; charset=UTF-8",
-            data: docsenviar4,
-            success: function (data) {
+        var lengthTA = $("table#table_anexa tbody tr[role='row']").length;
 
-                if (data !== null || data !== "") {
-
-                    $("table#table_anexah tbody").append(data);
+        if (lengthTA > 0) {
+            //Para mandar la tabla y comparar
+            jsonObjDocs4 = [];//lejgg02.11.2018
+            $("#table_anexa > tbody  > tr[role='row']").each(function () {
+                //Obtener el row para el plugin
+                var tr = $(this);
+                var pos = $(this).find("td.POS").text();
+                var nombre = $(this).find("td.NAME").text();
+                var tipo = $(this).find("td.TYPE").text();
+                var desc = $(this).find("td.DESC").text();
+                if (desc === "") {
+                    desc = $(this).find("td.DESC input").val();
                 }
+                var item4 = {};
+                item4["TIPO"] = tipo;
+                item4["DESC"] = desc;
+                item4["NAME"] = nombre;
+                item4["PATH"] = nombre;
+                jsonObjDocs4.push(item4);
+                item4 = "";
+            });
+            docsenviar4 = JSON.stringify({ 'docs': jsonObjDocs4, 'nd': _numdoc });
 
-            },
-            error: function (xhr, httpStatusMessage, customErrorMessage) {
-                M.toast({ html: httpStatusMessage });
-            },
-            async: false
-        });
+            $.ajax({
+                type: "POST",
+                url: '../getPartialCon4',
+                contentType: "application/json; charset=UTF-8",
+                data: docsenviar4,
+                success: function (data) {
+
+                    if (data !== null || data !== "") {
+
+                        $("table#table_anexah tbody").append(data);
+                    }
+
+                },
+                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                    M.toast({ html: httpStatusMessage });
+                },
+                async: false
+            });
+        }
+
+        
     }
 }
 

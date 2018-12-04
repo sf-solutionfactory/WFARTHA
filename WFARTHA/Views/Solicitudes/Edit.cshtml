@@ -161,6 +161,7 @@
     </style>
 
     <div class="col s12 right-align">
+        <a id="btn_borradorh" class="btn btn-small">Guardar Borrador</a> @*SE AGREGA BOTON PARA BORRADOR*@
         <a id="btn_cancelar" href="@Url.Action("Index", "Home" )" onclick="return confirm('Deseas salir sin guardar o enviar');" class="btn btn-small">Cancelar</a>@*FRT02122018 Para poder mostrar mensaje*@
         <a id="btn_guardarh" class="btn btn-small">Enviar</a>
     </div>
@@ -198,6 +199,7 @@
 @using (Html.BeginForm("Edit", "Solicitudes", FormMethod.Post, new { enctype = "multipart/form-data", id = "formCreate" }))
 {
     @Html.AntiForgeryToken()
+    <input id="borr" name="borr" type="hidden" value="">  @*FRT03122018 PARA PODER SABER SI PRESIONAMOS BORRADOR*@
     <input id="Uuid" name="Uuid" type="hidden" value="">
     <div class="form-horizontal">
         @*Encabezado*@
