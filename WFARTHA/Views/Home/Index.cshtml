@@ -710,115 +710,115 @@
                         if (visible)
                         {
 
-                    <tr>
-                        @*MGC 07-11-2018 Área de trabajo y solicitudes, Descartar el borrador*@
-                        @if (item.FLUJOes.Count > 0)
-                        {
-                            //MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B
-                            if (item.ESTATUS.Equals("B") & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
-                            {
-                                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
-                                    @item.NUM_DOC
+                            <tr>
+                                @*MGC 07-11-2018 Área de trabajo y solicitudes, Descartar el borrador*@
+                                @if (item.FLUJOes.Count > 0)
+                                {
+                                    //MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B
+                                    if (item.ESTATUS.Equals("B") & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
+                                    {
+                                        <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
+                                            @item.NUM_DOC
+                                        </td>
+                                    }
+                                    //MGC 03-11-2018.2 Se genero error en el preliminar, respuesta de SAP NOK, enviar a editar con parametro pacc P
+                                    else if ((item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP != null && item.ESTATUS_WF == null & item.ESTATUS_PRE == "E" && item.ESTATUS_SAP == "E") & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
+                                    {
+                                        <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "P" })'" style="cursor:pointer">
+                                            @item.NUM_DOC
+                                        </td>
+                                    }
+                                    else if (item.ESTATUS_WF == "R" & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID)
+                                    {
+                                        <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "R" })'" style="cursor:pointer">
+                                            @item.NUM_DOC
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                                            @item.NUM_DOC
+                                        </td>
+
+                                    }
+                                }
+                                else
+                                {
+                                    //MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B, solamente el usuario creador
+                                    if (item.ESTATUS.Equals("B") & ViewBag.usuario.ID == item.USUARIOC_ID)
+                                    {
+                                        <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
+                                            @item.NUM_DOC
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                                            @item.NUM_DOC
+                                        </td>
+                                    }
+                                }
+
+                                <td style="">
+                                    @item.NUM_PRE
                                 </td>
-                            }
-                            //MGC 03-11-2018.2 Se genero error en el preliminar, respuesta de SAP NOK, enviar a editar con parametro pacc P
-                            else if ((item.ESTATUS.Equals("N") && item.ESTATUS_C == null && item.ESTATUS_SAP != null && item.ESTATUS_WF == null & item.ESTATUS_PRE == "E" && item.ESTATUS_SAP == "E") & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
-                            {
-                                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "P" })'" style="cursor:pointer">
-                                    @item.NUM_DOC
+
+                                @*Tipo sol*@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
                                 </td>
-                            }
-                            else if (item.ESTATUS_WF == "R" & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID)
-                            {
-                                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "R" })'" style="cursor:pointer">
-                                    @item.NUM_DOC
-                                </td>
-                            }
-                            else
-                            {
-                                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-                                    @item.NUM_DOC
+                                <td>
+                                    @if (item.FECHAD != null)
+                                    {
+                                        try
+                                        {@(item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year);
+                                    }
+                                    catch (Exception) { };
+                                }
                                 </td>
 
-                            }
-                        }
-                        else
-                        {
-                            //MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B, solamente el usuario creador
-                            if (item.ESTATUS.Equals("B") & ViewBag.usuario.ID == item.USUARIOC_ID)
-                            {
-                                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id = item.NUM_DOC, pacc = "B" })'" style="cursor:pointer">
-                                    @item.NUM_DOC
+
+                                @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@
+                                @*MGC 07-11-2018 Solicitudes y estatus*@
+                                <td class="">
+                                    @*<span class="new badge @color white-text" data-badge-caption=" ">@estatus</span>*@
+                                    @*<span class="badge black-text" data-badge-caption=" ">@estatus</span>*@  @*MGC 10-11-2018 Sin color y letra color negra*@
+                                    @estatus  @*MGC 10-11-2018 Sin color y letra color negra*@
                                 </td>
-                            }
-                            else
-                            {
-                                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-                                    @item.NUM_DOC
+
+                                @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@
+                                <td>
+                                    @{var nPro = ""; try
+                                        { nPro = db.PROYECTOes.Where(x => x.ID_PSPNR == item.ID_PSPNR).FirstOrDefault().NOMBRE; }
+                                        catch (Exception e) { nPro = ""; }}
+                                    @nPro
+                                </td>@*Lejgg 26-11-2018*@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
                                 </td>
-                            }
-                        }
+                                <td style="text-align:left;">
+                                    @{var nProv = ""; try
+                                        { nProv = db.PROVEEDORs.Where(x => x.LIFNR == item.PAYER_ID).FirstOrDefault().NAME1; }
+                                        catch (Exception e)
+                                        { nProv = ""; }}
+                                    @nProv
+                                </td>@*Lejgg 26-11-2018*@
+                                <td>
+                                    @item.USUARIOC_ID
+                                </td>
 
-                        <td style="">
-                            @item.NUM_PRE
-                        </td>
+                                @if (item.ESTATUS.Equals("B"))
+                                {
+                                    <td></td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        @item.USUARIOD_ID
+                                    </td>
+                                }
 
-                        @*Tipo sol*@
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
-                        </td>
-                        <td>
-                            @if (item.FECHAD != null)
-                            {
-                                try
-                                {@(item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year);
-                            }
-                            catch (Exception) { };
-                        }
-                        </td>
-
-
-                        @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@
-                        @*MGC 07-11-2018 Solicitudes y estatus*@
-                        <td class="">
-                            @*<span class="new badge @color white-text" data-badge-caption=" ">@estatus</span>*@
-                            @*<span class="badge black-text" data-badge-caption=" ">@estatus</span>*@  @*MGC 10-11-2018 Sin color y letra color negra*@
-                            @estatus  @*MGC 10-11-2018 Sin color y letra color negra*@
-                        </td>
-
-                        @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@
-                        <td>
-                            @{var nPro = ""; try
-                                { nPro = db.PROYECTOes.Where(x => x.ID_PSPNR == item.ID_PSPNR).FirstOrDefault().NOMBRE; }
-                                catch (Exception e) { nPro = ""; }}
-                            @nPro
-                        </td>@*Lejgg 26-11-2018*@
-                        <td>
-                            @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
-                        </td>
-                        <td style="text-align:left;">
-                            @{var nProv = ""; try
-                                { nProv = db.PROVEEDORs.Where(x => x.LIFNR == item.PAYER_ID).FirstOrDefault().NAME1; }
-                                catch (Exception e)
-                                { nProv = ""; }}
-                            @nProv
-                        </td>@*Lejgg 26-11-2018*@
-                        <td>
-                            @item.USUARIOC_ID
-                        </td>
-
-                        @if (item.ESTATUS.Equals("B"))
-                        {
-                            <td></td>
-                        }
-                        else
-                        {
-                            <td>
-                                @item.USUARIOD_ID
-                            </td>
-                        }
-
-                    </tr>
+                            </tr>
 
                         }
                     }

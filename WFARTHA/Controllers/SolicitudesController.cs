@@ -350,7 +350,7 @@ namespace WFARTHA.Controllers
             List<DOCUMENTOR_MOD> retlt = new List<DOCUMENTOR_MOD>();
 
             retl = db.DOCUMENTORs.Where(x => x.NUM_DOC == id).ToList();
-                        
+
             //FRT06112018 Se agregan las lineas para obtener nombre del proyecto
             var id_pspnr = dOCUMENTO.ID_PSPNR;
             var nombre = db.PROYECTOes.Where(a => a.ID_PSPNR == id_pspnr).FirstOrDefault().NOMBRE;
@@ -903,9 +903,53 @@ namespace WFARTHA.Controllers
                     ID = new { VERSION = da.VERSION.ToString().Replace(" ", ""), USUARIOC_ID = da.USUARIOC_ID.ToString().Replace(" ", ""), ID_RUTA_AGENTE = da.ID_RUTA_AGENTE.ToString().Replace(" ", ""), USUARIOA_ID = da.USUARIOA_ID.ToString().Replace(" ", "") },
                     TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
                 }).ToList();
-
-            ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
-
+            
+            var _v = "";
+            var _usc = "";
+            var _id_ruta = "";
+            var _usa = "";
+            var _mt = "";
+            var _sc = "";
+            var lstDta = new List<object>();
+            //LEJGG03-12-2018-----------------------------I
+            for (int i = 0; i < dta.Count; i++)
+            {
+                _v = dta[i].ID.VERSION;
+                _usc = dta[i].ID.USUARIOC_ID;
+                _id_ruta = dta[i].ID.ID_RUTA_AGENTE;
+                _usa = dta[i].ID.USUARIOA_ID;
+                if (d.MONTO_DOC_MD == null)
+                {
+                    _mt = 0 + "";
+                }
+                else
+                { _mt = d.MONTO_DOC_MD.ToString(); }
+                _sc = d.SOCIEDAD_ID;
+                var lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc);
+                string cad = "";
+                for (int j = 0; j < lst.Count; j++)
+                {
+                    var aut = lst[j].autorizador.Split('-');
+                    if (j == lst.Count - 1)
+                    {
+                        cad += aut[0].Trim();
+                    }
+                    else
+                    {
+                        cad += aut[0].Trim() + "-";
+                    }
+                }
+                var nuevo = new
+                {
+                    ID = dta[i].ID,
+                    //TEXT = dta[i].TEXT + " (" + cad + ")"
+                    TEXT ="(" + cad + ")"
+                };
+                lstDta.Add(nuevo);
+            }
+            //ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
+            ViewBag.DETAA = new SelectList(lstDta, "ID", "TEXT");//LEJGG 03-12-2018
+            //LEJGG03-12-2018-----------------------------F
             ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Newtonsoft.Json.Formatting.Indented);
 
             return View(d);
@@ -932,7 +976,7 @@ namespace WFARTHA.Controllers
             FORMATO formato = new FORMATO();
             string spras = "";
             string user_id = ""; //MGC 02-10-2018 Cadenas de autorización
-            //LEJGG 22/10/2018
+                                 //LEJGG 22/10/2018
             if (doc.FECHAD == null)
             {
                 //Si doc.FECHAD viene vacio o nulo, le asgino la fecha que tiene fechado, su campo oculto
@@ -967,8 +1011,8 @@ namespace WFARTHA.Controllers
                     { dOCUMENTO.TIPO_CAMBIO = doc.TIPO_CAMBIO; }
                     dOCUMENTO.IMPUESTO = doc.IMPUESTO;
                     dOCUMENTO.USUARIOD_ID = doc.USUARIOD_ID;//MGC 26-10-2018 Agregar usuario solicitante a la bd
-                    // dOCUMENTO.MONTO_DOC_MD = doc.MONTO_DOC_MD;
-                    //LEJGG 10-10-2018------------------------>
+                                                            // dOCUMENTO.MONTO_DOC_MD = doc.MONTO_DOC_MD;
+                                                            //LEJGG 10-10-2018------------------------>
                     try
                     {
                         var _t = mtTot.Replace("$", "");
@@ -1257,8 +1301,8 @@ namespace WFARTHA.Controllers
 
                     var listafiles = listaNombreArchivos.Count;//FRT16112018
                     var _name = "";//FRT20112018 NOMBRE PAERA QUIATR DE LA LISTA
-                    //DOCUMENTOA
-                    //Misma cantidad de archivos y nombres, osea todo bien
+                                   //DOCUMENTOA
+                                   //Misma cantidad de archivos y nombres, osea todo bien
                     if (listaDirectorios.Count == listaDescArchivos.Count && listaDirectorios.Count == listaNombreArchivos.Count)
                     {
                         //un contador para los archivos que se borran de las listas
@@ -1876,8 +1920,8 @@ namespace WFARTHA.Controllers
 
                                             ////MGC 29-10-2018 Obtener las retenciones relacionadas con las ya mostradas en la tabla
                                             ccr++;// Contador consecutivo ////MGC 29-10-2018
-                                            //LEJGG 25-11-2018----------------------------->
-                                            //despues de guardarlo eliminamos de la lista de documentor la ligada si es que llegara a tener
+                                                  //LEJGG 25-11-2018----------------------------->
+                                                  //despues de guardarlo eliminamos de la lista de documentor la ligada si es que llegara a tener
                                             bool bdr = false;
                                             for (int x = 0; x < doc.DOCUMENTOR.Count; x++)
                                             {
@@ -2158,12 +2202,12 @@ namespace WFARTHA.Controllers
 
             try
             {
-               /* string p = Session["pr"].ToString();
-                string pid = Session["id_pr"].ToString();
-                ViewBag.PrSl = p;
-                pselG = pid;//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
-                ViewBag.pid = pid;//MGC 29-10-2018 Guardar el proyecto en el create*/
-               
+                /* string p = Session["pr"].ToString();
+                 string pid = Session["id_pr"].ToString();
+                 ViewBag.PrSl = p;
+                 pselG = pid;//MGC 16-10-2018 Obtener las sociedades asignadas al usuario
+                 ViewBag.pid = pid;//MGC 29-10-2018 Guardar el proyecto en el create*/
+
             }
             catch
             {
@@ -2545,19 +2589,65 @@ namespace WFARTHA.Controllers
             //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
             //var dta = db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).
             var dta = detcl.
-            //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
+                //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
                 Join(
                 db.USUARIOs,
                 da => da.USUARIOA_ID,
                 us => us.ID,
                 (da, us) => new
                 {
-                    //ID = new List<string>() { da.VERSION, da.USUARIOC_ID, da.ID_RUTA_AGENTE, da.USUARIOA_ID},                    
-                    ID = new { VERSION = da.VERSION.ToString().Replace(" ", ""), USUARIOC_ID = da.USUARIOC_ID.ToString().Replace(" ", ""), ID_RUTA_AGENTE = da.ID_RUTA_AGENTE.ToString().Replace(" ", ""), USUARIOA_ID = da.USUARIOA_ID.ToString().Replace(" ", "") },
+                //ID = new List<string>() { da.VERSION, da.USUARIOC_ID, da.ID_RUTA_AGENTE, da.USUARIOA_ID},                    
+                ID = new { VERSION = da.VERSION.ToString().Replace(" ", ""), USUARIOC_ID = da.USUARIOC_ID.ToString().Replace(" ", ""), ID_RUTA_AGENTE = da.ID_RUTA_AGENTE.ToString().Replace(" ", ""), USUARIOA_ID = da.USUARIOA_ID.ToString().Replace(" ", "") },
                     TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
                 }).ToList();
 
-            ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
+
+            var _v = "";
+            var _usc = "";
+            var _id_ruta = "";
+            var _usa = "";
+            var _mt = "";
+            var _sc = "";
+            var lstDta = new List<object>();
+            //LEJGG03-12-2018-----------------------------I
+            for (int i = 0; i < dta.Count; i++)
+            {
+                _v = dta[i].ID.VERSION;
+                _usc = dta[i].ID.USUARIOC_ID;
+                _id_ruta = dta[i].ID.ID_RUTA_AGENTE;
+                _usa = dta[i].ID.USUARIOA_ID;
+                if (dOCUMENTO.MONTO_DOC_MD == null)
+                {
+                    _mt = 0 + "";
+                }
+                else
+                { _mt = dOCUMENTO.MONTO_DOC_MD.ToString(); }
+                _sc = dOCUMENTO.SOCIEDAD_ID;
+                var _lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc);
+                string cad = "";
+                for (int j = 0; j < _lst.Count; j++)
+                {
+                    var aut = _lst[j].autorizador.Split('-');
+                    if (j == lst.Count - 1)
+                    {
+                        cad += aut[0].Trim();
+                    }
+                    else
+                    {
+                        cad += aut[0].Trim() + "-";
+                    }
+                }
+                var nuevo = new
+                {
+                    ID = dta[i].ID,
+                    //TEXT = dta[i].TEXT + " (" + cad + ")"
+                    TEXT ="(" + cad + ")"
+                };
+                lstDta.Add(nuevo);
+            }
+            //ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
+            ViewBag.DETAA = new SelectList(lstDta, "ID", "TEXT");//LEJGG 03-12-2018
+            //LEJGG03-12-2018-----------------------------F
 
             ViewBag.DETAA2 = JsonConvert.SerializeObject(db.DET_AGENTECC.Where(dt => dt.USUARIOC_ID == user_id).ToList(), Newtonsoft.Json.Formatting.Indented);
 
@@ -2851,8 +2941,8 @@ namespace WFARTHA.Controllers
 
 
                     var _name = "";//FRT20112018 NOMBRE PAERA QUIATR DE LA LISTA
-                    //DOCUMENTOA
-                    //Misma cantidad de archivos y nombres, osea todo bien
+                                   //DOCUMENTOA
+                                   //Misma cantidad de archivos y nombres, osea todo bien
                     if (listaDirectorios.Count == listaDescArchivos.Count && listaDirectorios.Count == listaNombreArchivos.Count)
                     {
                         //un contador para los archivos que se borran de las listas
@@ -3197,7 +3287,7 @@ namespace WFARTHA.Controllers
                                 int a15 = 0;
                                 //Compruebo que el numero este dentro de los rangos de anexos MAXIMO 5
                                 if (dOCUMENTO.Anexo[i].a5 > 0 && dOCUMENTO.Anexo[i].a5 <= listafiles)  //FRT16112018
-                                //if (doc.Anexo[i].a5 > 0 && doc.Anexo[i].a5 <= listaNombreArchivos.Count)
+                                                                                                       //if (doc.Anexo[i].a5 > 0 && doc.Anexo[i].a5 <= listaNombreArchivos.Count)
                                 {
                                     a5 = dOCUMENTO.Anexo[i].a5;
                                     a5 = a5 - 1;
@@ -5401,7 +5491,7 @@ namespace WFARTHA.Controllers
                 List<string> lstvals_error = new List<string>();
                 lstvals_error.Add("0");//FRT20112018Xml error en primera posicion
                 JsonResult jc = Json(lstvals_error, JsonRequestBehavior.AllowGet); //FRT20112018Xml error en primera posicion
-                //JsonResult jc = Json("", JsonRequestBehavior.AllowGet); //FRT20112018 Se comenta para poder tener los valores
+                                                                                   //JsonResult jc = Json("", JsonRequestBehavior.AllowGet); //FRT20112018 Se comenta para poder tener los valores
                 return jc;
             }
         }
@@ -5861,7 +5951,7 @@ namespace WFARTHA.Controllers
                 db.SaveChanges();
                 st = true;
             }
- 
+
             JsonResult jc = Json(st, JsonRequestBehavior.AllowGet);
             return jc;
         }
@@ -7093,7 +7183,8 @@ namespace WFARTHA.Controllers
                             select new CadenaAutorizadores
                             {
                                 fase = ca.fase,
-                                autorizador = ca.autorizador + " - " + us.NOMBRE + " " + us.APELLIDO_P + " " + us.APELLIDO_M
+                                //autorizador = ca.autorizador + " - " + us.NOMBRE + " " + us.APELLIDO_P + " " + us.APELLIDO_M
+                                autorizador =  us.NOMBRE + " " + us.APELLIDO_P + " " + us.APELLIDO_M//lejgg 03-12-2018
                             }).ToList();
             }
             catch (Exception)
@@ -7105,6 +7196,110 @@ namespace WFARTHA.Controllers
             return jc;
         }
 
+        //LEJGG 03-12-2018
+        public List<CadenaAutorizadores> getCad2(int version, string usuarioc, string id_ruta, string usuarioa, decimal monto, string bukrs)
+        {
+
+            //Obtener el encabezado de la cadena
+            DET_AGENTECC detc = new DET_AGENTECC();
+            List<int> fases = new List<int>();
+
+            detc = db.DET_AGENTECC.Where(dc => dc.VERSION == version && dc.USUARIOC_ID == usuarioc && dc.ID_RUTA_AGENTE == id_ruta && dc.USUARIOA_ID == usuarioa).FirstOrDefault();
+
+            List<DET_AGENTECA> deta = new List<DET_AGENTECA>();
+            //Existe el encabezado de la cadena
+            if (detc != null)
+            {
+                deta = db.DET_AGENTECA.Where(da => da.ID_RUTA_AGENTE == detc.ID_RUTA_AGENTE && da.VERSION == detc.VERSION).OrderBy(da => da.STEP_FASE).ToList();
+            }
+
+            //Lista de cadena de autorizadores
+            List<CadenaAutorizadores> lcadena = new List<CadenaAutorizadores>();
+
+            //Agregar el solicitante
+            try
+            {
+                if (detc != null)
+                {
+                    CadenaAutorizadores sol = new CadenaAutorizadores();
+                    sol.fase = "Solicitante";
+                    sol.autorizador = detc.USUARIOA_ID;
+
+                    lcadena.Add(sol);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            //Obtener las fases del proyecto
+            fases = deta.Select(da => da.STEP_FASE).Distinct().ToList();
+            ProcesaFlujo pf = new ProcesaFlujo();
+            //loop para obtener los autorizadores por fase
+            for (int i = 0; i < fases.Count(); i++)
+            {
+                List<DET_AGENTECA> detafase = new List<DET_AGENTECA>();
+
+                detafase = deta.Where(detf => detf.STEP_FASE == fases[i]).ToList();
+
+                if (detafase != null || detafase.Count > 0)
+                {
+                    DET_AGENTECA dap = new DET_AGENTECA();
+                    dap = pf.detAgenteLimite(detafase, monto);
+
+                    //Si se obtiene el agente por monto y fase, agregarlo a la lista
+                    CadenaAutorizadores cadenaauto = new CadenaAutorizadores();
+                    cadenaauto.fase = "Aprobador " + dap.STEP_FASE;
+                    cadenaauto.autorizador = dap.AGENTE_SIG;
+
+                    lcadena.Add(cadenaauto);
+
+                }
+            }
+
+            //Obtener el contabilizador
+            try
+            {
+                DET_APROB dap = new DET_APROB();
+                dap = pf.determinaAgenteContabilidadCadena(bukrs);
+                if (dap != null)
+                {
+                    //Se obtiene el agente contabilizador 
+                    CadenaAutorizadores cadenaauto = new CadenaAutorizadores();
+                    cadenaauto.fase = "Contabilizador";
+                    cadenaauto.autorizador = dap.ID_USUARIO;
+
+                    lcadena.Add(cadenaauto);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            //Obtener el nombre de los usuarios
+            List<CadenaAutorizadores> lcadenan = new List<CadenaAutorizadores>();
+            try
+            {
+                lcadenan = (from ca in lcadena
+                            join us in db.USUARIOs
+                            on ca.autorizador equals us.ID
+                            into jj
+                            from us in jj.DefaultIfEmpty()
+                            select new CadenaAutorizadores
+                            {
+                                fase = ca.fase,
+                                autorizador = ca.autorizador + " - " + us.NOMBRE + " " + us.APELLIDO_P + " " + us.APELLIDO_M
+                            }).ToList();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return lcadenan;
+        }
         //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 
     }
