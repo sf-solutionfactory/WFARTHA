@@ -2176,7 +2176,8 @@ namespace WFARTHA.Controllers
             }
             DOCUMENTO dOCUMENTO = db.DOCUMENTOes.Find(id);
             var id_pspnr = dOCUMENTO.ID_PSPNR;
-            var nombre = db.PROYECTOes.Where(x => x.ID_PSPNR == id_pspnr).FirstOrDefault().NOMBRE;
+            var nombre = db.PROYECTOes.Where(x => x.ID_PSPNR == id_pspnr).FirstOrDefault().NOMBRE; FRT03122018
+            //var nombre = "Proyecto Prueba";
             ViewBag.PrSl = id_pspnr;
             ViewBag.pid = nombre;
             if (dOCUMENTO.TIPO_CAMBIO == null)//Lejgg 15-11-2018
@@ -2598,6 +2599,8 @@ namespace WFARTHA.Controllers
             //MGC 02-10-2018 Cadenas de autorización
             string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr)
         {
+
+
             string errorString = "";
             var est = "";
             if (ModelState.IsValid)
@@ -2674,23 +2677,37 @@ namespace WFARTHA.Controllers
                     var doct = db.DET_TIPODOC.Where(dt => dt.TIPO_SOL == dOCUMENTO.TSOL_ID).FirstOrDefault();
                     _doc.DOCUMENTO_SAP = doct.BLART.ToString();
 
-                    //Si es B signfica que ya pasa a ser N
-                    est = _doc.ESTATUS;
-                    if (_doc.ESTATUS == "B")
-                    {
-                        //Estatus
-                        _doc.ESTATUS = "N";
+
+
+
+                    //FRT03122018 para poder realizar el guardado de borrador sin afectar estatus
+
+                    if (borr != "B") {
+                        //Si es B signfica que ya pasa a ser N
+                        est = _doc.ESTATUS;
+                        if (_doc.ESTATUS == "B")
+                        {
+                            //Estatus
+                            _doc.ESTATUS = "N";
+                        }
+                        else
+                        {
+                            //Estatus
+                        }
+                        //Estatus wf
+                        dOCUMENTO.ESTATUS_WF = "P";// Si el wf es p es que no se ha creado, si es A, es que se creo el archivo, cambia al generar el preliminar
                     }
-                    else
-                    {
-                        //Estatus
-                    }
-                    //Estatus wf
-                    dOCUMENTO.ESTATUS_WF = "P";// Si el wf es p es que no se ha creado, si es A, es que se creo el archivo, cambia al generar el preliminar
+
+                    //ENDFRT03122018 para poder realizar el guardado de borrador sin afectar estatus
 
                     //db.DOCUMENTOes.Add(_doc);
                     db.Entry(_doc).State = EntityState.Modified;
                     db.SaveChanges();//LEJGG 29-10-2018
+
+
+
+
+
 
                     //Guardar número de documento creado
                     Session["NUM_DOC"] = _doc.NUM_DOC;
@@ -2742,7 +2759,7 @@ namespace WFARTHA.Controllers
                                 FileInfo[] archivos = directorio.GetFiles();
 
                                 //FRT16112018
-                                var delDA = db.DOCUMENTOAs.Where(x => x.NUM_DOC == num_doc && x.ACTIVO == true).ToList();
+                                var delDA = db.DOCUMENTOAs.Where(x => x.NUM_DOC == num_doc ).ToList();
                                 for (int i = 0; i < delDA.Count; i++)
                                 {
                                     DOCUMENTOA dOCUMENTOAd = db.DOCUMENTOAs.Find(delDA[i].NUM_DOC, delDA[i].POSD, delDA[i].POS);
@@ -2751,7 +2768,7 @@ namespace WFARTHA.Controllers
                                 }
 
 
-                                var delDAS = db.DOCUMENTOAS1.Where(x => x.NUM_DOC == num_doc && x.ACTIVO == true).ToList();
+                                var delDAS = db.DOCUMENTOAS1.Where(x => x.NUM_DOC == num_doc ).ToList();
 
                                 for (int i = 0; i < delDAS.Count; i++)
                                 {
@@ -4052,321 +4069,340 @@ namespace WFARTHA.Controllers
 
                 }
 
-                if (est == "B")
+
+
+                //FRT03122018 Para Guardar el borrador sin afectar work
+                if (borr != "B")
                 {
-                    //Inicia un nuevo flujo de trabajo
-                    //MATIAS CODIGO
-                    //MATIAS CODIGO
-                    //----------------------29-10-2018-------------------\\
-                    //MGC 02-10-2018 Cadena de autorización work flow --->
-                    //Flujo
-                    var _docf = db.DOCUMENTOes.Where(n => n.NUM_DOC == dOCUMENTO.NUM_DOC).FirstOrDefault();
-                    ProcesaFlujo pf = new ProcesaFlujo();
-                    //Comienza el wf
-                    //Se obtiene la cabecera
-                    try
+                    if (est == "B")
                     {
-                        WORKFV wf = db.WORKFHs.Where(a => a.TSOL_ID.Equals(_docf.TSOL_ID)).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
-
-                        DET_AGENTECC deta = new DET_AGENTECC();
-                        try
-                        {
-                            deta.VERSION = Convert.ToInt32(DETTA_VERSION);
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-
-                        try
-                        {
-                            deta.USUARIOC_ID = DETTA_USUARIOC_ID;
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-
-
-                        try
-                        {
-                            deta.ID_RUTA_AGENTE = DETTA_ID_RUTA_AGENTE;
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-
-                        try
-                        {
-                            deta.USUARIOA_ID = DETTA_USUARIOA_ID;
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-
-                        if (wf != null)
-                        {
-                            WORKFP wp = wf.WORKFPs.OrderBy(a => a.POS).FirstOrDefault();
-                            string email = ""; //MGC 08-10-2018 Obtener el nombre del cliente
-                            email = wp.EMAIL; //MGC 08-10-2018 Obtener el nombre del cliente
-
-
-                            FLUJO f = new FLUJO();
-                            f.WORKF_ID = wf.ID;
-                            f.WF_VERSION = wf.VERSION;
-                            f.WF_POS = wp.POS;
-                            f.NUM_DOC = _docf.NUM_DOC;
-                            f.POS = 1;
-                            f.LOOP = 1;
-                            f.USUARIOA_ID = _docf.USUARIOC_ID;
-                            f.USUARIOD_ID = _docf.USUARIOD_ID;
-                            f.ESTATUS = "I";
-                            f.FECHAC = DateTime.Now;
-                            f.FECHAM = DateTime.Now;
-                            f.STEP_AUTO = 0;
-
-                            //Ruta tomada
-                            f.ID_RUTA_A = deta.ID_RUTA_AGENTE;
-                            f.RUTA_VERSION = deta.VERSION;
-
-                            //MGC 05-10-2018 Modificación para work flow al ser editada
-                            string c = pf.procesa(f, "", false, email, "");
-                            //while (c == "1")
-                            //{
-                            //    Email em = new Email();
-                            //    string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
-                            //    string image = Server.MapPath("~/images/logo_kellogg.png");
-                            //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
-
-                            //    FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
-                            //    if (conta.WORKFP.ACCION.TIPO == "B")
-                            //    {
-                            //        WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
-                            //        //FLUJO f1 = new FLUJO();
-                            //        //f1.WORKF_ID = conta.WORKF_ID;
-                            //        //f1.WF_VERSION = conta.WF_VERSION;
-                            //        //f1.WF_POS = (int)wpos.NEXT_STEP;
-                            //        //f1.NUM_DOC = dOCUMENTO.NUM_DOC;
-                            //        //f1.POS = conta.POS + 1;
-                            //        //f1.LOOP = 1;
-                            //        ////f1.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
-                            //        ////f1.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
-                            //        conta.ESTATUS = "A";
-                            //        //f1.FECHAC = DateTime.Now;
-                            //        conta.FECHAM = DateTime.Now;
-                            //        c = pf.procesa(conta, "");
-                            //    }
-                            //    else
-                            //    {
-                            //        c = "";
-                            //    }
-                            //}
-
-                        }
-
-                    }
-                    catch (Exception ee)
-                    {
-                        if (errorString == "")
-                        {
-                            errorString = ee.Message.ToString();
-                        }
-                        ViewBag.error = errorString;
-                    }
-                    //MGC 02-10-2018 Cadena de autorización work flow <---
-                    //MATIAS CODIGO
-                    //MATIAS CODIGO
-                }
-                else
-                {
-                    //MGC 05-10-2018 Modificación para work flow al ser editada -->
-                    //Flujo
-                    ProcesaFlujo pf = new ProcesaFlujo();
-                    //Comienza el wf
-                    //Se obtiene la cabecera
-                    try
-                    {
-                        string nuevo = "N";
-                        FLUJO f = new FLUJO();
+                        //Inicia un nuevo flujo de trabajo
+                        //MATIAS CODIGO
+                        //MATIAS CODIGO
+                        //----------------------29-10-2018-------------------\\
+                        //MGC 02-10-2018 Cadena de autorización work flow --->
+                        //Flujo
                         var _docf = db.DOCUMENTOes.Where(n => n.NUM_DOC == dOCUMENTO.NUM_DOC).FirstOrDefault();
-                        //MGC 03-11-2018.2 Obtener el flujo de la creación
-                        if (_docf.ESTATUS == "N" & _docf.ESTATUS_PRE == "E")
+                        ProcesaFlujo pf = new ProcesaFlujo();
+                        //Comienza el wf
+                        //Se obtiene la cabecera
+                        try
                         {
-                            f = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).OrderByDescending(x => x.POS).FirstOrDefault();
-
-                            //MGC 04-11-2018 Generar Archivos ----------------------------------------------------------------->
-
-                            //Crear el archivo para el preliminar //MGC Preliminar
-                            string corr = pf.procesaPreliminar(_docf, false, "");
-
-                            //Se genero el preliminar
-                            if (corr == "0")
-                            {
-                                //DOCUMENTOPRE dp = new DOCUMENTOPRE();
-
-                                //dp.NUM_DOC = _docf.NUM_DOC;
-                                //dp.POS = 1;
-                                //dp.MESSAGE = "Generando Preliminar";
-                                //try
-                                //{
-                                //    db.DOCUMENTOPREs.Add(dp);
-                                //    db.SaveChanges();
-                                //}
-                                //catch (Exception e)
-                                //{
-                                //    string r = "";
-                                //}
-
-                                //MGC 30-10-2018 Agregar mensaje a log de modificación
-                                try
-                                {
-                                    DOCUMENTOLOG dl = new DOCUMENTOLOG();
-
-                                    dl.NUM_DOC = _docf.NUM_DOC;
-                                    dl.TYPE_LINE = "M";
-                                    dl.TYPE = "S";
-                                    dl.MESSAGE = "Se generó el Archivo Preliminar";
-                                    dl.FECHA = DateTime.Now;
-
-                                    db.DOCUMENTOLOGs.Add(dl);
-                                    db.SaveChanges();
-                                }
-                                catch (Exception e)
-                                {
-
-                                }
-                                //MGC 30-10-2018 Agregar mensaje a log de modificación
-
-                                //Actualizar wf del documento
-                                //d.ESTATUS_WF = "A";//MGC 30-10-2018 Modificaión para validar creación del archivo
-
-                                if (true)
-                                {
-                                    _docf.ESTATUS = "N"; //MGC 02-11-2018 Regresa a estatus de crear preliminar
-                                    _docf.ESTATUS_WF = "P"; //MGC 02-11-2018 Regresa a estatus de crear preliminar
-                                    _docf.ESTATUS_SAP = null; //MGC 02-11-2018 Regresa a estatus de crear preliminar
-                                }
-
-                                //MGC 30-10-2018 Actualizar el estatus de preliminar del doc
-                                _docf.ESTATUS_PRE = "G";//MGC 30-10-2018 Modificaión para validar creación del archivo
-                                db.Entry(_docf).State = EntityState.Modified;
-                                db.SaveChanges();
-                            }
-                            //No se genero el preliminar
-                            else
-                            {
-                                string m;
-                                if (corr.Length > 50)
-                                {
-                                    m = corr.Substring(0, 50);
-                                }
-                                else
-                                {
-                                    m = corr;
-                                }
-                                //DOCUMENTOPRE dp = new DOCUMENTOPRE();
-
-                                //dp.NUM_DOC = _docf.NUM_DOC;
-                                //dp.POS = 1;
-                                //dp.MESSAGE = m;
-                                //try
-                                //{
-                                //    db.DOCUMENTOPREs.Add(dp);
-                                //    db.SaveChanges();
-                                //}
-                                //catch (Exception E)
-                                //{
-                                //    string r = "";
-                                //}
-
-                                //MGC 30-10-2018 Agregar mensaje a log de modificación
-                                try
-                                {
-                                    DOCUMENTOLOG dl = new DOCUMENTOLOG();
-
-                                    dl.NUM_DOC = _docf.NUM_DOC;
-                                    dl.TYPE_LINE = "M";
-                                    dl.TYPE = "E";
-                                    dl.MESSAGE = m;
-                                    dl.FECHA = DateTime.Now;
-
-                                    db.DOCUMENTOLOGs.Add(dl);
-                                    db.SaveChanges();
-                                }
-                                catch (Exception e)
-                                {
-
-                                }
-                                //MGC 30-10-2018 Agregar mensaje a log de modificación
-
-                                //MGC 30-10-2018 Actualizar el estatus de preliminar del doc
-                                _docf.ESTATUS_PRE = "E";//MGC 30-10-2018 Modificaión Estatus en la creación del archivo
-                                db.Entry(_docf).State = EntityState.Modified;
-                                db.SaveChanges();
-                                //Pendiente en edit, regresar a estatus de P en la creación del flujo
-
-                            }
-
-
-                            //MGC 04-11-2018 Generar Archivos -----------------------------------------------------------------<
-
-
-
-                        }
-                        else
-                        {
-                            //Obtener el último flujo
-                            f = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC) & a.ESTATUS.Equals("P")).FirstOrDefault();
-
+                            WORKFV wf = db.WORKFHs.Where(a => a.TSOL_ID.Equals(_docf.TSOL_ID)).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
 
                             DET_AGENTECC deta = new DET_AGENTECC();
-
-                            //f.ID_RUTA_A = f.ID_RUTA_A.Replace(" ", string.Empty);
-
-                            //Obtener la ruta seleccionada desde la creación (inicio)
-                            deta = db.DET_AGENTECC.Where(dcc => dcc.VERSION == f.RUTA_VERSION && dcc.USUARIOC_ID == f.USUARIOA_ID && dcc.ID_RUTA_AGENTE == f.ID_RUTA_A).FirstOrDefault();
-
-                            //Si la ruta existe
-                            if (deta != null)
+                            try
+                            {
+                                deta.VERSION = Convert.ToInt32(DETTA_VERSION);
+                            }
+                            catch (Exception e)
                             {
 
-                                FLUJO fe = new FLUJO();
-                                fe.WORKF_ID = f.WORKF_ID;
-                                fe.WF_VERSION = f.WF_VERSION;
-                                fe.WF_POS = f.WF_POS;
-                                fe.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                fe.POS = f.POS;
-                                fe.LOOP = 1;
-                                //fe.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
-                                //fe.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
-                                fe.USUARIOA_ID = _docf.USUARIOC_ID;
-                                fe.USUARIOD_ID = _docf.USUARIOD_ID;
-                                fe.ESTATUS = "I";
-                                fe.FECHAC = DateTime.Now;
-                                fe.FECHAM = DateTime.Now;
-                                fe.STEP_AUTO = f.STEP_AUTO;
+                            }
+
+                            try
+                            {
+                                deta.USUARIOC_ID = DETTA_USUARIOC_ID;
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+
+
+                            try
+                            {
+                                deta.ID_RUTA_AGENTE = DETTA_ID_RUTA_AGENTE;
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+
+                            try
+                            {
+                                deta.USUARIOA_ID = DETTA_USUARIOA_ID;
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+
+                            if (wf != null)
+                            {
+                                WORKFP wp = wf.WORKFPs.OrderBy(a => a.POS).FirstOrDefault();
+                                string email = ""; //MGC 08-10-2018 Obtener el nombre del cliente
+                                email = wp.EMAIL; //MGC 08-10-2018 Obtener el nombre del cliente
+
+
+                                FLUJO f = new FLUJO();
+                                f.WORKF_ID = wf.ID;
+                                f.WF_VERSION = wf.VERSION;
+                                f.WF_POS = wp.POS;
+                                f.NUM_DOC = _docf.NUM_DOC;
+                                f.POS = 1;
+                                f.LOOP = 1;
+                                f.USUARIOA_ID = _docf.USUARIOC_ID;
+                                f.USUARIOD_ID = _docf.USUARIOD_ID;
+                                f.ESTATUS = "I";
+                                f.FECHAC = DateTime.Now;
+                                f.FECHAM = DateTime.Now;
+                                f.STEP_AUTO = 0;
 
                                 //Ruta tomada
-                                fe.ID_RUTA_A = deta.ID_RUTA_AGENTE;
-                                fe.RUTA_VERSION = deta.VERSION;
+                                f.ID_RUTA_A = deta.ID_RUTA_AGENTE;
+                                f.RUTA_VERSION = deta.VERSION;
 
-                                string c = pf.procesa(fe, "", true, "", "");
+                                //MGC 05-10-2018 Modificación para work flow al ser editada
+                                string c = pf.procesa(f, "", false, email, "");
+                                //while (c == "1")
+                                //{
+                                //    Email em = new Email();
+                                //    string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                                //    string image = Server.MapPath("~/images/logo_kellogg.png");
+                                //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+
+                                //    FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                                //    if (conta.WORKFP.ACCION.TIPO == "B")
+                                //    {
+                                //        WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
+                                //        //FLUJO f1 = new FLUJO();
+                                //        //f1.WORKF_ID = conta.WORKF_ID;
+                                //        //f1.WF_VERSION = conta.WF_VERSION;
+                                //        //f1.WF_POS = (int)wpos.NEXT_STEP;
+                                //        //f1.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                //        //f1.POS = conta.POS + 1;
+                                //        //f1.LOOP = 1;
+                                //        ////f1.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
+                                //        ////f1.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
+                                //        conta.ESTATUS = "A";
+                                //        //f1.FECHAC = DateTime.Now;
+                                //        conta.FECHAM = DateTime.Now;
+                                //        c = pf.procesa(conta, "");
+                                //    }
+                                //    else
+                                //    {
+                                //        c = "";
+                                //    }
+                                //}
+
+                            }
+
+                        }
+                        catch (Exception ee)
+                        {
+                            if (errorString == "")
+                            {
+                                errorString = ee.Message.ToString();
+                            }
+                            ViewBag.error = errorString;
+                        }
+                        //MGC 02-10-2018 Cadena de autorización work flow <---
+                        //MATIAS CODIGO
+                        //MATIAS CODIGO
+                    }
+                    else
+                    {
+                        //MGC 05-10-2018 Modificación para work flow al ser editada -->
+                        //Flujo
+                        ProcesaFlujo pf = new ProcesaFlujo();
+                        //Comienza el wf
+                        //Se obtiene la cabecera
+                        try
+                        {
+                            string nuevo = "N";
+                            FLUJO f = new FLUJO();
+                            var _docf = db.DOCUMENTOes.Where(n => n.NUM_DOC == dOCUMENTO.NUM_DOC).FirstOrDefault();
+                            //MGC 03-11-2018.2 Obtener el flujo de la creación
+                            if (_docf.ESTATUS == "N" & _docf.ESTATUS_PRE == "E")
+                            {
+                                f = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).OrderByDescending(x => x.POS).FirstOrDefault();
+
+                                //MGC 04-11-2018 Generar Archivos ----------------------------------------------------------------->
+
+                                //Crear el archivo para el preliminar //MGC Preliminar
+                                string corr = pf.procesaPreliminar(_docf, false, "");
+
+                                //Se genero el preliminar
+                                if (corr == "0")
+                                {
+                                    //DOCUMENTOPRE dp = new DOCUMENTOPRE();
+
+                                    //dp.NUM_DOC = _docf.NUM_DOC;
+                                    //dp.POS = 1;
+                                    //dp.MESSAGE = "Generando Preliminar";
+                                    //try
+                                    //{
+                                    //    db.DOCUMENTOPREs.Add(dp);
+                                    //    db.SaveChanges();
+                                    //}
+                                    //catch (Exception e)
+                                    //{
+                                    //    string r = "";
+                                    //}
+
+                                    //MGC 30-10-2018 Agregar mensaje a log de modificación
+                                    try
+                                    {
+                                        DOCUMENTOLOG dl = new DOCUMENTOLOG();
+
+                                        dl.NUM_DOC = _docf.NUM_DOC;
+                                        dl.TYPE_LINE = "M";
+                                        dl.TYPE = "S";
+                                        dl.MESSAGE = "Se generó el Archivo Preliminar";
+                                        dl.FECHA = DateTime.Now;
+
+                                        db.DOCUMENTOLOGs.Add(dl);
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception e)
+                                    {
+
+                                    }
+                                    //MGC 30-10-2018 Agregar mensaje a log de modificación
+
+                                    //Actualizar wf del documento
+                                    //d.ESTATUS_WF = "A";//MGC 30-10-2018 Modificaión para validar creación del archivo
+
+                                    if (true)
+                                    {
+                                        _docf.ESTATUS = "N"; //MGC 02-11-2018 Regresa a estatus de crear preliminar
+                                        _docf.ESTATUS_WF = "P"; //MGC 02-11-2018 Regresa a estatus de crear preliminar
+                                        _docf.ESTATUS_SAP = null; //MGC 02-11-2018 Regresa a estatus de crear preliminar
+                                    }
+
+                                    //MGC 30-10-2018 Actualizar el estatus de preliminar del doc
+                                    _docf.ESTATUS_PRE = "G";//MGC 30-10-2018 Modificaión para validar creación del archivo
+                                    db.Entry(_docf).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
+                                //No se genero el preliminar
+                                else
+                                {
+                                    string m;
+                                    if (corr.Length > 50)
+                                    {
+                                        m = corr.Substring(0, 50);
+                                    }
+                                    else
+                                    {
+                                        m = corr;
+                                    }
+                                    //DOCUMENTOPRE dp = new DOCUMENTOPRE();
+
+                                    //dp.NUM_DOC = _docf.NUM_DOC;
+                                    //dp.POS = 1;
+                                    //dp.MESSAGE = m;
+                                    //try
+                                    //{
+                                    //    db.DOCUMENTOPREs.Add(dp);
+                                    //    db.SaveChanges();
+                                    //}
+                                    //catch (Exception E)
+                                    //{
+                                    //    string r = "";
+                                    //}
+
+                                    //MGC 30-10-2018 Agregar mensaje a log de modificación
+                                    try
+                                    {
+                                        DOCUMENTOLOG dl = new DOCUMENTOLOG();
+
+                                        dl.NUM_DOC = _docf.NUM_DOC;
+                                        dl.TYPE_LINE = "M";
+                                        dl.TYPE = "E";
+                                        dl.MESSAGE = m;
+                                        dl.FECHA = DateTime.Now;
+
+                                        db.DOCUMENTOLOGs.Add(dl);
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception e)
+                                    {
+
+                                    }
+                                    //MGC 30-10-2018 Agregar mensaje a log de modificación
+
+                                    //MGC 30-10-2018 Actualizar el estatus de preliminar del doc
+                                    _docf.ESTATUS_PRE = "E";//MGC 30-10-2018 Modificaión Estatus en la creación del archivo
+                                    db.Entry(_docf).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                    //Pendiente en edit, regresar a estatus de P en la creación del flujo
+
+                                }
+
+
+                                //MGC 04-11-2018 Generar Archivos -----------------------------------------------------------------<
+
+
+
+                            }
+                            else
+                            {
+                                //Obtener el último flujo
+                                f = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC) & a.ESTATUS.Equals("P")).FirstOrDefault();
+
+
+                                DET_AGENTECC deta = new DET_AGENTECC();
+
+                                //f.ID_RUTA_A = f.ID_RUTA_A.Replace(" ", string.Empty);
+
+                                //Obtener la ruta seleccionada desde la creación (inicio)
+                                deta = db.DET_AGENTECC.Where(dcc => dcc.VERSION == f.RUTA_VERSION && dcc.USUARIOC_ID == f.USUARIOA_ID && dcc.ID_RUTA_AGENTE == f.ID_RUTA_A).FirstOrDefault();
+
+                                //Si la ruta existe
+                                if (deta != null)
+                                {
+
+                                    FLUJO fe = new FLUJO();
+                                    fe.WORKF_ID = f.WORKF_ID;
+                                    fe.WF_VERSION = f.WF_VERSION;
+                                    fe.WF_POS = f.WF_POS;
+                                    fe.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                    fe.POS = f.POS;
+                                    fe.LOOP = 1;
+                                    //fe.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
+                                    //fe.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
+                                    fe.USUARIOA_ID = _docf.USUARIOC_ID;
+                                    fe.USUARIOD_ID = _docf.USUARIOD_ID;
+                                    fe.ESTATUS = "I";
+                                    fe.FECHAC = DateTime.Now;
+                                    fe.FECHAM = DateTime.Now;
+                                    fe.STEP_AUTO = f.STEP_AUTO;
+
+                                    //Ruta tomada
+                                    fe.ID_RUTA_A = deta.ID_RUTA_AGENTE;
+                                    fe.RUTA_VERSION = deta.VERSION;
+
+                                    string c = pf.procesa(fe, "", true, "", "");
+                                }
                             }
                         }
-                    }
-                    catch (Exception ee)
-                    {
-                        if (errorString == "")
+                        catch (Exception ee)
                         {
-                            errorString = ee.Message.ToString();
+                            if (errorString == "")
+                            {
+                                errorString = ee.Message.ToString();
+                            }
+                            ViewBag.error = errorString;
                         }
-                        ViewBag.error = errorString;
                     }
+                    return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");
+                else {
+                    return RedirectToAction("Index", "Home");
+
+                }
+                
+                //ENDFRT03122018 Para Guardar el borrador sin afectar work
+
+
+                
+              
             }
+
+
+
             var _numdoc = dOCUMENTO.NUM_DOC;
             var rpb = "";
             try
@@ -4418,6 +4454,9 @@ namespace WFARTHA.Controllers
             ViewBag.USUARIOC_ID = new SelectList(db.USUARIOs, "ID", "PASS", dOCUMENTO.USUARIOC_ID);
             return View(dOCUMENTO);
         }
+
+
+
 
         //Lejgg 11-10-2018
         [HttpPost]
