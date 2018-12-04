@@ -2220,7 +2220,7 @@ namespace WFARTHA.Controllers
             }
             DOCUMENTO dOCUMENTO = db.DOCUMENTOes.Find(id);
             var id_pspnr = dOCUMENTO.ID_PSPNR;
-            var nombre = db.PROYECTOes.Where(x => x.ID_PSPNR == id_pspnr).FirstOrDefault().NOMBRE; FRT03122018
+            var nombre = db.PROYECTOes.Where(x => x.ID_PSPNR == id_pspnr).FirstOrDefault().NOMBRE; //FRT03122018
             //var nombre = "Proyecto Prueba";
             ViewBag.PrSl = id_pspnr;
             ViewBag.pid = nombre;
@@ -4450,7 +4450,8 @@ namespace WFARTHA.Controllers
                                     fe.WF_POS = f.WF_POS;
                                     fe.NUM_DOC = dOCUMENTO.NUM_DOC;
                                     fe.POS = f.POS;
-                                    fe.LOOP = 1;
+                                    //fe.LOOP = 1;//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                                    fe.LOOP = f.LOOP;//MGC 03-12-2018 Loop para firmas y obtener el más actual
                                     //fe.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
                                     //fe.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
                                     fe.USUARIOA_ID = _docf.USUARIOC_ID;

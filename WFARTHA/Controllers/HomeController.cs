@@ -180,7 +180,7 @@ namespace WFARTHA.Controllers
                 //MGC 16-10-2018 Obtener los proyectos de las sociedades -->
                 //List<ASIGN_PROY_SOC> ps = new List<ASIGN_PROY_SOC>();//MGC 19-10-2018 Cambio en archivo
                 var ps = (from det in detsoc//MGC 19-10-2018 Cambio en archivo
-                          join aps in db.ASIGN_PROY_SOC
+                          join aps in db.ASIGN_PROY_SOC //MGC 04-12-2018 Desde la vista se obtienen nada más las sociedades activas
                       on det.BUKRS equals aps.ID_BUKRS
                       select new
                       {
@@ -191,7 +191,7 @@ namespace WFARTHA.Controllers
 
 
                 var p = (from asig in ps
-                         join pr in db.PROYECTOes
+                         join pr in db.PROYECTOes.Where(pr => pr.ACTIVO == true)//MGC 04-12-2018 Desde la vista se obtienen nada más los proyectos activos
                          on asig.ID_PSPNR equals pr.ID_PSPNR
                          select new PROYECTO
                          {
