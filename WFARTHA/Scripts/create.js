@@ -362,11 +362,13 @@ $(document).ready(function () {
     $('#addRowInfo').on('click', function () {
 
         var t = $('#table_info').DataTable();
-        var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018 //MGC 03-10-2018 solicitud con orden de compra       
-        posinfo++;
+        var _numrow = t.rows().count();
+        _numrow++; //frt04122018
+        var addedRowInfo = addRowInfo(t, _numrow, "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018 //MGC 03-10-2018 solicitud con orden de compra       
+        //posinfo++; frt04122018
 
         //Obtener el select de impuestos en la cabecera
-        var idselect = "infoSel" + posinfo;
+        var idselect = "infoSel" + _numrow;
 
         //Obtener el valor 
         var imp = $('#IMPUESTO').val();
@@ -428,6 +430,11 @@ $(document).ready(function () {
         updateFooter();
         event.returnValue = false;
         event.cancel = true;
+        //FRT 12112018  Para recorrer los numero borrados de los anexos
+        var _num = t.rows().count();
+        for (i = 1; i < _num + 1; i++) {
+            document.getElementById("table_info").rows[i].cells[1].innerHTML = i;
+        }
     });
 
     $('#delRowAnex').click(function (e) {
@@ -787,7 +794,7 @@ $(document).ready(function () {
                             } else {
                                 _b = false;
                                 statSend = false;
-                                msgerror = "Fila " + _rni + " valor: " + na1 + " Columna 2";
+                                msgerror = "Fila " + _rni + " : Valor ingresado en columna A1  debe ser un número de Anexo";
                             }
                         }
                         if (_b === false) {
@@ -800,7 +807,8 @@ $(document).ready(function () {
                             } else {
                                 _b = false;
                                 statSend = false;
-                                msgerror = "Fila " + _rni + " valor: " + na2 + " Columna 3";
+                                //msgerror = "Fila " + _rni + " valor: " + na2 + " Columna 3"; 
+                                msgerror = "Fila " + _rni + " : Valor ingresado en columna A2  debe ser un número de Anexo";
                             }
                         }
                         if (_b === false) {
@@ -813,7 +821,8 @@ $(document).ready(function () {
                             } else {
                                 _b = false;
                                 statSend = false;
-                                msgerror = "Fila " + _rni + " valor: " + na3 + " Columna 4";
+                                //msgerror = "Fila " + _rni + " valor: " + na3 + " Columna 4";
+                                msgerror = "Fila " + _rni + " : Valor ingresado en columna A3  debe ser un número de Anexo";
                             }
                         }
                         if (_b === false) {
@@ -826,7 +835,8 @@ $(document).ready(function () {
                             } else {
                                 _b = false;
                                 statSend = false;
-                                msgerror = "Fila " + _rni + " valor: " + na4 + " Columna 5";
+                                //msgerror = "Fila " + _rni + " valor: " + na4 + " Columna 5";
+                                msgerror = "Fila " + _rni + " : Valor ingresado en columna A4  debe ser un número de Anexo";
                             }
                         }
                         if (_b === false) {
@@ -839,7 +849,8 @@ $(document).ready(function () {
                             } else {
                                 _b = false;
                                 statSend = false;
-                                msgerror = "Fila " + _rni + " valor: " + na5 + " Columna 6";
+                                //msgerror = "Fila " + _rni + " valor: " + na5 + " Columna 6";
+                                msgerror = "Fila " + _rni + " : Valor ingresado en columna A5  debe ser un número de Anexo";
                             }
                         }
                         if (_b === false) {
@@ -1815,7 +1826,7 @@ function obtenerRetenciones(flag) {
                 "name": 'POS',
                 "className": 'POS',
                 "orderable": false,
-                "visible": false //MGC 04092018 Conceptos
+                "visible": true //MGC 04092018 Conceptos FRT 041223018
             },
             {
                 "name": 'A1',//MGC 22-10-2018 Etiquetas

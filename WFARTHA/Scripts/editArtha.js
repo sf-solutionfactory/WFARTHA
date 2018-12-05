@@ -218,6 +218,7 @@ $(document).ready(function () {
             //enca_monto = parseFloat(enca_monto);
             $("#MONTO_DOC_MD").val(enca_monto);
             var _b = false;
+            var _m = true;
             var _vs = [];
             var msgerror = "";
             var _rni = 0;
@@ -378,7 +379,8 @@ $(document).ready(function () {
                             break;
                         } else {
                             _b = false;
-                            msgerror = "Error en el renglon " + _rni + " valor: " + na1 + " Columna 2";
+                            //msgerror = "Error en el renglon " + _rni + " valor: " + na1 + " Columna 2";
+                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A1  debe ser un número de Anexo";
                         }
                     }
                     if (_b === false) {
@@ -390,7 +392,8 @@ $(document).ready(function () {
                             break;
                         } else {
                             _b = false;
-                            msgerror = "Error en el renglon " + _rni + " valor: " + na2 + " Columna 3";
+                            //msgerror = "Error en el renglon " + _rni + " valor: " + na2 + " Columna 3";
+                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A2  debe ser un número de Anexo";
                         }
                     }
                     if (_b === false) {
@@ -402,7 +405,8 @@ $(document).ready(function () {
                             break;
                         } else {
                             _b = false;
-                            msgerror = "Error en el renglon " + _rni + " valor: " + na3 + " Columna 4";
+                            //msgerror = "Error en el renglon " + _rni + " valor: " + na3 + " Columna 4";
+                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A3  debe ser un número de Anexo";
                         }
                     }
                     if (_b === false) {
@@ -414,7 +418,8 @@ $(document).ready(function () {
                             break;
                         } else {
                             _b = false;
-                            msgerror = "Error en el renglon " + _rni + " valor: " + na4 + " Columna 5";
+                            //msgerror = "Error en el renglon " + _rni + " valor: " + na4 + " Columna 5";
+                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A4  debe ser un número de Anexo";
                         }
                     }
                     if (_b === false) {
@@ -426,7 +431,8 @@ $(document).ready(function () {
                             break;
                         } else {
                             _b = false;
-                            msgerror = "Error en el renglon " + _rni + " valor: " + na5 + " Columna 6";
+                            //msgerror = "Error en el renglon " + _rni + " valor: " + na5 + " Columna 6";
+                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A5  debe ser un número de Anexo";
                         }
                     }
                     if (_b === false) {
@@ -549,15 +555,18 @@ $(document).ready(function () {
     //ENDFRT03122018 Para poder guardar el borrador
 
     $('#addRowInfo').on('click', function () {
-
+        
         var t = $('#table_info').DataTable();
+        var _numrow = t.rows().count();
+        _numrow++; //frt04122018
 
-        var addedRowInfo = addRowInfo(t, "1", "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018
 
-        posinfo++;
+        var addedRowInfo = addRowInfo(t, _numrow, "", "", "", "", "", "D", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");//Lej 13.09.2018
+
+        //posinfo++;  frt04122018
 
         //FRT08112018 AGREGAR Y QUE SE MIREN LAS 
-        posinfot = posrows + posinfo++;
+        posinfot = _numrow + _numrow++;
 
         //Obtener el select de impuestos en la cabecera
         var idselect = "infoSel" + posinfot;
@@ -929,6 +938,13 @@ $(document).ready(function () {
         if (tRet2.length > 0) {
             updateTableRet();
         }
+
+        //FRT04122018
+        var _num = t.rows().count();
+        for (i = 1; i < _num + 1; i++) {
+            document.getElementById("table_info").rows[i].cells[1].innerHTML = i;
+        }
+
     });
 
     $('#delRowAnex').click(function (e) {
@@ -2209,7 +2225,7 @@ function armarTablaInfo(datos) {
             "name": 'POS',
             "className": 'POS',
             "orderable": false,
-            "visible": false //MGC 04092018 Conceptos
+            "visible": true //MGC 04092018 Conceptos  frt04122018
         },
         {
             "name": 'A1',
