@@ -69,6 +69,7 @@ namespace WFARTHA.Controllers
             var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(User.Identity.Name) | a.USUARIOD_ID.Equals(User.Identity.Name)) && a.ESTATUS != "B").Include(a => a.SOCIEDAD).ToList();
 
             dOCUMENTOes = dOCUMENTOes.Distinct(new DocumentoComparer()).ToList();
+            var _d = dOCUMENTOes.OrderBy(x => x.FECHAC);//lejgg 04-12-2018
             return View(dOCUMENTOes);
         }
 
@@ -581,9 +582,51 @@ namespace WFARTHA.Controllers
                     TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
                 }).ToList();
 
-            ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
-
-
+            var _v = "";
+            var _usc = "";
+            var _id_ruta = "";
+            var _usa = "";
+            var _mt = "";
+            var _sc = "";
+            var lstDta = new List<object>();
+            //LEJGG03-12-2018-----------------------------I
+            for (int i = 0; i < dta.Count; i++)
+            {
+                _v = dta[i].ID.VERSION;
+                _usc = dta[i].ID.USUARIOC_ID;
+                _id_ruta = dta[i].ID.ID_RUTA_AGENTE;
+                _usa = dta[i].ID.USUARIOA_ID;
+                if (dOCUMENTO.MONTO_DOC_MD == null)
+                {
+                    _mt = 0 + "";
+                }
+                else
+                { _mt = dOCUMENTO.MONTO_DOC_MD.ToString(); }
+                _sc = dOCUMENTO.SOCIEDAD_ID;
+                var _lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc);
+                string cad = "";
+                for (int j = 0; j < _lst.Count; j++)
+                {
+                    var aut = _lst[j].autorizador.Split('-');
+                    if (j == _lst.Count - 1)
+                    {
+                        cad += aut[0].Trim();
+                    }
+                    else
+                    {
+                        cad += aut[0].Trim() + " - ";
+                    }
+                }
+                var nuevo = new
+                {
+                    ID = dta[i].ID,
+                    //TEXT = dta[i].TEXT + " (" + cad + ")"
+                    TEXT = cad
+                };
+                lstDta.Add(nuevo);
+            }
+            //ViewBag.DETAA = new SelectList(dta, "ID", "TEXT");
+            ViewBag.DETAA = new SelectList(lstDta, "ID", "TEXT");//LEJGG 03-12-2018
 
             //Obtener los aprobadores
             JsonResult autorizadores = new JsonResult();
@@ -903,7 +946,7 @@ namespace WFARTHA.Controllers
                     ID = new { VERSION = da.VERSION.ToString().Replace(" ", ""), USUARIOC_ID = da.USUARIOC_ID.ToString().Replace(" ", ""), ID_RUTA_AGENTE = da.ID_RUTA_AGENTE.ToString().Replace(" ", ""), USUARIOA_ID = da.USUARIOA_ID.ToString().Replace(" ", "") },
                     TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
                 }).ToList();
-            
+
             var _v = "";
             var _usc = "";
             var _id_ruta = "";
@@ -924,7 +967,8 @@ namespace WFARTHA.Controllers
                 }
                 else
                 { _mt = d.MONTO_DOC_MD.ToString(); }
-                _sc = d.SOCIEDAD_ID;
+                //_sc = d.SOCIEDAD_ID;
+                _sc = Session["id_pr"].ToString();
                 var lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc);
                 string cad = "";
                 for (int j = 0; j < lst.Count; j++)
@@ -936,14 +980,14 @@ namespace WFARTHA.Controllers
                     }
                     else
                     {
-                        cad += aut[0].Trim() + "-";
+                        cad += aut[0].Trim() + " - ";
                     }
                 }
                 var nuevo = new
                 {
                     ID = dta[i].ID,
                     //TEXT = dta[i].TEXT + " (" + cad + ")"
-                    TEXT ="(" + cad + ")"
+                    TEXT = cad
                 };
                 lstDta.Add(nuevo);
             }
@@ -2597,8 +2641,8 @@ namespace WFARTHA.Controllers
                 us => us.ID,
                 (da, us) => new
                 {
-                //ID = new List<string>() { da.VERSION, da.USUARIOC_ID, da.ID_RUTA_AGENTE, da.USUARIOA_ID},                    
-                ID = new { VERSION = da.VERSION.ToString().Replace(" ", ""), USUARIOC_ID = da.USUARIOC_ID.ToString().Replace(" ", ""), ID_RUTA_AGENTE = da.ID_RUTA_AGENTE.ToString().Replace(" ", ""), USUARIOA_ID = da.USUARIOA_ID.ToString().Replace(" ", "") },
+                    //ID = new List<string>() { da.VERSION, da.USUARIOC_ID, da.ID_RUTA_AGENTE, da.USUARIOA_ID},                    
+                    ID = new { VERSION = da.VERSION.ToString().Replace(" ", ""), USUARIOC_ID = da.USUARIOC_ID.ToString().Replace(" ", ""), ID_RUTA_AGENTE = da.ID_RUTA_AGENTE.ToString().Replace(" ", ""), USUARIOA_ID = da.USUARIOA_ID.ToString().Replace(" ", "") },
                     TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
                 }).ToList();
 
@@ -2629,20 +2673,20 @@ namespace WFARTHA.Controllers
                 for (int j = 0; j < _lst.Count; j++)
                 {
                     var aut = _lst[j].autorizador.Split('-');
-                    if (j == lst.Count - 1)
+                    if (j == _lst.Count - 1)
                     {
                         cad += aut[0].Trim();
                     }
                     else
                     {
-                        cad += aut[0].Trim() + "-";
+                        cad += aut[0].Trim() + " - ";
                     }
                 }
                 var nuevo = new
                 {
                     ID = dta[i].ID,
                     //TEXT = dta[i].TEXT + " (" + cad + ")"
-                    TEXT ="(" + cad + ")"
+                    TEXT = cad
                 };
                 lstDta.Add(nuevo);
             }
@@ -2772,7 +2816,8 @@ namespace WFARTHA.Controllers
 
                     //FRT03122018 para poder realizar el guardado de borrador sin afectar estatus
 
-                    if (borr != "B") {
+                    if (borr != "B")
+                    {
                         //Si es B signfica que ya pasa a ser N
                         est = _doc.ESTATUS;
                         if (_doc.ESTATUS == "B")
@@ -2849,7 +2894,7 @@ namespace WFARTHA.Controllers
                                 FileInfo[] archivos = directorio.GetFiles();
 
                                 //FRT16112018
-                                var delDA = db.DOCUMENTOAs.Where(x => x.NUM_DOC == num_doc ).ToList();
+                                var delDA = db.DOCUMENTOAs.Where(x => x.NUM_DOC == num_doc).ToList();
                                 for (int i = 0; i < delDA.Count; i++)
                                 {
                                     DOCUMENTOA dOCUMENTOAd = db.DOCUMENTOAs.Find(delDA[i].NUM_DOC, delDA[i].POSD, delDA[i].POS);
@@ -2858,7 +2903,7 @@ namespace WFARTHA.Controllers
                                 }
 
 
-                                var delDAS = db.DOCUMENTOAS1.Where(x => x.NUM_DOC == num_doc ).ToList();
+                                var delDAS = db.DOCUMENTOAS1.Where(x => x.NUM_DOC == num_doc).ToList();
 
                                 for (int i = 0; i < delDAS.Count; i++)
                                 {
@@ -4480,16 +4525,17 @@ namespace WFARTHA.Controllers
                     }
                     return RedirectToAction("Index");
                 }
-                else {
+                else
+                {
                     return RedirectToAction("Index", "Home");
 
                 }
-                
+
                 //ENDFRT03122018 Para Guardar el borrador sin afectar work
 
 
-                
-              
+
+
             }
 
 
@@ -7224,7 +7270,7 @@ namespace WFARTHA.Controllers
                             {
                                 fase = ca.fase,
                                 //autorizador = ca.autorizador + " - " + us.NOMBRE + " " + us.APELLIDO_P + " " + us.APELLIDO_M
-                                autorizador =  us.NOMBRE + " " + us.APELLIDO_P + " " + us.APELLIDO_M//lejgg 03-12-2018
+                                autorizador = us.NOMBRE + " " + us.APELLIDO_P + " " + us.APELLIDO_M//lejgg 03-12-2018
                             }).ToList();
             }
             catch (Exception)
