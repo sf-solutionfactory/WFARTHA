@@ -185,9 +185,10 @@ namespace WFARTHA.Controllers
             bool ban = false;
             if (anexos.Count > 0)
             {
-                Anexo _ax = new Anexo();
+                
                 for (int i = 0; i < result.Count; i++)
                 {
+                    Anexo _ax = new Anexo();
                     var posd = result[i];
                     var anexos2 = anexos.Where(x => x.POSD == posd).ToList();
                     int[] arrN = new int[5];
@@ -6686,37 +6687,69 @@ namespace WFARTHA.Controllers
         public JsonResult getAnexos(decimal id)
         {
             var c = db.DOCUMENTOAs.Where(i => i.NUM_DOC == id).ToList();
+            var result = c.Select(m => m.POSD).Distinct().ToList();
+
+
+
             List<Anexo> _lstax = new List<Anexo>();
             Anexo _ax = new Anexo();
             List<decimal> lstd = new List<decimal>();
-            for (int i = 0; i < c.Count; i++)
+            for (int i = 0; i < result.Count; i++)
             {
-                var _1filtro = c.Where(x => x.POS == (i + 1)).ToList();
+                    //var _1filtro = c.Where(x => x.POS == (p + 1) && x.POSD == c[i].POSD).ToList();
+                    var _1filtro = c.Where(x =>  x.POSD == c[i].POSD).ToList();
+                _ax = new Anexo();
                 for (int y = 0; y < _1filtro.Count; y++)
                 {
-                    _ax = new Anexo();
-                    switch (y + 1)
-                    {
-                        case 1:
-                            _ax.a1 = int.Parse(_1filtro[y].POSD.ToString());
-                            break;
-                        case 2:
-                            _ax.a2 = int.Parse(_1filtro[y].POSD.ToString());
-                            break;
-                        case 3:
-                            _ax.a3 = int.Parse(_1filtro[y].POSD.ToString());
-                            break;
-                        case 4:
-                            _ax.a4 = int.Parse(_1filtro[y].POSD.ToString());
-                            break;
-                        case 5:
-                            _ax.a5 = int.Parse(_1filtro[y].POSD.ToString());
-                            break;
-                        default:
-                            break;
+                    //_ax = new Anexo();
+                    if (y == 0) {
+                        _ax.a1 = int.Parse(_1filtro[y].POS.ToString());
                     }
-                    _lstax.Add(_ax);
+                    if (y == 1)
+                    {
+                        _ax.a2 = int.Parse(_1filtro[y].POS.ToString());
+                    }
+                    if (y == 2)
+                    {
+                        _ax.a3 = int.Parse(_1filtro[y].POS.ToString());
+                    }
+                    if (y == 3)
+                    {
+                        _ax.a4 = int.Parse(_1filtro[y].POS.ToString());
+                    }
+                    if (y == 4)
+                    {
+                        _ax.a5 = int.Parse(_1filtro[y].POS.ToString());
+                    }
+
+
+
+                    //switch (y + 1)
+                    //{
+                    //    case 1:
+                    //        _ax.a1 = int.Parse(_1filtro[y].POS.ToString());
+                    //        break;
+                    //    case 2:
+                    //        _ax.a2 = int.Parse(_1filtro[y].POS.ToString());
+                    //        break;
+                    //    case 3:
+                    //        _ax.a3 = int.Parse(_1filtro[y].POS.ToString());
+                    //        break;
+                    //    case 4:
+                    //        _ax.a4 = int.Parse(_1filtro[y].POS.ToString());
+                    //        break;
+                    //    case 5:
+                    //        _ax.a5 = int.Parse(_1filtro[y].POS.ToString());
+                    //        break;
+                    //    default:
+                    //        break;
+                    //}
+
                 }
+
+                _lstax.Add(_ax);
+
+
             }
             JsonResult jc = Json(_lstax, JsonRequestBehavior.AllowGet);
             return jc;
