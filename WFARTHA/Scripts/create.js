@@ -60,7 +60,7 @@ $(document).ready(function () {
                 "orderable": false
             },
             {
-                "name": 'FILA',
+                "name": 'Fila',
                 "className": 'POS',
                 "orderable": false,
                 "visible": false //MGC 04092018 Conceptos
@@ -406,22 +406,6 @@ $(document).ready(function () {
         }
     });
 
-    //FRT02122018 Para no dejar avanzar si no existe proveedor
-    $('.tabs a').click(function () {
-
-      
-        var proveedor = $("#PAYER_ID").val();
-        if (proveedor == "" | proveedor == null) {
-            alert("Falta ingresar proveedor");
-            return false;
-        } else {
-            //$(this).tab('show')
-          
-        }
-       
-    })
-        //ENDFRT02122018 Para no dejar avanzar si no existe proveedor
-
 
 
     $('#delRowInfo').click(function (e) {
@@ -552,14 +536,12 @@ $(document).ready(function () {
         }
     });
 
-
     $('#btn_cancelar').on("click", function (e) {
         if (statSend) {
             alert("Favor de esperar. Se esta generando Solicitud...");
         }
 
     });
-
 
     $('#btn_guardarh').on("click", function (e) {
 
@@ -659,7 +641,7 @@ $(document).ready(function () {
                     }
 
                 }
-                
+
                 //FRT02122018 PARA VALIDAR QUE LA FACTURA NO ESTE VACIA
                 if (borrador != "B") {
                     var factura = $(this).find("td.FACTURA input").val();
@@ -675,7 +657,7 @@ $(document).ready(function () {
                         return false;
                     }
                 }
-                
+
                 //ENDFRT02122018 PAA VALIDAR QUE LA FACTURA NO ESTE VACIA
 
 
@@ -683,21 +665,21 @@ $(document).ready(function () {
                 //var concepto = t.row(indexopc).data()[13];
 
 
-                    var concepto = $(this).find("td.GRUPO input").val(); //FRT21112018
+                var concepto = $(this).find("td.GRUPO input").val(); //FRT21112018
 
-                    if (concepto == "" | concepto == null) {
-                        statSend = false;
-                        msgerror = "Fila " + _rni + ": Falta ingresar Concepto";
-                        _b = false;
-                        _g = false;
-                    } else {
-                        _b = true;
-                    }
-                    if (_b === false) {
-                        return false;
-                    }
+                if (concepto == "" | concepto == null) {
+                    statSend = false;
+                    msgerror = "Fila " + _rni + ": Falta ingresar Concepto";
+                    _b = false;
+                    _g = false;
+                } else {
+                    _b = true;
+                }
+                if (_b === false) {
+                    return false;
+                }
 
-                
+
                 //ENDFRT20112018 iNGRESAR VALIDACION DE CONCEPTO
 
                 //FRT06112018.3 Se realizara validación del monto > 0
@@ -706,7 +688,7 @@ $(document).ready(function () {
                     monto = monto.replace('$', '').replace(',', '');
                 }
                 if (borrador != "B") {
-                   
+
                     if (monto == " 0.00" | monto == null | monto == "") { //MGC 07-11-2018 Validación en el monto
                         statSend = false;
                         msgerror = "Fila " + _rni + ": El monto debe ser mayor a cero";
@@ -719,7 +701,7 @@ $(document).ready(function () {
                     }
                 }
 
-               
+
                 //END FRT06112018.3
 
 
@@ -785,7 +767,7 @@ $(document).ready(function () {
                         return false;
                     }
                 }
-               
+
                 //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
                 if (borrador != "B") {
                     if (_vs.length > 0) {
@@ -863,7 +845,7 @@ $(document).ready(function () {
                     }
                 }
 
-                
+
             });
             var rn = $("table#table_info tbody tr[role='row']").length;
             if (rn == 0) {
@@ -889,13 +871,13 @@ $(document).ready(function () {
             }
 
 
-            
+
             //update codigo fer
             //END FRT04112018.2
 
 
             //FRT21112018 Para validar cantidad de anexos solamente al enviar
-            
+
             var lengthT = $("table#table_anexa tbody tr[role='row']").length;
             _a = true;
             if (borrador != "B") {
@@ -924,11 +906,11 @@ $(document).ready(function () {
                     _ct = true;
                 }
             }
-            
+
             //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
 
             //FRT02122018 PARA ELIMINAR VALIDACIONES EN EL BORRADOR
-   
+
             if (_m) {
                 if (_g) {
                     if (borrador != "B") {
@@ -943,7 +925,7 @@ $(document).ready(function () {
                                         copiarTableRet();
                                         //end FRT06112018.3 
                                         $('#btn_guardar').trigger("click");
-                                            }else {
+                                    } else {
                                         statSend = false;
                                         M.toast({ html: msgerror });
                                     }
@@ -971,16 +953,16 @@ $(document).ready(function () {
                     statSend = false;
                     M.toast({ html: msgerror });
                 }
-                } else {
-                    statSend = false;
-                    M.toast({ html: msgerror });
-                }
-          
-
-            
+            } else {
+                statSend = false;
+                M.toast({ html: msgerror });
+            }
 
 
-            
+
+
+
+
             //ENDFRT02122018 VALIDACIONES EN EL BORRADOR
 
 
@@ -993,9 +975,6 @@ $(document).ready(function () {
         }
 
     });
-
-
-
 
     $('#btn_borradorh').on("click", function (e) {
         document.getElementById("loader").style.display = "initial";
@@ -1025,6 +1004,28 @@ $(document).ready(function () {
         //Lejgg 27-11-2018      
         for (var i = 0; i < 2; i++) {
             $(window).resize();
+        }
+    });
+
+    $('#tab_con').on("click", function (e) {
+        var proveedor = $("#PAYER_ID").val();
+        if (proveedor == "" | proveedor == null) {
+            M.toast({ html: "Falta ingresar proveedor" });
+            return false;
+        } else {
+            //$(this).tab('show')
+            //se ocupa un ciclo for con minimo 2 veces que se ejecute el metodo para que lo haga,ó ue e le de 2 clicks a tab_con para que lo haga.
+        }
+    });
+
+    $('#tab_sop').on("click", function (e) {
+        var proveedor = $("#PAYER_ID").val();
+        if (proveedor == "" | proveedor == null) {
+            M.toast({ html: "Falta ingresar proveedor" });
+            return false;
+        } else {
+            //$(this).tab('show')
+            //se ocupa un ciclo for con minimo 2 veces que se ejecute el metodo para que lo haga,ó ue e le de 2 clicks a tab_con para que lo haga.
         }
     });
 
@@ -1364,15 +1365,15 @@ $(document).ready(function () {
     //MGC 02-10-2018
     $('#list_detaa').change(function () {
 
-        var val3 = $(this).val();
-        val3 = "[" + val3 + "]";
-        val3 = val3.replace("{", "{ \"");
-        val3 = val3.replace("}", "\" }");
-        val3 = val3.replace(/\,/g, "\" , \"");
-        val3 = val3.replace(/\=/g, "\" : \"");
-        val3 = val3.replace(/\ /g, "");
-        var jsval = $.parseJSON(val3);
-
+        var val3 = $.parseJSON($(this).val());
+        /*val3 = "[" + val3 + "]";
+         val3 = val3.replace("{", "{ \"");
+         val3 = val3.replace("}", "\" }");
+         val3 = val3.replace(/\,/g, "\" , \"");
+         val3 = val3.replace(/\=/g, "\" : \"");
+         val3 = val3.replace(/\ /g, "");
+        var jsval = $.parseJSON(val3);*/
+        var jsval = val3;
         //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
         //Obtener los datos de la cadena
         var version = "";
@@ -1381,21 +1382,21 @@ $(document).ready(function () {
         var usuarioa = "";
         //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 
-        $.each(jsval, function (i, dataj) {
-            $("#DETTA_VERSION").val(dataj.VERSION);
-            $("#DETTA_USUARIOC_ID").val(dataj.USUARIOC_ID);
-            $("#DETTA_ID_RUTA_AGENTE").val(dataj.ID_RUTA_AGENTE);
-            $("#DETTA_USUARIOA_ID").val(dataj.USUARIOA_ID);
+        // $.each(jsval, function (i, dataj) {        
+        $("#DETTA_VERSION").val(jsval.VERSION);
+        $("#DETTA_USUARIOC_ID").val(jsval.USUARIOC_ID);
+        $("#DETTA_ID_RUTA_AGENTE").val(jsval.ID_RUTA_AGENTE);
+        $("#DETTA_USUARIOA_ID").val(jsval.USUARIOA_ID);
 
-            //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
-            //Obtener los datos de la cadena
-            version = dataj.VERSION;
-            usuarioc = dataj.USUARIOC_ID;
-            id_ruta = dataj.ID_RUTA_AGENTE;
-            usuarioa = dataj.USUARIOA_ID;
-            //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
+        //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
+        //Obtener los datos de la cadena
+        version = jsval.VERSION;
+        usuarioc = jsval.USUARIOC_ID;
+        id_ruta = jsval.ID_RUTA_AGENTE;
+        usuarioa = jsval.USUARIOA_ID;
+        //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 
-        });
+        //});
 
 
         //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
@@ -1412,12 +1413,23 @@ $(document).ready(function () {
 
     });
 
+    //lejgg 05-12-2018
+    $('#SOCIEDAD_ID').change(function () {
+        traerCadAutR($("#UsC").val(), $("#SOCIEDAD_ID").val());
+    });
+    //lejgg 05-12-2018
+
     //lejgg 15-10-2018
     $('#FECHAD').change(function () {
         var fechad = $('#FECHAD').val();
         $('#FECHACON').val(fechad);
         $('#FECHA_BASE').val(fechad);
     });
+
+    //---------------------------05-12-2018I
+
+    traerCadAutR($("#UsC").val(), $("#SOCIEDAD_ID").val());
+    //---------------------------05-12-2018F
 });
 
 //Cuando se termina de cargar la página
@@ -1553,6 +1565,33 @@ function obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad) {
 
 //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 
+
+//LEJGG 05/12/2018
+function traerCadAutR(u, s) {
+    $("#list_detaa").empty();
+    $.ajax({
+        type: "POST",
+        url: 'getCad3',
+        data: { 'user_id': u, 'bukrs': s },
+        dataType: "json",
+        success: function (data) {
+            if (data !== null || data !== "") {
+                var $dropdown = $("#list_detaa");
+                $.each(data, function (i, dataj) {
+                    var _val = dataj.ID;
+                    var _Arr = {
+                        "VERSION": _val.VERSION, "USUARIOC_ID": _val.USUARIOC_ID, "ID_RUTA_AGENTE": _val.ID_RUTA_AGENTE, "USUARIOA_ID": _val.USUARIOA_ID
+                    };
+                    $dropdown.append($("<option />").val(JSON.stringify(_Arr)).text(dataj.TEXT));
+                }); //Fin de for
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
+}
 //LEJGG 28-10-2018
 function validarUuid(uuid) {
     var ban = false;
@@ -1828,7 +1867,7 @@ function obtenerRetenciones(flag) {
                 "orderable": false
             },
             {
-                "name": 'FILA',
+                "name": 'Fila',
                 "className": 'POS',
                 "orderable": false,
                 "visible": true //MGC 04092018 Conceptos FRT 041223018
@@ -1941,7 +1980,7 @@ function obtenerRetenciones(flag) {
         thead.append($("<tr />"));
         //Theads
         $("#table_info>thead>tr").append("<th></th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_pos\">FILA</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_pos\">Fila</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A1</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A2</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A3</th>");
@@ -2037,7 +2076,7 @@ function obtenerRetenciones(flag) {
             "columns": arrCols,
             columnDefs: [
                 {
-                    targets: [17,19],
+                    targets: [17, 19],
                     className: 'mdl-data-table__cell--non-numeric'
                 }
             ]
