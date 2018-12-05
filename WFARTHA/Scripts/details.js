@@ -232,10 +232,9 @@ function formatoTabla() {
             "visible": false //MGC 30-10-2018 Tipo de presupuesto
         },//MGC 30-10-2018 Tipo de presupuesto
         {
-            "name": 'POS',
+            "name": 'FILA',
             "className": 'POS',
-            "orderable": false,
-            "visible": false //MGC 04092018 Conceptos
+            "orderable": false
         },
         {
             "name": 'A1',
@@ -648,6 +647,10 @@ function tamanosRenglones() {
     //total
     var t_tot = $("#table_info>thead>tr").find('th.TOTAL');
     t_tot.css("text-align", "center");
+    //FILA
+    var tpos = $("#table_info>tbody>tr").find('td.POS');
+    tpos.css("text-align", "left");
+    tpos.css("font-size", "15px");
 }
 //LEJGG 21-11-2018 Cadena de autorización----------------------------------------------------------------------------->
 //Al seleccionar un solicitante, obtener la cadena para mostrar

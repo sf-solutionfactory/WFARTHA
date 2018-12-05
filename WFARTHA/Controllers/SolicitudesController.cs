@@ -69,7 +69,7 @@ namespace WFARTHA.Controllers
             var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(User.Identity.Name) | a.USUARIOD_ID.Equals(User.Identity.Name)) && a.ESTATUS != "B").Include(a => a.SOCIEDAD).ToList();
 
             dOCUMENTOes = dOCUMENTOes.Distinct(new DocumentoComparer()).ToList();
-            var _d = dOCUMENTOes.OrderBy(x => x.FECHAC);//lejgg 04-12-2018
+            var _d = dOCUMENTOes.OrderBy(x => x.FECHAC).OrderBy(x => x.NUM_DOC);//lejgg 04-12-2018
             return View(dOCUMENTOes);
         }
 
@@ -1255,12 +1255,14 @@ namespace WFARTHA.Controllers
                                 var temporal = Convert.ToDecimal(Session["Temporal"]);
                                 server = getDirPrel(car_ser, temporal);
                                 System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(server + "\\");
-                                if (Directory.Exists(server)) {
+                                if (Directory.Exists(server))
+                                {
                                     filenull = true;
 
                                 }
 
-                                if (filenull) {
+                                if (filenull)
+                                {
                                     FileInfo[] archivos = directorio.GetFiles();
                                     foreach (var a in archivos)
                                     {
@@ -1350,7 +1352,8 @@ namespace WFARTHA.Controllers
 
 
 
-                    if (filenull) {
+                    if (filenull)
+                    {
                         List<string> listaDirectorios2 = listaDirectorios;
                         List<string> listaNombreArchivos2 = listaNombreArchivos;
                         List<string> listaDescArchivos2 = listaDescArchivos;
@@ -2904,7 +2907,7 @@ namespace WFARTHA.Controllers
                                 //FRT13112018 Para poder subir muchos archivos
                                 var car_ser = "att";
                                 var server = "";
-                               
+
                                 var num_doc = Convert.ToDecimal(Session["NUM_DOC"]);
                                 server = getDirPrel(car_ser, num_doc);
                                 System.IO.DirectoryInfo directorio = new System.IO.DirectoryInfo(server + "\\");
@@ -3001,7 +3004,7 @@ namespace WFARTHA.Controllers
                                     }
                                 }
 
-                                
+
 
                             }
                             catch (Exception e)
@@ -3021,7 +3024,8 @@ namespace WFARTHA.Controllers
 
                     //FRT16112018 SE PONE LO DE CREATE
 
-                    if (filenull) {
+                    if (filenull)
+                    {
                         List<string> listaDirectorios2 = listaDirectorios;
                         List<string> listaNombreArchivos2 = listaNombreArchivos;
                         List<string> listaDescArchivos2 = listaDescArchivos;
@@ -3515,7 +3519,8 @@ namespace WFARTHA.Controllers
 
 
 
-                    if (filenull) {
+                    if (filenull)
+                    {
                         var listaDA = db.DOCUMENTOAs.Where(x => x.NUM_DOC == _ndoc && x.ACTIVO == true).ToList();
                         var _listaDAS = db.DOCUMENTOAS1.Where(x => x.NUM_DOC == _ndoc && x.ACTIVO == true).ToList();
                         DOCUMENTOA dOCUMENTOA = new DOCUMENTOA();
@@ -3590,7 +3595,7 @@ namespace WFARTHA.Controllers
 
                     //FRT22112018 FUNCIONALIDAD PARA DETALLES AGREGAR Y ELIMINAR
 
-                    var addDocumentoA =  db.DOCUMENTOAs.Where(x => x.NUM_DOC == _ndoc).ToList(); //FRT04122018 para anexos despues de editar
+                    var addDocumentoA = db.DOCUMENTOAs.Where(x => x.NUM_DOC == _ndoc).ToList(); //FRT04122018 para anexos despues de editar
 
                     var delDRP = db.DOCUMENTORPs.Where(x => x.NUM_DOC == _ndoc).ToList();
                     for (int i = 0; i < delDRP.Count; i++)
@@ -3617,7 +3622,7 @@ namespace WFARTHA.Controllers
 
                     }
 
-                   
+
 
                     decimal _monto = 0;
                     decimal _iva = 0;
@@ -6075,16 +6080,17 @@ namespace WFARTHA.Controllers
             //var cond = from con in db.CONDICIONES_PAGO where con.COND_PAGO.Contains(Prefix) select new { COND_PAGO = con.COND_PAGO.ToString(), TEXT = con.TEXT.ToString() };//FRT04122018
             if (Prefix == " ")
             {
-                var cond = from con in db.CONDICIONES_PAGO  select new { COND_PAGO = con.COND_PAGO.ToString(), TEXT = con.TEXT.ToString() };
+                var cond = from con in db.CONDICIONES_PAGO select new { COND_PAGO = con.COND_PAGO.ToString(), TEXT = con.TEXT.ToString() };
                 JsonResult cc = Json(cond, JsonRequestBehavior.AllowGet);
                 return cc;
             }
-            else {
+            else
+            {
                 var cond = from con in db.CONDICIONES_PAGO where con.COND_PAGO.ToLower().Contains(Prefix.ToLower()) select new { COND_PAGO = con.COND_PAGO.ToString(), TEXT = con.TEXT.ToString() };
                 JsonResult cc = Json(cond, JsonRequestBehavior.AllowGet);
                 return cc;
             }
-                        
+
         }
 
         [HttpPost]//LEJGG 06-11-18
