@@ -589,6 +589,7 @@ $(document).ready(function () {
 
             var _b = false;
             var _m = true;
+            var _g = true;
             var _vs = [];
             var msgerror = "";
             var _rni = 0;
@@ -681,20 +682,21 @@ $(document).ready(function () {
                 //FRT20112018 iNGRESAR VALIDACION DE CONCEPTO
                 //var concepto = t.row(indexopc).data()[13];
 
-                if (borrador != "B") {
+
                     var concepto = $(this).find("td.GRUPO input").val(); //FRT21112018
 
                     if (concepto == "" | concepto == null) {
                         statSend = false;
                         msgerror = "Fila " + _rni + ": Falta ingresar Concepto";
                         _b = false;
+                        _g = false;
                     } else {
                         _b = true;
                     }
                     if (_b === false) {
                         return false;
                     }
-                }
+
                 
                 //ENDFRT20112018 iNGRESAR VALIDACION DE CONCEPTO
 
@@ -927,7 +929,8 @@ $(document).ready(function () {
 
             //FRT02122018 PARA ELIMINAR VALIDACIONES EN EL BORRADOR
    
-                if (_m) {
+            if (_m) {
+                if (_g) {
                     if (borrador != "B") {
                         if (_p) {
                             if (_b) {
@@ -940,8 +943,7 @@ $(document).ready(function () {
                                         copiarTableRet();
                                         //end FRT06112018.3 
                                         $('#btn_guardar').trigger("click");
-                                    }
-                                    else {
+                                            }else {
                                         statSend = false;
                                         M.toast({ html: msgerror });
                                     }
@@ -965,7 +967,10 @@ $(document).ready(function () {
                         //end FRT06112018.3 
                         $('#btn_guardar').trigger("click");
                     }
-
+                } else {
+                    statSend = false;
+                    M.toast({ html: msgerror });
+                }
                 } else {
                     statSend = false;
                     M.toast({ html: msgerror });
