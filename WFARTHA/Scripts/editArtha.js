@@ -85,7 +85,7 @@ $(document).ready(function () {
                 "orderable": false
             },
             {
-                "name": 'FILA',
+                "name": 'Fila',
                 "className": 'POS',
                 "orderable": false
             },
@@ -2267,7 +2267,7 @@ function armarTablaInfo(datos) {
             "orderable": false
         },
         {
-            "name": 'FILA',
+            "name": 'Fila',
             "className": 'POS',
             "orderable": false,
             "visible": true //MGC 04092018 Conceptos  frt04122018
@@ -2379,7 +2379,7 @@ function armarTablaInfo(datos) {
     thead.append($("<tr />"));
     //Theads
     $("#table_info>thead>tr").append("<th></th>");
-    $("#table_info>thead>tr").append("<th class=\"lbl_pos\">FILA</th>");
+    $("#table_info>thead>tr").append("<th class=\"lbl_pos\">Fila</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A1</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A2</th>");
     $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A3</th>");

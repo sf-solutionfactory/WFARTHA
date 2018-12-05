@@ -7,6 +7,7 @@
     ViewBag.carpeta_r = 200;
     //string wf = ViewBag.worflw;
     // string[] arrwf = wf.Split(',');
+    WFARTHA.Entities.USUARIO us = ViewBag.usuario;
 }
 
 @*<link type="text/css" href="~/Content/datatables.min.css" rel="stylesheet" />
@@ -42,6 +43,7 @@
 
 <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
 <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
+<input id="UsC" name="UsC" type="hidden" value="@us.ID">
 
 <div class="row" style="margin-bottom:0">
 
@@ -645,7 +647,7 @@
 
                                                 </th>
                                                 <th class="lbl_pos">
-                                                    FILA
+                                                    Fila
                                                 </th>
                                                 <th class="lbl_NmAnexo">
                                                     A1

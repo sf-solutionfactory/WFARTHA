@@ -185,7 +185,7 @@ namespace WFARTHA.Controllers
             bool ban = false;
             if (anexos.Count > 0)
             {
-                
+
                 for (int i = 0; i < result.Count; i++)
                 {
                     Anexo _ax = new Anexo();
@@ -6702,13 +6702,14 @@ namespace WFARTHA.Controllers
             List<decimal> lstd = new List<decimal>();
             for (int i = 0; i < result.Count; i++)
             {
-                    //var _1filtro = c.Where(x => x.POS == (p + 1) && x.POSD == c[i].POSD).ToList();
-                    var _1filtro = c.Where(x =>  x.POSD == c[i].POSD).ToList();
+                //var _1filtro = c.Where(x => x.POS == (p + 1) && x.POSD == c[i].POSD).ToList();
+                var _1filtro = c.Where(x => x.POSD == c[i].POSD).ToList();
                 _ax = new Anexo();
                 for (int y = 0; y < _1filtro.Count; y++)
                 {
                     //_ax = new Anexo();
-                    if (y == 0) {
+                    if (y == 0)
+                    {
                         _ax.a1 = int.Parse(_1filtro[y].POS.ToString());
                     }
                     if (y == 1)
@@ -7299,6 +7300,94 @@ namespace WFARTHA.Controllers
         }
 
         //MGC 19-10-2018 CECOS --------------------------------------------------------------<
+
+        //LEJGG 05-12-2018
+        [HttpPost]
+        public JsonResult getCad3(string user_id, string bukrs)
+        {
+            var detcv = (from detc in db.DET_AGENTECC
+                         where detc.USUARIOC_ID == user_id
+                         group detc by new { detc.USUARIOC_ID, detc.ID_RUTA_AGENTE, detc.USUARIOA_ID } into grp
+                         select grp.OrderByDescending(x => x.VERSION).FirstOrDefault());
+
+            //Obtener las cadenas
+            List<DET_AGENTECC> detcl = new List<DET_AGENTECC>();
+
+            detcl = (from dv in detcv.ToList()
+                     join dccl in db.DET_AGENTECC.ToList()
+                     on new { dv.VERSION, dv.USUARIOC_ID, dv.ID_RUTA_AGENTE, dv.USUARIOA_ID } equals new { dccl.VERSION, dccl.USUARIOC_ID, dccl.ID_RUTA_AGENTE, dccl.USUARIOA_ID }
+                     select new DET_AGENTECC
+                     {
+                         VERSION = dccl.VERSION,
+                         USUARIOC_ID = dccl.USUARIOC_ID,
+                         ID_RUTA_AGENTE = dccl.ID_RUTA_AGENTE,
+                         DESCRIPCION = dccl.DESCRIPCION,
+                         USUARIOA_ID = dccl.USUARIOA_ID,
+                         FECHAC = dccl.FECHAC
+                     }).ToList();
+
+            //Obtener el usario a
+            DET_AGENTECC deta = new DET_AGENTECC();
+
+            if (detcl != null && detcl.Count > 0)
+            {
+                deta = detcl.FirstOrDefault();
+            }
+
+            var dta = detcl.
+                Join(
+                db.USUARIOs,
+                da => da.USUARIOA_ID,
+                us => us.ID,
+                (da, us) => new
+                {
+                    //ID = new List<string>() { da.VERSION, da.USUARIOC_ID, da.ID_RUTA_AGENTE, da.USUARIOA_ID},                    
+                    ID = new { VERSION = da.VERSION.ToString().Replace(" ", ""), USUARIOC_ID = da.USUARIOC_ID.ToString().Replace(" ", ""), ID_RUTA_AGENTE = da.ID_RUTA_AGENTE.ToString().Replace(" ", ""), USUARIOA_ID = da.USUARIOA_ID.ToString().Replace(" ", "") },
+                    TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
+                }).ToList();
+
+            var _v = "";
+            var _usc = "";
+            var _id_ruta = "";
+            var _usa = "";
+            var _mt = "";
+            var _sc = "";
+            var lstDta = new List<object>();
+            //LEJGG03-12-2018-----------------------------I
+            for (int i = 0; i < dta.Count; i++)
+            {
+                _v = dta[i].ID.VERSION;
+                _usc = dta[i].ID.USUARIOC_ID;
+                _id_ruta = dta[i].ID.ID_RUTA_AGENTE;
+                _usa = dta[i].ID.USUARIOA_ID;
+                _mt = 0 + "";
+                _sc = bukrs;
+                var _lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc);
+                string cad = "";
+                for (int j = 0; j < _lst.Count; j++)
+                {
+                    var aut = _lst[j].autorizador.Split('-');
+                    if (j == _lst.Count - 1)
+                    {
+                        cad += aut[0].Trim();
+                    }
+                    else
+                    {
+                        cad += aut[0].Trim() + " - ";
+                    }
+                }
+                var nuevo = new
+                {
+                    ID = dta[i].ID,
+                    TEXT = cad
+                };
+                lstDta.Add(nuevo);
+            }
+            var listaCad = lstDta;
+            JsonResult cc = Json(listaCad, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+        //LEJGG 05-12-2018
         //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
 
         [HttpPost]
