@@ -139,7 +139,8 @@ namespace WFARTHA.Controllers
                 
             }
             dOCUMENTOes = dOCUMENTOes.Distinct(new DocumentoComparer()).ToList();
-            dOCUMENTOes = dOCUMENTOes.OrderByDescending(a => a.FECHAC).OrderByDescending(a => a.NUM_DOC).ToList();
+            //dOCUMENTOes = dOCUMENTOes.OrderByDescending(a => a.FECHAC).OrderByDescending(a => a.NUM_DOC).ToList();
+            dOCUMENTOes = dOCUMENTOes.OrderBy(a => a.FECHAC).OrderByDescending(a => a.NUM_DOC).ToList();
             ViewBag.Proveedores = db.PROVEEDORs.ToList();
             //ViewBag.Cuentas = db.CUENTAs.ToList();//MGC 12092018
             //ViewBag.DOCF = db.DOCUMENTOFs.ToList();//MGC 12092018

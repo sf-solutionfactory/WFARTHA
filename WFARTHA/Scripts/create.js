@@ -398,9 +398,13 @@ $(document).ready(function () {
         for (var i = 0; i < 2; i++) {
             $(window).resize();
         }
-
     });
-
+    //Lejgg 27-11-2018
+    $('#tab_enc').on('click', function () {
+        for (var i = 0; i < 2; i++) {
+            $(window).resize();
+        }
+    });
 
     //FRT02122018 Para no dejar avanzar si no existe proveedor
     $('.tabs a').click(function () {
@@ -411,7 +415,7 @@ $(document).ready(function () {
             alert("Falta ingresar proveedor");
             return false;
         } else {
-            $(this).tab('show')
+            //$(this).tab('show')
           
         }
        
