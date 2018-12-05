@@ -232,7 +232,7 @@ function formatoTabla() {
             "visible": false //MGC 30-10-2018 Tipo de presupuesto
         },//MGC 30-10-2018 Tipo de presupuesto
         {
-            "name": 'FILA',
+            "name": 'Fila',
             "className": 'POS',
             "orderable": false
         },
