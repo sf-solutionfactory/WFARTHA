@@ -2,7 +2,6 @@
 @using System.Web.Hosting;
 @using System.Linq;
 @{
-    //ViewBag.Title = "Páginas";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 101;
     ViewBag.carpeta_r = 100;
@@ -10,56 +9,12 @@
     WFARTHA.Entities.WFARTHAEntities db = new WFARTHA.Entities.WFARTHAEntities();
     List<WFARTHA.Entities.PROVEEDOR> lst = ViewBag.Proveedores as List<WFARTHA.Entities.PROVEEDOR>;
 
-    //ViewBag.BORRADOR = "Mensaje de creación";
-}
+    }
 
 <script src="~/Scripts/Homescript.js"></script>
 <script src="~/Scripts/disenarVistas.js"></script>
-@*//jemo inicio 4/07/2018*@
-@if (ViewBag.imgnoticia != null)
-{
-    if (String.IsNullOrEmpty(ViewBag.imgnoticia) == false)
-    {
-        <div class="parallax-container" style="height:250px;">
-            <div class="@*parallax*@">
-                @if (Request.Url.PathAndQuery != "/")
-                {
-                    <img src="@Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "")@HostingEnvironment.ApplicationVirtualPath/@ViewBag.imgnoticia" style="height: 200px; position:absolute; width:100%;" />
-                }
-                else
-                {
-                    <img src="@Request.Url.OriginalString@HostingEnvironment.ApplicationVirtualPath/@ViewBag.imgnoticia" style="height: 200px; position:absolute; width:100%;" />
-                }
-            </div>
-        </div>
 
-        @*<script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    var elems = document.querySelectorAll('.parallax');
-                    var instances = M.Parallax.init(elems, options);
-                });
-            </script>*@
-    }
-}
 
-@*////jemo inicio 4/07/2018*@
-
-@*@section noticia{
-        @if (true)
-        {
-            <div style="width:320px;"></div>
-                    <div class="parallax-container" >
-                        <div class="parallax">
-                            <img src="~/images/parallax.jpg" />
-                        </div>
-                    </div>
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        var elems = document.querySelectorAll('.parallax');
-                        var instances = M.Parallax.init(elems, []);
-                    });</script>
-        }
-    }*@
 <!--BOTONES-->
 <div class="row">
     @if (ViewBag.delegados != null)
@@ -81,8 +36,7 @@
             </select>
         </div>
         <script>
-            //var elems = document.querySelectorAll('select');
-            //var instances = M.FormSelect.init(elems, []);
+            
             function cambiaUsuario(user_id) {
                 document.location.replace("/?id=" + user_id);
             }
@@ -90,11 +44,7 @@
     }
     <div class="col s8 right-align right">
         @Html.ActionLink("Crear Solicitud", "Create", "Solicitudes", null, new { @class = "btn-small", @id = "btn_create" })
-        @*@using (Html.BeginForm("Descargar", "Home", FormMethod.Post, new { @style = "display:inline;" }))
-            {
-                <button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel"></button>
-            }
-            @Html.ActionLink("Enviar Negociaciones", "Edit", "Negociaciones", null, new { @class = "btn-small red", @onclick = "document.getElementById('loader').style.display = 'initial';" })*@
+     
     </div>
     <div class="col s12 right-align" style="margin-top:5px;">
 
@@ -102,28 +52,6 @@
 </div>
 <!--MENSAJES-->
 <div>
-    <style>
-
-        /*#toast-container {*/
-        /*.toast {
-            padding: 10px 16px;
-            font-weight: 400;
-            overflow: hidden;
-            font-size: 16px;
-        }
-
-            .toast:before {
-                content: "\e656";
-                font-size: 24px;
-                color: white;
-                display: inline-block;
-                position: relative;
-                float: left;
-                margin: 0 10px 0 0;
-                font-family: "Material-Design-Icons";
-            }*/
-        /*}*/
-    </style>
     @*//B20180625 MGC 2018.06.26*@
 
     @if (ViewBag.BORRADOR != null)

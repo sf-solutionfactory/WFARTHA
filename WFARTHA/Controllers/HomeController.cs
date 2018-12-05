@@ -24,7 +24,7 @@ namespace WFARTHA.Controllers
         {
             using (WFARTHAEntities db = new WFARTHAEntities())
             {
-     
+
                 int pagina = 101; //ID EN BASE DE DATOS
                 string u = User.Identity.Name;
                 ////if (pais != null)
@@ -60,7 +60,7 @@ namespace WFARTHA.Controllers
                     string p = Session["NUM_DOC"].ToString();
                     ViewBag.NUM_DOC = p;
                     Session["NUM_DOC"] = null;
-                   
+
                 }
                 catch
                 {
@@ -108,9 +108,8 @@ namespace WFARTHA.Controllers
             //var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us)) & a.ESTATUS != "B").Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();            
             //MGC 26-10-2018 Modificación a borrador obtener todas las solicitudes, excepto las solicitudes canceladas a.estatus_c != "C"  o contabilizadas a.ESTATUS != "A"
             var dOCUMENTOes = db.DOCUMENTOes.Where(a => (a.USUARIOC_ID.Equals(us) | a.USUARIOD_ID.Equals(us)) & (a.ESTATUS != "A" & a.ESTATUS_C != "C")).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.SOCIEDAD).Include(d => d.DOCUMENTOPREs).ToList();
-            //var dOCUMENTOVs = db.DOCUMENTOVs.Where(a => a.USUARIOA_ID.Equals(us)).ToList();
             var dOCUMENTOVs = db.DOCUMENTOVs.Where(a => a.USUARIOA_ID.Equals(us)).ToList();
-           
+
             var tsol = db.TSOLs.ToList();
             foreach (DOCUMENTOV v in dOCUMENTOVs)
             {
@@ -129,23 +128,16 @@ namespace WFARTHA.Controllers
                     }
                 }
                 d.TSOL = tsol.Where(a => a.ID.Equals(d.TSOL_ID)).FirstOrDefault();
-                //d.ESTADO = db.STATES.Where(a => a.ID.Equals(v.ESTADO)).FirstOrDefault().NAME;
-                //d.CIUDAD = db.CITIES.Where(a => a.ID.Equals(v.CIUDAD)).FirstOrDefault().NAME;
-                //dOCUMENTOes.Add(d);
-                d.ID_PSPNR= db.DOCUMENTOes.Where(a => a.NUM_DOC.Equals(v.NUM_DOC)).FirstOrDefault().ID_PSPNR;
+                d.ID_PSPNR = db.DOCUMENTOes.Where(a => a.NUM_DOC.Equals(v.NUM_DOC)).FirstOrDefault().ID_PSPNR;
                 d.FLUJOes = db.FLUJOes.Where(a => a.NUM_DOC.Equals(d.NUM_DOC)).ToList();
                 d.DOCUMENTOPREs = db.DOCUMENTOPREs.Where(docpr => docpr.NUM_DOC.Equals(d.NUM_DOC)).ToList();
                 dOCUMENTOes.Add(d);
-                
+
             }
             dOCUMENTOes = dOCUMENTOes.Distinct(new DocumentoComparer()).ToList();
-            //dOCUMENTOes = dOCUMENTOes.OrderByDescending(a => a.FECHAC).OrderByDescending(a => a.NUM_DOC).ToList();
+            //dOCUMENTOes = dOCUMENTOes.OrderByDescending(a => a.FECHAC).OrderByDescending(a => a.NUM_DOC).ToList();//lejgg 05/12/18
             dOCUMENTOes = dOCUMENTOes.OrderBy(a => a.FECHAC).OrderBy(a => a.NUM_DOC).ToList();
             ViewBag.Proveedores = db.PROVEEDORs.ToList();
-            //ViewBag.Cuentas = db.CUENTAs.ToList();//MGC 12092018
-            //ViewBag.DOCF = db.DOCUMENTOFs.ToList();//MGC 12092018
-            //jemo inicio 4/07/2018
-            //ViewBag.imgnoticia = db.NOTICIAs.Where(x => x.FECHAI <= DateTime.Now && x.FECHAF >= DateTime.Now && x.ACTIVO == true).Select(x => x.PATH).FirstOrDefault();//MGC 12092018
 
 
             return View(dOCUMENTOes);
@@ -153,7 +145,7 @@ namespace WFARTHA.Controllers
         }
         //Lej 03.09.2018
         [Authorize]
-        public ActionResult Proyectos(string returnUrl )
+        public ActionResult Proyectos(string returnUrl)
         {
             using (WFARTHAEntities db = new WFARTHAEntities())
             {
@@ -183,11 +175,11 @@ namespace WFARTHA.Controllers
                 var ps = (from det in detsoc//MGC 19-10-2018 Cambio en archivo
                           join aps in db.ASIGN_PROY_SOC //MGC 04-12-2018 Desde la vista se obtienen nada más las sociedades activas
                       on det.BUKRS equals aps.ID_BUKRS
-                      select new
-                      {
-                          ID_PSPNR = aps.ID_PSPNR,
-                          //ID_BUKRS = aps.ID_BUKRS//MGC 19-10-2018 Cambio en archivo
-                      }
+                          select new
+                          {
+                              ID_PSPNR = aps.ID_PSPNR,
+                              //ID_BUKRS = aps.ID_BUKRS//MGC 19-10-2018 Cambio en archivo
+                          }
                       ).Distinct().ToList();
 
 
@@ -217,18 +209,16 @@ namespace WFARTHA.Controllers
             Session["pais"] = pais.ToUpper();
 
             return Redirect(returnUrl);
-            //return View();
         }
 
         //Lej 03.09.2018
         [HttpGet]
-        public ActionResult SelProv(string prov, string id,string returnUrl)
+        public ActionResult SelProv(string prov, string id, string returnUrl)
         {
             Session["id_pr"] = id.ToUpper();
             Session["pr"] = prov.ToUpper();
             ViewBag.flag = false;
             return Redirect(returnUrl);
-            //return View();
         }
     }
 }

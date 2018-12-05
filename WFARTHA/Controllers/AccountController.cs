@@ -148,8 +148,8 @@ namespace WFARTHA.Controllers
             {
                 user = db.USUARIOs.Where(a => a.ID.Equals(user.ID) && a.PASS.Equals(pass)).FirstOrDefault();
             }
-            //user =  Repository.GetUserDetails(user);
 
+            //El usuario se enontro en la bade de datos
             if (user != null)
             {
                 FormsAuthentication.SetAuthCookie(model.ID, false);
@@ -159,7 +159,6 @@ namespace WFARTHA.Controllers
                 string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
                 var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
                 HttpContext.Response.Cookies.Add(authCookie);
-                //return RedirectToAction("Index", "Home");
                 if (returnUrl != null)
                     return Redirect(returnUrl);
                 return RedirectToAction("Index", "Home");
@@ -181,7 +180,6 @@ namespace WFARTHA.Controllers
             //AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             try
             {
-                //Session["pais"] = null;
                 FormsAuthentication.SignOut();
                 Session["id_pr"] = null;
                 Session["pr"] = null;
