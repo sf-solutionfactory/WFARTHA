@@ -2943,12 +2943,10 @@ namespace WFARTHA.Controllers
                                         db.SaveChanges();
                                     }
 
-                                    foreach (var a in archivos)
-                                    {
-                                        var descripcion = "";
 
-                                        for (int i = 0; i < dOCUMENTO.DOCUMENTOA_TAB.Count; i++)
-                                        {
+                                    for (int i = 0; i < dOCUMENTO.DOCUMENTOA_TAB.Count; i++) {
+                                        var descripcion = "";
+                                        foreach (var a in archivos) {
                                             if (a.Name.Trim() == dOCUMENTO.DOCUMENTOA_TAB[i].NAME.Trim())
                                             {
                                                 try
@@ -3000,9 +2998,72 @@ namespace WFARTHA.Controllers
                                                 }
 
                                             }
-
                                         }
                                     }
+                                    
+                                
+
+
+                                        //foreach (var a in archivos)
+                                        //{
+                                        //    var descripcion = "";
+
+                                        //    for (int i = 0; i < dOCUMENTO.DOCUMENTOA_TAB.Count; i++)
+                                        //    {
+                                        //        if (a.Name.Trim() == dOCUMENTO.DOCUMENTOA_TAB[i].NAME.Trim())
+                                        //        {
+                                        //            try
+                                        //            {
+                                        //                listaDescArchivos.Add(labels_desc[indexlabel]);
+                                        //                listaDescArchivos3.Add(labels_desc[indexlabel]);
+                                        //            }
+                                        //            catch (Exception ex)
+                                        //            {
+                                        //                descripcion = "";
+                                        //                listaDescArchivos.Add(descripcion);
+                                        //                listaDescArchivos3.Add(descripcion);
+                                        //            }
+
+                                        //            try
+                                        //            {
+                                        //                listaNombreArchivos.Add(a.Name);
+                                        //                listaNombreArchivos3.Add(a.Name);
+                                        //            }
+                                        //            catch (Exception ex)
+                                        //            {
+                                        //                listaNombreArchivos.Add("");
+                                        //                listaNombreArchivos3.Add("");
+                                        //            }
+
+                                        //            string errorfiles = "";
+
+                                        //            var url_prel = "";
+                                        //            var dirFile = "";
+                                        //            string carpeta = "att";
+                                        //            try
+                                        //            {
+                                        //                url_prel = getDirPrel(carpeta, dOCUMENTO.NUM_DOC);
+                                        //                dirFile = url_prel;
+                                        //            }
+                                        //            catch (Exception e)
+                                        //            {
+                                        //                dirFile = ConfigurationManager.AppSettings["URL_ATT"].ToString() + @"att";
+                                        //            }
+
+                                        //            listaDirectorios.Add(dirFile + "\\" + a.Name);
+                                        //            listaDirectorios3.Add(dirFile + "\\" + a.Name);
+
+
+                                        //            indexlabel++;
+                                        //            if (errorfiles != "")
+                                        //            {
+                                        //                errorMessage += "Error con el archivo " + errorfiles;
+                                        //            }
+
+                                        //        }
+
+                                        //    }
+                                        //}
                                 }
 
 

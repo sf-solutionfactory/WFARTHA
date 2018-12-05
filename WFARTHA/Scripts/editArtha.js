@@ -250,6 +250,7 @@ $(document).ready(function () {
                 var na4 = $(this).find("td.NumAnexo4 input").val();
                 var na5 = $(this).find("td.NumAnexo5 input").val();
 
+                var _as = true; //FRT05122018 Para anexos asociados en detalles
                 //frt05112018 validacion de CECOS vacion en Tipo Imp. "K"
                 var ceco = $(this).find("td.CCOSTO input").val();
                 var tr = $(this);
@@ -392,6 +393,21 @@ $(document).ready(function () {
                         return false;
                     }
                 }
+
+
+                //FRT05122018 Para validar que si tiene anexos debemos tener al menos uno asociado por detalle
+                if (borrador != "B") {
+                    if (_vs.length > 0) {
+                        if (na1 === "") {
+                            _as = false;
+                            _b = false;
+                            msgerror = "Fila " + _rni + " :  Falta asociar numero de anexo en la columna A1";
+                            return false;
+                        }
+                    }
+                   
+                }
+                //ENDFRT05122018 Para validar que si tiene anexos debemos tener al menos uno asociado por detalle
                 
                 if (borrador != "B") {
                     if (_vs.length > 0) {
@@ -565,7 +581,7 @@ $(document).ready(function () {
 
 
 
-
+            $("#borr").val(''); //FRT05122018 para  saber cuando es borrador y cuando envio
 
            
 
@@ -2586,6 +2602,40 @@ function armarTablaInfo(datos) {
             }
 
             if (_infoAnex.length > 0) {
+                //FRT05122018 Para quitar los ceros en los vacios
+                if (_infoAnex[i].a1 == 0) {
+                    _infoAnex[i].a1 = "";
+                } else {
+                    _infoAnex[i].a1;
+                }
+
+                if (_infoAnex[i].a2 == 0) {
+                    _infoAnex[i].a2 = "";
+                } else {
+                    _infoAnex[i].a2;
+                }
+
+                if (_infoAnex[i].a3 == 0) {
+                    _infoAnex[i].a3 = "";
+                } else {
+                    _infoAnex[i].a3;
+                }
+
+                if (_infoAnex[i].a4 == 0) {
+                    _infoAnex[i].a4 = "";
+                } else {
+                    _infoAnex[i].a4;
+                }
+
+                if (_infoAnex[i].a5 == 0) {
+                    _infoAnex[i].a5 = "";
+                } else {
+                    _infoAnex[i].a5;
+                }
+
+                //ENDFRT05122018 Para quitar los ceros en los vacios
+
+
                 var ar = addRowInfo($('#table_info').DataTable(), datos.DOCUMENTOPSTR[i].POS, _infoAnex[i].a1, _infoAnex[i].a2, _infoAnex[i].a3, _infoAnex[i].a4, _infoAnex[i].a5, datos.DOCUMENTOPSTR[i].ACCION, datos.DOCUMENTOPSTR[i].FACTURA, datos.DOCUMENTOPSTR[i].TCONCEPTO, datos.DOCUMENTOPSTR[i].GRUPO, datos.DOCUMENTOPSTR[i].CUENTA,
                     datos.DOCUMENTOPSTR[i].NOMCUENTA, datos.DOCUMENTOPSTR[i].TIPOIMP, datos.DOCUMENTOPSTR[i].IMPUTACION, datos.DOCUMENTOPSTR[i].CCOSTO, datos.DOCUMENTOPSTR[i].MONTO, "", datos.DOCUMENTOPSTR[i].IVA, datos.DOCUMENTOPSTR[i].TEXTO, datos.DOCUMENTOPSTR[i].TOTAL, "", "", arrColExTA);
 
