@@ -60,7 +60,7 @@ $(document).ready(function () {
                 "orderable": false
             },
             {
-                "name": 'POS',
+                "name": 'FILA',
                 "className": 'POS',
                 "orderable": false,
                 "visible": false //MGC 04092018 Conceptos
@@ -1823,7 +1823,7 @@ function obtenerRetenciones(flag) {
                 "orderable": false
             },
             {
-                "name": 'POS',
+                "name": 'FILA',
                 "className": 'POS',
                 "orderable": false,
                 "visible": true //MGC 04092018 Conceptos FRT 041223018
@@ -1936,7 +1936,7 @@ function obtenerRetenciones(flag) {
         thead.append($("<tr />"));
         //Theads
         $("#table_info>thead>tr").append("<th></th>");
-        $("#table_info>thead>tr").append("<th class=\"lbl_pos\">Pos</th>");
+        $("#table_info>thead>tr").append("<th class=\"lbl_pos\">FILA</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A1</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A2</th>");
         $("#table_info>thead>tr").append("<th class=\"lbl_NmAnexo\">A3</th>");
@@ -3769,6 +3769,10 @@ function tamanosRenglones() {
     //total
     var t_tot = $("#table_info>thead>tr").find('th.TOTAL');
     t_tot.css("text-align", "center");
+    //FILA
+    var tpos = $("#table_info>tbody>tr").find('td.POS');
+    tpos.css("text-align", "center");
+    tpos.css("font-size", "15px");
 }
 //Lejgg 10/10/2018
 function guardarBorrador(asyncv) {
