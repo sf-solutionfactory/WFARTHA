@@ -6,7 +6,6 @@ var extraCols = 0;
 var tRet = [];//Agrego a un array los tipos de retenciones
 var tRet2 = [];//Agrego a un array los tipos de retenciones que no tienen ligadas
 var statSend = false;//FRT02122018 PARA PODER MANDAR ALERTA DE QUE EL FORMULARIO SE ESTA ENVIANDO
-var envio = true; //frt051222018 para saber si es envio o borrador
 
 $(document).ready(function () {
     //LEJ 11.09.2018------------------------------------
@@ -573,7 +572,6 @@ $(document).ready(function () {
             var _b = false;
             var _m = true;
             var _g = true;
-          
             var _vs = [];
             var msgerror = "";
             var _rni = 0;
@@ -607,9 +605,6 @@ $(document).ready(function () {
             }
 
             var borrador = $("#borr").val();
-
-
-            
             //$("#table_info > tbody  > tr[role='row']").each(function () { //MGC 24-10-2018 Conflicto Enrique-Rogelio
             var t = $('#table_info').DataTable();
             var tabble = "table_info";
@@ -625,7 +620,6 @@ $(document).ready(function () {
                 var na4 = $(this).find("td.NumAnexo4 input").val();
                 var na5 = $(this).find("td.NumAnexo5 input").val();
 
-                var _as = true; //FRT05122018 Para anexos asociados en detalles
                 //frt05112018 validacion de CECOS vacion en Tipo Imp. "K"
 
                 if (borrador != "B") {
@@ -775,27 +769,9 @@ $(document).ready(function () {
                 }
 
                 //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
-                //FRT05122018 Para validar que si tiene anexos debemos tener al menos uno asociado por detalle
-
-                if (borrador != "B") {
-                    if (_vs.length > 0) {
-                        if (na1 === "") {
-                            _as = false;
-                            _b = false;
-                            msgerror = "Fila " + _rni + " :  Falta asociar numero de anexo en la columna A1";
-                            return false;
-                        }
-                    }
-
-                }
-               
-                //ENDFRT05122018 Para validar que si tiene anexos debemos tener al menos uno asociado por detalle
-
                 if (borrador != "B") {
                     if (_vs.length > 0) {
                         for (var i = 0; i < _vs.length; i++) {
-
-
                             if (na1 === _vs[i] || na1 === "") {
                                 _b = true;
                                 break;
@@ -985,8 +961,7 @@ $(document).ready(function () {
 
 
 
-            
-            $("#borr").val(''); //FRT05122018 para  saber cuando es borrador y cuando envio
+
 
             //ENDFRT02122018 VALIDACIONES EN EL BORRADOR
 
