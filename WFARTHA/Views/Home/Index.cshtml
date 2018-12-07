@@ -523,41 +523,43 @@
                                         <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error contabilizando SAP</span>
                                     </td>*@
 
-                                //Solamente lo ve el usuario contabilizador
-                                //El usuario no es el usuario creador, pero el usuario si es el usuario contabilizador
-                                if (ViewBag.usuario.ID != item.USUARIOC_ID)
+                            //Solamente lo ve el usuario contabilizador
+                            //El usuario no es el usuario creador, pero el usuario si es el usuario contabilizador
+                            if (ViewBag.usuario.ID != item.USUARIOC_ID)
+                            {
+                                if (item.FLUJOes.Count > 0)
                                 {
-                                    if (item.FLUJOes.Count > 0)
+
+                                    if (ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
                                     {
-
-                                        if (ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
-                                        {
-                                            estatus = "Error Contabilizar SAP";
-                                            visible = true;
-                                            color = "red darken-2";
-                                        }
-                                        else
-                                        {
-                                            visible = false;
-                                        }
-
-
+                                        estatus = "Error Contabilizar SAP";
+                                        visible = true;
+                                        color = "red darken-2";
                                     }
                                     else
                                     {
                                         visible = false;
                                     }
+
+
                                 }
                                 else
                                 {
                                     visible = false;
                                 }
                             }
-                        }
-                        else if (item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("A"))
-                        {
-                            if (item.ESTATUS.Equals("C"))
+                            else
                             {
+                                visible = false;
+                            }
+                        }
+
+                    }
+                    else if (item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("A"))
+                    {
+                        if (item.ESTATUS.Equals("C"))
+
+                        {
                                 @*MGC 07-11-2018 Área de trabajo y solicitudes*@
                                 @*<td class="green darken-1 white-text">
                                         <div class="lbl_contab">Por contabilizar</div>
@@ -597,20 +599,20 @@
                                     <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Pendiente corrección usuario</span>
                                 </td>*@
 
-                            //Nada más la ve el usuario creador
-                            if (ViewBag.usuario.ID == item.USUARIOC_ID)
-                            {
-                                estatus = "Pendiente Corrección";
-                                visible = true;
-                                color = "red darken-2";
-                            }
-                            else
-                            {
-                                visible = false;
-                            }
-                        }
-                        else if (item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("T"))
+                        //Nada más la ve el usuario creador
+                        if (ViewBag.usuario.ID == item.USUARIOC_ID)
                         {
+                            estatus = "Pendiente Corrección";
+                            visible = true;
+                            color = "red darken-2";
+                        }
+                        else
+                        {
+                            visible = false;
+                        }
+                    }
+                    else if (item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("T"))
+                    {
                             @*MGC 07-11-2018 Área de trabajo y solicitudes*@
                             @*<td class="yellow darken-2 white-text">
                                     <div class="lbl_tax">Pendiente Tax</div>

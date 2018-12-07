@@ -263,10 +263,14 @@ namespace WFARTHA.Controllers
 
             //FRT 03112018.3--------Mostrar anexos de la misma forma que en Editar >
 
-            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).OrderBy(a => a.POS).ToList();  //FRT05122018 para ordenar corecto los anexos
+
+            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).OrderBy(a =>a.POS).ToList();  //FRT05122018 para ordenar corecto los anexos
+            var originales = lst.Select(w => w.POS).Distinct().ToList();
+
             DOCUMENTOA d_a = new DOCUMENTOA();
+
             var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).ToList();
-            var files = la1.Count + lst.Count;
+            var files = la1.Count + originales.Count;
             var anexar = 0;
 
             if (la1.Count > 0)
@@ -312,6 +316,35 @@ namespace WFARTHA.Controllers
 
             lst = lst.OrderBy(a => a.POS).ToList();//FRT05122018 para ordenar corecto los anexos
 
+
+            List<DOCUMENTOA> result1 = new List<DOCUMENTOA>();
+
+            for (int i = 0; i < lst.Count; i++)
+            {
+                // Assume not duplicate.
+                bool duplicate = false;
+                for (int z = 0; z < i; z++)
+                {
+                    if (lst[z].PATH == lst[i].PATH)
+                    {
+                        // This is a duplicate.
+                        duplicate = true;
+                        break;
+                    }
+                }
+                // If not duplicate, add to result.
+                if (!duplicate)
+                {
+                    result1.Add(lst[i]);
+                }
+            }
+
+
+
+
+
+
+
             for (int x = 0; x < lst.Count; x++)
             {
                 var _xtr = lst[x].PATH.Split('\\');
@@ -327,7 +360,10 @@ namespace WFARTHA.Controllers
                 }
                 lst[x].PATH = _path;
             }
-            ViewBag.docAn = lst;
+
+
+            ViewBag.docAn = result1; //frt06122018
+            //ViewBag.docAn = lst;
 
             //FRT END 
 
@@ -1554,8 +1590,12 @@ namespace WFARTHA.Controllers
                                         db.DOCUMENTOAs.Add(_dA);
                                         db.SaveChanges();
                                         pos++;
-                                        listaDirectorios2.Remove(_dA.PATH);
-                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDirectorios2.Remove(_dA.PATH);
+                                        if (listaDirectorios2.Remove(_dA.PATH)) {
+                                           listaDescArchivos2.Remove(_dA.DESC);
+                                        }
+
+                                        //listaDescArchivos2.RemoveAt(a11);
                                         listaNombreArchivos2.Remove(_name);
                                         //listaNombreArchivos2.RemoveAt(a11);
                                         arBorr++;
@@ -1634,8 +1674,13 @@ namespace WFARTHA.Controllers
                                         db.DOCUMENTOAs.Add(_dA);
                                         db.SaveChanges();
                                         pos++;
-                                        listaDirectorios2.Remove(_dA.PATH);
-                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDirectorios2.Remove(_dA.PATH);
+                                        //listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDescArchivos2.RemoveAt(a12);
+                                        if (listaDirectorios2.Remove(_dA.PATH))
+                                        {
+                                            listaDescArchivos2.Remove(_dA.DESC);
+                                        }
                                         listaNombreArchivos2.Remove(_name);
                                         //listaNombreArchivos2.RemoveAt(a12);
                                         arBorr++;
@@ -1715,8 +1760,13 @@ namespace WFARTHA.Controllers
                                         db.DOCUMENTOAs.Add(_dA);
                                         db.SaveChanges();
                                         pos++;
-                                        listaDirectorios2.Remove(_dA.PATH);
-                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDirectorios2.Remove(_dA.PATH);
+                                        ////listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDescArchivos2.RemoveAt(a13);
+                                        if (listaDirectorios2.Remove(_dA.PATH))
+                                        {
+                                            listaDescArchivos2.Remove(_dA.DESC);
+                                        }
                                         listaNombreArchivos2.Remove(_name);
                                         //listaNombreArchivos2.RemoveAt(a13);
                                         arBorr++;
@@ -1768,7 +1818,7 @@ namespace WFARTHA.Controllers
                                             }
                                             try
                                             {
-                                                _dA.PATH = listaDirectorios[a4];
+                                                _dA.PATH = listaDirectorios3[a4];
                                             }
                                             catch (Exception c)
                                             {
@@ -1792,8 +1842,13 @@ namespace WFARTHA.Controllers
                                         db.DOCUMENTOAs.Add(_dA);
                                         db.SaveChanges();
                                         pos++;
-                                        listaDirectorios2.Remove(_dA.PATH);
-                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDirectorios2.Remove(_dA.PATH);
+                                        ////listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDescArchivos2.RemoveAt(a14);
+                                        if (listaDirectorios2.Remove(_dA.PATH))
+                                        {
+                                            listaDescArchivos2.Remove(_dA.DESC);
+                                        }
                                         listaNombreArchivos2.Remove(_name);
                                         arBorr++;
                                     }
@@ -1869,8 +1924,13 @@ namespace WFARTHA.Controllers
                                         db.DOCUMENTOAs.Add(_dA);
                                         db.SaveChanges();
                                         pos++;
-                                        listaDirectorios2.Remove(_dA.PATH);
-                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDirectorios2.Remove(_dA.PATH);
+                                        ////listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDescArchivos2.RemoveAt(a15);
+                                        if (listaDirectorios2.Remove(_dA.PATH))
+                                        {
+                                            listaDescArchivos2.Remove(_dA.DESC);
+                                        }
                                         listaNombreArchivos2.Remove(_name);
                                         arBorr++;
                                     }
@@ -1883,8 +1943,8 @@ namespace WFARTHA.Controllers
                         }
                         //Lejgg 26.10.2018---------------------------------------->
                         //Los anexos que no se agreguen a documentoa se agregaran a documentoas(documentoa1), significa que estan en lista porque no se ligaron a ningun detalle
-                        if (listaDirectorios2.Count == listaDescArchivos2.Count && listaDirectorios2.Count == listaNombreArchivos2.Count)
-                        {
+                       if (listaDirectorios2.Count == listaDescArchivos2.Count && listaDirectorios2.Count == listaNombreArchivos2.Count)
+                       {
                             var pos = 1;
                             for (int i = 0; i < listaDescArchivos2.Count; i++)
                             {
@@ -2480,12 +2540,15 @@ namespace WFARTHA.Controllers
             ViewBag.ndoc = id;
 
             //LEJGG19 10 2018----------------------------------------------------->
-            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).OrderBy(a => a.POS).ToList(); //FRT05122018 para ordenar corecto los anexos
+
+            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).OrderBy(a=>a.POS).ToList(); //FRT05122018 para ordenar corecto los anexos
+            var originales = lst.Select(w => w.POS).Distinct().ToList(); //FRT06122018
+            
             DOCUMENTOA d_a = new DOCUMENTOA();
             var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).ToList();
-            var files = la1.Count + lst.Count;
+            var files = la1.Count + originales.Count;
             var anexar = 0;
-
+           
 
             if (la1.Count > 0)
             {
@@ -2518,7 +2581,7 @@ namespace WFARTHA.Controllers
             }
 
 
-
+            
 
 
             ////for (int i = 0; i < la1.Count; i++)
@@ -2533,8 +2596,37 @@ namespace WFARTHA.Controllers
             ////    lst.Add(d_a);
             ////}
 
+
             lst = lst.OrderBy(a => a.POS).ToList();//FRT05122018 para ordenar corecto los anexos
-            ViewBag.docAn = lst;
+
+            List<DOCUMENTOA> result = new List<DOCUMENTOA>();
+
+            for (int i = 0; i < lst.Count; i++)
+            {
+                // Assume not duplicate.
+                bool duplicate = false;
+                for (int z = 0; z < i; z++)
+                {
+                    if (lst[z].PATH == lst[i].PATH)
+                    {
+                        // This is a duplicate.
+                        duplicate = true;
+                        break;
+                    }
+                }
+                // If not duplicate, add to result.
+                if (!duplicate)
+                {
+                    result.Add(lst[i]);
+                }
+            }
+
+
+
+
+
+            //ViewBag.docAn = lst;
+            ViewBag.docAn = result;
             //ViewBag.docAn2 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id).ToList(); //LEJGG 28-10 2018
             //LEJGG19 10 2018-----------------------------------------------------<
             //solicitud con orden de compra ------>
@@ -3346,8 +3438,13 @@ namespace WFARTHA.Controllers
                                         db.DOCUMENTOAs.Add(_dA);
                                         db.SaveChanges();
                                         pos++;
-                                        listaDirectorios2.Remove(_dA.PATH);
-                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDirectorios2.Remove(_dA.PATH);
+                                        ////listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDescArchivos2.RemoveAt(a11);
+                                        if (listaDirectorios2.Remove(_dA.PATH))
+                                        {
+                                            listaDescArchivos2.Remove(_dA.DESC);
+                                        }
                                         listaNombreArchivos2.Remove(_name);
                                         //listaNombreArchivos2.RemoveAt(a11);
                                         arBorr++;
@@ -3427,8 +3524,13 @@ namespace WFARTHA.Controllers
                                         db.DOCUMENTOAs.Add(_dA);
                                         db.SaveChanges();
                                         pos++;
-                                        listaDirectorios2.Remove(_dA.PATH);
-                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDirectorios2.Remove(_dA.PATH);
+                                        ////listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDescArchivos2.RemoveAt(a12);
+                                        if (listaDirectorios2.Remove(_dA.PATH))
+                                        {
+                                            listaDescArchivos2.Remove(_dA.DESC);
+                                        }
                                         listaNombreArchivos2.Remove(_name);
                                         //listaNombreArchivos2.RemoveAt(a12);
                                         arBorr++;
@@ -3512,8 +3614,13 @@ namespace WFARTHA.Controllers
                                         db.DOCUMENTOAs.Add(_dA);
                                         db.SaveChanges();
                                         pos++;
-                                        listaDirectorios2.Remove(_dA.PATH);
-                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDirectorios2.Remove(_dA.PATH);
+                                        ////listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDescArchivos2.RemoveAt(a13);
+                                        if (listaDirectorios2.Remove(_dA.PATH))
+                                        {
+                                            listaDescArchivos2.Remove(_dA.DESC);
+                                        }
                                         listaNombreArchivos2.Remove(_name);
                                         //listaNombreArchivos2.RemoveAt(a13);
                                         arBorr++;
@@ -3570,7 +3677,7 @@ namespace WFARTHA.Controllers
                                             }
                                             try
                                             {
-                                                _dA.PATH = listaDirectorios[a4];
+                                                _dA.PATH = listaDirectorios3[a4];
                                             }
                                             catch (Exception c)
                                             {
@@ -3594,8 +3701,13 @@ namespace WFARTHA.Controllers
                                         db.DOCUMENTOAs.Add(_dA);
                                         db.SaveChanges();
                                         pos++;
-                                        listaDirectorios2.Remove(_dA.PATH);
-                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDirectorios2.Remove(_dA.PATH);
+                                        ////listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDescArchivos2.RemoveAt(a14);
+                                        if (listaDirectorios2.Remove(_dA.PATH))
+                                        {
+                                            listaDescArchivos2.Remove(_dA.DESC);
+                                        }
                                         listaNombreArchivos2.Remove(_name);
                                         //listaNombreArchivos2.RemoveAt(a14);
                                         arBorr++;
@@ -3678,8 +3790,13 @@ namespace WFARTHA.Controllers
                                         db.DOCUMENTOAs.Add(_dA);
                                         db.SaveChanges();
                                         pos++;
-                                        listaDirectorios2.Remove(_dA.PATH);
-                                        listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDirectorios2.Remove(_dA.PATH);
+                                        ////listaDescArchivos2.Remove(_dA.DESC);
+                                        //listaDescArchivos2.RemoveAt(a15);
+                                        if (listaDirectorios2.Remove(_dA.PATH))
+                                        {
+                                            listaDescArchivos2.Remove(_dA.DESC);
+                                        }
                                         listaNombreArchivos2.Remove(_name);
                                         //listaNombreArchivos2.RemoveAt(a15);
 
