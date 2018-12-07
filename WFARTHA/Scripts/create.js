@@ -779,7 +779,7 @@ $(document).ready(function () {
                         _b = false;
                         _anull = false;
                         msgerror = "Fila " + _rni + " : No existe numero de anexo " + na1 + " por asociar ";
-                       
+
                     }
                 }
 
@@ -789,106 +789,106 @@ $(document).ready(function () {
                 //ENDFRT06122018 Para validar que si no hay anexos no se pueda asociar
 
 
-              
+
                 if (_vs.length > 0) {
-                        for (var i = 0; i < _vs.length; i++) {
-                            if (na1 === _vs[i] || na1 === "") {
-                                _b = true;
-                                _asnull = true;
-                                break;
-                            } else {
-                                _b = false;
-                                _asnull = false;
-                                statSend = false;
-                                msgerror = "Fila " + _rni + " : Valor ingresado en columna A1  debe ser un número de Anexo";
-                            }
+                    for (var i = 0; i < _vs.length; i++) {
+                        if (na1 === _vs[i] || na1 === "") {
+                            _b = true;
+                            _asnull = true;
+                            break;
+                        } else {
+                            _b = false;
+                            _asnull = false;
+                            statSend = false;
+                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A1  debe ser un número de Anexo";
                         }
-                        if (_b === false) {
-                            return false;
+                    }
+                    if (_b === false) {
+                        return false;
                     }
                     if (_asnull === false) {
                         return false;
                     }
-                        for (var i2 = 0; i2 < _vs.length; i2++) {
-                            if (na2 === _vs[i2] || na2 === "") {
-                                _b = true;
-                                _asnull = true;
-                                break;
-                            } else {
-                                _b = false;
-                                _asnull = false;
-                                statSend = false;
-                                //msgerror = "Fila " + _rni + " valor: " + na2 + " Columna 3"; 
-                                msgerror = "Fila " + _rni + " : Valor ingresado en columna A2  debe ser un número de Anexo";
-                            }
+                    for (var i2 = 0; i2 < _vs.length; i2++) {
+                        if (na2 === _vs[i2] || na2 === "") {
+                            _b = true;
+                            _asnull = true;
+                            break;
+                        } else {
+                            _b = false;
+                            _asnull = false;
+                            statSend = false;
+                            //msgerror = "Fila " + _rni + " valor: " + na2 + " Columna 3"; 
+                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A2  debe ser un número de Anexo";
                         }
-                        if (_b === false) {
-                            return false;
+                    }
+                    if (_b === false) {
+                        return false;
                     }
                     if (_asnull === false) {
                         return false;
                     }
-                        for (var i3 = 0; i3 < _vs.length; i3++) {
-                            if (na3 === _vs[i3] || na3 === "") {
-                                _b = true;
-                                _asnull = true;
-                                break;
-                            } else {
-                                _b = false;
-                                _asnull = false;
-                                statSend = false;
-                                //msgerror = "Fila " + _rni + " valor: " + na3 + " Columna 4";
-                                msgerror = "Fila " + _rni + " : Valor ingresado en columna A3  debe ser un número de Anexo";
-                            }
+                    for (var i3 = 0; i3 < _vs.length; i3++) {
+                        if (na3 === _vs[i3] || na3 === "") {
+                            _b = true;
+                            _asnull = true;
+                            break;
+                        } else {
+                            _b = false;
+                            _asnull = false;
+                            statSend = false;
+                            //msgerror = "Fila " + _rni + " valor: " + na3 + " Columna 4";
+                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A3  debe ser un número de Anexo";
                         }
-                        if (_b === false) {
-                            return false;
+                    }
+                    if (_b === false) {
+                        return false;
                     }
                     if (_asnull === false) {
                         return false;
                     }
-                        for (var i4 = 0; i4 < _vs.length; i4++) {
-                            if (na4 === _vs[i4] || na4 === "") {
-                                _b = true;
-                                _asnull = true;
-                                break;
-                            } else {
-                                _b = false;
-                                _asnull = false;
-                                statSend = false;
-                                //msgerror = "Fila " + _rni + " valor: " + na4 + " Columna 5";
-                                msgerror = "Fila " + _rni + " : Valor ingresado en columna A4  debe ser un número de Anexo";
-                            }
+                    for (var i4 = 0; i4 < _vs.length; i4++) {
+                        if (na4 === _vs[i4] || na4 === "") {
+                            _b = true;
+                            _asnull = true;
+                            break;
+                        } else {
+                            _b = false;
+                            _asnull = false;
+                            statSend = false;
+                            //msgerror = "Fila " + _rni + " valor: " + na4 + " Columna 5";
+                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A4  debe ser un número de Anexo";
                         }
-                        if (_b === false) {
-                            return false;
+                    }
+                    if (_b === false) {
+                        return false;
                     }
                     if (_asnull === false) {
                         return false;
                     }
-                        for (var i5 = 0; i5 < _vs.length; i5++) {
-                            if (na5 === _vs[i5] || na5 === "") {
-                                _b = true;
-                                _asnull = true;
-                                break;
-                            } else {
-                                _b = false;
-                                _asnull = false;
-                                statSend = false;
-                                //msgerror = "Fila " + _rni + " valor: " + na5 + " Columna 6";
-                                msgerror = "Fila " + _rni + " : Valor ingresado en columna A5  debe ser un número de Anexo";
-                            }
+                    for (var i5 = 0; i5 < _vs.length; i5++) {
+                        if (na5 === _vs[i5] || na5 === "") {
+                            _b = true;
+                            _asnull = true;
+                            break;
+                        } else {
+                            _b = false;
+                            _asnull = false;
+                            statSend = false;
+                            //msgerror = "Fila " + _rni + " valor: " + na5 + " Columna 6";
+                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A5  debe ser un número de Anexo";
                         }
-                        if (_b === false) {
-                            return false;
-                        }
+                    }
+                    if (_b === false) {
+                        return false;
+                    }
                     if (_asnull === false) {
                         return false;
-                         }
-                    } else {
-                        _b = true;
                     }
-               
+                } else {
+                    _b = true;
+                }
+
 
 
             });
@@ -1000,12 +1000,12 @@ $(document).ready(function () {
                             statSend = false;
                             M.toast({ html: msgerror });
                         }
-                        
+
                     } else {
                         statSend = false;
                         M.toast({ html: msgerror });
                     }
-                    
+
                 } else {
                     statSend = false;
                     M.toast({ html: msgerror });
@@ -1090,31 +1090,38 @@ $(document).ready(function () {
 
         ////FRT 13112018 PARA PODER SUBIR LOS ARCHIVOS A CAREPETA TEMPORAL
         var lengthtemp = $(this).get(0).files.length;
+        //Validacion para archivos permitidos
+        //LEJGG 06-12-2018-------------------------------------------------I
+
 
         for (var t = 0; t < lengthtemp; t++) {
             var filetemp = $(this).get(0).files[t];
-            var datatemp = new FormData();
-            datatemp.append('file', filetemp);
-            $.ajax({
-                type: "POST",
-                url: 'subirTemporal',
-                data: datatemp,
-                dataType: "json",
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (datatemp) {
-                    if (datatemp !== null || datatemp !== "") {
-                        var valida = datatemp;
-                    }
-                },
-                error: function (xhr, httpStatusMessage, customErrorMessage) {
-                    M.toast({ html: httpStatusMessage });
-                },
-                async: false
-            });
+            var ft = filetemp.name.substr(filetemp.name.lastIndexOf('.') + 1);
+            if (ft.toLowerCase() == "jpg" || ft.toLowerCase() == "png" || ft.toLowerCase() == "jpeg" || ft.toLowerCase() == "doc" || ft.toLowerCase() == "xls" || ft.toLowerCase() == "ppt" ||
+                ft.toLowerCase() == "xml" || ft.toLowerCase() == "pdf" || ft.toLowerCase() == "txt" || ft.toLowerCase() == "docx" || ft.toLowerCase() == "xlsx" || ft.toLowerCase() == "pptx") {
+                var datatemp = new FormData();
+                datatemp.append('file', filetemp);
+                $.ajax({
+                    type: "POST",
+                    url: 'subirTemporal',
+                    data: datatemp,
+                    dataType: "json",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (datatemp) {
+                        if (datatemp !== null || datatemp !== "") {
+                            var valida = datatemp;
+                        }
+                    },
+                    error: function (xhr, httpStatusMessage, customErrorMessage) {
+                        M.toast({ html: httpStatusMessage });
+                    },
+                    async: false
+                });
+            }
         }
-
+        //LEJGG 06-12-2018-------------------------------------------------T
 
 
         //END FRT13112018
@@ -1138,127 +1145,13 @@ $(document).ready(function () {
                     var file = $(this).get(0).files[i];
                     var fileName = file.name;
                     var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-                    tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
-                    //Lejgg 22-10-2018
-                    if (fileNameExt.toLowerCase() === "xml") {
-                        var data = new FormData();
-                        var _fbool = false;
-                        var _resVu = false;
-                        data.append('file', file);
-                        $.ajax({
-                            type: "POST",
-                            url: 'procesarXML',
-                            data: data,
-                            dataType: "json",
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            success: function (data) {
-                                //FRT20112018 Para validar los RFC
-                                if (data[0] == "1") {
-                                    _bcorrecto = true;
-                                    _resVu = validarUuid(data[5]);
-                                    if (!_resVu) {
-                                        _bemisor = validarRFCEmisor(data[4]);
-                                        _breceptor = validarRFCReceptor(data[3], data[7]);
-                                        if (_bemisor & _breceptor) {
-                                            $('#Uuid').val(data[5]);
-                                            $('#FECHAD').val(data[1]);
-                                            $('#FECHADO').val(data[1]);
-                                            $("#FECHAD").trigger("change");
-                                            data[2];//Monto Total
-                                            //FRT14112018.3 Para Tipo de Cambio en XML
-                                            if (data[6] != "MXN") {
-                                                tipo = data[8];
-                                                $('#TIPO_CAMBIO').val(tipo);
-                                                $('#TIPO_CAMBIO').trigger("change");
-                                                var objSelect = document.getElementById("MONEDA_ID");
-                                                objSelect.options[1].selected = true;
-                                            }
-                                        }
-                                    }
-
-                                } else {
-                                    _bcorrecto = false;
-                                }
-                            },
-                            error: function (xhr, httpStatusMessage, customErrorMessage) {
-                                //
-                            },
-                            async: false
-                        });
-                    }
-                    if (fileNameExt.toLowerCase() === "xml") {
-                        if (_resVu) {
-                            //Alert no se metio porque ya hay un xml en la tabla
-                            M.toast({ html: "UUID existente en BD" });
-                            document.getElementById('file_sopAnexar').value = '';
-                        }
-                        else {
-                            if (_bcorrecto) {
-                                if (!_bemisor & !_breceptor) {
-                                    //Alert no se metio porque ya hay un xml en la tabla
-                                    M.toast({ html: "El RFC de Receptor y Emisor no coinciden" });
-                                    document.getElementById('file_sopAnexar').value = '';
-                                } else {
-                                    if (_bemisor) {
-                                        if (_breceptor) {
-                                            _tab.row.add(
-                                                $(tdata)
-                                            ).draw(false).node();
-                                        }
-                                        else {
-                                            //Alert no se metio porque ya hay un xml en la tabla
-                                            M.toast({ html: "El RFC de Receptor no coincide" });
-                                            document.getElementById('file_sopAnexar').value = '';
-                                        }
-
-                                    } else {
-                                        //Alert no se metio porque ya hay un xml en la tabla
-                                        M.toast({ html: "El RFC de Emisor no coincide" });
-                                        document.getElementById('file_sopAnexar').value = '';
-                                    }
-                                }
-                            } else {
-                                //Alert no se metio porque ya hay un xml en la tabla
-                                M.toast({ html: "El XML no tiene formato correcto" });
-                                document.getElementById('file_sopAnexar').value = '';
-                            }
-                        }
-                    }
-                    else {
-                        _tab.row.add(
-                            $(tdata)
-                        ).draw(false).node();
-                    }
-                } else {
-                    var file = $(this).get(0).files[i];
-                    var fileName = file.name;
-                    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-                    var _ban = false;
-                    //Lejgg 22-10-2018------------------------------------------------>
-                    $("#table_anexa > tbody  > tr[role='row']").each(function () {
-                        var t = $("#table_anexa").DataTable();
-                        //Obtener el row para el plugin
-                        var tr = $(this);
-                        var indexopc = t.row(tr).index();
-
-                        //Obtener valores visibles en la tabla
-                        var _tipoAr = $(this).find("td.TYPE").text();
-                        if (fileNameExt.toLowerCase() === _tipoAr) {
-                            _ban = true;
-                        }
-                        if (_ban)
-                            return;
-                    });
-                    //Si el archivo es xml entra
-                    //LEJGG23/10/18---------------------------------------------------->
-                    if (fileNameExt.toLowerCase() === "xml") {
-                        var _fbool = false;
-                        //Si ban es false, no hay ningun otro archivo xml, entonces metere el registro
-                        if (!_ban) {
-                            tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                    if (fileNameExt.toLowerCase() == "jpg" || fileNameExt.toLowerCase() == "png" || fileNameExt.toLowerCase() == "jpeg" || fileNameExt.toLowerCase() == "doc" || fileNameExt.toLowerCase() == "xls" || fileNameExt.toLowerCase() == "ppt" ||
+                        fileNameExt.toLowerCase() == "xml" || fileNameExt.toLowerCase() == "pdf" || fileNameExt.toLowerCase() == "txt" || fileNameExt.toLowerCase() == "docx" || fileNameExt.toLowerCase() == "xlsx" || fileNameExt.toLowerCase() == "pptx") {
+                        tdata = "<tr><td></td><td>" + (i + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                        //Lejgg 22-10-2018
+                        if (fileNameExt.toLowerCase() === "xml") {
                             var data = new FormData();
+                            var _fbool = false;
                             var _resVu = false;
                             data.append('file', file);
                             $.ajax({
@@ -1284,7 +1177,7 @@ $(document).ready(function () {
                                                 $("#FECHAD").trigger("change");
                                                 data[2];//Monto Total
                                                 //FRT14112018.3 Para Tipo de Cambio en XML
-                                                if (data[6] !== "MXN") {
+                                                if (data[6] != "MXN") {
                                                     tipo = data[8];
                                                     $('#TIPO_CAMBIO').val(tipo);
                                                     $('#TIPO_CAMBIO').trigger("change");
@@ -1292,7 +1185,6 @@ $(document).ready(function () {
                                                     objSelect.options[1].selected = true;
                                                 }
                                             }
-
                                         }
 
                                     } else {
@@ -1304,14 +1196,14 @@ $(document).ready(function () {
                                 },
                                 async: false
                             });
+                        }
+                        if (fileNameExt.toLowerCase() === "xml") {
                             if (_resVu) {
                                 //Alert no se metio porque ya hay un xml en la tabla
                                 M.toast({ html: "UUID existente en BD" });
                                 document.getElementById('file_sopAnexar').value = '';
                             }
                             else {
-                                //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
-                                //FRT20112018 Para saber de donde sale el error
                                 if (_bcorrecto) {
                                     if (!_bemisor & !_breceptor) {
                                         //Alert no se metio porque ya hay un xml en la tabla
@@ -1344,20 +1236,147 @@ $(document).ready(function () {
                             }
                         }
                         else {
-                            //Alert no se metio porque ya hay un xml en la tabla
-                            M.toast({ html: "Ya existe una factura" });
-                            document.getElementById('file_sopAnexar').value = '';
-
+                            _tab.row.add(
+                                $(tdata)
+                            ).draw(false).node();
                         }
                     }
-                    //LEJGG23/10/18----------------------------------------------------<
                     else {
-                        tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
-                        _tab.row.add(
-                            $(tdata)
-                        ).draw(false).node();
+                        M.toast({ html: "Tipo de archivo no valido: " + fileName });
                     }
-                    //Lejgg 22-10-2018------------------------------------------------>
+                } else {
+                    var file = $(this).get(0).files[i];
+                    var fileName = file.name;
+                    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+                    if (fileNameExt.toLowerCase() == "jpg" || fileNameExt.toLowerCase() == "png" || fileNameExt.toLowerCase() == "jpeg" || fileNameExt.toLowerCase() == "doc" || fileNameExt.toLowerCase() == "xls" || fileNameExt.toLowerCase() == "ppt" ||
+                        fileNameExt.toLowerCase() == "xml" || fileNameExt.toLowerCase() == "pdf" || fileNameExt.toLowerCase() == "txt" || fileNameExt.toLowerCase() == "docx" || fileNameExt.toLowerCase() == "xlsx" || fileNameExt.toLowerCase() == "pptx") {
+                        var _ban = false;
+                        //Lejgg 22-10-2018------------------------------------------------>
+                        $("#table_anexa > tbody  > tr[role='row']").each(function () {
+                            var t = $("#table_anexa").DataTable();
+                            //Obtener el row para el plugin
+                            var tr = $(this);
+                            var indexopc = t.row(tr).index();
+
+                            //Obtener valores visibles en la tabla
+                            var _tipoAr = $(this).find("td.TYPE").text();
+                            if (fileNameExt.toLowerCase() === _tipoAr) {
+                                _ban = true;
+                            }
+                            if (_ban)
+                                return;
+                        });
+                        //Si el archivo es xml entra
+                        //LEJGG23/10/18---------------------------------------------------->
+                        if (fileNameExt.toLowerCase() === "xml") {
+                            var _fbool = false;
+                            //Si ban es false, no hay ningun otro archivo xml, entonces metere el registro
+                            if (!_ban) {
+                                tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                                var data = new FormData();
+                                var _resVu = false;
+                                data.append('file', file);
+                                $.ajax({
+                                    type: "POST",
+                                    url: 'procesarXML',
+                                    data: data,
+                                    dataType: "json",
+                                    cache: false,
+                                    contentType: false,
+                                    processData: false,
+                                    success: function (data) {
+                                        //FRT20112018 Para validar los RFC
+                                        if (data[0] == "1") {
+                                            _bcorrecto = true;
+                                            _resVu = validarUuid(data[5]);
+                                            if (!_resVu) {
+                                                _bemisor = validarRFCEmisor(data[4]);
+                                                _breceptor = validarRFCReceptor(data[3], data[7]);
+                                                if (_bemisor & _breceptor) {
+                                                    $('#Uuid').val(data[5]);
+                                                    $('#FECHAD').val(data[1]);
+                                                    $('#FECHADO').val(data[1]);
+                                                    $("#FECHAD").trigger("change");
+                                                    data[2];//Monto Total
+                                                    //FRT14112018.3 Para Tipo de Cambio en XML
+                                                    if (data[6] !== "MXN") {
+                                                        tipo = data[8];
+                                                        $('#TIPO_CAMBIO').val(tipo);
+                                                        $('#TIPO_CAMBIO').trigger("change");
+                                                        var objSelect = document.getElementById("MONEDA_ID");
+                                                        objSelect.options[1].selected = true;
+                                                    }
+                                                }
+
+                                            }
+
+                                        } else {
+                                            _bcorrecto = false;
+                                        }
+                                    },
+                                    error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                        //
+                                    },
+                                    async: false
+                                });
+                                if (_resVu) {
+                                    //Alert no se metio porque ya hay un xml en la tabla
+                                    M.toast({ html: "UUID existente en BD" });
+                                    document.getElementById('file_sopAnexar').value = '';
+                                }
+                                else {
+                                    //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
+                                    //FRT20112018 Para saber de donde sale el error
+                                    if (_bcorrecto) {
+                                        if (!_bemisor & !_breceptor) {
+                                            //Alert no se metio porque ya hay un xml en la tabla
+                                            M.toast({ html: "El RFC de Receptor y Emisor no coinciden" });
+                                            document.getElementById('file_sopAnexar').value = '';
+                                        } else {
+                                            if (_bemisor) {
+                                                if (_breceptor) {
+                                                    _tab.row.add(
+                                                        $(tdata)
+                                                    ).draw(false).node();
+                                                }
+                                                else {
+                                                    //Alert no se metio porque ya hay un xml en la tabla
+                                                    M.toast({ html: "El RFC de Receptor no coincide" });
+                                                    document.getElementById('file_sopAnexar').value = '';
+                                                }
+
+                                            } else {
+                                                //Alert no se metio porque ya hay un xml en la tabla
+                                                M.toast({ html: "El RFC de Emisor no coincide" });
+                                                document.getElementById('file_sopAnexar').value = '';
+                                            }
+                                        }
+                                    } else {
+                                        //Alert no se metio porque ya hay un xml en la tabla
+                                        M.toast({ html: "El XML no tiene formato correcto" });
+                                        document.getElementById('file_sopAnexar').value = '';
+                                    }
+                                }
+                            }
+                            else {
+                                //Alert no se metio porque ya hay un xml en la tabla
+                                M.toast({ html: "Ya existe una factura" });
+                                document.getElementById('file_sopAnexar').value = '';
+
+                            }
+                        }
+                        //LEJGG23/10/18----------------------------------------------------<
+                        else {
+                            tdata = "<tr><td></td><td>" + (nr + 1) + "</td><td>OK</td><td>" + file.name + "</td><td>" + fileNameExt.toLowerCase() + "</td><td><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td></tr>";
+                            _tab.row.add(
+                                $(tdata)
+                            ).draw(false).node();
+                        }
+                        //Lejgg 22-10-2018------------------------------------------------>
+                    }
+                    else {
+                        M.toast({ html: "Tipo de archivo no valido: " + fileName });
+                    }
                 }
             }
         }
@@ -1370,47 +1389,53 @@ $(document).ready(function () {
                     var file = $(this).get(0).files[i];
                     var fileName = file.name;
                     var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-                    var nr = _tab2.rows().count();
-                    var file = $(this).get(0).files[i];
-                    var _data = new FormData();
-                    _data.append('file', file);
-                    if (fileNameExt.toLowerCase() === "xml") {
-                        //Se saca el UUID
-                        $.ajax({
-                            type: "POST",
-                            url: 'procesarXML',
-                            data: _data,
-                            dataType: "json",
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            success: function (data) {
-                                if (data !== null || data !== "") {
-                                    //data[4];//UUID
-                                    _resVu = validarUuid(data[4]);
-                                    if (!_resVu) {
-                                        //$('#Uuid').val(data[4]);
-                                        //$('#FECHAD').val(data[0]);
-                                        //$('#FECHADO').val(data[0]);
-                                        //$("#FECHAD").trigger("change");
-                                        //data[1];//Monto Total
-                                        _fbool = validarRFC(data[3], data[2], data[6]);
-                                        if (_fbool) {
-                                            $('#Uuid').val(data[4]);
-                                            $('#FECHAD').val(data[0]);
-                                            $('#FECHADO').val(data[0]);
-                                            $("#FECHAD").trigger("change");
-                                            data[1];//Monto Total
+                    if (fileNameExt.toLowerCase() == "jpg" || fileNameExt.toLowerCase() == "png" || fileNameExt.toLowerCase() == "jpeg" || fileNameExt.toLowerCase() == "doc" || fileNameExt.toLowerCase() == "xls" || fileNameExt.toLowerCase() == "ppt" ||
+                        fileNameExt.toLowerCase() == "xml" || fileNameExt.toLowerCase() == "pdf" || fileNameExt.toLowerCase() == "txt" || fileNameExt.toLowerCase() == "docx" || fileNameExt.toLowerCase() == "xlsx" || fileNameExt.toLowerCase() == "pptx") {
+                        var nr = _tab2.rows().count();
+                        var file = $(this).get(0).files[i];
+                        var _data = new FormData();
+                        _data.append('file', file);
+                        if (fileNameExt.toLowerCase() === "xml") {
+                            //Se saca el UUID
+                            $.ajax({
+                                type: "POST",
+                                url: 'procesarXML',
+                                data: _data,
+                                dataType: "json",
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                success: function (data) {
+                                    if (data !== null || data !== "") {
+                                        //data[4];//UUID
+                                        _resVu = validarUuid(data[4]);
+                                        if (!_resVu) {
+                                            //$('#Uuid').val(data[4]);
+                                            //$('#FECHAD').val(data[0]);
+                                            //$('#FECHADO').val(data[0]);
+                                            //$("#FECHAD").trigger("change");
+                                            //data[1];//Monto Total
+                                            _fbool = validarRFC(data[3], data[2], data[6]);
+                                            if (_fbool) {
+                                                $('#Uuid').val(data[4]);
+                                                $('#FECHAD').val(data[0]);
+                                                $('#FECHADO').val(data[0]);
+                                                $("#FECHAD").trigger("change");
+                                                data[1];//Monto Total
+                                            }
+                                            //data[2];//RFC
                                         }
-                                        //data[2];//RFC
                                     }
-                                }
-                            },
-                            error: function (xhr, httpStatusMessage, customErrorMessage) {
-                                //
-                            },
-                            async: false
-                        });
+                                },
+                                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                    //
+                                },
+                                async: false
+                            });
+                        }
+                    }
+                    else {
+                        M.toast({ html: "Tipo de archivo no valido: " + fileName });
                     }
                 }
             }
