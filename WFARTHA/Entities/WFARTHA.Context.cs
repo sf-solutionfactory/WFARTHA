@@ -12,6 +12,8 @@ namespace WFARTHA.Entities
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class WFARTHAEntities : DbContext
     {
@@ -27,6 +29,7 @@ namespace WFARTHA.Entities
     
         public virtual DbSet<ACCION> ACCIONs { get; set; }
         public virtual DbSet<APPSETTING> APPSETTINGs { get; set; }
+        public virtual DbSet<BANCO> BANCOS { get; set; }
         public virtual DbSet<CAMPOS> CAMPOS { get; set; }
         public virtual DbSet<CARPETA> CARPETAs { get; set; }
         public virtual DbSet<CARPETAT> CARPETATs { get; set; }
@@ -56,8 +59,13 @@ namespace WFARTHA.Entities
         public virtual DbSet<DOCUMENTORP> DOCUMENTORPs { get; set; }
         public virtual DbSet<DOCUMENTOSAP> DOCUMENTOSAPs { get; set; }
         public virtual DbSet<DOCUMENTOUUID> DOCUMENTOUUIDs { get; set; }
-        public virtual DbSet<EKKO_DUMM> EKKO_DUMM { get; set; }
-        public virtual DbSet<EKPO_DUMM> EKPO_DUMM { get; set; }
+        public virtual DbSet<EKBE> EKBEs { get; set; }
+        public virtual DbSet<EKBE_DUMMY> EKBE_DUMMY { get; set; }
+        public virtual DbSet<EKKO> EKKOes { get; set; }
+        public virtual DbSet<EKKO_DUMMY> EKKO_DUMMY { get; set; }
+        public virtual DbSet<EKPO> EKPOes { get; set; }
+        public virtual DbSet<EKPO_DUMMY> EKPO_DUMMY { get; set; }
+        public virtual DbSet<ESTATUS_PAGO> ESTATUS_PAGO { get; set; }
         public virtual DbSet<FLUJO> FLUJOes { get; set; }
         public virtual DbSet<FORMATO> FORMATOes { get; set; }
         public virtual DbSet<FORO> FOROes { get; set; }
@@ -74,6 +82,7 @@ namespace WFARTHA.Entities
         public virtual DbSet<PROYECTO> PROYECTOes { get; set; }
         public virtual DbSet<PUESTO> PUESTOes { get; set; }
         public virtual DbSet<PUESTOT> PUESTOTs { get; set; }
+        public virtual DbSet<RAMA_PEP> RAMA_PEP { get; set; }
         public virtual DbSet<RANGO> RANGOes { get; set; }
         public virtual DbSet<RETENCION> RETENCIONs { get; set; }
         public virtual DbSet<RETENCION_PROV> RETENCION_PROV { get; set; }
@@ -107,5 +116,32 @@ namespace WFARTHA.Entities
         public virtual DbSet<DOCUMENTOV> DOCUMENTOVs { get; set; }
         public virtual DbSet<PAGINAV> PAGINAVs { get; set; }
         public virtual DbSet<WARNINGV> WARNINGVs { get; set; }
+    
+        public virtual ObjectResult<SP_CABECERA_Result> SP_CABECERA(Nullable<decimal> nUM_DOC)
+        {
+            var nUM_DOCParameter = nUM_DOC.HasValue ?
+                new ObjectParameter("NUM_DOC", nUM_DOC) :
+                new ObjectParameter("NUM_DOC", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_CABECERA_Result>("SP_CABECERA", nUM_DOCParameter);
+        }
+    
+        public virtual ObjectResult<SP_DETALLE_Result> SP_DETALLE(Nullable<decimal> nUM_DOC)
+        {
+            var nUM_DOCParameter = nUM_DOC.HasValue ?
+                new ObjectParameter("NUM_DOC", nUM_DOC) :
+                new ObjectParameter("NUM_DOC", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_DETALLE_Result>("SP_DETALLE", nUM_DOCParameter);
+        }
+    
+        public virtual int SP_FIRMAS(Nullable<decimal> nUM_DOC)
+        {
+            var nUM_DOCParameter = nUM_DOC.HasValue ?
+                new ObjectParameter("NUM_DOC", nUM_DOC) :
+                new ObjectParameter("NUM_DOC", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_FIRMAS", nUM_DOCParameter);
+        }
     }
 }

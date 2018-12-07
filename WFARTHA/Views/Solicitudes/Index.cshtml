@@ -388,12 +388,17 @@
                         @*<td class="">
                                 <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Pendiente corrección usuario</span>
                             </td>*@
+                        estatus = "Pendiente Corrección";
+                        visible = false;
+                        color = "red darken-2";
+                    }
+                    else if (item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("T"))
+                    {
                     estatus = "Pendiente Corrección";
                     visible = false;
                     color = "red darken-2";
                 }
                 else if (item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("T"))
-
                {
                         @*MGC 07-11-2018 Área de trabajo y solicitudes*@
                         @*<td class="yellow darken-2 white-text">

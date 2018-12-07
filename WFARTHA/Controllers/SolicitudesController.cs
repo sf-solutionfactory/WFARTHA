@@ -263,9 +263,9 @@ namespace WFARTHA.Controllers
 
             //FRT 03112018.3--------Mostrar anexos de la misma forma que en Editar >
 
+
             var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).OrderBy(a =>a.POS).ToList();  //FRT05122018 para ordenar corecto los anexos
             var originales = lst.Select(w => w.POS).Distinct().ToList();
-
 
             DOCUMENTOA d_a = new DOCUMENTOA();
 
@@ -275,7 +275,7 @@ namespace WFARTHA.Controllers
 
             if (la1.Count > 0)
             {
-                for (int h = 1; h < files+1; h++)
+                for (int h = 1; h < files + 1; h++)
                 {
                     var _f = false;
                     for (int p = 0; p < lst.Count; p++)
@@ -301,11 +301,6 @@ namespace WFARTHA.Controllers
                     }
                 }
             }
-            
-
-
-
-
 
             //for (int i = 0; i < la1.Count; i++)
             //{
@@ -417,6 +412,17 @@ namespace WFARTHA.Controllers
 
             // END FRT06112018
 
+            //LEJGG 06-12-2018------------------------------------I
+            var np = dOCUMENTO.NUM_PRE;
+            var sp = dOCUMENTO.SOCIEDAD_PRE;
+            var ejp = dOCUMENTO.EJERCICIO_PRE;
+            var _pag = db.ESTATUS_PAGO.Where(x => x.BELNR == np && x.GJAHR == ejp && x.BUKRS == sp && x.TIPO == "P").ToList();
+            var _epag = db.ESTATUS_PAGO.Where(x => x.BELNR == np && x.GJAHR == ejp && x.BUKRS == sp && x.TIPO == "EP").ToList();
+
+            ViewBag.pagado= _pag;
+            ViewBag.epagado = _epag;
+
+            //LEJGG 06-12-2018------------------------------------I
 
             ViewBag.SOCIEDAD_ID = new SelectList(sociedades, "BUKRS", "TEXT", doc.SOCIEDAD_ID);
             ViewBag.TSOL_ID = new SelectList(tsoll, "ID", "TEXT", doc.TSOL_ID);
@@ -2003,7 +2009,8 @@ namespace WFARTHA.Controllers
                     try
                     {
 
-                        if (doc.DOCUMENTORP != null) {
+                        if (doc.DOCUMENTORP != null)
+                        {
                             for (int i = 0; i < doc.DOCUMENTORP.Count; i++)
                             {
                                 //cantdidad de renglones añadidos y su posicion
@@ -2075,7 +2082,7 @@ namespace WFARTHA.Controllers
                             }
                         }
 
-                        
+
                     }
                     catch (Exception e)
                     {
@@ -2087,7 +2094,8 @@ namespace WFARTHA.Controllers
                     try//LEJ 05.09.2018
                     {
 
-                        if (doc.DOCUMENTOR != null) {
+                        if (doc.DOCUMENTOR != null)
+                        {
                             List<DOCUMENTOR_MOD> docrr = new List<DOCUMENTOR_MOD>();
 
                             List<RETENCION> retsub = new List<RETENCION>();
@@ -2191,7 +2199,7 @@ namespace WFARTHA.Controllers
                         }
 
                         ////MGC 29-10-2018 Obtener las retenciones relacionadas con las ya mostradas en la tabla------------------------------>
-                        
+
                     }
                     catch (Exception e)
                     {
@@ -2530,19 +2538,20 @@ namespace WFARTHA.Controllers
 
             ViewBag.Title += id; //MGC 05-10-2018 Modificación para work flow al ser editada
             ViewBag.ndoc = id;
-            
+
             //LEJGG19 10 2018----------------------------------------------------->
+
             var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).OrderBy(a=>a.POS).ToList(); //FRT05122018 para ordenar corecto los anexos
             var originales = lst.Select(w => w.POS).Distinct().ToList(); //FRT06122018
             
-
             DOCUMENTOA d_a = new DOCUMENTOA();
             var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).ToList();
             var files = la1.Count + originales.Count;
             var anexar = 0;
            
 
-            if (la1.Count > 0) {
+            if (la1.Count > 0)
+            {
                 for (int h = 1; h < files + 1; h++)
                 {
                     var _f = false;
@@ -3197,9 +3206,11 @@ namespace WFARTHA.Controllers
                                     }
 
 
-                                    for (int i = 0; i < dOCUMENTO.DOCUMENTOA_TAB.Count; i++) {
+                                    for (int i = 0; i < dOCUMENTO.DOCUMENTOA_TAB.Count; i++)
+                                    {
                                         var descripcion = "";
-                                        foreach (var a in archivos) {
+                                        foreach (var a in archivos)
+                                        {
                                             if (a.Name.Trim() == dOCUMENTO.DOCUMENTOA_TAB[i].NAME.Trim())
                                             {
                                                 try
@@ -3253,70 +3264,70 @@ namespace WFARTHA.Controllers
                                             }
                                         }
                                     }
-                                    
-                                
 
 
-                                        //foreach (var a in archivos)
-                                        //{
-                                        //    var descripcion = "";
-
-                                        //    for (int i = 0; i < dOCUMENTO.DOCUMENTOA_TAB.Count; i++)
-                                        //    {
-                                        //        if (a.Name.Trim() == dOCUMENTO.DOCUMENTOA_TAB[i].NAME.Trim())
-                                        //        {
-                                        //            try
-                                        //            {
-                                        //                listaDescArchivos.Add(labels_desc[indexlabel]);
-                                        //                listaDescArchivos3.Add(labels_desc[indexlabel]);
-                                        //            }
-                                        //            catch (Exception ex)
-                                        //            {
-                                        //                descripcion = "";
-                                        //                listaDescArchivos.Add(descripcion);
-                                        //                listaDescArchivos3.Add(descripcion);
-                                        //            }
-
-                                        //            try
-                                        //            {
-                                        //                listaNombreArchivos.Add(a.Name);
-                                        //                listaNombreArchivos3.Add(a.Name);
-                                        //            }
-                                        //            catch (Exception ex)
-                                        //            {
-                                        //                listaNombreArchivos.Add("");
-                                        //                listaNombreArchivos3.Add("");
-                                        //            }
-
-                                        //            string errorfiles = "";
-
-                                        //            var url_prel = "";
-                                        //            var dirFile = "";
-                                        //            string carpeta = "att";
-                                        //            try
-                                        //            {
-                                        //                url_prel = getDirPrel(carpeta, dOCUMENTO.NUM_DOC);
-                                        //                dirFile = url_prel;
-                                        //            }
-                                        //            catch (Exception e)
-                                        //            {
-                                        //                dirFile = ConfigurationManager.AppSettings["URL_ATT"].ToString() + @"att";
-                                        //            }
-
-                                        //            listaDirectorios.Add(dirFile + "\\" + a.Name);
-                                        //            listaDirectorios3.Add(dirFile + "\\" + a.Name);
 
 
-                                        //            indexlabel++;
-                                        //            if (errorfiles != "")
-                                        //            {
-                                        //                errorMessage += "Error con el archivo " + errorfiles;
-                                        //            }
+                                    //foreach (var a in archivos)
+                                    //{
+                                    //    var descripcion = "";
 
-                                        //        }
+                                    //    for (int i = 0; i < dOCUMENTO.DOCUMENTOA_TAB.Count; i++)
+                                    //    {
+                                    //        if (a.Name.Trim() == dOCUMENTO.DOCUMENTOA_TAB[i].NAME.Trim())
+                                    //        {
+                                    //            try
+                                    //            {
+                                    //                listaDescArchivos.Add(labels_desc[indexlabel]);
+                                    //                listaDescArchivos3.Add(labels_desc[indexlabel]);
+                                    //            }
+                                    //            catch (Exception ex)
+                                    //            {
+                                    //                descripcion = "";
+                                    //                listaDescArchivos.Add(descripcion);
+                                    //                listaDescArchivos3.Add(descripcion);
+                                    //            }
 
-                                        //    }
-                                        //}
+                                    //            try
+                                    //            {
+                                    //                listaNombreArchivos.Add(a.Name);
+                                    //                listaNombreArchivos3.Add(a.Name);
+                                    //            }
+                                    //            catch (Exception ex)
+                                    //            {
+                                    //                listaNombreArchivos.Add("");
+                                    //                listaNombreArchivos3.Add("");
+                                    //            }
+
+                                    //            string errorfiles = "";
+
+                                    //            var url_prel = "";
+                                    //            var dirFile = "";
+                                    //            string carpeta = "att";
+                                    //            try
+                                    //            {
+                                    //                url_prel = getDirPrel(carpeta, dOCUMENTO.NUM_DOC);
+                                    //                dirFile = url_prel;
+                                    //            }
+                                    //            catch (Exception e)
+                                    //            {
+                                    //                dirFile = ConfigurationManager.AppSettings["URL_ATT"].ToString() + @"att";
+                                    //            }
+
+                                    //            listaDirectorios.Add(dirFile + "\\" + a.Name);
+                                    //            listaDirectorios3.Add(dirFile + "\\" + a.Name);
+
+
+                                    //            indexlabel++;
+                                    //            if (errorfiles != "")
+                                    //            {
+                                    //                errorMessage += "Error con el archivo " + errorfiles;
+                                    //            }
+
+                                    //        }
+
+                                    //    }
+                                    //}
                                 }
 
 
@@ -4014,7 +4025,8 @@ namespace WFARTHA.Controllers
                     db.SaveChanges();
 
 
-                    if (dOCUMENTO.DOCUMENTORP != null) {
+                    if (dOCUMENTO.DOCUMENTORP != null)
+                    {
                         for (int i = 0; i < dOCUMENTO.DOCUMENTORP.Count; i++)
                         {
 
@@ -4033,12 +4045,13 @@ namespace WFARTHA.Controllers
 
                         }
                     }
-                    
+
 
 
                     try
                     {
-                        if (dOCUMENTO.DOCUMENTOR != null){
+                        if (dOCUMENTO.DOCUMENTOR != null)
+                        {
                             var _docrets = dOCUMENTO.DOCUMENTOR;
                             if (_docrets != null)//significa que hay valores
                             {
@@ -4074,7 +4087,7 @@ namespace WFARTHA.Controllers
                             }
                         }
 
-                        
+
                     }
                     catch (Exception e) { }
 
@@ -7042,7 +7055,7 @@ namespace WFARTHA.Controllers
 
             var dp = db.DOCUMENTOPs.Where(i => i.ACCION != "H" && i.NUM_DOC == id).ToList();
 
-           
+
 
 
             List<Anexo> _lstax = new List<Anexo>();
@@ -7083,7 +7096,8 @@ namespace WFARTHA.Controllers
 
                     }
                 }
-                else {
+                else
+                {
                     _ax = new Anexo();
                     _ax.a1 = 0;
                     _ax.a2 = 0;
@@ -7513,7 +7527,7 @@ namespace WFARTHA.Controllers
         {
             try
             {
-                var c = (from N in db.EKKO_DUMM
+                var c = (from N in db.EKKO_DUMMY
                          where (N.LIFNR == lifnr)// & N.EBELN.Contains(Prefix))
                          select new { N.EBELN }).ToList();
 
@@ -7529,27 +7543,28 @@ namespace WFARTHA.Controllers
         [HttpPost]
         public JsonResult getPedidosPos(string ebeln)
         {
-            var c = (from N in db.EKPO_DUMM
+            var c = (from N in db.EKPO_DUMMY
                      where (N.EBELN.Equals(ebeln))
                      select new
                      {
-                         N.BPUMN,
-                         N.BPUMZ,
-                         N.BRTWR,
                          N.EBELN,
                          N.EBELP,
-                         N.H_ANT_AMORT,
-                         N.H_ANT_PAG,
-                         N.H_ANT_SOL,
-                         N.H_QUANTITY,
-                         N.H_VAL_CURRENCY,
-                         N.H_VAL_FORCUR,
-                         N.H_VAL_LOCCUR,
+                         N.BEDAT,
                          N.MATNR,
-                         N.MEINS,
+                         N.TXZ01,
+                         N.MATKL,
+                         N.WERKS,
+                         N.LGORT,
                          N.MENGE,
-                         N.NETWR,
-                         N.TXZ0
+                         N.MEINS,
+                         N.NETPR,
+                         N.WAERS,
+                         N.PEINH,
+                         N.MENGE_DEL,
+                         N.NETPR_DEL,
+                         N.MENGE_BIL,
+                         N.NETPR_BIL,
+                         N.MWSKZ
                      }).ToList();
 
             JsonResult jc = Json(c, JsonRequestBehavior.AllowGet);
@@ -7560,17 +7575,20 @@ namespace WFARTHA.Controllers
         [HttpPost]
         public JsonResult getFondos(string ebeln)
         {
-            var c = (from N in db.EKKO_DUMM
+            var c = (from N in db.EKKO_DUMMY
                      where (N.EBELN.Equals(ebeln))
                      select new
                      {
                          N.EBELN,
-                         N.FONDOG,
-                         N.RES_FONDOG,
-                         N.RET_FONDOG,
-                         N.TOTAL,
-                         N.POR_ANTICIPO,
-                         N.POR_FONDO
+                         N.BUKRS,
+                         N.BSART,
+                         N.LIFNR,
+                         N.RETTP,
+                         N.RETPC,
+                         N.DPTYP,
+                         N.DPPCT,
+                         N.DPAMT,
+                         N.ESTATUS
                      });
             JsonResult jc = Json(c, JsonRequestBehavior.AllowGet);
             return jc;
