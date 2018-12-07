@@ -253,6 +253,8 @@ $(document).ready(function () {
             var _b = false;
             var _m = true;
             var _g = true;
+            var _anull = true //FRT06122018
+            var _asnull = true //FRT06122018
             var _vs = [];
             var msgerror = "";
             var _rni = 0;
@@ -442,14 +444,31 @@ $(document).ready(function () {
                 }
                 //ENDFRT05122018 Para validar que si tiene anexos debemos tener al menos uno asociado por detalle
 
-                if (borrador != "B") {
-                    if (_vs.length > 0) {
+                //FRT06122018 Para validar que si no hay anexos no se pueda asociar
+                if (_vs.length == 0) {
+                    if (na1 != "" || na2 != "" || na3 != "" || na4 != "" || na5 != "") {
+                        _b = false;
+                        _anull = false;
+                        msgerror = "Fila " + _rni + " : No existe numero de anexo " + na1 + " por asociar ";
+
+                    }
+                }
+
+                if (_anull === false) {
+                    return false;
+                }
+                //ENDFRT06122018 Para validar que si no hay anexos no se pueda asociar
+
+              
+                if (_vs.length > 0) {
                         for (var i = 0; i < _vs.length; i++) {
                             if (na1 === _vs[i] || na1 === "") {
                                 _b = true;
+                                _asnull = true;
                                 break;
                             } else {
                                 _b = false;
+                                _asnull = false;
                                 //msgerror = "Error en el renglon " + _rni + " valor: " + na1 + " Columna 2";
                                 statSend = false;
                                 msgerror = "Fila " + _rni + " : Valor ingresado en columna A1  debe ser un número de Anexo";
@@ -457,13 +476,18 @@ $(document).ready(function () {
                         }
                         if (_b === false) {
                             return false;
-                        }
+                    }
+                    if (_asnull === false) {
+                        return false;
+                    }
                         for (var i2 = 0; i2 < _vs.length; i2++) {
                             if (na2 === _vs[i2] || na2 === "") {
                                 _b = true;
+                                _asnull = true;
                                 break;
                             } else {
                                 _b = false;
+                                _asnull = false;
                                 //msgerror = "Error en el renglon " + _rni + " valor: " + na2 + " Columna 3";
                                 statSend = false;
                                 msgerror = "Fila " + _rni + " : Valor ingresado en columna A2  debe ser un número de Anexo";
@@ -471,13 +495,18 @@ $(document).ready(function () {
                         }
                         if (_b === false) {
                             return false;
-                        }
+                    }
+                    if (_asnull === false) {
+                        return false;
+                    }
                         for (var i3 = 0; i3 < _vs.length; i3++) {
                             if (na3 === _vs[i3] || na3 === "") {
                                 _b = true;
+                                _asnull = true;
                                 break;
                             } else {
                                 _b = false;
+                                _asnull = false;
                                 //msgerror = "Error en el renglon " + _rni + " valor: " + na3 + " Columna 4";
                                 statSend = false;
                                 msgerror = "Fila " + _rni + " : Valor ingresado en columna A3  debe ser un número de Anexo";
@@ -485,13 +514,18 @@ $(document).ready(function () {
                         }
                         if (_b === false) {
                             return false;
-                        }
+                    }
+                    if (_asnull === false) {
+                        return false;
+                    }
                         for (var i4 = 0; i4 < _vs.length; i4++) {
                             if (na4 === _vs[i4] || na4 === "") {
                                 _b = true;
+                                _asnull = true;
                                 break;
                             } else {
                                 _b = false;
+                                _asnull = false;
                                 //msgerror = "Error en el renglon " + _rni + " valor: " + na4 + " Columna 5";
                                 statSend = false;
                                 msgerror = "Fila " + _rni + " : Valor ingresado en columna A4  debe ser un número de Anexo";
@@ -499,13 +533,18 @@ $(document).ready(function () {
                         }
                         if (_b === false) {
                             return false;
-                        }
+                    }
+                    if (_asnull === false) {
+                        return false;
+                    }
                         for (var i5 = 0; i5 < _vs.length; i5++) {
                             if (na5 === _vs[i5] || na5 === "") {
                                 _b = true;
+                                _asnull = true;
                                 break;
                             } else {
                                 _b = false;
+                                _asnull = false;
                                 //msgerror = "Error en el renglon " + _rni + " valor: " + na5 + " Columna 6";
                                 statSend = false;
                                 msgerror = "Fila " + _rni + " : Valor ingresado en columna A5  debe ser un número de Anexo";
@@ -513,11 +552,14 @@ $(document).ready(function () {
                         }
                         if (_b === false) {
                             return false;
-                        }
+                    }
+                    if (_asnull === false) {
+                        return false;
+                    }
                     } else {
                         _b = true;
                     }
-                }
+                
 
             });
             var rn = $("table#table_info tbody tr[role='row']").length;
@@ -569,34 +611,46 @@ $(document).ready(function () {
 
             if (_m) {
                 if (_g) {
-                    if (borra != "B") {
-                        if (_b) {
-                            if (_a) {
-                                if (_ct) {
-                                    //Guardar los valores de la tabla en el modelo para enviarlos al controlador
-                                    copiarTableInfoControl(); //copiarTableInfoPControl();
-                                    //copiarTableSopControl();
-                                    copiarTableRet();
-                                    $('#btn_guardar').trigger("click");
+                    if (_anull) {
+                        if (_asnull) {
+                            if (borra != "B") {
+                                if (_b) {
+                                    if (_a) {
+                                        if (_ct) {
+                                            //Guardar los valores de la tabla en el modelo para enviarlos al controlador
+                                            copiarTableInfoControl(); //copiarTableInfoPControl();
+                                            //copiarTableSopControl();
+                                            copiarTableRet();
+                                            $('#btn_guardar').trigger("click");
+                                        } else {
+                                            statSend = false
+                                            M.toast({ html: msgerror });
+                                        }
+                                    } else {
+                                        statSend = false
+                                        M.toast({ html: msgerror });
+                                    }
                                 } else {
                                     statSend = false
                                     M.toast({ html: msgerror });
                                 }
                             } else {
-                                statSend = false
-                                M.toast({ html: msgerror });
+                                //Guardar los valores de la tabla en el modelo para enviarlos al controlador
+                                copiarTableInfoControl(); //copiarTableInfoPControl();
+                                //copiarTableSopControl();
+                                copiarTableRet();
+                                $('#btn_guardar').trigger("click");
                             }
                         } else {
                             statSend = false
                             M.toast({ html: msgerror });
                         }
+                        
                     } else {
-                        //Guardar los valores de la tabla en el modelo para enviarlos al controlador
-                        copiarTableInfoControl(); //copiarTableInfoPControl();
-                        //copiarTableSopControl();
-                        copiarTableRet();
-                        $('#btn_guardar').trigger("click");
+                        statSend = false
+                        M.toast({ html: msgerror });
                     }
+                    
                 }
                 else {
 

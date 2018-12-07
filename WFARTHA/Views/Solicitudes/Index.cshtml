@@ -341,15 +341,15 @@
                             @*<td class="">
                                     <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Error contabilizando SAP</span>
                                 </td>*@
-                            estatus = "Error Contabilizar SAP";
-                            visible = true;
-                            color = "red darken-2";
-                        }
+                        estatus = "Error Contabilizar SAP";
+                        visible = true;
+                        color = "red darken-2";
                     }
-                    else if (item.ESTATUS_WF.Equals("A"))
+                }
+                else if (item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("A"))
+                {
+                    if (item.ESTATUS.Equals("C"))
                     {
-                        if (item.ESTATUS.Equals("C"))
-                        {
                             @*MGC 07-11-2018 Área de trabajo y solicitudes*@
                             @*<td class="green darken-1 white-text">
                                     <div class="lbl_contab">Por contabilizar</div>
@@ -388,22 +388,23 @@
                         @*<td class="">
                                 <span class="lbl_tax new badge red darken-2 white-text" data-badge-caption=" ">Pendiente corrección usuario</span>
                             </td>*@
-                        estatus = "Pendiente Corrección";
-                        visible = false;
-                        color = "red darken-2";
-                    }
-                    else if (item.ESTATUS_WF.Equals("T"))
-                    {
+                    estatus = "Pendiente Corrección";
+                    visible = false;
+                    color = "red darken-2";
+                }
+                else if (item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("T"))
+
+               {
                         @*MGC 07-11-2018 Área de trabajo y solicitudes*@
                         @*<td class="yellow darken-2 white-text">
                                 <div class="lbl_tax">Pendiente Tax</div>
                             </td>*@
-                        estatus = "Pendiente Tax";
-                        visible = false;
-                        color = "yellow darken-2";
-                    }
-                    else
-                    {
+                    estatus = "Pendiente Tax";
+                    visible = false;
+                    color = "yellow darken-2";
+                }
+                else
+                {
                         @*MGC 07-11-2018 Área de trabajo y solicitudes*@
                         @*<td class="yellow darken-2 white-text">
                                 <div class="lbl_tax">ttt</div>

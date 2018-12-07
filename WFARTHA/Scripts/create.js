@@ -572,6 +572,8 @@ $(document).ready(function () {
             var _b = false;
             var _m = true;
             var _g = true;
+            var _anull = true //FRT06122018
+            var _asnull = true //FRT06122018
             var _vs = [];
             var msgerror = "";
             var _rni = 0;
@@ -769,27 +771,52 @@ $(document).ready(function () {
                 }
 
                 //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
-                if (borrador != "B") {
-                    if (_vs.length > 0) {
+
+
+                //FRT06122018 Para validar que si no hay anexos no se pueda asociar
+                if (_vs.length == 0) {
+                    if (na1 != "" || na2 != "" || na3 != "" || na4 != "" || na5 != "") {
+                        _b = false;
+                        _anull = false;
+                        msgerror = "Fila " + _rni + " : No existe numero de anexo " + na1 + " por asociar ";
+                       
+                    }
+                }
+
+                if (_anull === false) {
+                    return false;
+                }
+                //ENDFRT06122018 Para validar que si no hay anexos no se pueda asociar
+
+
+              
+                if (_vs.length > 0) {
                         for (var i = 0; i < _vs.length; i++) {
                             if (na1 === _vs[i] || na1 === "") {
                                 _b = true;
+                                _asnull = true;
                                 break;
                             } else {
                                 _b = false;
+                                _asnull = false;
                                 statSend = false;
                                 msgerror = "Fila " + _rni + " : Valor ingresado en columna A1  debe ser un número de Anexo";
                             }
                         }
                         if (_b === false) {
                             return false;
-                        }
+                    }
+                    if (_asnull === false) {
+                        return false;
+                    }
                         for (var i2 = 0; i2 < _vs.length; i2++) {
                             if (na2 === _vs[i2] || na2 === "") {
                                 _b = true;
+                                _asnull = true;
                                 break;
                             } else {
                                 _b = false;
+                                _asnull = false;
                                 statSend = false;
                                 //msgerror = "Fila " + _rni + " valor: " + na2 + " Columna 3"; 
                                 msgerror = "Fila " + _rni + " : Valor ingresado en columna A2  debe ser un número de Anexo";
@@ -797,13 +824,18 @@ $(document).ready(function () {
                         }
                         if (_b === false) {
                             return false;
-                        }
+                    }
+                    if (_asnull === false) {
+                        return false;
+                    }
                         for (var i3 = 0; i3 < _vs.length; i3++) {
                             if (na3 === _vs[i3] || na3 === "") {
                                 _b = true;
+                                _asnull = true;
                                 break;
                             } else {
                                 _b = false;
+                                _asnull = false;
                                 statSend = false;
                                 //msgerror = "Fila " + _rni + " valor: " + na3 + " Columna 4";
                                 msgerror = "Fila " + _rni + " : Valor ingresado en columna A3  debe ser un número de Anexo";
@@ -811,13 +843,18 @@ $(document).ready(function () {
                         }
                         if (_b === false) {
                             return false;
-                        }
+                    }
+                    if (_asnull === false) {
+                        return false;
+                    }
                         for (var i4 = 0; i4 < _vs.length; i4++) {
                             if (na4 === _vs[i4] || na4 === "") {
                                 _b = true;
+                                _asnull = true;
                                 break;
                             } else {
                                 _b = false;
+                                _asnull = false;
                                 statSend = false;
                                 //msgerror = "Fila " + _rni + " valor: " + na4 + " Columna 5";
                                 msgerror = "Fila " + _rni + " : Valor ingresado en columna A4  debe ser un número de Anexo";
@@ -825,13 +862,18 @@ $(document).ready(function () {
                         }
                         if (_b === false) {
                             return false;
-                        }
+                    }
+                    if (_asnull === false) {
+                        return false;
+                    }
                         for (var i5 = 0; i5 < _vs.length; i5++) {
                             if (na5 === _vs[i5] || na5 === "") {
                                 _b = true;
+                                _asnull = true;
                                 break;
                             } else {
                                 _b = false;
+                                _asnull = false;
                                 statSend = false;
                                 //msgerror = "Fila " + _rni + " valor: " + na5 + " Columna 6";
                                 msgerror = "Fila " + _rni + " : Valor ingresado en columna A5  debe ser un número de Anexo";
@@ -840,10 +882,13 @@ $(document).ready(function () {
                         if (_b === false) {
                             return false;
                         }
+                    if (_asnull === false) {
+                        return false;
+                         }
                     } else {
                         _b = true;
                     }
-                }
+               
 
 
             });
@@ -913,18 +958,28 @@ $(document).ready(function () {
 
             if (_m) {
                 if (_g) {
-                    if (borrador != "B") {
-                        if (_p) {
-                            if (_b) {
-                                if (_a) {
-                                    if (_ct) {
-                                        //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
-                                        copiarTableInfoControl();
-                                        copiarTableInfoPControl();
-                                        copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
-                                        copiarTableRet();
-                                        //end FRT06112018.3 
-                                        $('#btn_guardar').trigger("click");
+                    if (_anull) {
+                        if (_asnull) {
+                            if (borrador != "B") {
+                                if (_p) {
+                                    if (_b) {
+                                        if (_a) {
+                                            if (_ct) {
+                                                //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
+                                                copiarTableInfoControl();
+                                                copiarTableInfoPControl();
+                                                copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
+                                                copiarTableRet();
+                                                //end FRT06112018.3 
+                                                $('#btn_guardar').trigger("click");
+                                            } else {
+                                                statSend = false;
+                                                M.toast({ html: msgerror });
+                                            }
+                                        } else {
+                                            statSend = false;
+                                            M.toast({ html: msgerror });
+                                        }
                                     } else {
                                         statSend = false;
                                         M.toast({ html: msgerror });
@@ -934,21 +989,23 @@ $(document).ready(function () {
                                     M.toast({ html: msgerror });
                                 }
                             } else {
-                                statSend = false;
-                                M.toast({ html: msgerror });
+                                copiarTableInfoControl();
+                                copiarTableInfoPControl();
+                                copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
+                                copiarTableRet();
+                                //end FRT06112018.3 
+                                $('#btn_guardar').trigger("click");
                             }
                         } else {
                             statSend = false;
                             M.toast({ html: msgerror });
                         }
+                        
                     } else {
-                        copiarTableInfoControl();
-                        copiarTableInfoPControl();
-                        copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
-                        copiarTableRet();
-                        //end FRT06112018.3 
-                        $('#btn_guardar').trigger("click");
+                        statSend = false;
+                        M.toast({ html: msgerror });
                     }
+                    
                 } else {
                     statSend = false;
                     M.toast({ html: msgerror });
@@ -960,7 +1017,7 @@ $(document).ready(function () {
 
 
 
-
+            $("#borr").val(''); //FRT05122018 para  saber cuando es borrador y cuando envio
 
 
             //ENDFRT02122018 VALIDACIONES EN EL BORRADOR
