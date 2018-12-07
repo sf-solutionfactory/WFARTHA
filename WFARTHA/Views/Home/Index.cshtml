@@ -9,7 +9,7 @@
     WFARTHA.Entities.WFARTHAEntities db = new WFARTHA.Entities.WFARTHAEntities();
     List<WFARTHA.Entities.PROVEEDOR> lst = ViewBag.Proveedores as List<WFARTHA.Entities.PROVEEDOR>;
 
-    }
+}
 
 <script src="~/Scripts/Homescript.js"></script>
 <script src="~/Scripts/disenarVistas.js"></script>
@@ -36,7 +36,7 @@
             </select>
         </div>
         <script>
-            
+
             function cambiaUsuario(user_id) {
                 document.location.replace("/?id=" + user_id);
             }
@@ -44,7 +44,7 @@
     }
     <div class="col s8 right-align right">
         @Html.ActionLink("Crear Solicitud", "Create", "Solicitudes", null, new { @class = "btn-small", @id = "btn_create" })
-     
+
     </div>
     <div class="col s12 right-align" style="margin-top:5px;">
 
@@ -554,7 +554,7 @@
                                 }
                             }
                         }
-                        else if (item.ESTATUS_WF.Equals("A"))
+                        else if (item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("A"))
                         {
                             if (item.ESTATUS.Equals("C"))
                             {
@@ -609,7 +609,7 @@
                                 visible = false;
                             }
                         }
-                        else if (item.ESTATUS_WF.Equals("T"))
+                        else if (item.ESTATUS_WF != null && item.ESTATUS_WF.Equals("T"))
                         {
                             @*MGC 07-11-2018 Área de trabajo y solicitudes*@
                             @*<td class="yellow darken-2 white-text">
@@ -696,6 +696,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT020)
                                 </td>
+
                                 <td>
                                     @if (item.FECHAD != null)
                                     {
@@ -712,7 +713,7 @@
                                 <td class="">
                                     @*<span class="new badge @color white-text" data-badge-caption=" ">@estatus</span>*@
                                     @*<span class="badge black-text" data-badge-caption=" ">@estatus</span>*@  @*MGC 10-11-2018 Sin color y letra color negra*@
-                                    @estatus  @*MGC 10-11-2018 Sin color y letra color negra*@
+                                    @estatus @*MGC 10-11-2018 Sin color y letra color negra*@
                                 </td>
 
                                 @*//Código en el archivo----------------------------------------------------------------------------------------------------------->*@
@@ -746,7 +747,6 @@
                                         @item.USUARIOD_ID
                                     </td>
                                 }
-
                             </tr>
 
                         }
