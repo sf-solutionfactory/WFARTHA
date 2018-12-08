@@ -404,6 +404,9 @@
     <Compile Include="Entities\PROVEEDOR.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\PROVEEDOR_BANCO.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\PROYECTO.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
