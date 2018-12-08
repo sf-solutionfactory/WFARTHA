@@ -79,6 +79,7 @@ namespace WFARTHA.Entities
         public virtual DbSet<PERMISO_PAGINA> PERMISO_PAGINA { get; set; }
         public virtual DbSet<POSICION> POSICIONs { get; set; }
         public virtual DbSet<PROVEEDOR> PROVEEDORs { get; set; }
+        public virtual DbSet<PROVEEDOR_BANCO> PROVEEDOR_BANCO { get; set; }
         public virtual DbSet<PROYECTO> PROYECTOes { get; set; }
         public virtual DbSet<PUESTO> PUESTOes { get; set; }
         public virtual DbSet<PUESTOT> PUESTOTs { get; set; }
@@ -142,6 +143,27 @@ namespace WFARTHA.Entities
                 new ObjectParameter("NUM_DOC", typeof(decimal));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_FIRMAS", nUM_DOCParameter);
+        }
+    
+        public virtual int SP_REPORTESOLS(Nullable<decimal> nUM_DOC, string bUKRS, string uSER, Nullable<int> num)
+        {
+            var nUM_DOCParameter = nUM_DOC.HasValue ?
+                new ObjectParameter("NUM_DOC", nUM_DOC) :
+                new ObjectParameter("NUM_DOC", typeof(decimal));
+    
+            var bUKRSParameter = bUKRS != null ?
+                new ObjectParameter("BUKRS", bUKRS) :
+                new ObjectParameter("BUKRS", typeof(string));
+    
+            var uSERParameter = uSER != null ?
+                new ObjectParameter("USER", uSER) :
+                new ObjectParameter("USER", typeof(string));
+    
+            var numParameter = num.HasValue ?
+                new ObjectParameter("num", num) :
+                new ObjectParameter("num", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_REPORTESOLS", nUM_DOCParameter, bUKRSParameter, uSERParameter, numParameter);
         }
     }
 }

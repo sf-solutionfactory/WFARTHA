@@ -792,17 +792,19 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.IIMPUESTO' no tiene definida n
           <Property Name="STCD2" Type="nchar" MaxLength="11" />
           <Property Name="ACTIVO" Type="bit" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6013: La tabla o vista 'PAGOS300I.dbo.PROVEEDOR_BANCO' no tiene definida una clave principal y no es posible inferir ninguna clave principal válida. Esta tabla o vista se ha excluido. Para usar la entidad, necesitará revisar el esquema, agregar las claves correctas y quitar sus comentarios.
         <EntityType Name="PROVEEDOR_BANCO">
-          <Property Name="LIFNR" Type="nchar" MaxLength="10" />
+          <Key>
+            <PropertyRef Name="LIFNR" />
+            <PropertyRef Name="BKVID" />
+          </Key>
+          <Property Name="LIFNR" Type="nchar" MaxLength="10" Nullable="false" />
           <Property Name="BANKS" Type="nchar" MaxLength="3" />
           <Property Name="BANKL" Type="nchar" MaxLength="15" />
           <Property Name="BANKN" Type="nchar" MaxLength="18" />
-          <Property Name="BKVID" Type="nchar" MaxLength="4" />
+          <Property Name="BKVID" Type="nchar" MaxLength="4" Nullable="false" />
           <Property Name="KOINH" Type="nvarchar" MaxLength="60" />
           <Property Name="BKEXT" Type="nchar" MaxLength="20" />
-        </EntityType>-->
+        </EntityType>
         <!--Errores durante la generación:
 advertencia 6013: La tabla o vista 'PAGOS300I.dbo.PROVEEDORES$' no tiene definida una clave principal y no es posible inferir ninguna clave principal válida. Esta tabla o vista se ha excluido. Para usar la entidad, necesitará revisar el esquema, agregar las claves correctas y quitar sus comentarios.
         <EntityType Name="PROVEEDORES$">
@@ -2312,6 +2314,12 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
         <Function Name="SP_FIRMAS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="NUM_DOC" Type="numeric" Mode="In" />
         </Function>
+        <Function Name="SP_REPORTESOLS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NUM_DOC" Type="numeric" Mode="In" />
+          <Parameter Name="BUKRS" Type="nchar" Mode="In" />
+          <Parameter Name="USER" Type="nvarchar" Mode="In" />
+          <Parameter Name="num" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="WFARTHAModelStoreContainer">
           <EntitySet Name="ACCION" EntityType="Self.ACCION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="APPSETTING" EntityType="Self.APPSETTING" Schema="dbo" store:Type="Tables" />
@@ -2366,6 +2374,7 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
           <EntitySet Name="PERMISO_PAGINA" EntityType="Self.PERMISO_PAGINA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="POSICION" EntityType="Self.POSICION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PROVEEDOR" EntityType="Self.PROVEEDOR" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PROVEEDOR_BANCO" EntityType="Self.PROVEEDOR_BANCO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PROYECTO" EntityType="Self.PROYECTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PUESTO" EntityType="Self.PUESTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PUESTOT" EntityType="Self.PUESTOT" Schema="dbo" store:Type="Tables" />
@@ -3672,6 +3681,19 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
           <Property Name="ACTIVO" Type="Boolean" />
           <NavigationProperty Name="DET_PROVEEDOR" Relationship="Self.FK_DET_PROVEEDOR_PROYECTO" FromRole="PROVEEDOR" ToRole="DET_PROVEEDOR" />
           <NavigationProperty Name="RETENCION_PROV" Relationship="Self.FK_RETENCION_PROV_PROVEEDOR" FromRole="PROVEEDOR" ToRole="RETENCION_PROV" />
+        </EntityType>
+        <EntityType Name="PROVEEDOR_BANCO">
+          <Key>
+            <PropertyRef Name="LIFNR" />
+            <PropertyRef Name="BKVID" />
+          </Key>
+          <Property Name="LIFNR" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="BANKS" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="BANKL" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+          <Property Name="BANKN" Type="String" MaxLength="18" FixedLength="true" Unicode="true" />
+          <Property Name="BKVID" Type="String" MaxLength="4" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="KOINH" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="BKEXT" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="PROYECTO">
           <Key>
@@ -5235,6 +5257,7 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
           <EntitySet Name="PERMISO_PAGINA" EntityType="Self.PERMISO_PAGINA" />
           <EntitySet Name="POSICIONs" EntityType="Self.POSICION" />
           <EntitySet Name="PROVEEDORs" EntityType="Self.PROVEEDOR" />
+          <EntitySet Name="PROVEEDOR_BANCO" EntityType="Self.PROVEEDOR_BANCO" />
           <EntitySet Name="PROYECTOes" EntityType="Self.PROYECTO" />
           <EntitySet Name="PUESTOes" EntityType="Self.PUESTO" />
           <EntitySet Name="PUESTOTs" EntityType="Self.PUESTOT" />
@@ -5592,6 +5615,12 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
           </FunctionImport>
           <FunctionImport Name="SP_FIRMAS">
             <Parameter Name="NUM_DOC" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="SP_REPORTESOLS">
+            <Parameter Name="NUM_DOC" Mode="In" Type="Decimal" />
+            <Parameter Name="BUKRS" Mode="In" Type="String" />
+            <Parameter Name="USER" Mode="In" Type="String" />
+            <Parameter Name="num" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="SP_CABECERA_Result">
@@ -6374,6 +6403,19 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="PROVEEDOR_BANCO">
+            <EntityTypeMapping TypeName="WFARTHAModel.PROVEEDOR_BANCO">
+              <MappingFragment StoreEntitySet="PROVEEDOR_BANCO">
+                <ScalarProperty Name="LIFNR" ColumnName="LIFNR" />
+                <ScalarProperty Name="BANKS" ColumnName="BANKS" />
+                <ScalarProperty Name="BANKL" ColumnName="BANKL" />
+                <ScalarProperty Name="BANKN" ColumnName="BANKN" />
+                <ScalarProperty Name="BKVID" ColumnName="BKVID" />
+                <ScalarProperty Name="KOINH" ColumnName="KOINH" />
+                <ScalarProperty Name="BKEXT" ColumnName="BKEXT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="PROYECTOes">
             <EntityTypeMapping TypeName="WFARTHAModel.PROYECTO">
               <MappingFragment StoreEntitySet="PROYECTO">
@@ -6902,6 +6944,7 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_FIRMAS" FunctionName="WFARTHAModel.Store.SP_FIRMAS" />
+          <FunctionImportMapping FunctionImportName="SP_REPORTESOLS" FunctionName="WFARTHAModel.Store.SP_REPORTESOLS" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

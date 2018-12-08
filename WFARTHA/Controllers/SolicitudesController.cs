@@ -264,7 +264,7 @@ namespace WFARTHA.Controllers
             //FRT 03112018.3--------Mostrar anexos de la misma forma que en Editar >
 
 
-            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).OrderBy(a =>a.POS).ToList();  //FRT05122018 para ordenar corecto los anexos
+            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).OrderBy(a => a.POS).ToList();  //FRT05122018 para ordenar corecto los anexos
             var originales = lst.Select(w => w.POS).Distinct().ToList();
 
             DOCUMENTOA d_a = new DOCUMENTOA();
@@ -419,7 +419,7 @@ namespace WFARTHA.Controllers
             var _pag = db.ESTATUS_PAGO.Where(x => x.BELNR == np && x.GJAHR == ejp && x.BUKRS == sp && x.TIPO == "P").ToList();
             var _epag = db.ESTATUS_PAGO.Where(x => x.BELNR == np && x.GJAHR == ejp && x.BUKRS == sp && x.TIPO == "EP").ToList();
 
-            ViewBag.pagado= _pag;
+            ViewBag.pagado = _pag;
             ViewBag.epagado = _epag;
 
             //LEJGG 06-12-2018------------------------------------I
@@ -1591,8 +1591,9 @@ namespace WFARTHA.Controllers
                                         db.SaveChanges();
                                         pos++;
                                         //listaDirectorios2.Remove(_dA.PATH);
-                                        if (listaDirectorios2.Remove(_dA.PATH)) {
-                                           listaDescArchivos2.Remove(_dA.DESC);
+                                        if (listaDirectorios2.Remove(_dA.PATH))
+                                        {
+                                            listaDescArchivos2.Remove(_dA.DESC);
                                         }
 
                                         //listaDescArchivos2.RemoveAt(a11);
@@ -1943,8 +1944,8 @@ namespace WFARTHA.Controllers
                         }
                         //Lejgg 26.10.2018---------------------------------------->
                         //Los anexos que no se agreguen a documentoa se agregaran a documentoas(documentoa1), significa que estan en lista porque no se ligaron a ningun detalle
-                       if (listaDirectorios2.Count == listaDescArchivos2.Count && listaDirectorios2.Count == listaNombreArchivos2.Count)
-                       {
+                        if (listaDirectorios2.Count == listaDescArchivos2.Count && listaDirectorios2.Count == listaNombreArchivos2.Count)
+                        {
                             var pos = 1;
                             for (int i = 0; i < listaDescArchivos2.Count; i++)
                             {
@@ -2541,14 +2542,14 @@ namespace WFARTHA.Controllers
 
             //LEJGG19 10 2018----------------------------------------------------->
 
-            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).OrderBy(a=>a.POS).ToList(); //FRT05122018 para ordenar corecto los anexos
+            var lst = db.DOCUMENTOAs.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).OrderBy(a => a.POS).ToList(); //FRT05122018 para ordenar corecto los anexos
             var originales = lst.Select(w => w.POS).Distinct().ToList(); //FRT06122018
-            
+
             DOCUMENTOA d_a = new DOCUMENTOA();
             var la1 = db.DOCUMENTOAS1.Where(a => a.NUM_DOC == id && a.PATH != "" && a.ACTIVO == true).ToList();
             var files = la1.Count + originales.Count;
             var anexar = 0;
-           
+
 
             if (la1.Count > 0)
             {
@@ -2581,7 +2582,7 @@ namespace WFARTHA.Controllers
             }
 
 
-            
+
 
 
             ////for (int i = 0; i < la1.Count; i++)
@@ -7196,6 +7197,15 @@ namespace WFARTHA.Controllers
                 //return File(descargarArchivo(btnArchivo, contentyp, nombre), contentyp, nombre);
                 return File(archivo, contentyp, nombre);
             }
+        }
+
+        [HttpPost]
+        //public FileResult crearReporte()
+        public string crearReporte()
+        {
+            var xr = db.SP_REPORTESOLS(1, "1", "1", 2);
+            //return File(archivo, contentyp, nombre);
+            return "";
         }
 
         //FRT06112018 Se agrega para poder descargar archivos desde detail

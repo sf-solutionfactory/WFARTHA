@@ -76,7 +76,14 @@
 <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
 <input id="auxS" name="auxS" type="hidden" value="">
 
-
+<div class="row">
+    <div class="col s12 right-align" style="display:none;">
+        @using (Html.BeginForm("crearReporte", "Solicitudes", FormMethod.Post))
+        {
+            <button id="btnDownload" class="btn" type="submit">Generar Reporte</button>
+        }
+    </div>
+</div>
 <div class="row" style="margin-bottom:0">
 
     @*@{WFARTHA.Entities.USUARIO us = ViewBag.usuario;
