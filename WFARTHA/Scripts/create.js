@@ -572,9 +572,11 @@ $(document).ready(function () {
             var _b = false;
             var _m = true;
             var _g = true;
-            var _anull = true //FRT06122018
-            var _asnull = true //FRT06122018
+            var _anull = true; //FRT06122018
+            var _asnull = true; //FRT06122018
+            _aduplicados = true; //FRT07122018 
             var _vs = [];
+            
             var msgerror = "";
             var _rni = 0;
             //Validar que los anexos existan
@@ -613,14 +615,19 @@ $(document).ready(function () {
 
             if ($("table#table_info tbody tr[role='row']").length === 0) { tabble = "table_infoP"; }
             $("#" + tabble + " > tbody  > tr[role='row']").each(function () {
-
+                var _anexos = []; //FRT07122018
                 _rni++;
                 //Obtener valores visibles en la tabla
                 var na1 = $(this).find("td.NumAnexo input").val();
+                _anexos.push(na1);
                 var na2 = $(this).find("td.NumAnexo2 input").val();
+                _anexos.push(na2);
                 var na3 = $(this).find("td.NumAnexo3 input").val();
+                _anexos.push(na3);
                 var na4 = $(this).find("td.NumAnexo4 input").val();
+                _anexos.push(na4);
                 var na5 = $(this).find("td.NumAnexo5 input").val();
+                _anexos.push(na5);
 
                 //frt05112018 validacion de CECOS vacion en Tipo Imp. "K"
 
@@ -752,25 +759,43 @@ $(document).ready(function () {
 
 
 
-                //FRT2311208 PARA VALIDACION DE 50 CARACTERES
+                ////FRT2311208 PARA VALIDACION DE 50 CARACTERES  frt07122018 se quieta validacion en detalles 
 
+                //if (borrador != "B") {
+                //    var texto = $(this).find("td.TEXTO textarea").val().trim();
+                //    var ct = texto.length;
+                //    ct = parseFloat(ct);
+                //    if (ct < 50) {
+                //        _b = false;
+                //        statSend = false;
+                //        msgerror = "Fila " + _rni + ": Falta explicación del egreso en texto";
+                //    } else {
+                //        _b = true;
+                //    }
+                //    if (_b === false) {
+                //        return false;
+                //    }
+                //}
+
+                ////END FRT2311208 PARA VALIDACION DE 50 CARACTERES
+
+                //FRT05122018 Para validar que si tiene anexos debemos tener al menos uno asociado por detalle
                 if (borrador != "B") {
-                    var texto = $(this).find("td.TEXTO textarea").val().trim();
-                    var ct = texto.length;
-                    ct = parseFloat(ct);
-                    if (ct < 50) {
-                        _b = false;
-                        statSend = false;
-                        msgerror = "Fila " + _rni + ": Falta explicación del egreso en texto";
-                    } else {
-                        _b = true;
+                    if (_vs.length > 0) {
+                        if (na1 === "") {
+                            _as = false;
+                            statSend = false;
+                            _b = false;
+                            msgerror = "Fila " + _rni + " :  Falta asociar numero de anexo en la columna A1";
+                            return false;
+                        }
                     }
                     if (_b === false) {
                         return false;
                     }
-                }
 
-                //END FRT2311208 PARA VALIDACION DE 50 CARACTERES
+                }
+                //ENDFRT05122018 Para validar que si tiene anexos debemos tener al menos uno asociado por detalle
 
 
                 //FRT06122018 Para validar que si no hay anexos no se pueda asociar
@@ -788,6 +813,33 @@ $(document).ready(function () {
                 }
                 //ENDFRT06122018 Para validar que si no hay anexos no se pueda asociar
 
+
+                //frt07122018 para validar que no metan dos veces el anexo asociado en la misma fila
+
+                for (var k = 0; k < 5; k++) {
+                    var duplicado = false;
+                    for (var z = 0; z < k; z++) {
+                        if (_anexos[k] != "") {
+                            if (_anexos[z] == _anexos[k]) {
+                                duplicado = true;
+                                break;
+                            }
+                        }
+                       
+                    }
+                    if (duplicado) {
+                        _b = false;
+                        _aduplicados = false;
+                        statSend = false;
+                        msgerror = "Fila " + _rni + " : No es posible duplicar anexo asociado " + _anexos[z] ;
+                        break;
+                    }
+                }
+                if (_b === false) {
+                    return false;
+                }
+
+                //endfrt07122018
 
 
                 if (_vs.length > 0) {
@@ -960,18 +1012,23 @@ $(document).ready(function () {
                 if (_g) {
                     if (_anull) {
                         if (_asnull) {
-                            if (borrador != "B") {
-                                if (_p) {
-                                    if (_b) {
-                                        if (_a) {
-                                            if (_ct) {
-                                                //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
-                                                copiarTableInfoControl();
-                                                copiarTableInfoPControl();
-                                                copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
-                                                copiarTableRet();
-                                                //end FRT06112018.3 
-                                                $('#btn_guardar').trigger("click");
+                            if (_aduplicados) {
+                                if (borrador != "B") {
+                                    if (_p) {
+                                        if (_b) {
+                                            if (_a) {
+                                                if (_ct) {
+                                                    //FRT06112018.3 Se pasa la ejecucion de estas lineas para su actualizacion
+                                                    copiarTableInfoControl();
+                                                    copiarTableInfoPControl();
+                                                    copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
+                                                    copiarTableRet();
+                                                    //end FRT06112018.3 
+                                                    $('#btn_guardar').trigger("click");
+                                                } else {
+                                                    statSend = false;
+                                                    M.toast({ html: msgerror });
+                                                }
                                             } else {
                                                 statSend = false;
                                                 M.toast({ html: msgerror });
@@ -985,17 +1042,18 @@ $(document).ready(function () {
                                         M.toast({ html: msgerror });
                                     }
                                 } else {
-                                    statSend = false;
-                                    M.toast({ html: msgerror });
+                                    copiarTableInfoControl();
+                                    copiarTableInfoPControl();
+                                    copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
+                                    copiarTableRet();
+                                    //end FRT06112018.3 
+                                    $('#btn_guardar').trigger("click");
                                 }
                             } else {
-                                copiarTableInfoControl();
-                                copiarTableInfoPControl();
-                                copiarTableAnexos(); //FRT12112018 se agrega para poder realzar barrido de archivos en tablaanexos
-                                copiarTableRet();
-                                //end FRT06112018.3 
-                                $('#btn_guardar').trigger("click");
+                                statSend = false;
+                                M.toast({ html: msgerror });
                             }
+                            
                         } else {
                             statSend = false;
                             M.toast({ html: msgerror });
@@ -1139,6 +1197,7 @@ $(document).ready(function () {
             var tdata = "";
             var _tab = $('#table_anexa').DataTable();
             for (var i = 0; i < length; i++) {
+                var xmlvalido = true;
                 var nr = _tab.rows().count();
                 //Si nr es 0 significa que la tabla esta vacia
                 if (nr === 0) {
@@ -1201,14 +1260,16 @@ $(document).ready(function () {
                             if (_resVu) {
                                 //Alert no se metio porque ya hay un xml en la tabla
                                 M.toast({ html: "UUID existente en BD" });
-                                document.getElementById('file_sopAnexar').value = '';
+                                xmlvalido = false;
+                                //document.getElementById('file_sopAnexar').value = '';
                             }
                             else {
                                 if (_bcorrecto) {
                                     if (!_bemisor & !_breceptor) {
                                         //Alert no se metio porque ya hay un xml en la tabla
                                         M.toast({ html: "El RFC de Receptor y Emisor no coinciden" });
-                                        document.getElementById('file_sopAnexar').value = '';
+                                        xmlvalido = false;
+                                        //document.getElementById('file_sopAnexar').value = '';
                                     } else {
                                         if (_bemisor) {
                                             if (_breceptor) {
@@ -1219,19 +1280,22 @@ $(document).ready(function () {
                                             else {
                                                 //Alert no se metio porque ya hay un xml en la tabla
                                                 M.toast({ html: "El RFC de Receptor no coincide" });
-                                                document.getElementById('file_sopAnexar').value = '';
+                                                xmlvalido = false;
+                                                //document.getElementById('file_sopAnexar').value = '';
                                             }
 
                                         } else {
                                             //Alert no se metio porque ya hay un xml en la tabla
                                             M.toast({ html: "El RFC de Emisor no coincide" });
-                                            document.getElementById('file_sopAnexar').value = '';
+                                            xmlvalido = false;
+                                            //document.getElementById('file_sopAnexar').value = '';
                                         }
                                     }
                                 } else {
                                     //Alert no se metio porque ya hay un xml en la tabla
                                     M.toast({ html: "El XML no tiene formato correcto" });
-                                    document.getElementById('file_sopAnexar').value = '';
+                                    xmlvalido = false;
+                                    //document.getElementById('file_sopAnexar').value = '';
                                 }
                             }
                         }
@@ -1322,7 +1386,8 @@ $(document).ready(function () {
                                 if (_resVu) {
                                     //Alert no se metio porque ya hay un xml en la tabla
                                     M.toast({ html: "UUID existente en BD" });
-                                    document.getElementById('file_sopAnexar').value = '';
+                                    xmlvalido = false;
+                                    //document.getElementById('file_sopAnexar').value = '';
                                 }
                                 else {
                                     //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
@@ -1331,7 +1396,8 @@ $(document).ready(function () {
                                         if (!_bemisor & !_breceptor) {
                                             //Alert no se metio porque ya hay un xml en la tabla
                                             M.toast({ html: "El RFC de Receptor y Emisor no coinciden" });
-                                            document.getElementById('file_sopAnexar').value = '';
+                                            xmlvalido = false;
+                                            //document.getElementById('file_sopAnexar').value = '';
                                         } else {
                                             if (_bemisor) {
                                                 if (_breceptor) {
@@ -1342,26 +1408,29 @@ $(document).ready(function () {
                                                 else {
                                                     //Alert no se metio porque ya hay un xml en la tabla
                                                     M.toast({ html: "El RFC de Receptor no coincide" });
-                                                    document.getElementById('file_sopAnexar').value = '';
+                                                    xmlvalido = false;
+                                                    //document.getElementById('file_sopAnexar').value = '';
                                                 }
 
                                             } else {
                                                 //Alert no se metio porque ya hay un xml en la tabla
                                                 M.toast({ html: "El RFC de Emisor no coincide" });
-                                                document.getElementById('file_sopAnexar').value = '';
+                                                xmlvalido = false;
+                                                //document.getElementById('file_sopAnexar').value = '';
                                             }
                                         }
                                     } else {
                                         //Alert no se metio porque ya hay un xml en la tabla
                                         M.toast({ html: "El XML no tiene formato correcto" });
-                                        document.getElementById('file_sopAnexar').value = '';
+                                        xmlvalido = false;
+                                        ////document.getElementById('file_sopAnexar').value = '';
                                     }
                                 }
                             }
                             else {
                                 //Alert no se metio porque ya hay un xml en la tabla
                                 M.toast({ html: "Ya existe una factura" });
-                                document.getElementById('file_sopAnexar').value = '';
+                                //document.getElementById('file_sopAnexar').value = '';
 
                             }
                         }
@@ -1379,6 +1448,9 @@ $(document).ready(function () {
                     }
                 }
             }
+        
+                document.getElementById('file_sopAnexar').value = '';
+         
         }
         if (jsval[0].ID === "SRE") {
             var _length = $(this).get(0).files.length;
