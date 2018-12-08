@@ -651,6 +651,23 @@ function tamanosRenglones() {
     var tpos = $("#table_info>tbody>tr").find('td.POS');
     tpos.css("text-align", "left");
     tpos.css("font-size", "15px");
+    if (tRet2.length == 0) {
+        //FILA
+        var an = $("#table_info>tbody>tr").find('td.NumAnexo');
+        an.css("text-align", "left");
+        //FILA
+        var an2 = $("#table_info>tbody>tr").find('td.NumAnexo2');
+        an2.css("text-align", "left");
+        //FILA
+        var an3 = $("#table_info>tbody>tr").find('td.NumAnexo3');
+        an3.css("text-align", "left");
+        //FILA
+        var an4 = $("#table_info>tbody>tr").find('td.NumAnexo4');
+        an4.css("text-align", "left");
+        //FILA
+        var an5 = $("#table_info>tbody>tr").find('td.NumAnexo5');
+        an5.css("text-align", "left");
+    }
 }
 //LEJGG 21-11-2018 Cadena de autorización----------------------------------------------------------------------------->
 //Al seleccionar un solicitante, obtener la cadena para mostrar
