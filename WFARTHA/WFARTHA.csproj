@@ -217,6 +217,7 @@
     <Compile Include="Controllers\FlujosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MensajesController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\SolicitudesController.cs" />
     <Compile Include="Entities\ACCION.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
@@ -534,6 +535,11 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ProyectoSociedadNuevo.cs" />
+    <Compile Include="Models\ReportCabecera.cs" />
+    <Compile Include="Models\ReportDetalle.cs" />
+    <Compile Include="Models\ReportEsqueleto.cs" />
+    <Compile Include="Models\ReportFirmas.cs" />
+    <Compile Include="Models\ReportInfo.cs" />
     <Compile Include="Models\SociedadesUsuario.cs" />
     <Compile Include="Models\SociedadesUsuarioNuevo.cs" />
     <Compile Include="Models\Usuario.cs" />
@@ -809,6 +815,9 @@
     <Content Include="Views\SociedadesUsuario\Create.cshtml" />
     <Content Include="Views\SociedadesUsuario\Edit.cshtml" />
     <Content Include="Views\ProyectoSociedad\Create.cshtml" />
+    <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\Report\Reporte.cshtml" />
+    <Content Include="Views\Report\ReportTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
