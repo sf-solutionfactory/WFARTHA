@@ -240,10 +240,29 @@
                         string estatus = "";
                         string color = "";
 
+                        @*//MGC 06-12-2018 Modificación a borrador, Label de eliminar solicitud--------------------------------------------->*@
+                        if(item.ESTATUS_C != null){
+                            if(item.ESTATUS_C.Equals("A") || item.ESTATUS_C.Equals("B") || item.ESTATUS_C.Equals("C") ){
 
-                        @*//MGC 26-10-2018 Modificación a borrador, Label de borrador*@
-                        if (item.ESTATUS.Equals("B"))
+                                visible = false;
+                                color = "gray darken-2";
+
+                            
+                                if(item.ESTATUS_C.Equals("A")){
+                                    estatus = "Eliminando Solicitud";
+                                }else if(item.ESTATUS_C.Equals("B")){
+                                    estatus = "Error Eliminar";
+                                }else if(item.ESTATUS_C.Equals("C")){
+                                    estatus = "Solicitud Eliminada";
+                                }
+
+                            }
+                        }
+                        @*//MGC 06-12-2018 Modificación a borrador, Label de borrador*@
+                        //if (item.ESTATUS.Equals("B"))@*//MGC 06-12-2018 Modificación a borrador, Label de eliminar solicitud*@
+                        else if (item.ESTATUS.Equals("B")) //MGC 06-12-2018 Modificación a borrador, Label de eliminar solicitud*@S
                         {
+                        @*//MGC 06-12-2018 Modificación a borrador, Label de eliminar solicitud---------------------------------------------<*@
                             @*<td class="gray darken-3 white-text">
                                     <div class="lbl_pending">Borrador</div>
                                 </td>*@
@@ -639,8 +658,22 @@
                         {
 
                             <tr>
+                                @*//MGC 06-12-2018 Modificación a borrador, Label de eliminar solicitud--------------------------------------------->*@
+                                @if (item.ESTATUS_C != null)
+                                {
+                                    if (item.ESTATUS_C.Equals("A") || item.ESTATUS_C.Equals("B") || item.ESTATUS_C.Equals("C"))
+                                    {
+
+                                        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                                                @item.NUM_DOC
+                                        </td>
+
+                                    }
+                                }
                                 @*MGC 07-11-2018 Área de trabajo y solicitudes, Descartar el borrador*@
-                                @if (item.FLUJOes.Count > 0)
+                                @*//@if (item.FLUJOes.Count > 0)*@
+                                @*//MGC 06-12-2018 Modificación a borrador, Label de eliminar solicitud---------------------------------------------<*@
+                                else if (item.FLUJOes.Count > 0)
                                 {
                                     //MGC 03-11-2018.2 La solicitud es un borrador, enviar a editar con parametro pacc B
                                     if (item.ESTATUS.Equals("B") & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID)
