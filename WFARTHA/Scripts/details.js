@@ -613,10 +613,6 @@ function asigF(fir) {
 
 //LEJGG 13/11/2018
 function tamanosRenglones() {
-    if (tRet2.length == 0) {
-        //TEXTO
-        $('.materialize-textarea').css("width", "100%");
-    }
     //TEXTO
     var t_ret = $("#table_info>thead>tr").find('th.TXTPOS');
     t_ret.css("text-align", "center");
@@ -652,6 +648,8 @@ function tamanosRenglones() {
     tpos.css("text-align", "left");
     tpos.css("font-size", "15px");
     if (tRet2.length == 0) {
+        //TEXTO
+        $('.materialize-textarea').css("width", "100%");
         //FILA
         var an = $("#table_info>tbody>tr").find('td.NumAnexo');
         an.css("text-align", "left");
@@ -667,6 +665,18 @@ function tamanosRenglones() {
         //FILA
         var an5 = $("#table_info>tbody>tr").find('td.NumAnexo5');
         an5.css("text-align", "left");
+        //grupo
+        var tg1 = $("#table_info>thead>tr").find('th.GRUPO');
+        tg1.css("text-align", "left");
+        //Monto
+        var t_mt1 = $("#table_info>thead>tr").find('th.CCOSTO');
+        t_mt1.css("text-align", "left");
+        //IVA
+        var t_iva1 = $("#table_info>thead>tr").find('th.IVA');
+        t_iva1.css("text-align", "left");
+        //IMPUESTO
+        var t_im = $("#table_info>thead>tr").find('th.MONTO');
+        t_im.css("text-align", "left");
     }
 }
 //LEJGG 21-11-2018 Cadena de autorización----------------------------------------------------------------------------->
