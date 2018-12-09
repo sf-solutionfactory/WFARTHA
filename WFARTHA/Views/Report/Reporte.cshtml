@@ -1,0 +1,18 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Reporte</title>
+</head>
+<body>
+    <a target="_blank" id="ReportUrl_Performance" href="@Url.Action("ReportTemplate", "Report", new { id = 20,ReportName = "Performance", ReportDescription = "Performance Report", Width = 100, Height = 650 })">
+        Performance Report
+    </a>
+</body>
+</html>
