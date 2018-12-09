@@ -5953,52 +5953,64 @@ namespace WFARTHA.Controllers
                 //FRT07112018.2  Lectura de XML
                 var _ff = file.ToList();
                 var lines = ReadLines(() => _ff[0].InputStream, Encoding.UTF8).ToArray();
-                var _lin = lines.Count();
-                string _soc = (string)Session["SOC"];
+                if (lines[0].Substring(0,5) == "<?xml ") {
+                    var _lin = lines.Count();
+                    string _soc = (string)Session["SOC"];
 
-                string _rfc_soc = db.SOCIEDADs.Where(soc => soc.BUKRS == _soc).FirstOrDefault().STCD1;
-                var _xml = "";
-                //Proceso a realizar si el xml viene estructurado en varios renglones, se concatena en 1 solo //FRT Y LEJGG 07-11-18
-                for (int i = 0; i < _lin; i++)
-                {
-                    _xml += lines[i];
+                    string _rfc_soc = db.SOCIEDADs.Where(soc => soc.BUKRS == _soc).FirstOrDefault().STCD1;
+                    var _xml = "";
+                    //Proceso a realizar si el xml viene estructurado en varios renglones, se concatena en 1 solo //FRT Y LEJGG 07-11-18
+                    for (int i = 0; i < _lin; i++)
+                    {
+                        _xml += lines[i];
+                    }
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(_xml);
+
+                    var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
+                    var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
+                    var xmlnode3 = doc.GetElementsByTagName("cfdi:Emisor");
+                    var xmlnode4 = doc.GetElementsByTagName("tfd:TimbreFiscalDigital");
+
+                    var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
+                    var _Mt = xmlnode[0].Attributes["Total"].Value;
+                    var _RFCReceptor = xmlnode2[0].Attributes["Rfc"].Value;
+                    var _RFCEmisor = xmlnode3[0].Attributes["Rfc"].Value;
+                    var _Uuid = xmlnode4[0].Attributes["UUID"].Value;
+                    var _Moneda = xmlnode[0].Attributes["Moneda"].Value;   //FRT14112018.3 para agregar la moneda al JSON
+                    var _TipoCambio = "0";
+                    if (_Moneda != "MXN")
+                    {
+                        _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;  //FRT14112018.3 para agregar la TIPO CAMBIO al JSON
+                    }
+
+
+                    var _xmlcorrecto = "1";  //FRT20112018 Para poder saber si el XML esta correcto
+
+                    List<string> lstvals = new List<string>();
+                    lstvals.Add(_xmlcorrecto);//FRT20112018 Xml correcto en primera posicion
+                    lstvals.Add(_F);//Fecha
+                    lstvals.Add(_Mt);//Monto
+                    lstvals.Add(_RFCReceptor);//RFCReceptor
+                    lstvals.Add(_RFCEmisor);//RFCEmisor
+                    lstvals.Add(_Uuid);//UUID
+                    lstvals.Add(_Moneda);//Moneda //FRT14112018.3 para agregar la moneda al JSON
+                    lstvals.Add(_rfc_soc);//Sociedad
+                    lstvals.Add(_TipoCambio);//Tipo de Cambio //FRT14112018.3 para agregar tipo de cambio  al JSON
+                    JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
+                    return jc;
+
                 }
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(_xml);
+                else {
+                    List<string> lstvals_error = new List<string>();
+                    lstvals_error.Add("0");//FRT20112018Xml error en primera posicion
+                    JsonResult jc = Json(lstvals_error, JsonRequestBehavior.AllowGet);
+                    return jc;
+                    //FRT 07112018 
 
-                var xmlnode = doc.GetElementsByTagName("cfdi:Comprobante");
-                var xmlnode2 = doc.GetElementsByTagName("cfdi:Receptor");
-                var xmlnode3 = doc.GetElementsByTagName("cfdi:Emisor");
-                var xmlnode4 = doc.GetElementsByTagName("tfd:TimbreFiscalDigital");
-
-                var _F = DateTime.Parse(xmlnode[0].Attributes["Fecha"].Value).ToShortDateString();
-                var _Mt = xmlnode[0].Attributes["Total"].Value;
-                var _RFCReceptor = xmlnode2[0].Attributes["Rfc"].Value;
-                var _RFCEmisor = xmlnode3[0].Attributes["Rfc"].Value;
-                var _Uuid = xmlnode4[0].Attributes["UUID"].Value;
-                var _Moneda = xmlnode[0].Attributes["Moneda"].Value;   //FRT14112018.3 para agregar la moneda al JSON
-                var _TipoCambio = "0";
-                if (_Moneda != "MXN")
-                {
-                    _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;  //FRT14112018.3 para agregar la TIPO CAMBIO al JSON
                 }
 
-
-                var _xmlcorrecto = "1";  //FRT20112018 Para poder saber si el XML esta correcto
-
-                List<string> lstvals = new List<string>();
-                lstvals.Add(_xmlcorrecto);//FRT20112018 Xml correcto en primera posicion
-                lstvals.Add(_F);//Fecha
-                lstvals.Add(_Mt);//Monto
-                lstvals.Add(_RFCReceptor);//RFCReceptor
-                lstvals.Add(_RFCEmisor);//RFCEmisor
-                lstvals.Add(_Uuid);//UUID
-                lstvals.Add(_Moneda);//Moneda //FRT14112018.3 para agregar la moneda al JSON
-                lstvals.Add(_rfc_soc);//Sociedad
-                lstvals.Add(_TipoCambio);//Tipo de Cambio //FRT14112018.3 para agregar tipo de cambio  al JSON
-                JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
-                //FRT 07112018 
-                return jc;
+               
             }
             catch (Exception e)
             {
