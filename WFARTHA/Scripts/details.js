@@ -665,6 +665,11 @@ function tamanosRenglones() {
         //FILA
         var an5 = $("#table_info>tbody>tr").find('td.NumAnexo5');
         an5.css("text-align", "left");
+        //total
+        var TTH = $("#table_info>thead>tr").find('th.TOTAL');
+        TTH.css("text-align", "left");
+        var TT = $("#table_info>tbody>tr").find('td.TOTAL');
+        TT.css("text-align", "left");
         //grupo
         var tg1 = $("#table_info>thead>tr").find('th.GRUPO');
         tg1.css("text-align", "left");
