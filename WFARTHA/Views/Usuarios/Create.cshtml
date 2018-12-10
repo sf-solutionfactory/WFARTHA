@@ -13,18 +13,9 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="row">
-        <div class="col s12 right-align">
-            <button type="submit" id="btn_guardar" class="btn btn-default">Guardar NT</button>
-        </div>
-    </div>
-        <div class="row">
-        <div class="col s12 left-align">
-            @if (@TempData["MensajeUsuario"] != null)
-            {
-            <label id="lbl_mensajeusuario"></label>
-            }
-        </div>
+<div class="row">
+    <div class="col s12 right-align">
+        <button type="submit" id="btn_guardar" class="btn btn-default">Guardar NT</button>
     </div>
     <div class="row right">
         <div class="col l6 s12">
@@ -38,7 +29,7 @@
                     </div>
 
                     <div class="input-field col s12">
-                        @Html.PasswordFor(model => model.PASS, new { @class = "form-control", @id = "txt_pass", required=true, @maxlength=16, @minlength=5 })
+                        @Html.PasswordFor(model => model.PASS, new { @class = "form-control", @id = "txt_pass", required = true, @maxlength = 16, @minlength = 5 })
                         @Html.LabelFor(model => model.PASS, htmlAttributes: new { @id = "lbl_pass" })
                         @Html.ValidationMessageFor(model => model.PASS, "", new { @class = "text-danger" })
                     </div>
@@ -94,7 +85,7 @@
                     </div>
 
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.APELLIDO_P, new { htmlAttributes = new { @class = "form-control",required=true } })
+                        @Html.EditorFor(model => model.APELLIDO_P, new { htmlAttributes = new { @class = "form-control", required = true } })
                         @Html.LabelFor(model => model.APELLIDO_P, htmlAttributes: new { @id = "lbl_appPat" })
                         @Html.ValidationMessageFor(model => model.APELLIDO_P, "", new { @class = "text-danger" })
                     </div>
@@ -113,10 +104,10 @@
 
                     @*//MGC 24-10-2018 Usuarios*@
                     @*<div class="input-field col s12">
-                        @Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @class = "form-control" })
-                        <label id="lbl_spras">SPRAS</label>
-                       
-                    </div>*@
+                            @Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @class = "form-control" })
+                            <label id="lbl_spras">SPRAS</label>
+
+                        </div>*@
                     @*//MGC 24-10-2018 Usuarios*@
 
                     @*<div class="form-group">
@@ -152,10 +143,10 @@
 
                     @*//MGC 24-10-2018 Usuarios*@
                     @*<div class="input-field col s12">
-                        @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "form-control" })
-                        @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
-                        @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
-                    </div>*@
+                            @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
+                            @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+                        </div>*@
                     @*//MGC 24-10-2018 Usuarios*@
 
 
@@ -178,6 +169,16 @@
             </div>
         </div>
     </div>
+</div>
+        <div class="row">
+        <div class="col s12 left-align">
+            @if (@TempData["MensajeUsuario"] != null)
+            {
+            <label id="lbl_mensajeusuario"></label>
+            }
+        </div>
+    </div>
+    
     //OCG 11/10/18 Validacion de email
     <script>
 
