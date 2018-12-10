@@ -5953,7 +5953,7 @@ namespace WFARTHA.Controllers
                 //FRT07112018.2  Lectura de XML
                 var _ff = file.ToList();
                 var lines = ReadLines(() => _ff[0].InputStream, Encoding.UTF8).ToArray();
-                if (lines[0].Substring(0,5) == "<?xml ") {
+               
                     var _lin = lines.Count();
                     string _soc = (string)Session["SOC"];
 
@@ -6000,16 +6000,7 @@ namespace WFARTHA.Controllers
                     JsonResult jc = Json(lstvals, JsonRequestBehavior.AllowGet);
                     return jc;
 
-                }
-                else {
-                    List<string> lstvals_error = new List<string>();
-                    lstvals_error.Add("0");//FRT20112018Xml error en primera posicion
-                    JsonResult jc = Json(lstvals_error, JsonRequestBehavior.AllowGet);
-                    return jc;
-                    //FRT 07112018 
-
-                }
-
+              
                
             }
             catch (Exception e)

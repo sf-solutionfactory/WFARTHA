@@ -853,7 +853,7 @@ $(document).ready(function () {
                             _b = false;
                             _asnull = false;
                             statSend = false;
-                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A1  debe ser un número de Anexo";
+                            msgerror = "Fila " + _rni + " : El valor ingresado en la columna A1 no es un Anexo";
                         }
                     }
                     if (_b === false) {
@@ -872,7 +872,7 @@ $(document).ready(function () {
                             _asnull = false;
                             statSend = false;
                             //msgerror = "Fila " + _rni + " valor: " + na2 + " Columna 3"; 
-                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A2  debe ser un número de Anexo";
+                            msgerror = "Fila " + _rni + " : El valor ingresado en la columna A2 no es un Anexo";
                         }
                     }
                     if (_b === false) {
@@ -891,7 +891,7 @@ $(document).ready(function () {
                             _asnull = false;
                             statSend = false;
                             //msgerror = "Fila " + _rni + " valor: " + na3 + " Columna 4";
-                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A3  debe ser un número de Anexo";
+                            msgerror = "Fila " + _rni + " : El valor ingresado en la columna A3 no es un Anexo";
                         }
                     }
                     if (_b === false) {
@@ -910,7 +910,7 @@ $(document).ready(function () {
                             _asnull = false;
                             statSend = false;
                             //msgerror = "Fila " + _rni + " valor: " + na4 + " Columna 5";
-                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A4  debe ser un número de Anexo";
+                            msgerror = "Fila " + _rni + " : El valor ingresado en la columna A4 no es un Anexo";
                         }
                     }
                     if (_b === false) {
@@ -929,7 +929,7 @@ $(document).ready(function () {
                             _asnull = false;
                             statSend = false;
                             //msgerror = "Fila " + _rni + " valor: " + na5 + " Columna 6";
-                            msgerror = "Fila " + _rni + " : Valor ingresado en columna A5  debe ser un número de Anexo";
+                            msgerror = "Fila " + _rni + " : El valor ingresado en la columna A5 no es un Anexo";
                         }
                     }
                     if (_b === false) {
@@ -949,7 +949,7 @@ $(document).ready(function () {
             if (rn == 0) {
                 statSend = false;
                 _f = false;
-                msgerror = "Sin Filas";
+                msgerror = "No hay filas con egresos";
             } else {
                 _f = true;
             }
