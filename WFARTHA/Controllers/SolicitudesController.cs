@@ -4784,7 +4784,7 @@ namespace WFARTHA.Controllers
                                 //MGC 04-11-2018 Generar Archivos ----------------------------------------------------------------->
 
                                 //Crear el archivo para el preliminar //MGC Preliminar
-                                string corr = pf.procesaPreliminar(_docf, false, "");
+                                string corr = pf.procesaPreliminar(_docf, false, "", false);
 
                                 //Se genero el preliminar
                                 if (corr == "0")
@@ -8031,6 +8031,110 @@ namespace WFARTHA.Controllers
             return lcadenan;
         }
         //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
+
+        //MGC 10-12-2018 Firma del usuario cancelar------------------------------------------------------------------------->
+        [HttpPost]
+        public ActionResult Cancelar(decimal id)
+        {
+            //Session["sol_tipo"] = null;
+            DOCUMENTO d = db.DOCUMENTOes.Find(id);
+            //d.ESTATUS_C = "C";
+            //FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC == id).OrderByDescending(a => a.POS).FirstOrDefault();
+            //db.Entry(d).State = EntityState.Modified;
+            //if (actual != null)
+            //{
+            //    FLUJO nuevo = new FLUJO();
+            //    WORKFP fin = db.WORKFPs.Where(a => a.ID == actual.WORKF_ID & a.VERSION == actual.WF_VERSION & a.NEXT_STEP == 99).FirstOrDefault();
+            //    if (fin != null)
+            //    {
+            //        nuevo.COMENTARIO = "";
+            //        nuevo.DETPOS = 0;
+            //        nuevo.DETVER = 0;
+            //        nuevo.ESTATUS = "A";
+            //        nuevo.FECHAC = DateTime.Now;
+            //        nuevo.FECHAM = nuevo.FECHAC;
+            //        nuevo.LOOP = 0;
+            //        nuevo.NUM_DOC = actual.NUM_DOC;
+            //        nuevo.POS = actual.POS + 1;
+            //        nuevo.USUARIOA_ID = User.Identity.Name;
+            //        nuevo.WF_POS = fin.POS;
+            //        nuevo.WF_VERSION = fin.VERSION;
+            //        nuevo.WORKF_ID = fin.ID;
+            //        db.FLUJOes.Add(nuevo);
+            //    }
+            //}
+            //Enviar el archivo con parámetro de Borrado
+            //Crear el archivo para el preliminar //MGC Preliminar
+            ProcesaFlujo pf = new ProcesaFlujo();
+            string corr = pf.procesaPreliminar(d, false, "", true);
+            //Se genero el archivo de cancelación
+            if (corr == "0")
+            {
+                try
+                {
+                    DOCUMENTOLOG dl = new DOCUMENTOLOG();
+                    dl.NUM_DOC = d.NUM_DOC;
+                    dl.TYPE_LINE = "M";
+                    dl.TYPE = "S";
+                    dl.MESSAGE = "Se generó el Archivo Cancelación Portal";
+                    dl.FECHA = DateTime.Now;
+                    db.DOCUMENTOLOGs.Add(dl);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                }
+                try
+                {
+                    d.ESTATUS_C = "A";
+                    db.Entry(d).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                }
+            }
+            //No se genero el archivo de preliminar
+            else
+            {
+                string m;
+                if (corr.Length > 50)
+                {
+                    m = corr.Substring(0, 50);
+                }
+                else
+                {
+                    m = corr;
+                }
+                //MGC 30-10-2018 Agregar mensaje a log de modificación
+                try
+                {
+                    DOCUMENTOLOG dl = new DOCUMENTOLOG();
+                    dl.NUM_DOC = d.NUM_DOC;
+                    dl.TYPE_LINE = "M";
+                    dl.TYPE = "E";
+                    dl.MESSAGE = m;
+                    dl.FECHA = DateTime.Now;
+                    db.DOCUMENTOLOGs.Add(dl);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                }
+                try
+                {
+                    d.ESTATUS_C = "B";
+                    db.Entry(d).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                }
+            }
+            db.SaveChanges();
+            return RedirectToAction("Index", "Home");
+        }
+        //MGC 10-12-2018 Firma del usuario cancelar-------------------------------------------------------------------------<
 
     }
     public class TXTImp

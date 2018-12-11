@@ -166,9 +166,79 @@
         {
             <a id="btn_borradorh" class="btn btn-small">Guardar Borrador</a> @*SE AGREGA BOTON PARA BORRADOR*@
         }
+        @*//MGC 06-12-2018 Firma del usuario cancelar -------------------------------------------------->*@
+        else if (pacc == "R" | pacc == "P")
+        {
+            <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2">Eliminar</a>
+
+        }
 
         <a id="btn_cancelar" href="@Url.Action("Index", "Home" )" onclick="return confirm('Deseas salir sin guardar o enviar');" class="btn btn-small">Cancelar</a>@*FRT02122018 Para poder mostrar mensaje*@
         <a id="btn_guardarh" class="btn btn-small">Enviar</a>
+        @if (pacc == "R" | pacc == "P")
+        {
+            using (Html.BeginForm("Cancelar", "Solicitudes", new { id = Model.NUM_DOC }, FormMethod.Post, new { id = "form_procesac" }))
+            {
+                 <div id="modal2" class="modal">
+                    @Html.AntiForgeryToken()
+                    <div class="modal-content" style="text-align: left;">
+                        <div class="row">
+                            <h4 id="txt_can">Eliminar Solicitud</h4>
+                            <br />
+                        </div>
+                        <div class="row" style="">
+                            <div class="col s12 m12 l12">
+                                <div class="row" style="margin-bottom:0">
+                                    ¿Está seguro de eliminar esta solicitud?
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div>
+                            <div class="input-field col s2 offset-s1" style="width:auto;margin-top:0px;margin-left:0px">
+                                <input type="password" name="txtfirma_usc" id="txtfirma_usc" value="" />
+                                <label for="txtfirma_usc" id="lbl_firma">Firma</label>
+                            </div>
+                             <a href="#!" class="modal-action modal-close btn-flat">No</a>
+                            <a id="cont_sendc" href="#!" class="modal-action modal-close btn-flat">Si</a>
+                            @*<a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>*@
+                            @*<input id="cont_sendc" type="button" value="Si" class="modal-action modal-close btn-flat" onclick="document.getElementById('loader').style.display = 'initial';" />*@
+                        </div>
+                    </div>
+                </div>
+                 <script>
+                    //MGC 18-10-2018 Firma del usuario -------------------------------------------------->
+                    var elem2 = document.getElementById('modal2');
+                    if (elem2 != undefined)
+                        var instance2 = M.Modal.init(elem2, []);
+                    //Validar la firma del usuario
+                    //$("#form_procesa").submit(function (e) {
+                    $("#cont_sendc").click(function (e) {
+                         //var $this = $(this);
+                        //var frmValues = JSON.stringify($this)
+                        document.getElementById('loader').style.display = 'initial';
+                         var p = $("#txtfirma_usc").val();
+                         var resc = false;
+                        res = valF(p);
+                         if (res == "true") {
+                            resc = true;
+                        }
+                         if (!resc) {
+                            //Error
+                            document.getElementById('loader').style.display = 'none';
+                            M.toast({ html: 'Error con la Firma del Usuario' });
+                            e.preventDefault();
+                         } else {
+                            //Hacer el submit
+                            $("#form_procesac").submit();
+                        }
+                        document.getElementById('loader').style.display = 'none';
+                    });
+                 </script>
+            }
+            @*//MGC 06-12-2018 Firma del usuario cancelar --------------------------------------------------<*@
+        }
     </div>
     <div class="col s12" style="display:inline;">
         @*FRT 02112018 Agregar titulos*@

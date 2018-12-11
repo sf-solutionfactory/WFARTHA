@@ -34,7 +34,7 @@ namespace WFARTHA.Common
             controller.ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina_id_textos) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
         }
-        public static void ObtenerConfPage(WFARTHAEntities db, int pagina_id, string user_id, ControllerBase controller,int? pagina_id_textos=null)
+        public static void ObtenerConfPage(WFARTHAEntities db, int pagina_id, string user_id, ControllerBase controller, int? pagina_id_textos = null)
         {
             var user = ObtenerUsuario(db, user_id);
             controller.ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
