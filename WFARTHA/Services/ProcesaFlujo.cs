@@ -21,7 +21,7 @@ namespace WFARTHA.Services
     {
 
         //MGC 02-10-2018 Cadena de autorización
-        public string procesaPreliminar(DOCUMENTO d, bool edit, string nuevo)
+        public string procesaPreliminar(DOCUMENTO d, bool edit, string nuevo, bool borrado)//MGC 10-12-2018 Firma del usuario cancelar
         {
             string correcto = String.Empty;
             WFARTHAEntities db = new WFARTHAEntities();
@@ -44,6 +44,13 @@ namespace WFARTHA.Services
                     accion = "P";
                 }
             }
+
+            //MGC 10-12-2018 Firma del usuario cancelar--------------------------------------->
+            if (borrado == true)
+            {
+                accion = "B";
+            }
+            //MGC 10-12-2018 Firma del usuario cancelar---------------------------------------<
 
             ArchivoPreliminar sa = new ArchivoPreliminar();
             string file = sa.generarArchivo(d.NUM_DOC, accion);
@@ -290,7 +297,7 @@ namespace WFARTHA.Services
                     db.Entry(d).State = EntityState.Modified;
 
                     //Crear el archivo para el preliminar //MGC Preliminar
-                    string corr = procesaPreliminar(d, edit, nuevo_acc);
+                    string corr = procesaPreliminar(d, edit, nuevo_acc, false);//MGC 10-12-2018 Firma del usuario cancelar
 
                     //Se genero el preliminar
                     if (corr == "0")

@@ -33,28 +33,11 @@ namespace WFARTHA.Controllers
 
         public ActionResult ReportTemplate(int id)
         {
-            //int Width = 100;
-            //int Height = 650;
-            //string ReportDescription = "Performance Report";
-            //string ReportName = "ChequesReport";
-            //string reportServer = "http://sf-0024/ReportServer";
-            //string reportFolder = "WFARTHAChequesCaratula";
-
-            //var rptInfo = new ReportInfo
-            //{
-            //    ReportId = id,
-            //    ReportName = ReportName,
-            //    ReportServer = reportServer,
-            //    ReportFolder = reportFolder,
-            //    ReportDescription = ReportDescription,
-            //    ReportURL = String.Format("../../Reports/ReportTemplate.aspx?ReportName={0}&Height={1}&ReportServer={2}&ReportFolder={3}&ReportId={4}", ReportName, Height, reportServer, reportFolder, id),
-            //    Width = Width,
-            //    Height = Height
-            //};
-
-            //return View(rptInfo);
+            int pagina = 1101; //ID EN BASE DE DATOS
             using (WFARTHAEntities db = new WFARTHAEntities())
             {
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+
                 decimal? total = 0;
                 SP_CABECERA_Result c = db.SP_CABECERA(id).Single();
                 List<SP_DETALLE_Result> d = db.SP_DETALLE(id).ToList();
@@ -87,7 +70,11 @@ namespace WFARTHA.Controllers
                 }
                 ReportEsqueleto re = new ReportEsqueleto();
                 string recibeRuta = re.crearPDF(cab, det, total);
-                return RedirectToAction("Index", new { ruta = recibeRuta, ids = c.NUM_DOC });
+                ViewBag.url = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + HostingEnvironment.ApplicationVirtualPath + "/" + recibeRuta;
+                ViewBag.miNum = c.NUM_DOC;
+
+                return View();
+                //return RedirectToAction("Index", new { ruta = recibeRuta, ids = c.NUM_DOC });
                 //ViewBag.url = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + HostingEnvironment.ApplicationVirtualPath + "/" + ruta;
                 //return View();
             }

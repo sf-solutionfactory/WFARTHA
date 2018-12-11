@@ -4029,3 +4029,29 @@ function alinearEstilo() {
         R5.css("text-align", "left");
     });
 }
+
+////MGC 10-12-2018 Firma del usuario cancelar -------------------------------------------------->
+//Validar la firma del usuario
+function valF(frmValues) {
+    firmaVal = "";
+    firmaVallocal = "";
+    $.ajax({
+        type: "POST",
+        url: '../ValF',
+        //dataType: "json",
+        data: { "pws": frmValues },
+        success: function (data) {
+            asigF(data);
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            var a = xhr;
+        },
+        async: false
+    });
+    firmaVallocal = firmaVal;
+    return firmaVallocal;
+}
+function asigF(fir) {
+    firmaVal = fir;
+}
+ ////MGC 10-12-2018 Firma del usuario cancelar --------------------------------------------------<
