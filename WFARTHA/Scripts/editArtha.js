@@ -406,21 +406,21 @@ $(document).ready(function () {
 
                 ////FRT2311208 PARA VALIDACION DE 50 CARACTERES  FRT06122018 se queita validacion en detales
 
-                //if (borrador != "B") {
-                //    var texto = $(this).find("td.TEXTO textarea").val().trim();
-                //    var ct = texto.length;
-                //    ct = parseFloat(ct)
-                //    if (ct < 50) {
-                //        _b = false;
-                //        statSend = false;
-                //        msgerror = "Fila " + _rni + ": Falta explicación del egreso en texto";
-                //    } else {
-                //        _b = true;
-                //    }
-                //    if (_b === false) {
-                //        return false;
-                //    }
-                //}
+                if (borrador != "B") {
+                    var texto = $(this).find("td.TEXTO textarea").val().trim();
+                    var ct = texto.length;
+                    ct = parseFloat(ct)
+                    if (ct == 0) {
+                        _b = false;
+                        statSend = false;
+                        msgerror = "Fila " + _rni + ": Falta explicación en la columna de Texto";
+                    } else {
+                        _b = true;
+                    }
+                    if (_b === false) {
+                        return false;
+                    }
+                }
 
                 ////END FRT2311208 PARA VALIDACION DE 50 CARACTERES
 
@@ -803,39 +803,39 @@ $(document).ready(function () {
     });
 
     $('#file_sopAnexar').change(function () {
-        //FRT 13112018 PARA PODER SUBIR LOS ARCHIVOS A CAREPETA TEMPORAL
-        var lengthtemp = $(this).get(0).files.length;
+        ////FRT 13112018 PARA PODER SUBIR LOS ARCHIVOS A CAREPETA TEMPORAL
+        ////var lengthtemp = $(this).get(0).files.length;
 
-        for (var t = 0; t < lengthtemp; t++) {
-            var filetemp = $(this).get(0).files[t];
-            var filetemp = $(this).get(0).files[t];
-            var ft = filetemp.name.substr(filetemp.name.lastIndexOf('.') + 1);
-            if (ft.toLowerCase() == "jpg" || ft.toLowerCase() == "png" || ft.toLowerCase() == "jpeg" || ft.toLowerCase() == "doc" || ft.toLowerCase() == "xls" || ft.toLowerCase() == "ppt" ||
-                ft.toLowerCase() == "xml" || ft.toLowerCase() == "pdf" || ft.toLowerCase() == "txt" || ft.toLowerCase() == "docx" || ft.toLowerCase() == "xlsx" || ft.toLowerCase() == "pptx") {
-                var datatemp = new FormData();
-                datatemp.append('file', filetemp);
-                $.ajax({
-                    type: "POST",
-                    url: '../subirTemporalEditar',
-                    data: datatemp,
-                    dataType: "json",
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (datatemp) {
-                        if (datatemp !== null || datatemp !== "") {
+        ////for (var t = 0; t < lengthtemp; t++) {
+        ////    var filetemp = $(this).get(0).files[t];
+        ////    var filetemp = $(this).get(0).files[t];
+        ////    var ft = filetemp.name.substr(filetemp.name.lastIndexOf('.') + 1);
+        ////    if (ft.toLowerCase() == "jpg" || ft.toLowerCase() == "png" || ft.toLowerCase() == "jpeg" || ft.toLowerCase() == "doc" || ft.toLowerCase() == "xls" || ft.toLowerCase() == "ppt" ||
+        ////        ft.toLowerCase() == "xml" || ft.toLowerCase() == "pdf" || ft.toLowerCase() == "txt" || ft.toLowerCase() == "docx" || ft.toLowerCase() == "xlsx" || ft.toLowerCase() == "pptx") {
+        ////        var datatemp = new FormData();
+        ////        datatemp.append('file', filetemp);
+        ////        $.ajax({
+        ////            type: "POST",
+        ////            url: '../subirTemporalEditar',
+        ////            data: datatemp,
+        ////            dataType: "json",
+        ////            cache: false,
+        ////            contentType: false,
+        ////            processData: false,
+        ////            success: function (datatemp) {
+        ////                if (datatemp !== null || datatemp !== "") {
 
-                        }
-                    },
-                    error: function (xhr, httpStatusMessage, customErrorMessage) {
-                        M.toast({ html: httpStatusMessage });
-                    },
-                    async: false
-                });
-            }
-        }
+        ////                }
+        ////            },
+        ////            error: function (xhr, httpStatusMessage, customErrorMessage) {
+        ////                M.toast({ html: httpStatusMessage });
+        ////            },
+        ////            async: false
+        ////        });
+        ////    }
+        ////}
 
-        //END FRT13112018
+        ////END FRT13112018
 
         //Validacion para saber si es sin orden de compra o reembolso
         var val3 = $('#tsol').val();
@@ -915,7 +915,7 @@ $(document).ready(function () {
                             if (_resVu) {
                                 //Alert no se metio porque ya hay un xml en la tabla
                                 M.toast({ html: "UUID existente en BD" });
-                                document.getElementById('file_sopAnexar').value = '';
+                                //document.getElementById('file_sopAnexar').value = '';
                             }
                             else {
                                 //quiere decir que es true y que el rfc coincide, por lo tanto hace el pintado de datos en la tabla
@@ -1093,7 +1093,7 @@ $(document).ready(function () {
                                 else {
                                     //Alert no se metio porque ya hay un xml en la tabla
                                     M.toast({ html: "Ya existe una factura" });
-                                    document.getElementById('file_sopAnexar').value = '';
+                                    //document.getElementById('file_sopAnexar').value = '';
                                 }
                             }
                             //LEJGG23/10/18----------------------------------------------------<
@@ -1114,7 +1114,7 @@ $(document).ready(function () {
                     }
                 }
             }
-            document.getElementById('file_sopAnexar').value = '';
+            //document.getElementById('file_sopAnexar').value = '';
         }
         if (jsval[0].ID === "SRE") {
             var _length = $(this).get(0).files.length;
@@ -1160,6 +1160,40 @@ $(document).ready(function () {
             }
         }
         alinearEstilo();
+        //FRT 13112018 PARA PODER SUBIR LOS ARCHIVOS A CAREPETA TEMPORAL
+        var lengthtemp = $(this).get(0).files.length;
+
+        for (var t = 0; t < lengthtemp; t++) {
+            var filetemp = $(this).get(0).files[t];
+            var filetemp = $(this).get(0).files[t];
+            var ft = filetemp.name.substr(filetemp.name.lastIndexOf('.') + 1);
+            if (ft.toLowerCase() == "jpg" || ft.toLowerCase() == "png" || ft.toLowerCase() == "jpeg" || ft.toLowerCase() == "doc" || ft.toLowerCase() == "xls" || ft.toLowerCase() == "ppt" ||
+                ft.toLowerCase() == "xml" || ft.toLowerCase() == "pdf" || ft.toLowerCase() == "txt" || ft.toLowerCase() == "docx" || ft.toLowerCase() == "xlsx" || ft.toLowerCase() == "pptx") {
+                var datatemp = new FormData();
+                datatemp.append('file', filetemp);
+                $.ajax({
+                    type: "POST",
+                    url: '../subirTemporalEditar',
+                    data: datatemp,
+                    dataType: "json",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (datatemp) {
+                        if (datatemp !== null || datatemp !== "") {
+
+                        }
+                    },
+                    error: function (xhr, httpStatusMessage, customErrorMessage) {
+                        M.toast({ html: httpStatusMessage });
+                    },
+                    async: false
+                });
+            }
+        }
+
+         document.getElementById('file_sopAnexar').value = '';
+            // END FRT13112018
     });
 
     $('#table_anexa tbody').on('click', 'td.select_row', function () {
