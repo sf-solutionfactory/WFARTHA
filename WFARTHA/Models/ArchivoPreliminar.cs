@@ -74,6 +74,12 @@ namespace WFARTHA.Models
                     {
                         variable = "ACCION_CONTABILIZAR";
                     }
+                    //MGC 06-12-2018 Firma del usuario cancelar--------------------------------------->
+                    else if (accion == "B")
+                    {
+                        variable = "ACCION_BORRAR";
+                    }
+                    //MGC 06-12-2018 Firma del usuario cancelar---------------------------------------<
 
                     //Obtener el nombre de la acción desde la bd en APPSETTING
                     try
@@ -104,7 +110,7 @@ namespace WFARTHA.Models
                             string bjahr = "";
                             string bukrs = "";
 
-                            if (accion == "R")
+                            if (accion == "R" | accion == "B") //MGC 06-12-2018 Firma del usuario cancelar
                             {
                                 belnr = doc.NUM_PRE + "";
                                 bjahr = doc.EJERCICIO_PRE + "";

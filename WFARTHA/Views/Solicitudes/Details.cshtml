@@ -319,7 +319,7 @@
                         </div>*@
 
 
-                        using (Html.BeginForm("Cancelar", "Solicitudes",new { id = @Model.D.NUM_DOC }, FormMethod.Post, new { id = "form_procesa" }))
+                        using (Html.BeginForm("Cancelar", "Solicitudes",new { id = @Model.D.NUM_DOC }, FormMethod.Post, new { id = "form_procesac" }))
                         {
                                 
                             <div id="modal2" class="modal">
@@ -379,7 +379,7 @@
 
                                     } else {
                                         //Hacer el submit
-                                        //$("#form_procesa").submit();
+                                        $("#form_procesac").submit();
                                     }
                                     document.getElementById('loader').style.display = 'none';
                                 });
