@@ -762,21 +762,23 @@ $(document).ready(function () {
 
                 ////FRT2311208 PARA VALIDACION DE 50 CARACTERES  frt07122018 se quieta validacion en detalles 
 
-                //if (borrador != "B") {
-                //    var texto = $(this).find("td.TEXTO textarea").val().trim();
-                //    var ct = texto.length;
-                //    ct = parseFloat(ct);
-                //    if (ct < 50) {
-                //        _b = false;
-                //        statSend = false;
-                //        msgerror = "Fila " + _rni + ": Falta explicación del egreso en texto";
-                //    } else {
-                //        _b = true;
-                //    }
-                //    if (_b === false) {
-                //        return false;
-                //    }
-                //}
+                if (borrador != "B") {
+                    var texto = $(this).find("td.TEXTO textarea").val().trim();
+                    var ct = texto.length;
+                    ct = parseFloat(ct);
+                    if (ct == 0) {
+                        _b = false;
+                        statSend = false;
+                        msgerror = "Fila " + _rni + ": Falta explicación en la columna de Texto";
+                    } else {
+                        _b = true;
+                    }
+                    if (_b === false) {
+                        return false;
+                    }
+
+                }
+                
 
                 ////END FRT2311208 PARA VALIDACION DE 50 CARACTERES
 
@@ -1154,40 +1156,43 @@ $(document).ready(function () {
     $('#file_sopAnexar').change(function () {
 
         ////FRT 13112018 PARA PODER SUBIR LOS ARCHIVOS A CAREPETA TEMPORAL
-        var lengthtemp = $(this).get(0).files.length;
+        //var lengthtemp = $(this).get(0).files.length;
         //Validacion para archivos permitidos
         //LEJGG 06-12-2018-------------------------------------------------I
 
 
-        for (var t = 0; t < lengthtemp; t++) {
-            var filetemp = $(this).get(0).files[t];
-            var ft = filetemp.name.substr(filetemp.name.lastIndexOf('.') + 1);
-            if (ft.toLowerCase() == "jpg" || ft.toLowerCase() == "png" || ft.toLowerCase() == "jpeg" || ft.toLowerCase() == "doc" || ft.toLowerCase() == "xls" || ft.toLowerCase() == "ppt" ||
-                ft.toLowerCase() == "xml" || ft.toLowerCase() == "pdf" || ft.toLowerCase() == "txt" || ft.toLowerCase() == "docx" || ft.toLowerCase() == "xlsx" || ft.toLowerCase() == "pptx") {
-                var datatemp = new FormData();
-                datatemp.append('file', filetemp);
-                $.ajax({
-                    type: "POST",
-                    url: 'subirTemporal',
-                    data: datatemp,
-                    dataType: "json",
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (datatemp) {
-                        if (datatemp !== null || datatemp !== "") {
-                            var valida = datatemp;
-                        }
-                    },
-                    error: function (xhr, httpStatusMessage, customErrorMessage) {
-                        M.toast({ html: httpStatusMessage });
-                    },
-                    async: false
-                });
-            }
-        }
-        //LEJGG 06-12-2018-------------------------------------------------T
+        //for (var t = 0; t < lengthtemp; t++) {
+        //    var filetemp = $(this).get(0).files[t];
+        //    var ft = filetemp.name.substr(filetemp.name.lastIndexOf('.') + 1);
+        //    if (ft.toLowerCase() == "jpg" || ft.toLowerCase() == "png" || ft.toLowerCase() == "jpeg" || ft.toLowerCase() == "doc" || ft.toLowerCase() == "xls" || ft.toLowerCase() == "ppt" ||
+        //        ft.toLowerCase() == "xml" || ft.toLowerCase() == "pdf" || ft.toLowerCase() == "txt" || ft.toLowerCase() == "docx" || ft.toLowerCase() == "xlsx" || ft.toLowerCase() == "pptx") {
+        //        var datatemp = new FormData();
+        //        datatemp.append('file', filetemp);
+        //        $.ajax({
+        //            type: "POST",
+        //            url: 'subirTemporal',
+        //            data: datatemp,
+        //            dataType: "json",
+        //            cache: false,
+        //            contentType: false,
+        //            processData: false,
+        //            success: function (datatemp) {
+        //                if (datatemp !== null || datatemp !== "") {
+        //                    var valida = datatemp;
+        //                }
+        //            },
+        //            error: function (xhr, httpStatusMessage, customErrorMessage) {
+        //                M.toast({ html: httpStatusMessage });
+        //            },
+        //            async: false
+        //        });
+        //    }
+        //}
+        ////LEJGG 06-12-2018-------------------------------------------------T
 
+        
+           
+        
 
         //END FRT13112018
         //Validacion para saber si es sin orden de compra o reembolso
@@ -1484,7 +1489,7 @@ $(document).ready(function () {
                 }
             }
         
-                document.getElementById('file_sopAnexar').value = '';
+               
          
         }
         if (jsval[0].ID === "SRE") {
@@ -1548,6 +1553,45 @@ $(document).ready(function () {
             }
         }
         alinearEstilo();
+////FRT 13112018 PARA PODER SUBIR LOS ARCHIVOS A CAREPETA TEMPORAL
+        var lengthtemp = $(this).get(0).files.length;
+        //Validacion para archivos permitidos
+        //LEJGG 06-12-2018-------------------------------------------------I
+
+      
+        for (var t = 0; t < lengthtemp; t++) {
+            var filetemp = $(this).get(0).files[t];
+            var ft = filetemp.name.substr(filetemp.name.lastIndexOf('.') + 1);
+            if (ft.toLowerCase() == "jpg" || ft.toLowerCase() == "png" || ft.toLowerCase() == "jpeg" || ft.toLowerCase() == "doc" || ft.toLowerCase() == "xls" || ft.toLowerCase() == "ppt" ||
+                ft.toLowerCase() == "xml" || ft.toLowerCase() == "pdf" || ft.toLowerCase() == "txt" || ft.toLowerCase() == "docx" || ft.toLowerCase() == "xlsx" || ft.toLowerCase() == "pptx") {
+                var datatemp = new FormData();
+                datatemp.append('file', filetemp);
+
+                $.ajax({
+                    type: "POST",
+                    url: 'subirTemporal',
+                    data: datatemp,
+                    dataType: "json",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                   
+                    success: function (datatemp) {
+                       
+                        if (datatemp !== null || datatemp !== "") {
+                           
+                            var valida = datatemp;
+                        }
+                    },
+                    error: function (xhr, httpStatusMessage, customErrorMessage) {
+                        M.toast({ html: httpStatusMessage });
+                    },
+                    async: false
+                });
+            }
+        }
+        ////LEJGG 06-12-2018-------------------------------------------------T
+        document.getElementById('file_sopAnexar').value = '';
     });
 
     //Cadena de autorización
