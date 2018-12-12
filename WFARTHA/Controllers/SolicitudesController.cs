@@ -666,6 +666,11 @@ namespace WFARTHA.Controllers
                     TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
                 }).ToList();
 
+            //MGC 11-12-2018 Agregar Contabilizador 0------>
+            int vc1 = vbFlujo.VERSIONC1;
+            int vc2 = vbFlujo.VERSIONC2;
+            //MGC 11-12-2018 Agregar Contabilizador 0------<
+
             var _v = "";
             var _usc = "";
             var _id_ruta = "";
@@ -687,12 +692,19 @@ namespace WFARTHA.Controllers
                 else
                 { _mt = dOCUMENTO.MONTO_DOC_MD.ToString(); }
                 _sc = dOCUMENTO.SOCIEDAD_ID;
-                var _lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc);
+                //var _lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc, out vc1, out vc2);//MGC 11-12-2018 Agregar Contabilizador 0
+                CadenaAutorizadores _lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc, vc1, vc2); //MGC 11-12-2018 Agregar Contabilizador 0
+                List<CadenaAutorizadoresItem> cadi = new List<CadenaAutorizadoresItem>();//MGC 11-12-2018 Agregar Contabilizador 0
+                cadi = _lst.cadenal;//MGC 11-12-2018 Agregar Contabilizador 0
+
                 string cad = "";
-                for (int j = 0; j < _lst.Count; j++)
+                //for (int j = 0; j < _lst.Count; j++)//MGC 11-12-2018 Agregar Contabilizador 0
+                for (int j = 0; j < cadi.Count; j++)//MGC 11-12-2018 Agregar Contabilizador 0
                 {
-                    var aut = _lst[j].autorizador.Split('-');
-                    if (j == _lst.Count - 1)
+                    //var aut = lst[j].autorizador.Split('-');//MGC 11-12-2018 Agregar Contabilizador 0
+                    var aut = cadi[j].autorizador.Split('-');//MGC 11-12-2018 Agregar Contabilizador 0
+                    //if (j == lst.Count - 1)//MGC 11-12-2018 Agregar Contabilizador 0
+                    if (j == cadi.Count - 1)//MGC 11-12-2018 Agregar Contabilizador 0
                     {
                         cad += aut[0].Trim();
                     }
@@ -714,19 +726,21 @@ namespace WFARTHA.Controllers
 
             //Obtener los aprobadores
             JsonResult autorizadores = new JsonResult();
-            autorizadores = getCadena(Convert.ToInt32(rutav), usuarioc, id_cadena, deta.USUARIOA_ID, Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD), dOCUMENTO.SOCIEDAD_ID);
+            autorizadores = getCadena(Convert.ToInt32(rutav), usuarioc, id_cadena, deta.USUARIOA_ID, Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD), dOCUMENTO.SOCIEDAD_ID, vc1, vc2);//MGC 11-12-2018 Agregar Contabilizador 0
 
-            List<CadenaAutorizadores> lcandena = new List<CadenaAutorizadores>();
+            CadenaAutorizadores lcandena = new CadenaAutorizadores();
+            List<CadenaAutorizadoresItem> lcandenai = new List<CadenaAutorizadoresItem>();
             try
             {
-                lcandena = autorizadores.Data as List<CadenaAutorizadores>;
+                lcandena = autorizadores.Data as CadenaAutorizadores;
+                lcandenai = lcandena.cadenal;
             }
             catch (Exception)
             {
 
             }
 
-            ViewBag.lcadena = lcandena;
+            ViewBag.lcadena = lcandenai;//MGC 11-12-2018 Agregar Contabilizador 0
             //MGC 22-11-2018.2 Cadena de autorización-----------------------------------------------------------------------<
 
 
@@ -1031,6 +1045,12 @@ namespace WFARTHA.Controllers
                     TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
                 }).ToList();
 
+            //MGC 11-12-2018 Agregar Contabilizador 0------>
+            //versión del contabilizador 0 y contabilizador 1
+            int vc1 = 0;
+            int vc2 = 0;
+            //MGC 11-12-2018 Agregar Contabilizador 0------<
+
             var _v = "";
             var _usc = "";
             var _id_ruta = "";
@@ -1053,12 +1073,19 @@ namespace WFARTHA.Controllers
                 { _mt = d.MONTO_DOC_MD.ToString(); }
                 //_sc = d.SOCIEDAD_ID;
                 _sc = Session["id_pr"].ToString();
-                var lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc);
+                //var lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc, out vc1, out vc2); //MGC 11-12-2018 Agregar Contabilizador 0
+                CadenaAutorizadores lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc, vc1, vc2); //MGC 11-12-2018 Agregar Contabilizador 0
+                List<CadenaAutorizadoresItem> cadi = new List<CadenaAutorizadoresItem>();//MGC 11-12-2018 Agregar Contabilizador 0
+                cadi = lst.cadenal;//MGC 11-12-2018 Agregar Contabilizador 0
+
                 string cad = "";
-                for (int j = 0; j < lst.Count; j++)
+                //for (int j = 0; j < lst.Count; j++)//MGC 11-12-2018 Agregar Contabilizador 0
+                for (int j = 0; j < cadi.Count; j++)//MGC 11-12-2018 Agregar Contabilizador 0
                 {
-                    var aut = lst[j].autorizador.Split('-');
-                    if (j == lst.Count - 1)
+                    //var aut = lst[j].autorizador.Split('-');//MGC 11-12-2018 Agregar Contabilizador 0
+                    var aut = cadi[j].autorizador.Split('-');//MGC 11-12-2018 Agregar Contabilizador 0
+                    //if (j == lst.Count - 1)//MGC 11-12-2018 Agregar Contabilizador 0
+                    if (j == cadi.Count - 1)//MGC 11-12-2018 Agregar Contabilizador 0
                     {
                         cad += aut[0].Trim();
                     }
@@ -1097,7 +1124,9 @@ namespace WFARTHA.Controllers
             "AGENTE_ACTUAL,FECHA_PASO_ACTUAL,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,FECHACON,FECHA_BASE,REFERENCIA," +
             "CONDICIONES,TEXTO_POS,ASIGNACION_POS,CLAVE_CTA, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,DOCUMENTOA_TAB,Anexo")] Models.DOCUMENTO_MOD doc, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc,
             //MGC 02-10-2018 Cadenas de autorización
-            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string mtTot, string DETTA_USUARIOA_ID, string borr, string FECHADO, string Uuid)
+            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string mtTot, string DETTA_USUARIOA_ID, string borr, string FECHADO, string Uuid
+            //MGC 11-12-2018 Agregar Contabilizador 0
+            ,string VERSIONC1, string VERSIONC2)
         {
             int pagina = 202; //ID EN BASE DE DATOS
             string errorString = "";
@@ -2264,6 +2293,28 @@ namespace WFARTHA.Controllers
 
                             }
 
+                            //MGC 11-12-2018 Agregar Contabilizador 0------>
+                            int vc1 = 0;
+                            int vc2 = 0;
+                            try
+                            {
+                                vc1 = Convert.ToInt32(VERSIONC1);
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+
+                            try
+                            {
+                                vc2 = Convert.ToInt32(VERSIONC2);
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+                            //MGC 11-12-2018 Agregar Contabilizador 0------<
+
                             if (wf != null)
                             {
                                 WORKFP wp = wf.WORKFPs.OrderBy(a => a.POS).FirstOrDefault();
@@ -2288,6 +2339,11 @@ namespace WFARTHA.Controllers
                                 //Ruta tomada
                                 f.ID_RUTA_A = deta.ID_RUTA_AGENTE;
                                 f.RUTA_VERSION = deta.VERSION;
+
+                                //MGC 11-12-2018 Agregar Contabilizador 0
+                                f.VERSIONC1 = vc1;
+                                f.VERSIONC2 = vc2;
+
 
                                 //MGC 05-10-2018 Modificación para work flow al ser editada
                                 string c = pf.procesa(f, "", false, email, "");
@@ -2930,6 +2986,22 @@ namespace WFARTHA.Controllers
                     TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
                 }).ToList();
 
+            //MGC 11-12-2018 Agregar Contabilizador 0------>
+            int vc1 = 0;
+            int vc2 = 0;
+
+            try
+            {
+                vc1 = vbFlujo.VERSIONC1;
+                vc2 = vbFlujo.VERSIONC2;
+            }
+            catch (Exception)
+            {
+                vc1 = 0;
+                vc2 = 0;
+            }
+            //MGC 11-12-2018 Agregar Contabilizador 0------<
+
 
             var _v = "";
             var _usc = "";
@@ -2952,12 +3024,18 @@ namespace WFARTHA.Controllers
                 else
                 { _mt = dOCUMENTO.MONTO_DOC_MD.ToString(); }
                 _sc = dOCUMENTO.SOCIEDAD_ID;
-                var _lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc);
+                //var _lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc, out vc1, out vc2);//MGC 11-12-2018 Agregar Contabilizador 0
+                CadenaAutorizadores _lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc, vc1, vc2); //MGC 11-12-2018 Agregar Contabilizador 0
+                List<CadenaAutorizadoresItem> cadi = new List<CadenaAutorizadoresItem>();//MGC 11-12-2018 Agregar Contabilizador 0
+                cadi = _lst.cadenal;//MGC 11-12-2018 Agregar Contabilizador 0
                 string cad = "";
-                for (int j = 0; j < _lst.Count; j++)
+                //for (int j = 0; j < _lst.Count; j++)//MGC 11-12-2018 Agregar Contabilizador 0
+                for (int j = 0; j < cadi.Count; j++)//MGC 11-12-2018 Agregar Contabilizador 0
                 {
-                    var aut = _lst[j].autorizador.Split('-');
-                    if (j == _lst.Count - 1)
+                    //var aut = lst[j].autorizador.Split('-');//MGC 11-12-2018 Agregar Contabilizador 0
+                    var aut = cadi[j].autorizador.Split('-');//MGC 11-12-2018 Agregar Contabilizador 0
+                    //if (j == lst.Count - 1)//MGC 11-12-2018 Agregar Contabilizador 0
+                    if (j == cadi.Count - 1)//MGC 11-12-2018 Agregar Contabilizador 0
                     {
                         cad += aut[0].Trim();
                     }
@@ -7774,6 +7852,11 @@ namespace WFARTHA.Controllers
                     TEXT = us.NOMBRE.ToString() + " " + us.APELLIDO_P.ToString()
                 }).ToList();
 
+            //MGC 11-12-2018 Agregar Contabilizador 0------>
+            int vc1 = 0;
+            int vc2 = 0;
+            //MGC 11-12-2018 Agregar Contabilizador 0------<
+
             var _v = "";
             var _usc = "";
             var _id_ruta = "";
@@ -7790,12 +7873,18 @@ namespace WFARTHA.Controllers
                 _usa = dta[i].ID.USUARIOA_ID;
                 _mt = 0 + "";
                 _sc = bukrs;
-                var _lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc);
+                //var _lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc, out vc1, out vc2); //MGC 11-12-2018 Agregar Contabilizador 0
+                CadenaAutorizadores _lst = getCad2(int.Parse(_v), _usc, _id_ruta, _usa, decimal.Parse(_mt), _sc, vc1, vc2); //MGC 11-12-2018 Agregar Contabilizador 0
+                List<CadenaAutorizadoresItem> cadi = new List<CadenaAutorizadoresItem>();//MGC 11-12-2018 Agregar Contabilizador 0
+                cadi = _lst.cadenal;//MGC 11-12-2018 Agregar Contabilizador 0
                 string cad = "";
-                for (int j = 0; j < _lst.Count; j++)
+                //for (int j = 0; j < _lst.Count; j++)//MGC 11-12-2018 Agregar Contabilizador 0
+                for (int j = 0; j < cadi.Count; j++)//MGC 11-12-2018 Agregar Contabilizador 0
                 {
-                    var aut = _lst[j].autorizador.Split('-');
-                    if (j == _lst.Count - 1)
+                    //var aut = lst[j].autorizador.Split('-');//MGC 11-12-2018 Agregar Contabilizador 0
+                    var aut = cadi[j].autorizador.Split('-');//MGC 11-12-2018 Agregar Contabilizador 0
+                    //if (j == lst.Count - 1)//MGC 11-12-2018 Agregar Contabilizador 0
+                    if (j == cadi.Count - 1)//MGC 11-12-2018 Agregar Contabilizador 0
                     {
                         cad += aut[0].Trim();
                     }
@@ -7819,8 +7908,13 @@ namespace WFARTHA.Controllers
         //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
 
         [HttpPost]
-        public JsonResult getCadena(int version, string usuarioc, string id_ruta, string usuarioa, decimal monto, string bukrs)
+        public JsonResult getCadena(int version, string usuarioc, string id_ruta, string usuarioa, decimal monto, string bukrs, int vc1, int vc2) //MGC 11-12-2018 Agregar Contabilizador 0
         {
+            //MGC 11-12-2018 Agregar Contabilizador 0--------->
+            int vcl1 = 0;
+            int vcl2 = 0;
+            //MGC 11-12-2018 Agregar Contabilizador 0---------<
+
 
             //Obtener el encabezado de la cadena
             DET_AGENTECC detc = new DET_AGENTECC();
@@ -7836,14 +7930,15 @@ namespace WFARTHA.Controllers
             }
 
             //Lista de cadena de autorizadores
-            List<CadenaAutorizadores> lcadena = new List<CadenaAutorizadores>();
+            //List<CadenaAutorizadores> lcadena = new List<CadenaAutorizadores>();//MGC 11-12-2018 Agregar Contabilizador 0
+            List<CadenaAutorizadoresItem> lcadena = new List<CadenaAutorizadoresItem>();//MGC 11-12-2018 Agregar Contabilizador 0
 
             //Agregar el solicitante
             try
             {
                 if (detc != null)
                 {
-                    CadenaAutorizadores sol = new CadenaAutorizadores();
+                    CadenaAutorizadoresItem sol = new CadenaAutorizadoresItem();
                     sol.fase = "Solicitante";
                     sol.autorizador = detc.USUARIOA_ID;
 
@@ -7855,10 +7950,34 @@ namespace WFARTHA.Controllers
 
             }
 
+            //MGC 11-12-2018 Agregar Contabilizador 0--------------------------------->
+            ProcesaFlujo pf = new ProcesaFlujo();
+            try
+            {
+                DET_APROB0 dap = new DET_APROB0();
+                dap = pf.determinaAgenteContabilidadCadena0(bukrs, vc1); //MGC 11-12-2018 Agregar Contabilizador 0
+                if (dap != null)
+                {
+                    //Se obtiene el agente contabilizador 
+                    CadenaAutorizadoresItem cadenaauto = new CadenaAutorizadoresItem();
+                    cadenaauto.fase = "Contabilizador";
+                    cadenaauto.autorizador = dap.ID_USUARIO;
+
+
+                    vcl1 = dap.VERSION;//MGC 11-12-2018 Agregar Contabilizador 0
+
+                    lcadena.Add(cadenaauto);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            //MGC 11-12-2018 Agregar Contabilizador 0---------------------------------<
 
             //Obtener las fases del proyecto
             fases = deta.Select(da => da.STEP_FASE).Distinct().ToList();
-            ProcesaFlujo pf = new ProcesaFlujo();
+            
             //loop para obtener los autorizadores por fase
             for (int i = 0; i < fases.Count(); i++)
             {
@@ -7872,7 +7991,7 @@ namespace WFARTHA.Controllers
                     dap = pf.detAgenteLimite(detafase, monto);
 
                     //Si se obtiene el agente por monto y fase, agregarlo a la lista
-                    CadenaAutorizadores cadenaauto = new CadenaAutorizadores();
+                    CadenaAutorizadoresItem cadenaauto = new CadenaAutorizadoresItem();
                     cadenaauto.fase = "Aprobador " + dap.STEP_FASE;
                     cadenaauto.autorizador = dap.AGENTE_SIG;
 
@@ -7885,13 +8004,15 @@ namespace WFARTHA.Controllers
             try
             {
                 DET_APROB dap = new DET_APROB();
-                dap = pf.determinaAgenteContabilidadCadena(bukrs);
+                dap = pf.determinaAgenteContabilidadCadena(bukrs, vc2);//MGC 11-12-2018 Agregar Contabilizador 0
                 if (dap != null)
                 {
                     //Se obtiene el agente contabilizador 
-                    CadenaAutorizadores cadenaauto = new CadenaAutorizadores();
+                    CadenaAutorizadoresItem cadenaauto = new CadenaAutorizadoresItem();
                     cadenaauto.fase = "Contabilizador";
                     cadenaauto.autorizador = dap.ID_USUARIO;
+
+                    vcl2 = dap.VERSION;//MGC 11-12-2018 Agregar Contabilizador 0
 
                     lcadena.Add(cadenaauto);
                 }
@@ -7902,7 +8023,8 @@ namespace WFARTHA.Controllers
             }
 
             //Obtener el nombre de los usuarios
-            List<CadenaAutorizadores> lcadenan = new List<CadenaAutorizadores>();
+            //List<CadenaAutorizadores> lcadenan = new List<CadenaAutorizadores>();//MGC 11-12-2018 Agregar Contabilizador 0
+            List<CadenaAutorizadoresItem> lcadenan = new List<CadenaAutorizadoresItem>();//MGC 11-12-2018 Agregar Contabilizador 0
             try
             {
                 lcadenan = (from ca in lcadena
@@ -7910,7 +8032,7 @@ namespace WFARTHA.Controllers
                             on ca.autorizador equals us.ID
                             into jj
                             from us in jj.DefaultIfEmpty()
-                            select new CadenaAutorizadores
+                            select new CadenaAutorizadoresItem//MGC 11-12-2018 Agregar Contabilizador 0
                             {
                                 fase = ca.fase,
                                 //autorizador = ca.autorizador + " - " + us.NOMBRE + " " + us.APELLIDO_P + " " + us.APELLIDO_M
@@ -7922,13 +8044,27 @@ namespace WFARTHA.Controllers
 
             }
 
-            JsonResult jc = Json(lcadenan, JsonRequestBehavior.AllowGet);
+            //MGC 11-12-2018 Agregar Contabilizador 0--->
+            CadenaAutorizadores cda = new CadenaAutorizadores();
+            cda.vc1 = vcl1;
+            cda.vc2 = vcl2;
+            cda.cadenal = lcadenan;
+            //MGC 11-12-2018 Agregar Contabilizador 0---<
+
+            //JsonResult jc = Json(lcadenan, JsonRequestBehavior.AllowGet);//MGC 11-12-2018 Agregar Contabilizador 0
+            JsonResult jc = Json(cda, JsonRequestBehavior.AllowGet);//MGC 11-12-2018 Agregar Contabilizador 0
             return jc;
         }
 
         //LEJGG 03-12-2018
-        public List<CadenaAutorizadores> getCad2(int version, string usuarioc, string id_ruta, string usuarioa, decimal monto, string bukrs)
+        //public List<CadenaAutorizadores> getCad2(int version, string usuarioc, string id_ruta, string usuarioa, decimal monto, string bukrs, out int vc1, out int vc2)//MGC 11-12-2018 Agregar Contabilizador 0
+        public CadenaAutorizadores getCad2(int version, string usuarioc, string id_ruta, string usuarioa, decimal monto, string bukrs, int vc1, int vc2)//MGC 11-12-2018 Agregar Contabilizador 0
         {
+            //MGC 11-12-2018 Agregar Contabilizador 0---->
+            int vcl1 = 0;
+            int vcl2 = 0;
+
+            //MGC 11-12-2018 Agregar Contabilizador 0----<
 
             //Obtener el encabezado de la cadena
             DET_AGENTECC detc = new DET_AGENTECC();
@@ -7944,14 +8080,16 @@ namespace WFARTHA.Controllers
             }
 
             //Lista de cadena de autorizadores
-            List<CadenaAutorizadores> lcadena = new List<CadenaAutorizadores>();
+            //List<CadenaAutorizadores> lcadena = new List<CadenaAutorizadores>();//MGC 11-12-2018 Agregar Contabilizador 0
+            List<CadenaAutorizadoresItem> lcadena = new List<CadenaAutorizadoresItem>();//MGC 11-12-2018 Agregar Contabilizador 0
+
 
             //Agregar el solicitante
             try
             {
                 if (detc != null)
                 {
-                    CadenaAutorizadores sol = new CadenaAutorizadores();
+                    CadenaAutorizadoresItem sol = new CadenaAutorizadoresItem();//MGC 11-12-2018 Agregar Contabilizador 0
                     sol.fase = "Solicitante";
                     sol.autorizador = detc.USUARIOA_ID;
 
@@ -7963,9 +8101,33 @@ namespace WFARTHA.Controllers
 
             }
 
+            //MGC 11-12-2018 Agregar Contabilizador 0--------------------------------->
+            ProcesaFlujo pf = new ProcesaFlujo();
+            try
+            {
+                DET_APROB0 dap = new DET_APROB0();
+                dap = pf.determinaAgenteContabilidadCadena0(bukrs, vc1); //MGC 11-12-2018 Agregar Contabilizador 0
+                if (dap != null)
+                {
+                    //Se obtiene el agente contabilizador 
+                    CadenaAutorizadoresItem cadenaauto = new CadenaAutorizadoresItem();//MGC 11-12-2018 Agregar Contabilizador 0
+                    cadenaauto.fase = "Contabilizador";
+                    cadenaauto.autorizador = dap.ID_USUARIO;
+
+                    vcl1 = dap.VERSION;//MGC 11-12-2018 Agregar Contabilizador 0
+
+                    lcadena.Add(cadenaauto);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            //MGC 11-12-2018 Agregar Contabilizador 0---------------------------------<
+
             //Obtener las fases del proyecto
             fases = deta.Select(da => da.STEP_FASE).Distinct().ToList();
-            ProcesaFlujo pf = new ProcesaFlujo();
+            
             //loop para obtener los autorizadores por fase
             for (int i = 0; i < fases.Count(); i++)
             {
@@ -7979,7 +8141,7 @@ namespace WFARTHA.Controllers
                     dap = pf.detAgenteLimite(detafase, monto);
 
                     //Si se obtiene el agente por monto y fase, agregarlo a la lista
-                    CadenaAutorizadores cadenaauto = new CadenaAutorizadores();
+                    CadenaAutorizadoresItem cadenaauto = new CadenaAutorizadoresItem();//MGC 11-12-2018 Agregar Contabilizador 0
                     cadenaauto.fase = "Aprobador " + dap.STEP_FASE;
                     cadenaauto.autorizador = dap.AGENTE_SIG;
 
@@ -7992,13 +8154,15 @@ namespace WFARTHA.Controllers
             try
             {
                 DET_APROB dap = new DET_APROB();
-                dap = pf.determinaAgenteContabilidadCadena(bukrs);
+                dap = pf.determinaAgenteContabilidadCadena(bukrs, vc2); //MGC 11-12-2018 Agregar Contabilizador 0
                 if (dap != null)
                 {
                     //Se obtiene el agente contabilizador 
-                    CadenaAutorizadores cadenaauto = new CadenaAutorizadores();
+                    CadenaAutorizadoresItem cadenaauto = new CadenaAutorizadoresItem();//MGC 11-12-2018 Agregar Contabilizador 0
                     cadenaauto.fase = "Contabilizador";
                     cadenaauto.autorizador = dap.ID_USUARIO;
+
+                    vcl2 = dap.VERSION;//MGC 11-12-2018 Agregar Contabilizador 0
 
                     lcadena.Add(cadenaauto);
                 }
@@ -8009,7 +8173,7 @@ namespace WFARTHA.Controllers
             }
 
             //Obtener el nombre de los usuarios
-            List<CadenaAutorizadores> lcadenan = new List<CadenaAutorizadores>();
+            List<CadenaAutorizadoresItem> lcadenan = new List<CadenaAutorizadoresItem>(); //MGC 11-12-2018 Agregar Contabilizador 0
             try
             {
                 lcadenan = (from ca in lcadena
@@ -8017,7 +8181,7 @@ namespace WFARTHA.Controllers
                             on ca.autorizador equals us.ID
                             into jj
                             from us in jj.DefaultIfEmpty()
-                            select new CadenaAutorizadores
+                            select new CadenaAutorizadoresItem //MGC 11-12-2018 Agregar Contabilizador 0
                             {
                                 fase = ca.fase,
                                 autorizador = ca.autorizador + " - " + us.NOMBRE + " " + us.APELLIDO_P + " " + us.APELLIDO_M
@@ -8028,7 +8192,16 @@ namespace WFARTHA.Controllers
 
             }
 
-            return lcadenan;
+
+            //MGC 11-12-2018 Agregar Contabilizador 0--->
+            CadenaAutorizadores cda = new CadenaAutorizadores();
+            cda.vc1 = vcl1;
+            cda.vc2 = vcl2;
+            cda.cadenal = lcadenan;
+            //MGC 11-12-2018 Agregar Contabilizador 0---<
+
+            //return lcadenan;//MGC 11-12-2018 Agregar Contabilizador 0
+            return cda;
         }
         //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 

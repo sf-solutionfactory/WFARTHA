@@ -173,6 +173,7 @@
         <AssociationConnector Association="WFARTHAModel.FK_WORKFP_WORKFV" ManuallyRouted="false" />
         <AssociationConnector Association="WFARTHAModel.FK_WORKFT_WORKFV" ManuallyRouted="false" />
         <AssociationConnector Association="WFARTHAModel.DET_PROYECTO" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="WFARTHAModel.DET_APROB0" Width="1.5" PointX="3.375" PointY="16.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

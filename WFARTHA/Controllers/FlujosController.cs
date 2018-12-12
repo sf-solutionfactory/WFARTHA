@@ -103,6 +103,11 @@ namespace WFARTHA.Controllers
             flujo.RUTA_VERSION = f.RUTA_VERSION;
             flujo.STEP_AUTO = f.STEP_AUTO;
 
+            //MGC 11-12-2018 Agregar Contabilizador 0----------------->
+            flujo.VERSIONC1 = actual.VERSIONC1;
+            flujo.VERSIONC2 = actual.VERSIONC2;
+            //MGC 11-12-2018 Agregar Contabilizador 0-----------------<
+
             //Agregar funcionalidad, para checar si el próximo es contabilización, y si es contabilización 
             //checar que el usuario contabilizador esté asignado a la sociedad
             ContabilizarRes resc = new ContabilizarRes();
