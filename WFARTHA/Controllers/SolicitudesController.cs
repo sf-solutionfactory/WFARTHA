@@ -3093,7 +3093,11 @@ namespace WFARTHA.Controllers
             "FECHA_PASO_ACTUAL,VKORG,VTWEG,SPART,PUESTO_ID,GALL_ID,CONCEPTO_ID,DOCUMENTO_SAP,PORC_APOYO,LIGADA,OBJETIVOQ,FRECUENCIA_LIQ,OBJQ_PORC,FECHACON,FECHA_BASE,REFERENCIA," +
             "TEXTO_POS,ASIGNACION_POS,CLAVE_CTA,MONTO_DOC_IMP, DOCUMENTOP,DOCUMENTOR,DOCUMENTORP,Anexo,DOCUMENTOA_TAB")] Models.DOCUMENTO_MOD dOCUMENTO, IEnumerable<HttpPostedFileBase> file_sopAnexar, string[] labels_desc, string FECHADO, string mtTot, string Uuid,
             //MGC 02-10-2018 Cadenas de autorización
-            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr)
+            string DETTA_VERSION, string DETTA_USUARIOC_ID, string DETTA_ID_RUTA_AGENTE, string DETTA_USUARIOA_ID, string borr
+
+            //MGC 11-12-2018 Agregar Contabilizador 0
+            , string VERSIONC1, string VERSIONC2
+            )
         {
 
 
@@ -4769,6 +4773,31 @@ namespace WFARTHA.Controllers
 
                             }
 
+
+                            //MGC 11-12-2018 Agregar Contabilizador 0------>
+                            int vc1 = 0;
+                            int vc2 = 0;
+                            try
+                            {
+                                vc1 = Convert.ToInt32(VERSIONC1);
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+
+                            try
+                            {
+                                vc2 = Convert.ToInt32(VERSIONC2);
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+                            //MGC 11-12-2018 Agregar Contabilizador 0------<
+
+
+
                             if (wf != null)
                             {
                                 WORKFP wp = wf.WORKFPs.OrderBy(a => a.POS).FirstOrDefault();
@@ -4793,6 +4822,10 @@ namespace WFARTHA.Controllers
                                 //Ruta tomada
                                 f.ID_RUTA_A = deta.ID_RUTA_AGENTE;
                                 f.RUTA_VERSION = deta.VERSION;
+
+                                //MGC 11-12-2018 Agregar Contabilizador 0
+                                f.VERSIONC1 = vc1;
+                                f.VERSIONC2 = vc2;
 
                                 //MGC 05-10-2018 Modificación para work flow al ser editada
                                 string c = pf.procesa(f, "", false, email, "");
@@ -5015,6 +5048,10 @@ namespace WFARTHA.Controllers
                                     //Ruta tomada
                                     fe.ID_RUTA_A = deta.ID_RUTA_AGENTE;
                                     fe.RUTA_VERSION = deta.VERSION;
+
+                                    //MGC 11-12-2018 Agregar Contabilizador 0
+                                    fe.VERSIONC1 = f.VERSIONC1;
+                                    fe.VERSIONC2 = f.VERSIONC2;
 
                                     string c = pf.procesa(fe, "", true, "", "");
                                 }
