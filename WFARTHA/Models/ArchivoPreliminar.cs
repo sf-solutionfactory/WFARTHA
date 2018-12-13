@@ -41,7 +41,7 @@ namespace WFARTHA.Models
                     url_prel = getDirPrel(carpeta);
                     dirFile = url_prel;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     dirFile = ConfigurationManager.AppSettings["URL_PREL"].ToString() + @"in";
                 }
@@ -54,12 +54,6 @@ namespace WFARTHA.Models
                 //El direcorio existe
                 if (existd)
                 {
-                    string user = "";
-                    string pass = "";
-
-                    user = getUserPrel();
-                    pass = getPassPrel();
-
                     //dirFile = ConfigurationManager.AppSettings["URL_PREL"].ToString() + @"POSTING";
                     string docname = dirFile + @"\INBOUND_PREL" + ts.ID.Substring(0, 3) + docum.ToString().PadLeft(10, '0') + "-1";
 
@@ -80,12 +74,6 @@ namespace WFARTHA.Models
                     {
                         variable = "ACCION_CONTABILIZAR";
                     }
-                    //MGC 10-12-2018 Firma del usuario cancelar--------------------------------------->
-                    else if (accion == "B")
-                    {
-                        variable = "ACCION_BORRAR";
-                    }
-                    //MGC 10-12-2018 Firma del usuario cancelar---------------------------------------<
 
                     //Obtener el nombre de la acción desde la bd en APPSETTING
                     try
@@ -106,10 +94,17 @@ namespace WFARTHA.Models
                     List<DetalleContab> det = new List<DetalleContab>();
 
                     //MemoryStream stIn = new MemoryStream();
-                    try
+                    string user = "";
+                    string pass = "";
+                    string dom = "";
+
+                    user = getUserPrel();
+                    pass = getPassPrel();
+                    dom = getDomPrel();
+                    using (Impersonation.LogonUser(dom, user, pass, LogonType.NewCredentials))
                     {
-                        //using (Impersonation.LogonUser(dirFile, user, pass, LogonType.NewCredentials))
-                        //{
+                        try
+                        {
                             FileStream fs = null;
                             fs = new FileStream(docname, FileMode.CreateNew);
                             using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.ASCII))
@@ -118,7 +113,7 @@ namespace WFARTHA.Models
                                 string bjahr = "";
                                 string bukrs = "";
 
-                                if (accion == "R" | accion == "B") //MGC 10-12-2018 Firma del usuario cancelar
+                                if (accion == "R")
                                 {
                                     belnr = doc.NUM_PRE + "";
                                     bjahr = doc.EJERCICIO_PRE + "";
@@ -400,10 +395,11 @@ namespace WFARTHA.Models
 
 
                             }
-                        //}
-                    } catch(Exception e)
-                    {
-                        errorMessage = "Error al generar el archivo txt preliminar " + e.Message;
+                        }
+                        catch (Exception e)
+                        {
+                            errorMessage = "Error al generar el archivo txt preliminar " + e.Message;
+                        }
                     }
 
                 }
@@ -411,10 +407,10 @@ namespace WFARTHA.Models
                 {
                     errorMessage = "Error con el directorio para crear archivo";
                 }
-                
 
 
-                
+
+
 
                 ////MGC 11-10-2018 Acciones para el encabezado -->
 
@@ -437,7 +433,7 @@ namespace WFARTHA.Models
                 //try
                 //{
                 //    accionhead = db.APPSETTINGs.Where(aps => aps.NOMBRE.Equals(variable) && aps.ACTIVO == true).FirstOrDefault().VALUE.ToString();
-                        
+
                 //}catch(Exception e)
                 //{
 
@@ -594,7 +590,7 @@ namespace WFARTHA.Models
                 //}
 
                 //MGC prueba FTP---------------------------------------------------------------------------------------------------------------------------------------->
-                
+
                 //Obtener la configuración de la url desde app setting
                 //string ftpServerIP = "";
                 //try
@@ -605,7 +601,7 @@ namespace WFARTHA.Models
                 //}
                 //catch (Exception e)
                 //{
-                    
+
                 //}
                 //string targetFileName = "/SAP/POSTING/INBOUND_PREL" + ts.ID.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-1.txt";
 
@@ -848,7 +844,7 @@ namespace WFARTHA.Models
                 //        stOut.Write(stIn.GetBuffer(), 0, (int)stIn.Length);
                 //    }
 
-                    
+
 
                 //}
 
@@ -900,13 +896,15 @@ namespace WFARTHA.Models
         {
             string user = "";
             string pass = "";
+            string dom = "";
 
             user = getUserPrel();
             pass = getPassPrel();
+            dom = getDomPrel();
             try
             {
-                //using (Impersonation.LogonUser(path, user, pass, LogonType.NewCredentials))
-                //{
+                using (Impersonation.LogonUser(dom, user, pass, LogonType.NewCredentials))
+                {
 
                     try
                     {
@@ -924,8 +922,9 @@ namespace WFARTHA.Models
                     {
                         return false;
                     }
-                //}
-            } catch(Exception e)
+                }
+            }
+            catch (Exception e)
             {
                 return false;
             }
@@ -937,7 +936,7 @@ namespace WFARTHA.Models
             try
             {
                 user = db.APPSETTINGs.Where(aps => aps.NOMBRE.Equals("USER_PREL") && aps.ACTIVO == true).FirstOrDefault().VALUE.ToString();
-        
+
             }
             catch (Exception e)
             {
@@ -954,7 +953,7 @@ namespace WFARTHA.Models
             try
             {
                 pass = db.APPSETTINGs.Where(aps => aps.NOMBRE.Equals("PASS_PREL") && aps.ACTIVO == true).FirstOrDefault().VALUE.ToString();
-             
+
             }
             catch (Exception e)
             {
@@ -962,6 +961,23 @@ namespace WFARTHA.Models
             }
 
             return pass;
+
+        }
+
+        private string getDomPrel()
+        {
+            string dom = "";
+            try
+            {
+                dom = db.APPSETTINGs.Where(aps => aps.NOMBRE.Equals("DOMA_PREL") && aps.ACTIVO == true).FirstOrDefault().VALUE.ToString();
+
+            }
+            catch (Exception e)
+            {
+                dom = "";
+            }
+
+            return dom;
 
         }
 
