@@ -18,107 +18,114 @@
 </div>
 <div class="card-panel">
     @*<div class="row">*@
-        <div class="row" style="margin-bottom:0;">
-            <div class="input-field col s3 m3 l3">
-                <select id="selecc">
-                    <option value="10" selected>10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-                <label id="btn_length">Ver por página</label>
-            </div>
-            <div class="input-field col s3 m3 l3 offset-l6 offset-m6">
-                <input type="text" class="global_filter" id="global_filter">
-                <label for="global_filter" id="lbl_search">Buscar</label>
-            </div>
+    <div class="row" style="margin-bottom:0;">
+        <div class="input-field col s3 m3 l3">
+            <select id="selecc">
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            <label id="btn_length">Ver por página</label>
         </div>
-        <script>
-            var elem = document.querySelector('select');
-            var options = [];
-            var instance = M.FormSelect.init(elem, options);
-        </script>
-        <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-        <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
-        <link href="~/Content/dataTable.css" rel="stylesheet" />
-        <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
-        <div style="width:100%;">
-            <table class="table mdl-data-table striped" id="table" style="width:100%;">
-                <thead>
-                    <tr>
-                        <th class="lblID">
-                            @Html.DisplayNameFor(model => model.L.FirstOrDefault().ID)
+        <div class="input-field col s3 m3 l3 offset-l6 offset-m6">
+            <input type="text" class="global_filter" id="global_filter">
+            <label for="global_filter" id="lbl_search">Buscar</label>
+        </div>
+    </div>
+    <script>
+        var elem = document.querySelector('select');
+        var options = [];
+        var instance = M.FormSelect.init(elem, options);
+    </script>
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+    <link href="~/Content/dataTable.css" rel="stylesheet" />
+    <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+    <div style="width:100%;">
+        <table class="table mdl-data-table striped" id="table" style="width:100%;">
+            <thead>
+                <tr>
+                    <th class="lblID">
+                        @Html.DisplayNameFor(model => model.L.FirstOrDefault().ID)
+                    </th>
+                    <th class="lblNombre">
+                        @Html.DisplayNameFor(model => model.L.FirstOrDefault().NOMBRE)
+                    </th>
+                    <th class="lblEmail">
+                        @Html.DisplayNameFor(model => model.L.FirstOrDefault().EMAIL)
+                    </th>
+                    @*<th>
+                            @Html.DisplayNameFor(model => model.L.FirstOrDefault().MANAGER)
                         </th>
-                        <th class="lblNombre">
-                            @Html.DisplayNameFor(model => model.L.FirstOrDefault().NOMBRE)
-                        </th>
-                        <th class="lblEmail">
-                            @Html.DisplayNameFor(model => model.L.FirstOrDefault().EMAIL)
-                        </th>
-                        @*<th>
-                                @Html.DisplayNameFor(model => model.L.FirstOrDefault().MANAGER)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.L.FirstOrDefault().BACKUP_ID)
-                            </th>*@
-                        <th class="lblPuesto">
-                            @Html.DisplayNameFor(model => model.L.FirstOrDefault().PUESTO_ID)
-                        </th>
-                        @*<th>
-                                @Html.DisplayNameFor(model => model.L.PUESTO.ACTIVO)
-                            </th>*@
-                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.L.FirstOrDefault().BACKUP_ID)
+                        </th>*@
+                    <th class="lblPuesto">
+                        @Html.DisplayNameFor(model => model.L.FirstOrDefault().PUESTO_ID)
+                    </th>
+                    @*<th>
+                            @Html.DisplayNameFor(model => model.L.PUESTO.ACTIVO)
+                        </th>*@
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.L)
+                {
+                    <tr onclick="document.location = '@Url.Action("Details", new { id = item.ID })'" style="cursor:pointer">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NOMBRE)
+                            @Html.DisplayFor(modelItem => item.APELLIDO_P)
+                            @Html.DisplayFor(modelItem => item.APELLIDO_M)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EMAIL)
+                        </td>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.MANAGER)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BACKUP_ID)
+                            </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
+                        </td>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.PUESTO.PUESTOTs.FirstOrDefault().)
+                            </td>*@
+                        <td>
+                            <a href="@Url.Action("Edit", "Usuarios", new { id = item.ID })">
+                                <i class='material-icons green-text'>edit</i>
+                            </a>&nbsp;
+                            <a href="@Url.Action("Details", new { id = item.ID })">
+                                <i class='material-icons blue-text'>search</i>
+                            </a>&nbsp;
+                            <a href="" onclick="DELETE('@item.ID')">
+                                <span id="borrar" hidden>
+                                    @item.ID
+                                </span>
+                                <i class='material-icons red-text'>delete</i>
+                            </a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.L)
-                    {
-                        <tr onclick="document.location = '@Url.Action("Details", new { id = item.ID })'" style="cursor:pointer">
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ID)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.NOMBRE)
-                                @Html.DisplayFor(modelItem => item.APELLIDO_P)
-                                @Html.DisplayFor(modelItem => item.APELLIDO_M)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.EMAIL)
-                            </td>
-                            @*<td>
-                                    @Html.DisplayFor(modelItem => item.MANAGER)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.BACKUP_ID)
-                                </td>*@
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
-                            </td>
-                            @*<td>
-                                    @Html.DisplayFor(modelItem => item.PUESTO.PUESTOTs.FirstOrDefault().)
-                                </td>*@
-                            <td>
-                                <a href="@Url.Action("Edit", "Usuarios", new { id = item.ID })">
-                                    <i class='material-icons green-text'>edit</i>
-                                </a>&nbsp;
-                                <a href="@Url.Action("Details", new { id = item.ID })">
-                                    <i class='material-icons blue-text'>search</i>
-                                </a>&nbsp;
-                                <a href="" onclick="DELETE('@item.ID')">
-                                    <span id="borrar" hidden>
-                                        @item.ID
-                                    </span>
-                                    <i class='material-icons red-text'>delete</i>
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
+    </div>
     @*</div>*@
 </div>
+
+@if (ViewBag.Error != null)
+{
+    <script>
+            M.toast({ html: '@ViewBag.Error'});
+    </script>
+}
 
 <script type="text/javascript">
     $("a[data-form-method='post']").click(function (event) {
@@ -223,6 +230,9 @@
     }
 
 </script>
+
+
+
 <style>
     .dataTables_length {
         display: none;

@@ -20,7 +20,7 @@ using WFARTHA.Services;
 namespace TAT001.Controllers.Catalogos
 {
     [Authorize]
-    public class UsuarioCController : Controller
+    public class UsuarioC1Controller : Controller
     {
 
         private WFARTHAEntities db = new WFARTHAEntities();
@@ -30,11 +30,11 @@ namespace TAT001.Controllers.Catalogos
         // GET: UsuarioC
         public ActionResult Index()
         {
-            int pagina = 681; //ID EN BASE DE DATOS
+            int pagina = 671; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-            var UsuarioC = db.DET_APROBV;
-            UsuarioCNuevo un = new UsuarioCNuevo();
-            un.L = UsuarioC.ToList();
+            var UsuarioC1 = db.DET_APROB0V;
+            UsuarioC1Nuevo un = new UsuarioC1Nuevo();
+            un.L = UsuarioC1.ToList();
             return View(un);
         }
 
@@ -42,49 +42,49 @@ namespace TAT001.Controllers.Catalogos
         // GET: Usuarios/Create
         public ActionResult Create()
         {
-            int pagina = 683; //ID EN BASE DE DATOS
+            int pagina = 673; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-            UsuarioC obj = new UsuarioC();
+            UsuarioC1 obj = new UsuarioC1();
             return View(obj);
         }
 
         // GET: Usuarios/Create
         public ActionResult Edit(string ID_SOCIEDAD, string ID_USUARIO, int VERSION)
         {
-            int pagina = 684; //ID EN BASE DE DATOS
+            int pagina = 674; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-            var  id_sociedad = db.DET_APROBV.Where(a=>a.ID_SOCIEDAD == ID_SOCIEDAD && a.ID_USUARIO == ID_USUARIO && a.VERSION == VERSION).FirstOrDefault().ID_SOCIEDAD;
-            var sociedad = db.DET_APROBV.Where(a => a.ID_SOCIEDAD == ID_SOCIEDAD && a.ID_USUARIO == ID_USUARIO && a.VERSION == VERSION).FirstOrDefault().SOCIEDAD;
+            var  id_sociedad = db.DET_APROB0V.Where(a=>a.ID_SOCIEDAD == ID_SOCIEDAD && a.ID_USUARIO == ID_USUARIO && a.VERSION == VERSION).FirstOrDefault().ID_SOCIEDAD;
+            var sociedad = db.DET_APROB0V.Where(a => a.ID_SOCIEDAD == ID_SOCIEDAD && a.ID_USUARIO == ID_USUARIO && a.VERSION == VERSION).FirstOrDefault().SOCIEDAD;
             ViewBag.idsociedad = id_sociedad;
             ViewBag.sociedad = sociedad;
-            UsuarioC obj = new UsuarioC();
+            UsuarioC1 obj = new UsuarioC1();
             return View(obj);
            
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID_SOCIEDAD,ID_USUARIO")] UsuarioC usuarioC)
+        public ActionResult Edit([Bind(Include = "ID_SOCIEDAD,ID_USUARIO")] UsuarioC1 usuarioC1)
         {
             var st = false;
             var version = 1;
             string displayName = null;
-            var keyValue = db.DET_APROB.FirstOrDefault(a => a.ID_SOCIEDAD == usuarioC.ID_SOCIEDAD);
+            var keyValue = db.DET_APROB0.FirstOrDefault(a => a.ID_SOCIEDAD == usuarioC1.ID_SOCIEDAD);
 
             if (keyValue != null)
             {
-                var reg = db.DET_APROB.Where(a => a.ID_SOCIEDAD == usuarioC.ID_SOCIEDAD);
+                var reg = db.DET_APROB0.Where(a => a.ID_SOCIEDAD == usuarioC1.ID_SOCIEDAD);
                 version = reg.Count() + 1;
             }
 
 
-            DET_APROB u = new DET_APROB();
-            u.ID_SOCIEDAD = usuarioC.ID_SOCIEDAD;
-            u.ID_USUARIO = usuarioC.ID_USUARIO;
+            DET_APROB0 u = new DET_APROB0();
+            u.ID_SOCIEDAD = usuarioC1.ID_SOCIEDAD;
+            u.ID_USUARIO = usuarioC1.ID_USUARIO;
             u.VERSION = version;
-            u.STEP_FASE = 99;
+            u.STEP_FASE = 0;
 
-            db.DET_APROB.Add(u);
+            db.DET_APROB0.Add(u);
 
             try
             {
@@ -94,9 +94,9 @@ namespace TAT001.Controllers.Catalogos
             catch
             {
                 ViewBag.Error = "Ocurrio un error al taratar de ingresar registro";
-                int pagina = 683; //ID EN BASE DE DATOS
+                int pagina = 673; //ID EN BASE DE DATOS
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-                UsuarioC obj = new UsuarioC();
+                UsuarioC1 obj = new UsuarioC1();
                 return View(obj);
             }
         }
@@ -104,27 +104,27 @@ namespace TAT001.Controllers.Catalogos
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID_SOCIEDAD,ID_USUARIO")] UsuarioC usuarioC)
+        public ActionResult Create([Bind(Include = "ID_SOCIEDAD,ID_USUARIO")] UsuarioC1 usuarioC1)
         {
             var st = false;
             var version = 1;
             string displayName = null;
-            var keyValue = db.DET_APROB.FirstOrDefault(a=>a.ID_SOCIEDAD == usuarioC.ID_SOCIEDAD );
+            var keyValue = db.DET_APROB0.FirstOrDefault(a=>a.ID_SOCIEDAD == usuarioC1.ID_SOCIEDAD );
 
             if (keyValue != null)
             {
-                var reg = db.DET_APROB.Where(a => a.ID_SOCIEDAD == usuarioC.ID_SOCIEDAD);
+                var reg = db.DET_APROB0.Where(a => a.ID_SOCIEDAD == usuarioC1.ID_SOCIEDAD);
                 version = reg.Count() + 1;
             }
            
 
-            DET_APROB u = new DET_APROB();
-            u.ID_SOCIEDAD = usuarioC.ID_SOCIEDAD;
-            u.ID_USUARIO = usuarioC.ID_USUARIO;
+            DET_APROB0 u = new DET_APROB0();
+            u.ID_SOCIEDAD = usuarioC1.ID_SOCIEDAD;
+            u.ID_USUARIO = usuarioC1.ID_USUARIO;
             u.VERSION = version;
-            u.STEP_FASE = 99;
+            u.STEP_FASE = 0;
 
-            db.DET_APROB.Add(u);
+            db.DET_APROB0.Add(u);
 
             try
             {
@@ -133,9 +133,9 @@ namespace TAT001.Controllers.Catalogos
             }
             catch {
                 ViewBag.Error = "Ocurrio un error al taratar de ingresar registro";
-                int pagina = 683; //ID EN BASE DE DATOS
+                int pagina = 673; //ID EN BASE DE DATOS
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-                UsuarioC obj = new UsuarioC();
+                UsuarioC1 obj = new UsuarioC1();
                 return View(obj);
             }
 

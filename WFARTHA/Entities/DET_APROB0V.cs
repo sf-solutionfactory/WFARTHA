@@ -12,7 +12,7 @@ namespace WFARTHA.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DET_APROBV
+    public partial class DET_APROB0V
     {
         public int VERSION { get; set; }
         public string ID_SOCIEDAD { get; set; }

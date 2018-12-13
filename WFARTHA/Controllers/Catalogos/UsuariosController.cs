@@ -145,6 +145,8 @@ namespace TAT001.Controllers.Catalogos
             //    }
             //    Session["spras"] = user.SPRAS_ID;
             //}
+
+            USUARIO uSUARIO = new USUARIO();
             string spra = "ES";// Session["spras"].ToString();//MGC 24-10-2018 Usuarios
             var puestol = db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra) & a.PUESTO.ACTIVO == true).ToList();//MGC 24-10-2018 Usuarios
             ViewBag.PUESTO_ID = new SelectList(puestol, "PUESTO_ID", "TXT50");
@@ -152,226 +154,172 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.ROLs = new SelectList(db.ROLs, "ID", "ID");
             ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
             ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS");
-            return View();
+            return View(uSUARIO);
         }
 
         //MGC 24-10-2018 Usuarios
         //// POST: Usuarios/Create
         //// Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         //// más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create([Bind(Include = "ID,PASS,NOMBRE,APELLIDO_P,APELLIDO_M,EMAIL,SPRAS_ID,ACTIVO,PUESTO_ID,MANAGER,BACKUP_ID,BUNIT,ROL")] Usuario uSUARIO)
-        //{
-        //    int pagina = 602; //ID EN BASE DE DATOS
-        //    FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-        //    ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
-        //    ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS");
-        //    string spra = Session["spras"].ToString();
-        //    ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50");
-        //    ViewBag.ROLs = new SelectList(db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra)), "ROL_ID", "TXT50");
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (!ExisteUsuario(uSUARIO.ID))
-        //        {
-        //            if (!String.IsNullOrEmpty(uSUARIO.PASS) & !String.IsNullOrEmpty(uSUARIO.MANAGER))
-        //            {
-        //                if (uSUARIO.PASS == uSUARIO.MANAGER)
-        //                {
-        //                    if (ComprobarEmail(uSUARIO.EMAIL) != false & !String.IsNullOrEmpty(uSUARIO.EMAIL))
-        //                    {
-        //                        Cryptography c = new Cryptography();
-        //                        uSUARIO.PASS = c.Encrypt(uSUARIO.PASS);
-        //                        USUARIO u = new USUARIO();
-        //                        var ppd = u.GetType().GetProperties();
-        //                        var ppv = uSUARIO.GetType().GetProperties();
-        //                        foreach (var pv in ppv)
-        //                        {
-        //                            foreach (var pd in ppd)
-        //                            {
-        //                                if (pd.Name == pv.Name)
-        //                                {
-        //                                    pd.SetValue(u, pv.GetValue(uSUARIO));
-        //                                    break;
-        //                                }
-        //                            }
-        //                        }
-        //                        u.ACTIVO = true;
-        //                        u.ID.Trim();
-        //                        db.USUARIOs.Add(u);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "ID,NOMBRE,APELLIDO_P,APELLIDO_M,EMAIL,PUESTO_ID,BUNIT")] Usuario uSUARIO)
+        {
+            int pagina = 602; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            Email em = new Email();
 
-        //                        ////MIEMBRO m = new MIEMBRO();
-        //                        ////m.ROL_ID = int.Parse(Request.Form["ROLs"].ToString());
-        //                        ////m.USUARIO_ID = uSUARIO.ID;
-        //                        ////m.ACTIVO = true;
-        //                        ////db.MIEMBROS.Add(m);
+            if (ModelState.IsValid)
+            {
+                Random random = new Random();
+                var pass = random.Next(100000, 500000);
+                Cryptography c = new Cryptography();
+                var passcry = c.Encrypt(pass.ToString());
+                USUARIO u = new USUARIO();
+                u.NOMBRE = uSUARIO.NOMBRE.Trim();
+                u.APELLIDO_P = uSUARIO.APELLIDO_P.Trim();
+                u.APELLIDO_M = uSUARIO.APELLIDO_M.Trim();
+                u.PASS = passcry;
+                u.FIRMA = passcry;
+                u.EMAIL = uSUARIO.EMAIL;
+                u.ACTIVO = true;
+                u.ID = uSUARIO.ID.Trim();
+                u.SPRAS_ID = "ES";
+                u.PUESTO_ID = uSUARIO.PUESTO_ID;
+                u.BUNIT = uSUARIO.BUNIT;
+                db.USUARIOs.Add(u);
 
-        //                        db.SaveChanges();
-        //                        return RedirectToAction("Index");
-        //                    }
-        //                    else
-        //                    {
-        //                        ViewBag.Error = "El correo no es correcto";
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    TempData["MensajePass"] = "La contraseña no coincide";
-        //                }
+                try
+                {
+                    db.SaveChanges();
+                    em.enviaMailUsuario(uSUARIO.EMAIL, pass, uSUARIO.NOMBRE.Trim(), uSUARIO.APELLIDO_P.Trim(), uSUARIO.APELLIDO_M.Trim(), uSUARIO.ID.Trim());
+                    ViewBag.Error = "El usuario " + uSUARIO.ID.Trim() + " se creo con exito";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception e)
+                {
 
-        //            }
-        //        }
-        //        else
-        //        {
-        //            TempData["MensajeUsuario"] = "El usuario ya existe. Introduzca un ID de usuario diferente";
-        //            return View(uSUARIO);
-        //        }
-        //    }
+                }
+
+            }
 
 
-        //    //using (TAT001Entities db = new TAT001Entities())
-        //    //{
-        //    //    string u = User.Identity.Name;
-        //    //    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-        //    //    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-        //    //    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-        //    //    ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-        //    //    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-        //    //    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-        //    //    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-        //    //    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-        //    //    try
-        //    //    {
-        //    //        string p = Session["pais"].ToString();
-        //    //        ViewBag.pais = p + ".png";
-        //    //    }
-        //    //    catch
-        //    //    {
-        //    //        //ViewBag.pais = "mx.png";
-        //    //        //return RedirectToAction("Pais", "Home");
-        //    //    }
-        //    //    Session["spras"] = user.SPRAS_ID;
-        //    //}
-        //    //string spra = Session["spras"].ToString();
-        //    //ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50");
-        //    //ViewBag.ROLs = new SelectList(db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra)), "ROL_ID", "TXT50");
-        //    //ViewBag.ROLs = new SelectList(db.ROLs, "ID", "ID");
-        //    //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
-        //    //ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS");
-
-        //    return View(uSUARIO);
-        //}
+            return View(uSUARIO);
+        }
 
         //// GET: Usuarios/Edit/5
-        //public ActionResult Edit(string id)
-        //{
-        //    int pagina = 603; //ID EN BASE DE DATOS
-        //    FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-        //    //using (TAT001Entities db = new TAT001Entities())
-        //    //{
-        //    //    string u = User.Identity.Name;
-        //    //    //string u = "admin";
-        //    //    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-        //    //    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-        //    //    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-        //    //    ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-        //    //    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-        //    //    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-        //    //    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-        //    //    pagina = pagina - 1;
-        //    //    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+        public ActionResult Edit(string id)
+        {
+            int pagina = 603; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            //using (TAT001Entities db = new TAT001Entities())
+            //{
+            //    string u = User.Identity.Name;
+            //    //string u = "admin";
+            //    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            //    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            //    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            //    ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+            //    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            //    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            //    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            //    pagina = pagina - 1;
+            //    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
-        //    //    try
-        //    //    {
-        //    //        string p = Session["pais"].ToString();
-        //    //        ViewBag.pais = p + ".png";
-        //    //    }
-        //    //    catch
-        //    //    {
-        //    //        //ViewBag.pais = "mx.png";
-        //    //        //return RedirectToAction("Pais", "Home");
-        //    //    }
-        //    //    Session["spras"] = user.SPRAS_ID;
-        //    //}
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    USUARIO uSUARIO = db.USUARIOs.Find(id);
-        //    if (uSUARIO == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    //ViewBag.PUESTO_ID = new SelectList(db.PUESTOes, "ID", "ID", uSUARIO.PUESTO_ID);
-        //    string spra = Session["spras"].ToString();
-        //    ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
-        //    ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
-        //    ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
-        //    ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
-        //    ViewBag.SOCIEDADES = db.SOCIEDADs;
-        //    ViewBag.PAISES = db.PAIS;
-        //    ViewBag.APROBADORES = db.DET_APROB.Where(a => a.BUKRS.Equals("KCMX") & a.PUESTOC_ID == uSUARIO.PUESTO_ID).ToList();
-        //    return View(uSUARIO);
-        //}
+            //    try
+            //    {
+            //        string p = Session["pais"].ToString();
+            //        ViewBag.pais = p + ".png";
+            //    }
+            //    catch
+            //    {
+            //        //ViewBag.pais = "mx.png";
+            //        //return RedirectToAction("Pais", "Home");
+            //    }
+            //    Session["spras"] = user.SPRAS_ID;
+            //}
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            USUARIO uSUARIO = db.USUARIOs.Find(id);
+            if (uSUARIO == null)
+            {
+                return HttpNotFound();
+            }
+            //ViewBag.PUESTO_ID = new SelectList(db.PUESTOes, "ID", "ID", uSUARIO.PUESTO_ID);
+            string spra = Session["spras"].ToString();
+            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
+            ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
+            ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
+            ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
+            ViewBag.SOCIEDADES = db.SOCIEDADs;
 
-        //// POST: Usuarios/Edit/5
-        //// Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        //// más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include = "ID,PASS,NOMBRE,APELLIDO_P,APELLIDO_M,EMAIL,SPRAS_ID,ACTIVO,PUESTO_ID,MANAGER,BACKUP_ID,BUNIT")] USUARIO uSUARIO)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (ComprobarEmail(uSUARIO.EMAIL) != false & uSUARIO.EMAIL != null & uSUARIO.EMAIL != "")
-        //        {
-        //            uSUARIO.ACTIVO = true;
-        //            db.Entry(uSUARIO).State = EntityState.Modified;
-        //            db.SaveChanges();
-        //            return RedirectToAction("Details", new { id = uSUARIO.ID });
-        //            //return RedirectToAction("Index");
-        //        }
-        //        else
-        //        {
-        //            ViewBag.Error = "El correo no es correcto";
-        //        }
-        //    }
-        //    int pagina = 603; //ID EN BASE DE DATOS
-        //    FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-        //    //using (TAT001Entities db = new TAT001Entities())
-        //    //{
-        //    //    string u = User.Identity.Name;
-        //    //    //string u = "admin";
-        //    //    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-        //    //    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-        //    //    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-        //    //    ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-        //    //    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-        //    //    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-        //    //    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-        //    //    pagina = pagina - 1;
-        //    //    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            return View(uSUARIO);
+        }
 
-        //    //    try
-        //    //    {
-        //    //        string p = Session["pais"].ToString();
-        //    //        ViewBag.pais = p + ".png";
-        //    //    }
-        //    //    catch
-        //    //    {
-        //    //        //ViewBag.pais = "mx.png";
-        //    //        //return RedirectToAction("Pais", "Home");
-        //    //    }
-        //    //    Session["spras"] = user.SPRAS_ID;
-        //    //}
-        //    string spra = Session["spras"].ToString();
-        //    ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "ID", uSUARIO.SPRAS_ID);
-        //    ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
-        //    ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
-        //    ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
-        //    return View(uSUARIO);
-        //}
+        // POST: Usuarios/Edit/5
+        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
+        // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "ID,PASS,FIRMA,NOMBRE,APELLIDO_P,APELLIDO_M,EMAIL,SPRAS_ID,ACTIVO,PUESTO_ID,MANAGER,BACKUP_ID,BUNIT")] USUARIO uSUARIO)
+        {
+
+            var msgerror = "";
+            if (ModelState.IsValid)
+            {
+
+                uSUARIO.ACTIVO = true;
+                uSUARIO.SPRAS_ID = "ES";
+                db.Entry(uSUARIO).State = EntityState.Modified;
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Details", new { id = uSUARIO.ID });
+                }
+                catch (Exception e)
+                {
+                }
+
+                //return RedirectToAction("Index");
+
+            }
+            int pagina = 603; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            //using (TAT001Entities db = new TAT001Entities())
+            //{
+            //    string u = User.Identity.Name;
+            //    //string u = "admin";
+            //    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            //    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            //    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            //    ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+            //    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            //    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            //    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            //    pagina = pagina - 1;
+            //    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
+            //    try
+            //    {
+            //        string p = Session["pais"].ToString();
+            //        ViewBag.pais = p + ".png";
+            //    }
+            //    catch
+            //    {
+            //        //ViewBag.pais = "mx.png";
+            //        //return RedirectToAction("Pais", "Home");
+            //    }
+            //    Session["spras"] = user.SPRAS_ID;
+            //}
+            string spra = "ES";
+            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "ID", uSUARIO.SPRAS_ID);
+            ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
+            ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
+            ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
+            return View(uSUARIO);
+        }
 
         //// GET: Usuarios/Delete/5
         //public ActionResult Delete(string id)
@@ -416,16 +364,16 @@ namespace TAT001.Controllers.Catalogos
         //}
 
         //// POST: Usuarios/Delete/5
-        //[HttpPost]
-        ////[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(string id)
-        //{
-        //    USUARIO uSUARIO = db.USUARIOs.Find(id);
-        //    uSUARIO.ACTIVO = false;
-        //    db.Entry(uSUARIO).State = EntityState.Modified;
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(string id)
+        {
+            USUARIO uSUARIO = db.USUARIOs.Find(id);
+            uSUARIO.ACTIVO = false;
+            db.Entry(uSUARIO).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
 
         //// GET: Usuarios/Edit/5
         //public ActionResult Pass(string id)
@@ -2972,6 +2920,89 @@ namespace TAT001.Controllers.Catalogos
         //    return RedirectToAction("Details", new { id=id});
 
         //}
+
+
+        //FRT11122018 validar si existe el usuario
+
+        [HttpPost]//FRT27112018
+        public JsonResult getUsuario(string id)
+        {
+
+            var st = false;
+
+            string displayName = null;
+            var keyValue = db.USUARIOs.FirstOrDefault(a => a.ID == id);
+
+            if (keyValue != null)
+            {
+                st = true;
+            }
+            else
+            {
+                st = false;
+            }
+
+            JsonResult jc = Json(st, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
+        public ActionResult CambioPass(string id)
+        {
+            int pagina = 602; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            ViewBag.id = id;
+
+            USUARIO uSUARIO = new USUARIO();
+
+            return View(uSUARIO);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CambioPass([Bind(Include = "ID,PASS,FIRMA")] Usuario uSUARIO)
+        {
+            var msgerror = "";
+            if (ModelState.IsValid)
+            {
+                Cryptography c = new Cryptography();
+                var passcry = c.Encrypt(uSUARIO.PASS.ToString());
+                var nombre = db.USUARIOs.Where(a => a.ID == uSUARIO.ID).FirstOrDefault().NOMBRE;
+                var paterno = db.USUARIOs.Where(a => a.ID == uSUARIO.ID).FirstOrDefault().APELLIDO_P;
+                var materno = db.USUARIOs.Where(a => a.ID == uSUARIO.ID).FirstOrDefault().APELLIDO_M;
+                var email = db.USUARIOs.Where(a => a.ID == uSUARIO.ID).FirstOrDefault().EMAIL;
+                var user = db.USUARIOs.Where(a => a.ID == uSUARIO.ID).FirstOrDefault().PUESTO_ID;
+                var buint = db.USUARIOs.Where(a => a.ID == uSUARIO.ID).FirstOrDefault().BUNIT;
+
+                uSUARIO.NOMBRE = nombre;
+                uSUARIO.APELLIDO_P = paterno;
+                uSUARIO.APELLIDO_M = materno;
+                uSUARIO.EMAIL = email;
+                uSUARIO.PUESTO_ID = user;
+                uSUARIO.BUNIT = buint;
+                uSUARIO.PASS = passcry;
+                uSUARIO.ACTIVO = true;
+                uSUARIO.SPRAS_ID = "ES";
+                db.Entry(uSUARIO).State = EntityState.Modified;
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Details", new { id = uSUARIO.ID });
+                }
+                catch (Exception e)
+                {
+                }
+
+
+            }
+            int pagina = 603; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            string spra = "ES";
+            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "ID", uSUARIO.SPRAS_ID);
+            ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
+            ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
+            ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
+            return View();
+        }
     }
 }
 

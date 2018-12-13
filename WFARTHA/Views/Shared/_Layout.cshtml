@@ -67,6 +67,9 @@
                         }
                         }*@
                     <li>
+                        <a href="@Url.Action("CambioPass","Usuarios",new { id = @ViewBag.usuario.ID })">Cambiar Contraseña</a>
+                    </li>
+                    <li>
                         @using Microsoft.AspNet.Identity
                         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
                         {
@@ -74,6 +77,8 @@
                             <a href="javascript:document.getElementById('logoutForm').submit()" id="lbl_loggoff">Salir</a>
                         }
                     </li>
+
+
                 </ul>
             </div>
         </nav>

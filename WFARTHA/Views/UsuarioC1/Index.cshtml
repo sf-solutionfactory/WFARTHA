@@ -1,9 +1,9 @@
 ﻿@*@model IEnumerable<TAT001.Entities.DET_APROBV>*@
-@model WFARTHA.Models.UsuarioCNuevo
+@model WFARTHA.Models.UsuarioC1Nuevo
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.pagina_r = 681;
+    ViewBag.pagina_r = 671;
     ViewBag.carpeta_r = 500;
 }
 
@@ -72,7 +72,7 @@
                         @Html.DisplayFor(modelItem => item.USUARIO)
                     </td>
                     <td>
-                        <a href="@Url.Action("Edit", "UsuarioC", new { ID_SOCIEDAD = item.ID_SOCIEDAD ,ID_USUARIO = item.ID_USUARIO,VERSION = item.VERSION })">
+                        <a href="@Url.Action("Edit", "UsuarioC1", new { ID_SOCIEDAD = item.ID_SOCIEDAD ,ID_USUARIO = item.ID_USUARIO,VERSION = item.VERSION })">
                             <i class='material-icons green-text'>edit</i>
                         </a>&nbsp;
                     </td>

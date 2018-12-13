@@ -19,8 +19,7 @@
 @if (ViewBag.NUM_DOC != null)
 {
     if (ViewBag.NUM_DOC != "")
-    {
-        <script>
+    {        <script>
         $(document).ready(function () {
             function docMessage(msg) {
                 M.toast({ html: msg });
@@ -550,7 +549,7 @@
             ],
             scrollX: "50vh",
             scrollY: "50vh",
-            order: [[3, "desc"], [0, "desc"]],
+            order: [[0, "desc"], [3, "desc"]],
             scrollCollapse: true,
             initComplete: function () {
                 this.api().columns().every(function () {

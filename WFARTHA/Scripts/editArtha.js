@@ -802,6 +802,10 @@ $(document).ready(function () {
         $('#btnDownload').trigger("click");
     });
 
+    $('#file_sopAnexar').on("click", function (e) {
+        $("#cargando").css("display", "inline");
+    });
+
     $('#file_sopAnexar').change(function () {
         ////FRT 13112018 PARA PODER SUBIR LOS ARCHIVOS A CAREPETA TEMPORAL
         ////var lengthtemp = $(this).get(0).files.length;
@@ -859,7 +863,7 @@ $(document).ready(function () {
                     var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
                     if (fileNameExt.toLowerCase() == "jpg" || fileNameExt.toLowerCase() == "png" || fileNameExt.toLowerCase() == "jpeg" || fileNameExt.toLowerCase() == "doc" || fileNameExt.toLowerCase() == "xls" || fileNameExt.toLowerCase() == "ppt" ||
                         fileNameExt.toLowerCase() == "xml" || fileNameExt.toLowerCase() == "pdf" || fileNameExt.toLowerCase() == "txt" || fileNameExt.toLowerCase() == "docx" || fileNameExt.toLowerCase() == "xlsx" || fileNameExt.toLowerCase() == "pptx") {
-                        tdata = "<tr><td></td><td style=\"text - align: left\">" + (i + 1) + "</td><td style=\"text - align: left\">OK</td><td style=\"text - align: left\">" + file.name + "</td><td style=\"text - align: left\">" + fileNameExt.toLowerCase() + "</td><td style=\"text - align: left\"><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
+                        tdata = "<tr><td></td><td style=\"text - align: left\">" + (1) + "</td><td style=\"text - align: left\">OK</td><td style=\"text - align: left\">" + file.name + "</td><td style=\"text - align: left\">" + fileNameExt.toLowerCase() + "</td><td style=\"text - align: left\"><input name=\"labels_desc\" class=\"Descripcion\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\"></td><td></td></tr>";
 
                         //Lejgg 22-10-2018
                         if (fileNameExt.toLowerCase() === "xml") {
@@ -1192,7 +1196,8 @@ $(document).ready(function () {
             }
         }
 
-         document.getElementById('file_sopAnexar').value = '';
+        $("#cargando").css("display", "none");
+        document.getElementById('file_sopAnexar').value = '';
             // END FRT13112018
     });
 
