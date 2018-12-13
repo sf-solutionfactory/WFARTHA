@@ -147,6 +147,7 @@ namespace WFARTHA.Models
                                     "" + "|" +
                                     "" + "|" +
                                     doc.TIPO_CAMBIO  //MGC 11-10-2018 Acciones para el encabezado
+                                    +"|" //MGC 13-10-2018 Modificaión fecha
                                     );
                                 //sw.WriteLine("");//MGC 17-10-2018.2 Adaptación a archivo
                                 //for (int i = 0; i < det.Count; i++)
