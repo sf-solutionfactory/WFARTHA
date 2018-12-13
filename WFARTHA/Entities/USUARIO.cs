@@ -6,18 +6,7 @@
 //     Los cambios manuales en este archivo se sobrescribirán si se regenera el código.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-using System.Web.Mvc;
-using WFARTHA.Entities;
+
 namespace WFARTHA.Entities
 {
     using System;
@@ -25,50 +14,9 @@ namespace WFARTHA.Entities
     
     public partial class USUARIO
     {
-
-        [DataType(DataType.Text)]
-        [DisplayName("Users")]
-        [UIHint("List")]
-        public List<SelectListItem> UsersLista { get; set; }
-        public List<SelectListItem> SociedadLista { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public USUARIO()
         {
-
-            WFARTHAEntities data = new WFARTHAEntities();
-
-            SociedadLista = new List<SelectListItem>();
-            UsersLista = new List<SelectListItem>();
-            var qSociedad = from s in data.SOCIEDADs where (s.ACTIVO == true) select s;
-            var SociedadData = qSociedad.ToList();
-            var qUsers = from s in data.PUESTOTs where (s.SPRAS_ID == "ES") select s;
-            var UsersData = qUsers.ToList();
-
-            foreach (var Data in SociedadData)
-            {
-                string sociedad = string.Format("{0} - {1}",
-                Data.BUKRS,
-                Data.BUTXT);
-
-                SociedadLista.Add(new SelectListItem()
-                {
-                    Value = Data.BUKRS.ToString(),
-                    Text = sociedad,
-                });
-            }
-
-            foreach (var Data in UsersData)
-            {
-                string users = string.Format("{0} - {1}",
-                Data.PUESTO_ID,
-                Data.TXT50);
-
-                UsersLista.Add(new SelectListItem()
-                {
-                    Value = Data.PUESTO_ID.ToString(),
-                    Text = users,
-                });
-            }
             this.DELEGARs = new HashSet<DELEGAR>();
             this.DELEGARs1 = new HashSet<DELEGAR>();
             this.DET_AGENTEC = new HashSet<DET_AGENTEC>();

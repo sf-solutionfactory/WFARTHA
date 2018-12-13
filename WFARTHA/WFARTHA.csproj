@@ -277,11 +277,9 @@
     <Compile Include="Entities\DET_APROB0.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
-
     <Compile Include="Entities\DET_APROB0V.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
-
     <Compile Include="Entities\DET_APROBV.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
@@ -457,6 +455,9 @@
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\SP_DETALLE_Result.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\SP_FIRMAS_Result.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\TCAMBIO.cs">

@@ -38,9 +38,9 @@ namespace WFARTHA.Controllers
             {
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
 
-                decimal? total = 0;
                 SP_CABECERA_Result c = db.SP_CABECERA(id).Single();
                 List<SP_DETALLE_Result> d = db.SP_DETALLE(id).ToList();
+                List<SP_FIRMAS_Result> f = db.SP_FIRMAS(id).ToList();
                 ReportCabecera cab = new ReportCabecera
                 {
                     NUM_DOC = c.NUM_DOC.ToString(),
@@ -65,18 +65,73 @@ namespace WFARTHA.Controllers
                         IMPORTE = dd.IMPORTE.ToString(),
                         TEXTO = (dd.TEXTO ?? "")
                     };
-                    total += dd.IMPORTE;
                     det.Add(rd);
                 }
+                List<ReportFirmas> fir = new List<ReportFirmas>();
+                var cont = 1;
+                var cont2 = f.Count();
+                ReportFirmas rf = new ReportFirmas();
+                for (int i = 0; i < f.Count(); i++)
+                {
+                    if (cont == 1)
+                    {
+                        rf = new ReportFirmas();
+                    }
+                    switch (cont)
+                    {
+                        case 1:
+                            rf.fasen1 = f[i].fasen.ToString();
+                            rf.faseletrero1 = f[i].faseletrero;
+                            rf.usuariocadena1 = f[i].usuariocadena;
+                            rf.fecham1 = string.Format(DateTime.Parse(f[i].fecham.ToString()).ToString(@"dd/MM/yyyy"));
+                            cont++;
+                            cont2--;
+                            break;
+                        case 2:
+                            rf.fasen2 = (f[i].fasen.ToString() ?? "");
+                            rf.faseletrero2 = (f[i].faseletrero ?? "");
+                            rf.usuariocadena2 = (f[i].usuariocadena ?? "");
+                            rf.fecham2 = (string.Format(DateTime.Parse(f[i].fecham.ToString()).ToString(@"dd/MM/yyyy")) ?? "");
+                            cont++;
+                            cont2--;
+                            break;
+                        case 3:
+                            rf.fasen3 = (f[i].fasen.ToString() ?? "");
+                            rf.faseletrero3 = (f[i].faseletrero ?? "");
+                            rf.usuariocadena3 = (f[i].usuariocadena ?? "");
+                            rf.fecham3 = (string.Format(DateTime.Parse(f[i].fecham.ToString()).ToString(@"dd/MM/yyyy")) ?? "");
+                            cont++;
+                            cont2--;
+                            break;
+                        case 4:
+                            rf.fasen4 = (f[i].fasen.ToString() ?? "");
+                            rf.faseletrero4 = (f[i].faseletrero ?? "");
+                            rf.usuariocadena4 = (f[i].usuariocadena ?? "");
+                            rf.fecham4 = (string.Format(DateTime.Parse(f[i].fecham.ToString()).ToString(@"dd/MM/yyyy")) ?? "");
+                            cont++;
+                            cont2--;
+                            break;
+                        case 5:
+                            rf.fasen5 = (f[i].fasen.ToString() ?? "");
+                            rf.faseletrero5 = (f[i].faseletrero ?? "");
+                            rf.usuariocadena5 = (f[i].usuariocadena ?? "");
+                            rf.fecham5 = (string.Format(DateTime.Parse(f[i].fecham.ToString()).ToString(@"dd/MM/yyyy")) ?? "");
+                            cont = 1;
+                            cont2--;
+                            break;
+                    }
+                    if (cont == 5 || cont2 == 0)
+                    {
+                        fir.Add(rf);
+                    }
+                }
+
                 ReportEsqueleto re = new ReportEsqueleto();
-                string recibeRuta = re.crearPDF(cab, det, total);
+                string recibeRuta = re.crearPDF(cab, det, fir);
                 ViewBag.url = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + HostingEnvironment.ApplicationVirtualPath + "/" + recibeRuta;
                 ViewBag.miNum = c.NUM_DOC;
 
                 return View();
-                //return RedirectToAction("Index", new { ruta = recibeRuta, ids = c.NUM_DOC });
-                //ViewBag.url = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + HostingEnvironment.ApplicationVirtualPath + "/" + ruta;
-                //return View();
             }
         }
     }
