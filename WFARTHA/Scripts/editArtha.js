@@ -1347,7 +1347,7 @@ $('body').on('change', '#list_detaa', function (event, param1) {
 
     //Al seleccionar un solicitante, obtener la cadena para mostrar
 
-    obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad);
+    obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad, 0, 0);//MGC 11-12-2018 Agregar Contabilizador 0
     //LEJGG 21-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
 
 });
@@ -3837,7 +3837,7 @@ function validarRFCReceptor(rfc_soc, rfc_soc_doc) {
 //LEJGG 21-11-2018 Cadena de autorización----------------------------------------------------------------------------->
 //Al seleccionar un solicitante, obtener la cadena para mostrar
 
-function obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad) {
+function obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad, vc1, vc2) {//MGC 11-12-2018 Agregar Contabilizador 0
 
     try {
         monto = parseFloat(monto) || 0.0;
@@ -3848,15 +3848,29 @@ function obtenerCadena(version, usuarioc, id_ruta, usuarioa, monto, sociedad) {
     //Eliminar Registros
     $("#tableAutorizadores > tbody > tr").remove();
 
+    //MGC 11-12-2018 Agregar Contabilizador 0--------------->
+    $('#VERSIONC1').val("");
+    $('#VERSIONC2').val("");
+   //MGC 11-12-2018 Agregar Contabilizador 0---------------<
+
     $.ajax({
         type: "POST",
         url: '../getCadena',
-        data: { 'version': version, 'usuarioc': usuarioc, 'id_ruta': id_ruta, 'usuarioa': usuarioa, 'monto': monto, 'bukrs': sociedad },
+        data: { 'version': version, 'usuarioc': usuarioc, 'id_ruta': id_ruta, 'usuarioa': usuarioa, 'monto': monto, 'bukrs': sociedad, 'vc1': vc1, 'vc2': vc2 },//MGC 11-12-2018 Agregar Contabilizador 0
         dataType: "json",
         success: function (data) {
             if (data !== null || data !== "") {
 
-                $.each(data, function (i, dataj) {
+                //MGC 11-12-2018 Agregar Contabilizador 0--------------->
+                //Obtener la cadena y las versiones de los autorizadores
+                var c1 = data.vc1;
+                var c2 = data.vc2;
+
+                $('#VERSIONC1').val(c1);
+                $('#VERSIONC2').val(c2);
+                //MGC 11-12-2018 Agregar Contabilizador 0---------------<
+
+                $.each(data.cadenal, function (i, dataj) {//MGC 11-12-2018 Agregar Contabilizador 0
                     var fase = dataj.fase;
                     var autorizador = dataj.autorizador;
 
