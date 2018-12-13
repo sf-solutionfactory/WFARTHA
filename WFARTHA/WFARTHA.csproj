@@ -210,6 +210,7 @@
     <Compile Include="Controllers\Catalogos\ConmailController.cs" />
     <Compile Include="Controllers\Catalogos\ProyectoSociedadController.cs" />
     <Compile Include="Controllers\Catalogos\SociedadesUsuarioController.cs" />
+    <Compile Include="Controllers\Catalogos\UsuarioC1Controller.cs" />
     <Compile Include="Controllers\Catalogos\UsuarioCController.cs" />
     <Compile Include="Controllers\Catalogos\UsuariosController.cs" />
     <Compile Include="Controllers\Catalogos\UsuariosController2.cs" />
@@ -271,6 +272,12 @@
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DET_APROB.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DET_APROB0.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DET_APROB0V.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DET_APROBV.cs">
@@ -544,7 +551,9 @@
     <Compile Include="Models\SociedadesUsuarioNuevo.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Models\ProyectoSociedad.cs" />
+    <Compile Include="Models\UsuarioC1.cs" />
     <Compile Include="Models\UsuarioC.cs" />
+    <Compile Include="Models\UsuariosC1Nuevo.cs" />
     <Compile Include="Models\UsuariosCNuevo.cs" />
     <Compile Include="Models\UsuariosNuevo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -675,6 +684,7 @@
     <Content Include="Scripts\analisis.js" />
     <Content Include="Scripts\autocomplete1.11.4.js" />
     <Content Include="Scripts\CargaPresupuesto.js" />
+    <Content Include="Scripts\Catalogos.js" />
     <Content Include="Scripts\ConsultarPresupuesto.js" />
     <Content Include="Scripts\cartaV.js" />
     <Content Include="Scripts\create.js" />
@@ -799,7 +809,6 @@
     <Content Include="Views\Usuarios\AddBackup.cshtml" />
     <Content Include="Views\Usuarios\AgregarRol.cshtml" />
     <Content Include="Views\Usuarios\Carga.cshtml" />
-    <Content Include="Views\Usuarios\Create.cshtml" />
     <Content Include="Views\Usuarios\Delete.cshtml" />
     <Content Include="Views\Usuarios\Details.cshtml" />
     <Content Include="Views\Usuarios\Details1.cshtml" />
@@ -818,6 +827,12 @@
     <Content Include="Views\Report\Index.cshtml" />
     <Content Include="Views\Report\Reporte.cshtml" />
     <Content Include="Views\Report\ReportTemplate.cshtml" />
+    <Content Include="Views\Usuarios\Create.cshtml" />
+    <Content Include="Views\UsuarioC\Edit.cshtml" />
+    <Content Include="Views\UsuarioC1\Create.cshtml" />
+    <Content Include="Views\UsuarioC1\Index.cshtml" />
+    <Content Include="Views\UsuarioC1\Edit.cshtml" />
+    <Content Include="Views\Usuarios\CambioPass.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -22,7 +22,7 @@
         @Html.AntiForgeryToken()*@
 <div class="row">
     <div class="col s12 l12 right-align">
-        <a class="btn" id="btn_changepassword" href="@Url.Action("Pass", new { id = Model.ID})">Cambiar contraseña</a>
+        @*<a class="btn" id="btn_changepassword" href="@Url.Action("Pass", new { id = Model.ID})">Cambiar contraseña</a>*@
         <a class="btn" id="btn_editar" href="@Url.Action("Edit", new { id = Model.ID})">Editar</a>
     </div>
 </div>
@@ -76,24 +76,32 @@
     <div class="col l6 s12">
         <div class="card-panel">
             <div class="row">
+
                 <div class="input-field col s12">
                     @Html.EditorFor(model => model.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT50, null, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.PUESTO_ID, "PUESTO_ID", htmlAttributes: new { @id = "lbl_puesto" })
                     @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
                 </div>
+
+                <div class="input-field col s12">
+                    @Html.EditorFor(model => model.BUNIT, null, new { htmlAttributes = new { @disabled = "disabled" } })
+                    @Html.LabelFor(model => model.BUNIT, "SOCIEDAD", htmlAttributes: new { @id = "lbl_bukrs" })
+                    @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+                </div>
+
                 @*<div class="input-field col s12">
-                        @Html.EditorFor(model => model.MIEMBROS.FirstOrDefault().ROL.ROLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT50, null, new { htmlAttributes = new { @disabled = "disabled" } })
-                        @Html.LabelFor(model => model.MIEMBROS, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.ValidationMessageFor(model => model.MIEMBROS, "", new { @class = "text-danger" })
-                    </div>*@
+            @Html.EditorFor(model => model.MIEMBROS.FirstOrDefault().ROL.ROLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT50, null, new { htmlAttributes = new { @disabled = "disabled" } })
+            @Html.LabelFor(model => model.MIEMBROS, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.ValidationMessageFor(model => model.MIEMBROS, "", new { @class = "text-danger" })
+        </div>*@
 
 
                 @*//MGC 24-10-2018 Usuarios
-                @*<div class="input-field col s12">
-                    @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
-                    @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
-                </div>*@
+        @*<div class="input-field col s12">
+            @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
+            @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
+            @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+        </div>*@
                 @*//MGC 24-10-2018 Usuarios*@
 
 
@@ -101,283 +109,7 @@
         </div>
     </div>
     </div>
-<div class="row">
-    <div class="col l6 s12">
-        <div class="card-panel">
-            <div class="row">
-                <div class="col s12 l12 right-align">
-                    <a class="btn" id="btn_agregarbackup" href="@Url.Action("AddBackup", new { id = Model.ID})">Agregar back up NT</a>
-                </div>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="lbl_usrbackup">Usuario Backup</th>
-                        <th class="lbl_fechai">Fecha Inicial</th>
-                        <th class="lbl_fechaf">Fecha Final</th>
-                        <th class="lbl_activo">Activo</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var i in Model.DELEGARs.OrderByDescending(t=>t.FECHAF))
-                    {
-                    <tr>
-                        <td>@i.USUARIOD_ID </td>
-                        <td>@i.FECHAI.ToShortDateString()</td>
-                        <td>@i.FECHAF.ToShortDateString()</td>
-                        @if ((bool)i.ACTIVO == true)
-                        {
-                            <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
-                        else
-                        {
-                            <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
-                            <td>
-                                @*<a href="@Url.Action("EditBackup", new { id = i.USUARIO_ID, idd=i.USUARIOD_ID, fi=i.FECHAI, ff=i.FECHAF })">
-                                    <i class='material-icons green-text'>edit</i>
-                                </a>&nbsp*@
-                                @if (i.ACTIVO)
-                                {
-                                <a href="@Url.Action("DeleteBackup", new { id = i.USUARIO_ID, idd = i.USUARIOD_ID, fi = i.FECHAI, ff = i.FECHAF })">
-                                    <i class='material-icons red-text'>delete</i>
-                                </a>}
-                            </td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <script>
-        var elem = document.querySelectorAll('select');
-        var options = [];
-        var instance = M.FormSelect.init(elem, options);
-    </script>
-    @*<div class="col l6 s12">
-        <div class="card-panel">
-            <div class="row">
-                <h5>Flujos</h5>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>País</th>
-                            <th>Cliente</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.DET_AGENTEC.Where(a => a.POS == 1).ToList())
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PAI.LANDX)
-                                </td>
-                                <td>
-                                    @item.KUNNR.TrimStart('0')
-                                    @Html.DisplayFor(modelItem => item.CLIENTE.NAME1)
-                                </td>
-                                <td class="right-align">
-                                    <a class="btn-small modal-trigger" href="#@item.PAIS_ID@item.KUNNR">Editar</a>
-                                    @using (Html.BeginForm("ModificarRol", "Usuarios"))
-                                    {
-                                        @Html.AntiForgeryToken()
 
-                                        <div id="@item.PAIS_ID@item.KUNNR" class="modal modal-fixed-footer left-align">
-                                            <div class="modal-content">
-                                                <h4>Modificar flujo</h4>
-                                                <div class="row">
-                                                    @Html.HiddenFor(model => model.ID)
-                                                    @Html.HiddenFor(itemm => item.PAIS_ID, new { @id = item.PAIS_ID + "-" + item.KUNNR + "-txt_pai" })
-                                                    @Html.HiddenFor(itemm => item.VKORG, new { @id = item.PAIS_ID + "-" + item.KUNNR + "-txt_vko" })
-                                                    @Html.HiddenFor(itemm => item.VTWEG, new { @id = item.PAIS_ID + "-" + item.KUNNR + "-txt_vtw" })
-                                                    @Html.HiddenFor(itemm => item.SPART, new { @id = item.PAIS_ID + "-" + item.KUNNR + "-txt_spa" })
-                                                    @Html.HiddenFor(itemm => item.KUNNR, new { @id = item.PAIS_ID + "-" + item.KUNNR + "-txt_kun" })
-                                                    <div class="input-field col s6 hide">
-                                                        <select id="@item.PAIS_ID-@item.KUNNR-txt_rol" name="@item.PAIS_ID-@item.KUNNR-txt_rol" required="required">
-                                                            @foreach (var itemm in ViewBag.ROLES)
-                                                            {
-                                                                <option value="@itemm.ROL_ID">@itemm.TXT50</option>
-                                                                break;
-                                                            }
-                                                        </select>
-                                                        <label for="txt_rol">Rol</label>
-                                                    </div>
-                                                </div>
-                                                <script>
-                                                    var elem2 = document.getElementById('@item.PAIS_ID-@item.KUNNR-txt_rol');
-                                                    var instance2 = M.FormSelect.init(elem2, []);
-                                                </script>
-                                                <div class="col s12" id="div_crea">
-                                                    <div class="row">
-                                                        <div class="input-field col s6">
-                                                            <input type="text" id="mtxt_pai" name="txt_pai" disabled="disabled" value="@item.PAI.LANDX" />
-                                                            <label for="mtxt_pai">País</label>
-                                                        </div>
-                                                        <div class="input-field col s6">
-                                                            <input type="text" id="mtxt_kun" name="txt_soc" disabled="disabled" value="@item.KUNNR" />
-                                                            <label for="mtxt_kun">Cliente</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="">
-                                                        <div id="q">
-
-                                                            @{
-                                                                int poss = Model.DET_AGENTEC.Where(a => a.PAIS_ID.Equals(item.PAIS_ID) & a.KUNNR.Equals(item.KUNNR) & a.POS != 99).OrderByDescending(a => a.POS).FirstOrDefault().POS;
-                                                                foreach (var input in Model.DET_AGENTEC.Where(a => a.PAIS_ID.Equals(item.PAIS_ID) & a.KUNNR.Equals(item.KUNNR)).ToList())
-                                                                {
-                                                                    <div class="row" style="margin-bottom:0;">
-                                                                        <div class="input-field col s4">
-                                                                            <input type="text" value="@input.USUARIOA_ID" name="@item.PAIS_ID-@item.KUNNR-@input.POS" id="@item.PAIS_ID-@item.KUNNR-@input.POS" />
-                                                                            <label for="@item.PAIS_ID-@item.KUNNR-@input.POS">@input.USUARIO1.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50</label>
-                                                                        </div>
-                                                                        @if (input.POS != 99 & input.POS != poss)
-                                                                        {
-                                                                            if (!input.PRESUPUESTO)
-                                                                            {
-                                                                                <div class="col s2">
-                                                                                    <label>Presupuesto</label>
-                                                                                    <div class="switch">
-                                                                                        <label>
-                                                                                            <input type="checkbox" id="@item.PAIS_ID-@item.KUNNR-@input.POS-presup" name="@item.PAIS_ID-@item.KUNNR-@input.POS-presup">
-                                                                                            <span class="lever"></span>
-                                                                                        </label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <div class="col s2">
-                                                                                    <label>Presupuesto</label>
-                                                                                    <div class="switch">
-                                                                                        <label>
-                                                                                            <input checked="checked" type="checkbox" id="@item.PAIS_ID-@item.KUNNR-@input.POS-presup" name="@item.PAIS_ID-@item.KUNNR-@input.POS-presup">
-                                                                                            <span class="lever"></span>
-                                                                                        </label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            }
-                                                                            if (input.MONTO != null)
-                                                                            {
-                                                                                <div class="col s2">
-                                                                                    <label>Monto</label>
-                                                                                    <div class="switch">
-                                                                                        <label>
-                                                                                            <input onchange="cambiaMonto(this.id)" checked="checked" type="checkbox" id="@item.PAIS_ID-@item.KUNNR-@input.POS-IsMonto" name="@item.PAIS_ID-@item.KUNNR-@input.POS-IsMonto">
-                                                                                            <span class="lever"></span>
-                                                                                        </label>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="input-field col s4" id="@item.PAIS_ID-@item.KUNNR-@input.POS-montoDiv">
-                                                                                    <input type="text" value="@input.MONTO" name="@item.PAIS_ID-@item.KUNNR-@input.POS-monto" id="@item.PAIS_ID-@item.KUNNR-@input.POS-monto" />
-                                                                                    <label for="@item.PAIS_ID-@item.KUNNR-@input.POS-monto">Monto</label>
-                                                                                </div>
-                                                                            }
-                                                                            else
-                                                                            {
-
-                                                                                <div class="col s2">
-                                                                                    <label>Monto</label>
-                                                                                    <div class="switch">
-                                                                                        <label>
-                                                                                            <input onchange="cambiaMonto(this.id)" type="checkbox" id="@item.PAIS_ID-@item.KUNNR-@input.POS-IsMonto" name="@item.PAIS_ID-@item.KUNNR-@input.POS-IsMonto">
-                                                                                            <span class="lever"></span>
-                                                                                        </label>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div class="input-field col s4 hide" id="@item.PAIS_ID-@item.KUNNR-@input.POS-montoDiv">
-                                                                                    <input type="text" value="@input.MONTO" name="@item.PAIS_ID-@item.KUNNR-@input.POS-monto" id="@item.PAIS_ID-@item.KUNNR-@input.POS-monto" />
-                                                                                    <label for="@item.PAIS_ID-@item.KUNNR-@input.POS-monto">Monto</label>
-                                                                                </div>
-                                                                            }
-                                                                        }
-                                                                    </div>
-                                                                    <script>
-                                    auto("#" + "@item.PAIS_ID-@item.KUNNR-@input.POS").autocomplete({
-                                                                source: function (request, response) {
-                                                                        auto.ajax({
-                                                                        url: "../../Listas/UsuariosPuesto",
-                                                type: "GET",
-                                                dataType: "json",
-                                                data: { puesto: '2', Prefix: request.term },
-                                                success: function (data) {
-                                                                                response($.map(data, function (item) {
-                                                                                    return { label: item.NOMBRE, value: item.ID };
-                                                                                }))
-                                                },
-                                                error: function (data) {
-                                                                                alert("error");
-                                                                            }
-                                                                        })
-                                        },
-                                        messages: {
-                                                                    noResults: '',
-                                            results: function (resultsCount) { }
-                                                                    },
-                                        change: function (e, ui) {
-                                                                        if (!(ui.item)) {
-                                                                            e.target.value = "";
-                                                                            document.getElementById("@item.PAIS_ID-@item.KUNNR-btn_submit2").className = "modal-action modal-close btn-flat disabled";
-                                                                        }
-
-                                                                        for (var i = 1; i <= 2; i++) {
-                                                    try {
-                                                        var value = document.getElementById("@item.PAIS_ID-@item.KUNNR-" + i).value;
-                                                if (value != "") {
-                                                    document.getElementById("btn_submit2").className = "modal-action modal-close btn-flat";
-                                                } else {
-                                                    document.getElementById("btn_submit2").className = "modal-action modal-close btn-flat disabled";
-                                                    break;
-                                                        }
-                                                    } catch
-                                                    { }
-                                            }
-                                        },
-                                        autoFocus: true,
-                                        minLength: 1
-                                    });
-
-                                                                    </script>
-                                                                    <script>
-                                                                        function cambiaMonto(id) {
-                                                                            var campo = document.getElementById(id);
-                                                                            var i = "" + id;
-                                                                            var ids = i.split('-');
-                                                                            var prin = ids[0] + "-" + ids[1] + "-" + ids[2] + "-montoDiv";
-                                                                            if (campo.checked) {
-                                                                                document.getElementById(prin).classList.remove("hide");
-                                                                            } else {
-                                                                                document.getElementById(prin).classList.add("hide");
-                                                                            }
-                                                                        }
-                                                                    </script>
-                                                                }
-                                                            }
-
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <input type="submit" class="modal-action modal-close btn-flat" value="Guardar" id="@item.PAIS_ID-@item.KUNNR-btn_submit2" />
-                                            </div>
-                                        </div>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="row">
-                <div class="col s12 right-align">
-                    <a class="btn modal-trigger" href="#modal1">Agregar</a>
-                </div>
-            </div>
-        </div>
-    </div>*@
-</div>
 
 @using (Html.BeginForm("AgregarRol", "Usuarios"))
 {
@@ -794,6 +526,3 @@
     }
 
 </script>
-<div>
-    @Html.ActionLink("Back to List", "Index", null, new { id="lbl_regresar"})
-</div>

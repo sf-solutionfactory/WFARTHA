@@ -990,8 +990,6 @@
                 <div class="col s12">
                     <div class="card-panel">
                         <h5 id="head_cabecera">Anexos</h5>
-                        <input id="cargando" name="cargando" value="Cargando Archivo espere..." style="display:none;"  />
-
                         <div class="row" style="margin-bottom:0">
                             <div>
                                 <a class="btn"><i class="material-icons left">clear</i><span id="delRowAnex">Eliminar Anexo</span></a>
@@ -1005,6 +1003,7 @@
                                     <input class="file-path validate file_sopAnexar" type="text">
                                 </div>
                             </div>
+                            <div id="cargando" style="display:none; color: red;font-size:1em;">Favor de esperar se estan validando y subiendo archivos...</div>
                             <table class="table display mdl-data-table striped" id="table_anexa" style="width:100%;">
                                 <thead>
                                     <tr>
