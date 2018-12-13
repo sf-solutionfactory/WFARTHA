@@ -273,6 +273,9 @@
     <Compile Include="Entities\DET_APROB.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DET_APROB0.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DET_APROBV.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>

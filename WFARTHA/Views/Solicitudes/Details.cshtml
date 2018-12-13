@@ -189,7 +189,7 @@
             {
                 if (ViewBag.acciones != null)
                 {
-                    if (ViewBag.accion == "A" | ViewBag.accion == "R")
+                    if (ViewBag.accion == "A" | ViewBag.accion == "R" | ViewBag.accion == "S")//MGC 11-12-2018 Agregar Contabilizador 0
                     {
 
                         //////MGC 12-11-2018 Saber si el siguiente aprobador es el contabilizador------------------------------------------------------->
@@ -1197,7 +1197,7 @@
                     <div class="row" style="margin-bottom:0">
                         <h5>Información Cadena de Autorización</h5>
                         @* //MGC 22-11-2018.2 Cadena de autorización-----------------------------------------------------------------------> *@
-                        @{List<WFARTHA.Models.CadenaAutorizadores> lcadena = new List<WFARTHA.Models.CadenaAutorizadores>(); lcadena = ViewBag.lcadena as List<WFARTHA.Models.CadenaAutorizadores>; }
+                        @{List<WFARTHA.Models.CadenaAutorizadoresItem> lcadena = new List<WFARTHA.Models.CadenaAutorizadoresItem>(); lcadena = ViewBag.lcadena as List<WFARTHA.Models.CadenaAutorizadoresItem>; } @*//MGC 11-12-2018 Agregar Contabilizador 0*@
 
                         <table class="table highlight responsive-table" id="tableAutorizadores">
                             <thead>

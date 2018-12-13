@@ -117,6 +117,7 @@ namespace WFARTHA.Entities
         public virtual DbSet<DOCUMENTOV> DOCUMENTOVs { get; set; }
         public virtual DbSet<PAGINAV> PAGINAVs { get; set; }
         public virtual DbSet<WARNINGV> WARNINGVs { get; set; }
+        public virtual DbSet<DET_APROB0> DET_APROB0 { get; set; }
     
         public virtual ObjectResult<SP_CABECERA_Result> SP_CABECERA(Nullable<decimal> nUM_DOC)
         {

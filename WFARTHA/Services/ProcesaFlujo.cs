@@ -127,6 +127,12 @@ namespace WFARTHA.Services
                 actual.ID_RUTA_A = f.ID_RUTA_A;
                 actual.RUTA_VERSION = f.RUTA_VERSION;
                 actual.STEP_AUTO = f.STEP_AUTO;
+
+                //MGC 11-12-2018 Agregar Contabilizador 0---------------->
+                actual.VERSIONC1 = f.VERSIONC1;
+                actual.VERSIONC2 = f.VERSIONC2;
+                //MGC 11-12-2018 Agregar Contabilizador 0----------------<
+
                 //DET_AGENTEH dah = db.DET_AGENTEH.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) & a.PUESTOC_ID == d.PUESTO_ID &
                 //                    a.USUARIOC_ID.Equals(d.USUARIOC_ID)).OrderByDescending(a => a.VERSION).FirstOrDefault();
                 //MGC COMM
@@ -229,6 +235,11 @@ namespace WFARTHA.Services
                     nuevo.ID_RUTA_A = actual.ID_RUTA_A;
                     nuevo.RUTA_VERSION = actual.RUTA_VERSION;
 
+                    //MGC 11-12-2018 Agregar Contabilizador 0----------------->
+                    nuevo.VERSIONC1 = actual.VERSIONC1;
+                    nuevo.VERSIONC2 = actual.VERSIONC2;
+                    //MGC 11-12-2018 Agregar Contabilizador 0-----------------<
+
                     if (next.ACCION.TIPO == "E")
                     {
                         nuevo.USUARIOA_ID = null;
@@ -302,20 +313,20 @@ namespace WFARTHA.Services
                     //Se genero el preliminar
                     if (corr == "0")
                     {
-                        DOCUMENTOPRE dp = new DOCUMENTOPRE();
+                        //DOCUMENTOPRE dp = new DOCUMENTOPRE();
 
-                        dp.NUM_DOC = d.NUM_DOC;
-                        dp.POS = 1;
-                        dp.MESSAGE = "Generando Preliminar";
-                        try
-                        {
-                            db.DOCUMENTOPREs.Add(dp);
-                            db.SaveChanges();
-                        }
-                        catch (Exception e)
-                        {
-                            string r = "";
-                        }
+                        //dp.NUM_DOC = d.NUM_DOC;
+                        //dp.POS = 1;
+                        //dp.MESSAGE = "Generando Preliminar";
+                        //try
+                        //{
+                        //    db.DOCUMENTOPREs.Add(dp);
+                        //    db.SaveChanges();
+                        //}
+                        //catch (Exception e)
+                        //{
+                        //    string r = "";
+                        //}
 
                         //MGC 30-10-2018 Agregar mensaje a log de modificación
                         try
@@ -362,20 +373,20 @@ namespace WFARTHA.Services
                         {
                             m = corr;
                         }
-                        DOCUMENTOPRE dp = new DOCUMENTOPRE();
+                        //DOCUMENTOPRE dp = new DOCUMENTOPRE();
 
-                        dp.NUM_DOC = d.NUM_DOC;
-                        dp.POS = 1;
-                        dp.MESSAGE = m;
-                        try
-                        {
-                            db.DOCUMENTOPREs.Add(dp);
-                            db.SaveChanges();
-                        }
-                        catch (Exception E)
-                        {
-                            string r = "";
-                        }
+                        //dp.NUM_DOC = d.NUM_DOC;
+                        //dp.POS = 1;
+                        //dp.MESSAGE = m;
+                        //try
+                        //{
+                        //    db.DOCUMENTOPREs.Add(dp);
+                        //    db.SaveChanges();
+                        //}
+                        //catch (Exception E)
+                        //{
+                        //    string r = "";
+                        //}
 
                         //MGC 30-10-2018 Agregar mensaje a log de modificación
                         try
@@ -492,18 +503,31 @@ namespace WFARTHA.Services
                                 {
                                     bool res = false;
 
-                                    res = detAgenteSiguiente(d.NUM_DOC, actual);
-
-                                    if (res)
-                                    {
-                                        next = paso_a;
-                                        stepnew = Convert.ToInt32(actual.STEP_AUTO) + 1;
-                                    }
-                                    else
+                                    //MGC 11-12-2018 Agregar Contabilizador 0----------------->
+                                    //Verificar si hay un primer contabilizador contabilizador 
+                                    WORKFP nextconp = new WORKFP();
+                                    nextconp = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
+                                    if (nextconp != null && nextconp.ACCION.TIPO == "S")
                                     {
                                         next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
                                         stepnew = Convert.ToInt32(actual.STEP_AUTO);
                                     }
+                                    else
+                                    {
+
+                                        res = detAgenteSiguiente(d.NUM_DOC, actual);
+
+                                        if (res)
+                                        {
+                                            next = paso_a;
+                                            stepnew = Convert.ToInt32(actual.STEP_AUTO) + 1;
+                                        }
+                                        else
+                                        {
+                                            next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
+                                            stepnew = Convert.ToInt32(actual.STEP_AUTO);
+                                        }
+                                    }//MGC 11-12-2018 Agregar Contabilizador 0-----------------<
                                 }
 
                                 FLUJO nuevo = new FLUJO();
@@ -512,6 +536,12 @@ namespace WFARTHA.Services
                                 nuevo.WF_POS = next.POS;
                                 nuevo.NUM_DOC = actual.NUM_DOC;
                                 nuevo.POS = actual.POS + 1;
+
+                                //MGC 11-12-2018 Agregar Contabilizador 0----------------->
+                                nuevo.VERSIONC1 = actual.VERSIONC1;
+                                nuevo.VERSIONC2 = actual.VERSIONC2;
+                                //MGC 11-12-2018 Agregar Contabilizador 0-----------------<
+
                                 //nuevo.LOOP = 1;//-----------------------------------cc//MGC 03-12-2018 Loop para firmas y obtener el más actual
                                 nuevo.LOOP = actual.LOOP;//-----------------------------------cc//MGC 03-12-2018 Loop para firmas y obtener el más actual
                                                          //                                   //int loop = db.FLUJOes.Where(a => a.WORKF_ID.Equals(next.ID) & a.WF_VERSION.Equals(next.VERSION) & a.WF_POS == next.POS & a.NUM_DOC.Equals(actual.NUM_DOC) & a.ESTATUS.Equals("A")).Count();	                                               //    
@@ -546,6 +576,13 @@ namespace WFARTHA.Services
                                     detA = determinaAgenteContabilidad(d, actual.USUARIOA_ID, actual.USUARIOD_ID, actual.DETPOS, next.LOOPS, sop, Convert.ToInt32(actual.STEP_AUTO));
                                     contabilizar = true;//MGC 08-10-2018 Modificación para mensaje por contabilizar
                                 }
+                                //MGC 11-12-2018 Agregar Contabilizador 0----------------->
+                                else if (next.ACCION.TIPO == "S")
+                                {
+                                    detA = determinaAgenteContabilidad0(d, actual.USUARIOA_ID, actual.USUARIOD_ID, actual.DETPOS, next.LOOPS, sop, Convert.ToInt32(actual.STEP_AUTO));
+
+                                }
+                                //MGC 11-12-2018 Agregar Contabilizador 0-----------------<
                                 else
                                 {
 
@@ -805,6 +842,11 @@ namespace WFARTHA.Services
                                         nuevo.FECHAC = DateTime.Now;
                                         nuevo.FECHAM = DateTime.Now;
 
+                                        //MGC 11-12-2018 Agregar Contabilizador 0----------------->
+                                        nuevo.VERSIONC1 = actual.VERSIONC1;
+                                        nuevo.VERSIONC2 = actual.VERSIONC2;
+                                        //MGC 11-12-2018 Agregar Contabilizador 0-----------------<
+
                                         db.FLUJOes.Add(nuevo);
                                         db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
 
@@ -878,8 +920,147 @@ namespace WFARTHA.Services
                             {
                                 //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);//MGC 09-10-2018 Envío de correos
 
+                                //MGC 11-12-2018 Agregar Contabilizador 0----------------->
 
-                                next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
+                                //next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
+
+                                //FLUJO nuevo = new FLUJO();
+                                //nuevo.WORKF_ID = paso_a.ID;
+                                //nuevo.WF_VERSION = paso_a.VERSION;
+                                //nuevo.WF_POS = next.POS;
+                                //nuevo.NUM_DOC = actual.NUM_DOC;
+                                //nuevo.POS = actual.POS + 1;
+                                //nuevo.LOOP = 1;//-----------------------------------cc
+                                //               //int loop = db.FLUJOes.Where(a => a.WORKF_ID.Equals(next.ID) & a.WF_VERSION.Equals(next.VERSION) & a.WF_POS == next.POS & a.NUM_DOC.Equals(actual.NUM_DOC) & a.ESTATUS.Equals("A")).Count();
+                                //               //if (loop >= next.LOOPS)
+                                //               //{
+                                //               //    paso_a = next;
+                                //               //    continue;
+                                //               //}
+                                //               //if (loop != 0)
+                                //               //    nuevo.LOOP = loop + 1;
+                                //               //else
+                                //               //    nuevo.LOOP = 1;
+                                //if (paso_a.ACCION.TIPO == "N")
+                                //    actual.DETPOS = actual.DETPOS - 1;
+                                //FLUJO detA = determinaAgente(d, actual.USUARIOA_ID, actual.USUARIOD_ID, 98, next.LOOPS, 98, Convert.ToInt32(nuevo.STEP_AUTO));
+                                ////nuevo.USUARIOA_ID = detA.USUARIOA_ID;
+
+                                //nuevo.USUARIOD_ID = detA.USUARIOA_ID;
+
+                                //DateTime fecha = DateTime.Now.Date;
+                                //DELEGAR del = db.DELEGARs.Where(a => a.USUARIO_ID.Equals(nuevo.USUARIOD_ID) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).FirstOrDefault();
+                                //if (del != null)
+                                //    nuevo.USUARIOA_ID = del.USUARIOD_ID;
+                                //else
+                                //    nuevo.USUARIOA_ID = nuevo.USUARIOD_ID;
+
+
+                                //nuevo.DETPOS = detA.DETPOS;
+                                //nuevo.DETVER = actual.DETVER;
+                                //if (paso_a.ACCION.TIPO == "N")
+                                //{
+                                //    nuevo.DETPOS = nuevo.DETPOS + 1;
+                                //    actual.DETPOS = actual.DETPOS + 1;
+                                //}
+
+
+                                //if (nuevo.DETPOS == 0 | nuevo.DETPOS == 99)
+                                //{
+                                //    next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
+                                //    if (next.NEXT_STEP.Equals(99))//--------FIN DEL WORKFLOW
+                                //    {
+                                //        //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
+                                //        d.ESTATUS_WF = "A";
+                                //        if (paso_a.EMAIL.Equals("X"))
+                                //            correcto = "2";
+                                //    }
+                                //    else
+                                //    {
+                                //        //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
+                                //        //FLUJO nuevo = new FLUJO();
+                                //        nuevo.WORKF_ID = next.ID;
+                                //        nuevo.WF_VERSION = next.VERSION;
+                                //        nuevo.WF_POS = next.POS + detA.POS;
+                                //        nuevo.NUM_DOC = actual.NUM_DOC;
+                                //        nuevo.POS = actual.POS + 1;
+                                //        nuevo.LOOP = 1;//-----------------------------------
+                                //                       //int loop1 = db.FLUJOes.Where(a => a.WORKF_ID.Equals(next.ID) & a.WF_VERSION.Equals(next.VERSION) & a.WF_POS == next.POS & a.NUM_DOC.Equals(actual.NUM_DOC) & a.ESTATUS.Equals("A")).Count();
+                                //                       //if (loop1 >= next.LOOPS)
+                                //                       //{
+                                //                       //    paso_a = next;
+                                //                       //    continue;
+                                //                       //}
+                                //                       //if (loop1 != 0)
+                                //                       //    nuevo.LOOP = loop1 + 1;
+                                //                       //else
+                                //                       //    nuevo.LOOP = 1;
+
+                                //        //FLUJO detA = determinaAgente(d, actual.USUARIOA_ID, actual.USUARIOD_ID, 0);
+                                //        //nuevo.USUARIOA_ID = "admin";
+                                //        //nuevo.DETPOS = 1;
+                                //        d.ESTATUS_WF = "P";
+                                //        if (nuevo.DETPOS == 0)
+                                //        {
+                                //            nuevo.USUARIOA_ID = null;
+                                //            d.ESTATUS_WF = "A";
+                                //            d.ESTATUS_SAP = "P";
+                                //        }
+                                //        nuevo.ESTATUS = "P";
+                                //        nuevo.FECHAC = DateTime.Now;
+                                //        nuevo.FECHAM = DateTime.Now;
+
+                                //        db.FLUJOes.Add(nuevo);
+                                //        if (paso_a.EMAIL.Equals("X"))
+                                //            correcto = "1";
+                                //    }
+                                //}
+                                ////else if(nuevo.DETPOS == 99)
+                                ////{
+                                ////    next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
+                                ////}
+                                //else
+                                //{
+                                //    //nuevo.USUARIOD_ID
+                                //    nuevo.ESTATUS = "P";
+                                //    nuevo.FECHAC = DateTime.Now;
+                                //    nuevo.FECHAM = DateTime.Now;
+                                //    nuevo.WF_POS = nuevo.WF_POS + detA.POS;
+
+                                //    db.FLUJOes.Add(nuevo);
+                                //    if (paso_a.EMAIL.Equals("X"))
+                                //        correcto = "1";
+
+                                //    d.ESTATUS_WF = "P";
+                                //}
+                                //db.Entry(d).State = EntityState.Modified;
+
+                                //db.SaveChanges();
+                                //ban = false;
+
+                                //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC); //MGC 09-10-2018 Envío de correos
+
+                                //Verificar si hay un siguiente aprobador
+                                int stepnew = 0;
+                                if (paso_a.ACCION.TIPO == "S")
+                                {
+                                    bool res = false;
+
+                                    res = detAgenteSiguiente(d.NUM_DOC, actual);
+
+                                    if (res)
+                                    {
+                                        //next = paso_a;//MGC 11-12-2018 Agregar Contabilizador 0
+                                        next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
+                                        stepnew = Convert.ToInt32(actual.STEP_AUTO) + 1;
+                                    }
+                                    else
+                                    {
+                                        //next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();//MGC 11-12-2018 Agregar Contabilizador 0
+                                        next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a + 1).FirstOrDefault();//MGC 11-12-2018 Agregar Contabilizador 0
+                                        stepnew = Convert.ToInt32(actual.STEP_AUTO);
+                                    }
+                                }
 
                                 FLUJO nuevo = new FLUJO();
                                 nuevo.WORKF_ID = paso_a.ID;
@@ -887,21 +1068,65 @@ namespace WFARTHA.Services
                                 nuevo.WF_POS = next.POS;
                                 nuevo.NUM_DOC = actual.NUM_DOC;
                                 nuevo.POS = actual.POS + 1;
-                                nuevo.LOOP = 1;//-----------------------------------cc
-                                               //int loop = db.FLUJOes.Where(a => a.WORKF_ID.Equals(next.ID) & a.WF_VERSION.Equals(next.VERSION) & a.WF_POS == next.POS & a.NUM_DOC.Equals(actual.NUM_DOC) & a.ESTATUS.Equals("A")).Count();
-                                               //if (loop >= next.LOOPS)
-                                               //{
-                                               //    paso_a = next;
-                                               //    continue;
-                                               //}
-                                               //if (loop != 0)
-                                               //    nuevo.LOOP = loop + 1;
-                                               //else
-                                               //    nuevo.LOOP = 1;
+
+                                //MGC 11-12-2018 Agregar Contabilizador 0----------------->
+                                nuevo.VERSIONC1 = actual.VERSIONC1;
+                                nuevo.VERSIONC2 = actual.VERSIONC2;
+                                //MGC 11-12-2018 Agregar Contabilizador 0-----------------<
+
+                                //nuevo.LOOP = 1;//-----------------------------------cc//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                                nuevo.LOOP = actual.LOOP;//-----------------------------------cc//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                                                         //                                   //int loop = db.FLUJOes.Where(a => a.WORKF_ID.Equals(next.ID) & a.WF_VERSION.Equals(next.VERSION) & a.WF_POS == next.POS & a.NUM_DOC.Equals(actual.NUM_DOC) & a.ESTATUS.Equals("A")).Count();	                                               //    
+                                                         //                                   //int loop = db.FLUJOes.Where(a => a.WORKF_ID.Equals(next.ID) & a.WF_VERSION.Equals(next.VERSION) & a.WF_POS == next.POS & a.NUM_DOC.Equals(actual.NUM_DOC) & a.ESTATUS.Equals("A")).Count();
+                                                         //                                   //if (loop >= next.LOOPS)
+                                                         //                                   //{
+                                                         //                                   //    paso_a = next;
+                                                         //                                   //    continue;
+                                                         //                                   //}
+                                                         //                                   //if (loop != 0)
+                                                         //                                   //    nuevo.LOOP = loop + 1;
+                                                         //                                   //else
+                                                         //                                   //    nuevo.LOOP = 1;
+                                FLUJO detA = new FLUJO();
                                 if (paso_a.ACCION.TIPO == "N")
                                     actual.DETPOS = actual.DETPOS - 1;
-                                FLUJO detA = determinaAgente(d, actual.USUARIOA_ID, actual.USUARIOD_ID, 98, next.LOOPS, 98, Convert.ToInt32(nuevo.STEP_AUTO));
+                                int sop = 99;
+                                if (next.ACCION.TIPO == "S")
+                                    sop = 98;
+
+                                nuevo.STEP_AUTO = stepnew;
+                                nuevo.RUTA_VERSION = actual.RUTA_VERSION;
+                                nuevo.ID_RUTA_A = actual.ID_RUTA_A;
+
+                                //MGC 08-10-2018 Modificación para mensaje por contabilizar
+                                bool contabilizar = false;
+
+
+                                //Para la contabilización se obtiene otra ruta
+                                if (next.ACCION.TIPO == "P")
+                                {
+                                    detA = determinaAgenteContabilidad(d, actual.USUARIOA_ID, actual.USUARIOD_ID, actual.DETPOS, next.LOOPS, sop, Convert.ToInt32(actual.STEP_AUTO));
+                                    contabilizar = true;//MGC 08-10-2018 Modificación para mensaje por contabilizar
+                                }
+                                else
+                                {
+
+                                    detA = determinaAgente(d, actual.USUARIOA_ID, actual.USUARIOD_ID, actual.DETPOS, next.LOOPS, sop, stepnew);
+                                }
                                 //nuevo.USUARIOA_ID = detA.USUARIOA_ID;
+
+                                //MGC 09-10-2018 Envío de correos
+                                if (emails)
+                                {
+
+                                    //MGC 09-10-2018 Envío de correos
+                                    string emailc = "";
+
+                                    //Obtener el usuario del siguiente aprobador 
+                                    emailc = db.USUARIOs.Where(us => us.ID == detA.USUARIOA_ID).FirstOrDefault().EMAIL;
+                                    emailsto += "," + emailc;
+                                }
+
 
                                 nuevo.USUARIOD_ID = detA.USUARIOA_ID;
 
@@ -912,25 +1137,50 @@ namespace WFARTHA.Services
                                 else
                                     nuevo.USUARIOA_ID = nuevo.USUARIOD_ID;
 
-
                                 nuevo.DETPOS = detA.DETPOS;
                                 nuevo.DETVER = actual.DETVER;
+                                nuevo.STEP_AUTO = detA.STEP_AUTO;
                                 if (paso_a.ACCION.TIPO == "N")
                                 {
                                     nuevo.DETPOS = nuevo.DETPOS + 1;
                                     actual.DETPOS = actual.DETPOS + 1;
                                 }
 
+                                //                    if (d.DOCUMENTORECs.Count > 0)
+                                //                        recurrente = "X";
 
                                 if (nuevo.DETPOS == 0 | nuevo.DETPOS == 99)
                                 {
                                     next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
+                                    //if (recurrente == "X" & next.ACCION.TIPO.Equals("P"))
+                                    //{
+                                    //    next_step_a++;
+                                    //    next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
+                                    //}
                                     if (next.NEXT_STEP.Equals(99))//--------FIN DEL WORKFLOW
                                     {
                                         //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
                                         d.ESTATUS_WF = "A";
                                         if (paso_a.EMAIL.Equals("X"))
                                             correcto = "2";
+                                        //if (recurrente == "X")
+                                        //{
+                                        //    FLUJO nuevos = new FLUJO();
+                                        //    nuevos.WORKF_ID = paso_a.ID;
+                                        //    nuevos.WF_VERSION = paso_a.VERSION;
+                                        //    nuevos.WF_POS = next.POS;
+                                        //    nuevos.NUM_DOC = actual.NUM_DOC;
+                                        //    nuevos.POS = actual.POS + 1;
+                                        //    nuevos.ESTATUS = "A";
+                                        //    nuevos.FECHAC = DateTime.Now;
+                                        //    nuevos.FECHAM = DateTime.Now;
+
+                                        //    d.ESTATUS = "A";
+
+                                        //    db.FLUJOes.Add(nuevos);
+                                        //    //db.SaveChanges();
+                                        //    ban = false;
+                                        //}
                                     }
                                     else
                                     {
@@ -941,35 +1191,68 @@ namespace WFARTHA.Services
                                         nuevo.WF_POS = next.POS + detA.POS;
                                         nuevo.NUM_DOC = actual.NUM_DOC;
                                         nuevo.POS = actual.POS + 1;
-                                        nuevo.LOOP = 1;//-----------------------------------
-                                                       //int loop1 = db.FLUJOes.Where(a => a.WORKF_ID.Equals(next.ID) & a.WF_VERSION.Equals(next.VERSION) & a.WF_POS == next.POS & a.NUM_DOC.Equals(actual.NUM_DOC) & a.ESTATUS.Equals("A")).Count();
-                                                       //if (loop1 >= next.LOOPS)
-                                                       //{
-                                                       //    paso_a = next;
-                                                       //    continue;
-                                                       //}
-                                                       //if (loop1 != 0)
-                                                       //    nuevo.LOOP = loop1 + 1;
-                                                       //else
-                                                       //    nuevo.LOOP = 1;
+                                        //nuevo.LOOP = 1;//-----------------------------------//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                                        nuevo.LOOP = actual.LOOP;//-----------------------------------//MGC 03-12-2018 Loop para firmas y obtener el más actual
 
                                         //FLUJO detA = determinaAgente(d, actual.USUARIOA_ID, actual.USUARIOD_ID, 0);
                                         //nuevo.USUARIOA_ID = "admin";
                                         //nuevo.DETPOS = 1;
+                                        bool finR = false;
                                         d.ESTATUS_WF = "P";
-                                        if (nuevo.DETPOS == 0)
+                                        if (next.ACCION.TIPO.Equals("T"))
+                                        {
+                                            //    TAX_LAND tl = db.TAX_LAND.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) & a.PAIS_ID.Equals(d.PAIS_ID) & a.ACTIVO == true).FirstOrDefault();
+                                            //    if (tl != null)
+                                            //    {
+                                            //        //nuevo.USUARIOA_ID = db.DET_TAX.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) & a.PUESTOC_ID == d.PUESTO_ID & a.PAIS_ID.Equals(d.PAIS_ID) & a.ACTIVO == true).FirstOrDefault().USUARIOA_ID;
+                                            //        //nuevo.USUARIOA_ID = db.DET_TAXEO.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) & a.PAIS_ID.Equals(d.PAIS_ID) & a.PUESTOC_ID == d.PUESTO_ID & a.USUARIOC_ID.Equals(d.USUARIOC_ID) & a.ACTIVO == true).FirstOrDefault().USUARIOA_ID;
+                                            //        nuevo.USUARIOA_ID = db.DET_TAXEOC.Where(a => a.USUARIOC_ID.Equals(d.USUARIOD_ID) & a.PAIS_ID.Equals(d.PAIS_ID) & a.KUNNR == d.PAYER_ID & a.ACTIVO == true).FirstOrDefault().USUARIOA_ID;
+                                            //        d.ESTATUS_WF = "T";
+                                            //    }
+                                            //    else
+                                            //    {
+                                            //        nuevo.WF_POS = nuevo.WF_POS + 1;
+                                            //        nuevo.USUARIOA_ID = null;
+                                            //        d.ESTATUS_WF = "A";
+                                            //        d.ESTATUS_SAP = "P";
+                                            //        if (recurrente == "X")
+                                            //        {
+                                            //            nuevo.WF_POS++;
+                                            //            d.ESTATUS_SAP = "";
+                                            //            finR = true;
+                                            //        }
+                                            //    }
+                                        }
+                                        else if (paso_a.ACCION.TIPO == "E")
                                         {
                                             nuevo.USUARIOA_ID = null;
-                                            d.ESTATUS_WF = "A";
-                                            d.ESTATUS_SAP = "P";
+                                        }
+                                        else
+                                        {
+                                            if (nuevo.DETPOS == 0)
+                                            {
+                                                nuevo.USUARIOA_ID = null;
+                                                d.ESTATUS_WF = "A";
+                                                d.ESTATUS_SAP = "P";
+                                            }
                                         }
                                         nuevo.ESTATUS = "P";
                                         nuevo.FECHAC = DateTime.Now;
                                         nuevo.FECHAM = DateTime.Now;
 
+                                        if (finR)
+                                        {
+                                            nuevo.ESTATUS = "A";
+                                            d.ESTATUS = "A";
+                                        }
+
                                         db.FLUJOes.Add(nuevo);
-                                        if (paso_a.EMAIL.Equals("X"))
-                                            correcto = "1";
+                                        db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                                        if (paso_a.EMAIL != null)
+                                        {
+                                            if (paso_a.EMAIL.Equals("X"))
+                                                correcto = "1";
+                                        }
                                     }
                                 }
                                 //else if(nuevo.DETPOS == 99)
@@ -985,15 +1268,67 @@ namespace WFARTHA.Services
                                     nuevo.WF_POS = nuevo.WF_POS + detA.POS;
 
                                     db.FLUJOes.Add(nuevo);
-                                    if (paso_a.EMAIL.Equals("X"))
-                                        correcto = "1";
+                                    db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                                    if (paso_a.EMAIL != null)
+                                    {
+                                        if (paso_a.EMAIL.Equals("X"))
+                                            correcto = "1";
+                                    }
 
                                     d.ESTATUS_WF = "P";
                                 }
+                                if (nuevo.DETPOS.Equals(98))
+                                    d.ESTATUS_WF = "S";
                                 db.Entry(d).State = EntityState.Modified;
+                                db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                                correcto = "1";
+
+
+                                //MGC 08-10-2018 Modificación para mensaje por contabilizar
+                                if (contabilizar)
+                                {
+                                    //MGC 08-10-2018 Modificación para mensaje por contabilizar
+                                    //Eliminar los mensajes de la tabla
+                                    try
+                                    {
+                                        db.DOCUMENTOPREs.RemoveRange(db.DOCUMENTOPREs.Where(dpre => dpre.NUM_DOC == d.NUM_DOC));
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception e)
+                                    {
+
+                                    }
+
+                                    //MGC 29-10-2018 Cambiar estatus conforme a matriz, contabilizar
+                                    DOCUMENTO dcc = db.DOCUMENTOes.Find(f.NUM_DOC);
+                                    dcc.ESTATUS = "C";
+                                    db.Entry(dcc).State = EntityState.Modified;
+                                    db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
+                                    ////MGC 08-10-2018 Modificación para mensaje por contabilizar
+                                    ////Guardar Mensaje en tabla
+                                    //DOCUMENTOPRE dp = new DOCUMENTOPRE();
+
+                                    //dp.NUM_DOC = d.NUM_DOC;
+                                    //dp.POS = 1;
+                                    //dp.MESSAGE = "Por contabilizar";
+
+                                    //try
+                                    //{
+                                    //    db.DOCUMENTOPREs.Add(dp);
+                                    //    db.SaveChanges();
+                                    //}
+                                    //catch (Exception e)
+                                    //{
+                                    //    string r = "";
+                                    //}
+
+                                }
+
 
                                 db.SaveChanges();
                                 ban = false;
+
+                                //MGC 11-12-2018 Agregar Contabilizador 0-----------------<
                             }
                         }
 
@@ -1058,6 +1393,12 @@ namespace WFARTHA.Services
                 nuevo.POS = actual.POS + 1;
                 nuevo.DETPOS = 1;
                 nuevo.DETVER = actual.DETVER;
+
+                //MGC 11-12-2018 Agregar Contabilizador 0----------------->
+                nuevo.VERSIONC1 = actual.VERSIONC1;
+                nuevo.VERSIONC2 = actual.VERSIONC2;
+                //MGC 11-12-2018 Agregar Contabilizador 0-----------------<
+
                 nuevo.LOOP = actual.LOOP + 1;//-----------------------------------//MGC 03-12-2018 Loop para firmas y obtener el más actual
                                              //nuevo.LOOP = 1;//-----------------------------------//MGC 03-12-2018 Loop para firmas y obtener el más actual
                                              //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC); //MGC 09-10-2018 Envío de correos
@@ -1363,7 +1704,10 @@ namespace WFARTHA.Services
             ////MGC 12-11-2018 El usuario aprobador, no tiene como tal una versión, se toma el actual-------------------------------------------------------------------->
 
             //dap = db.DET_APROB.Where(ap => ap.VERSION == f_actual.RUTA_VERSION && ap.ID_SOCIEDAD == d.SOCIEDAD_ID).OrderBy(apo => apo.VERSION).FirstOrDefault();
-            dap = db.DET_APROB.Where(ap => ap.ID_SOCIEDAD == d.SOCIEDAD_ID).OrderBy(apo => apo.VERSION).FirstOrDefault();
+            //MGC 11-12-2018 Agregar Contabilizador 0----------------->
+            //dap = db.DET_APROB.Where(ap => ap.ID_SOCIEDAD == d.SOCIEDAD_ID).OrderBy(apo => apo.VERSION).FirstOrDefault();
+            dap = db.DET_APROB.Where(ap => ap.ID_SOCIEDAD == d.SOCIEDAD_ID && ap.VERSION == f_actual.VERSIONC2).OrderBy(apo => apo.VERSION).FirstOrDefault();
+            //MGC 11-12-2018 Agregar Contabilizador 0-----------------<
 
             ////MGC 12-11-2018 El usuario aprobador, no tiene como tal una versión, se toma el actual--------------------------------------------------------------------<
 
@@ -1496,7 +1840,154 @@ namespace WFARTHA.Services
             return f;
         }
 
+        //MGC 11-12-2018 Agregar Contabilizador 0----------------->
+        public FLUJO determinaAgenteContabilidad0(DOCUMENTO d, string user, string delega, int pos, int? loop, int sop, int fase_det)
+        {
+            if (delega != null)
+                user = delega;
+            bool fin = false;
+            WFARTHAEntities db = new WFARTHAEntities();
+            DET_APROB0 dap = new DET_APROB0();
+            FLUJO f_actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(d.NUM_DOC)).FirstOrDefault();
+            //DET_AGENTEH dah = db.DET_AGENTEH.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) & a.PUESTOC_ID == d.PUESTO_ID &
+            //                    a.USUARIOC_ID.Equals(d.USUARIOC_ID) & a.VERSION == f_actual.DETVER).FirstOrDefault();
 
+            ////MGC 12-11-2018 El usuario aprobador, no tiene como tal una versión, se toma el actual-------------------------------------------------------------------->
+
+            //dap = db.DET_APROB.Where(ap => ap.VERSION == f_actual.RUTA_VERSION && ap.ID_SOCIEDAD == d.SOCIEDAD_ID).OrderBy(apo => apo.VERSION).FirstOrDefault();
+            dap = db.DET_APROB0.Where(ap => ap.ID_SOCIEDAD == d.SOCIEDAD_ID && ap.VERSION == f_actual.VERSIONC1).OrderBy(apo => apo.VERSION).FirstOrDefault();
+
+            ////MGC 12-11-2018 El usuario aprobador, no tiene como tal una versión, se toma el actual--------------------------------------------------------------------<
+
+            int ppos = 0;
+
+            //dap = db.DET_AGENTECA.Where(a => a.VERSION == dah.VERSION && a.ID_RUTA_AGENTE == dah.ID_RUTA_AGENTE && a.STEP == 1).FirstOrDefault();
+            //dap = db.DET_AGENTECA.Where(a => a.VERSION == f_actual.RUTA_VERSION && a.ID_RUTA_AGENTE == f_actual.ID_RUTA_A && a.STEP == 1).FirstOrDefault();
+
+
+            USUARIO u = db.USUARIOs.Find(d.USUARIOC_ID);
+            //long gaa = db.CREADOR2.Where(a => a.ID.Equals(u.ID) & a.BUKRS.Equals(d.SOCIEDAD_ID) & a.LAND.Equals(d.PAIS_ID) & a.PUESTOC_ID == d.PUESTO_ID & a.ACTIVO == true).FirstOrDefault().AGROUP_ID;
+            //int ppos = 0;
+
+            //if (pos.Equals(0))
+            //{
+            //    if (loop == null)
+            //    {
+            //        //dap = db.DET_AGENTEP.Where(a => a.SOCIEDAD_ID.Equals(dah.SOCIEDAD_ID) & a.PUESTOC_ID == dah.PUESTOC_ID &
+            //        //                    a.VERSION == dah.VERSION & a.AGROUP_ID == dah.AGROUP_ID & a.POS == 1).FirstOrDefault();
+            //        dap = dah.Where(a => a.STEP_FASE == 1).FirstOrDefault();
+            //        dap.STEP_FASE = dap.STEP_FASE - 1;
+            //    }
+            //    else
+            //    {
+            //        FLUJO ffl = db.FLUJOes.Where(a => a.NUM_DOC.Equals(d.NUM_DOC) & a.ESTATUS.Equals("R")).OrderByDescending(a => a.POS).FirstOrDefault();
+            //        if (ffl.DETPOS == 99)
+            //            ppos = 1;
+            //        ffl.DETPOS = ffl.DETPOS - 1;
+            //        fin = true;
+            //        ffl.POS = ppos;
+
+            //        return ffl;
+            //    }
+            //}
+            //else if (pos.Equals(98))
+            //{
+            //    dap = dah.Where(a => a.STEP_FASE == (pos + 1)).FirstOrDefault();
+            //}
+            //else
+            //{
+            //    //DET_AGENTE actual = db.DET_AGENTE.Where(a => a.PUESTOC_ID == d.PUESTO_ID & a.AGROUP_ID == gaa & a.POS == (pos)).FirstOrDefault();
+            //    DET_AGENTECA actual = dah.Where(a => a.POS == (pos)).FirstOrDefault();
+            //    if (actual.STEP_FASE == 99)
+            //    {
+            //        fin = true;
+            //    }
+            //    else if (actual.STEP_FASE == 98)
+            //    {
+            //        //da = db.DET_AGENTE.Where(a => a.PUESTOC_ID == d.PUESTO_ID & a.AGROUP_ID == gaa & a.POS == (pos + 1)).FirstOrDefault();
+            //        dap = dah.Where(a => a.STEP_FASE == (pos)).FirstOrDefault();
+            //    }
+            //    else
+            //    {
+            //        if (actual.MONTO != null)
+            //            if (d.MONTO_DOC_ML2 > actual.MONTO)
+            //            {
+            //                dap = dah.Where(a => a.POS == (pos + 1)).FirstOrDefault();
+            //                ppos = -1;
+            //            }
+            //        //if (actual.PRESUPUESTO != null)
+            //        if ((bool)actual.PRESUPUESTO)
+            //            if (d.MONTO_DOC_MD > 100000)
+            //            {
+            //                //da = db.DET_AGENTE.Where(a => a.PUESTOC_ID == d.PUESTO_ID & a.AGROUP_ID == gaa & a.POS == (pos + 1)).FirstOrDefault();
+            //                dap = dah.Where(a => a.POS == (pos + 1)).FirstOrDefault();
+            //                ppos = -1;
+            //            }
+            //    }
+            //}
+
+            //agente = dap.USUARIOA_ID;
+
+
+            string agente = "";
+            FLUJO f = new FLUJO();
+            f.DETPOS = 0;
+
+
+            agente = dap.ID_USUARIO;
+            //f.DETPOS = dap.POS;
+            f.DETPOS = 1;
+            f.STEP_AUTO = dap.STEP_FASE;
+            //if (!fin)
+            //{
+            //    if (dap != null)
+            //    {
+            //        if (dap.USUARIOA_ID != null)
+            //        {
+            //            //agente = db.GAUTORIZACIONs.Where(a => a.ID == da.AGROUP_ID).FirstOrDefault().USUARIOs.Where(a => a.PUESTO_ID == da.PUESTOA_ID).First().ID;
+            //            agente = dap.USUARIOA_ID;
+            //            f.DETPOS = dap.POS;
+            //        }
+            //        else
+            //        {
+            //            dap = dah.Where(a => a.POS == (sop)).FirstOrDefault();
+            //            if (dap == null)
+            //            {
+            //                agente = d.USUARIOD_ID;
+            //                f.DETPOS = 98;
+            //            }
+            //            else
+            //            {
+            //                //agente = db.GAUTORIZACIONs.Where(a => a.ID == da.AGROUP_ID).FirstOrDefault().USUARIOs.Where(a => a.PUESTO_ID == da.PUESTOA_ID).First().ID;
+            //                agente = dap.USUARIOA_ID;
+            //                f.DETPOS = dap.POS;
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        dap = dah.Where(a => a.POS == (sop)).FirstOrDefault();
+            //        if (dap == null)
+            //        {
+            //            agente = d.USUARIOD_ID;
+            //            f.DETPOS = 98;
+            //        }
+            //        else
+            //        {
+            //            //agente = db.GAUTORIZACIONs.Where(a => a.ID == da.AGROUP_ID).FirstOrDefault().USUARIOs.Where(a => a.PUESTO_ID == da.PUESTOA_ID).First().ID;
+            //            agente = dap.USUARIOA_ID;
+            //            f.DETPOS = dap.POS;
+            //        }
+            //    }
+            //}
+            f.POS = ppos;
+            if (agente != "")
+                f.USUARIOA_ID = agente;
+            else
+                f.USUARIOA_ID = null;
+            return f;
+        }
+        //MGC 11-12-2018 Agregar Contabilizador 0-----------------<
         //Obtener el agente que se ajusta de a partir del monto del documento
         public DET_AGENTECA detAgenteLimite(List<DET_AGENTECA> lag, decimal monto)
         {
@@ -1947,7 +2438,7 @@ namespace WFARTHA.Services
         ///
         ///
         //MGC 14-11-2018 Cadena de autorización----------------------------------------------------------------------------->
-        public DET_APROB determinaAgenteContabilidadCadena(string sociedad)
+        public DET_APROB determinaAgenteContabilidadCadena(string sociedad, int version) //MGC 11-12-2018 Agregar Contabilizador 0
         {
 
             WFARTHAEntities db = new WFARTHAEntities();
@@ -1955,7 +2446,15 @@ namespace WFARTHA.Services
 
             try
             {
-                dap = db.DET_APROB.Where(ap => ap.ID_SOCIEDAD == sociedad).OrderBy(apo => apo.VERSION).FirstOrDefault();
+                //MGC 11-12-2018 Agregar Contabilizador 0
+                if (version > 0)
+                {
+                    dap = db.DET_APROB.Where(ap => ap.ID_SOCIEDAD == sociedad && ap.VERSION == version).OrderBy(apo => apo.VERSION).FirstOrDefault();
+                }
+                else
+                {
+                    dap = db.DET_APROB.Where(ap => ap.ID_SOCIEDAD == sociedad).OrderBy(apo => apo.VERSION).FirstOrDefault();
+                }
             }
             catch (Exception)
             {
@@ -1966,6 +2465,36 @@ namespace WFARTHA.Services
             return dap;
         }
         //MGC 14-11-2018 Cadena de autorización-----------------------------------------------------------------------------<
+
+        ////MGC 11-12-2018 Agregar Contabilizador 0----------------------------------------------------------------------------->
+        public DET_APROB0 determinaAgenteContabilidadCadena0(string sociedad, int version)//MGC 11-12-2018 Agregar Contabilizador 0
+        {
+
+            WFARTHAEntities db = new WFARTHAEntities();
+            DET_APROB0 dap = new DET_APROB0();
+
+            try
+            {
+                //MGC 11-12-2018 Agregar Contabilizador 0
+                if (version > 0)
+                {
+                    dap = db.DET_APROB0.Where(ap => ap.ID_SOCIEDAD == sociedad && ap.VERSION == version).OrderBy(apo => apo.VERSION).FirstOrDefault();
+                }
+                else
+                {
+
+                    dap = db.DET_APROB0.Where(ap => ap.ID_SOCIEDAD == sociedad).OrderBy(apo => apo.VERSION).FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+
+            return dap;
+        }
+        ////MGC 11-12-2018 Agregar Contabilizador 0-----------------------------------------------------------------------------<
 
         //MGC 21-11-2018 Si es el inicio de la solicitud y si no hay cadena de autorización, asignar al solicitante/detonador--------<
         //Obtener el agente que se ajusta de a partir del monto del documento
