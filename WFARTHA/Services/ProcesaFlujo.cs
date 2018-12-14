@@ -21,7 +21,7 @@ namespace WFARTHA.Services
     {
 
         //MGC 02-10-2018 Cadena de autorización
-        public string procesaPreliminar(DOCUMENTO d, bool edit, string nuevo, bool borrado)//MGC 10-12-2018 Firma del usuario cancelar
+        public string procesaPreliminar(DOCUMENTO d, bool edit, string nuevo, bool borrado,string fechacon)//MGC 10-12-2018 Firma del usuario cancelar//MGC-14-12-2018 Modificación fechacon
         {
             string correcto = String.Empty;
             WFARTHAEntities db = new WFARTHAEntities();
@@ -53,7 +53,7 @@ namespace WFARTHA.Services
             //MGC 10-12-2018 Firma del usuario cancelar---------------------------------------<
 
             ArchivoPreliminar sa = new ArchivoPreliminar();
-            string file = sa.generarArchivo(d.NUM_DOC, accion);
+            string file = sa.generarArchivo(d.NUM_DOC, accion, fechacon);//MGC-14-12-2018 Modificación fechacon
 
             if (file == "")
             {
@@ -77,7 +77,7 @@ namespace WFARTHA.Services
             DOCUMENTO d = db.DOCUMENTOes.Find(id);
             bool ban = true;
             ArchivoContable sa = new ArchivoContable();
-            string file = sa.generarArchivo(d.NUM_DOC, 0, "A");
+            string file = sa.generarArchivo(d.NUM_DOC, 0, "A","");
 
             if (file == "")
             {
@@ -94,7 +94,7 @@ namespace WFARTHA.Services
 
         public string procesa(FLUJO f, string recurrente, bool edit, string email, string nuevo_acc)
         {
-
+            string fechacon = "";//MGC-14-12-2018 Modificación fechacon
             bool emails = false; //MGC 08-10-2018 Obtener los datos para el correo
             string correcto = String.Empty;
             WFARTHAEntities db = new WFARTHAEntities();
@@ -307,8 +307,15 @@ namespace WFARTHA.Services
                     //d.ESTATUS_WF = "P";//MGC 26-10-2018 Modificaión para validar creación del archivo
                     db.Entry(d).State = EntityState.Modified;
 
+                    //MGC-14-12-2018 Modificación fechacon
+                    fechacon = "";
+                    if(f.FECHACON != null)
+                    {
+                        fechacon = "";
+                    }
+
                     //Crear el archivo para el preliminar //MGC Preliminar
-                    string corr = procesaPreliminar(d, edit, nuevo_acc, false);//MGC 10-12-2018 Firma del usuario cancelar
+                    string corr = procesaPreliminar(d, edit, nuevo_acc, false, fechacon);//MGC 10-12-2018 Firma del usuario cancelar//MGC-14-12-2018 Modificación fechacon
 
                     //Se genero el preliminar
                     if (corr == "0")
@@ -452,8 +459,16 @@ namespace WFARTHA.Services
                     actual.FECHAM = DateTime.Now; ; //MGC 03-12-2018 Loop para firmas y obtener el más actual
                     actual.COMENTARIO = f.COMENTARIO;
                     actual.USUARIOA_ID = f.USUARIOA_ID;
+                    actual.FECHACON = f.FECHACON;//MGC-14-12-2018 Modificación fechacon
                     db.Entry(actual).State = EntityState.Modified;
                     db.SaveChanges();//MGC 03-12-2018 Loop para firmas y obtener el más actual
+
+                    //MGC-14-12-2018 Modificación fechacon------------>
+                    if (actual.FECHACON != null)
+                    {
+                        fechacon = String.Format("{0:dd.MM.yyyy}", actual.FECHACON).Replace(".", "");
+                    }
+                    //MGC-14-12-2018 Modificación fechacon------------<
 
                     //MGC 09-10-2018 Envío de correos
                     if (actual.WORKFP.EMAIL == "X")
@@ -813,7 +828,7 @@ namespace WFARTHA.Services
                                 //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);//MGC 09-10-2018 Envío de correos
 
                                 ArchivoContable sa = new ArchivoContable();
-                                string file = sa.generarArchivo(d.NUM_DOC, 0, "A");
+                                string file = sa.generarArchivo(d.NUM_DOC, 0, "A",fechacon);//MGC-14-12-2018 Modificación fechacon
 
                                 if (file == "")
                                 {
@@ -1488,6 +1503,7 @@ namespace WFARTHA.Services
                     db.Entry(conta).State = EntityState.Modified;
                     //MGC COMM
                     //corr = procesa(conta, recurrente);
+                    correcto = "1";
                 }
             }
 

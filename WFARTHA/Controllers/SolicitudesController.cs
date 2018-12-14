@@ -4895,7 +4895,7 @@ namespace WFARTHA.Controllers
                                 //MGC 04-11-2018 Generar Archivos ----------------------------------------------------------------->
 
                                 //Crear el archivo para el preliminar //MGC Preliminar
-                                string corr = pf.procesaPreliminar(_docf, false, "", false);
+                                string corr = pf.procesaPreliminar(_docf, false, "", false, "");//MGC-14-12-2018 Modificación fechacon
 
                                 //Se genero el preliminar
                                 if (corr == "0")
@@ -8276,7 +8276,7 @@ namespace WFARTHA.Controllers
             //Enviar el archivo con parámetro de Borrado
             //Crear el archivo para el preliminar //MGC Preliminar
             ProcesaFlujo pf = new ProcesaFlujo();
-            string corr = pf.procesaPreliminar(d, false, "", true);
+            string corr = pf.procesaPreliminar(d, false, "", true, "");//MGC-14-12-2018 Modificación fechacon
             //Se genero el archivo de cancelación
             if (corr == "0")
             {
