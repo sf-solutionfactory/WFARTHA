@@ -83,7 +83,7 @@ namespace WFARTHA.Controllers
                 {
                     AuthenticationManager.SignOut();
                     LoginViewModel _m = new LoginViewModel();
-                    _m.ID = "admin";
+                    //_m.ID = "admin";
                     ViewBag.ReturnUrl = returnUrl;
                     return View(_m);
                 }
@@ -95,7 +95,7 @@ namespace WFARTHA.Controllers
 
             }
             LoginViewModel m = new LoginViewModel();
-            m.ID = "admin";
+            //m.ID = "admin";
             //m.Password = "admin";
             ViewBag.ReturnUrl = returnUrl;
             return View(m);
