@@ -265,3 +265,7 @@ WFARTHA/Web.config
 WFARTHA/Descargas/photo-1521173531190-ce76154f20b5.jpg
 WFARTHA/Web.config
 WFARTHA/Web.config
+*.pdf
+WFARTHA/Properties/PublishProfiles/FolderProfile6.pubxml
+WFARTHA/Properties/PublishProfiles/FolderProfile7.pubxml
+*.pdf

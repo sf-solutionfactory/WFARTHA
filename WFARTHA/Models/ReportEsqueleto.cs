@@ -21,30 +21,34 @@ namespace WFARTHA.Models
             iTextSharp.text.Font normalPeque = FontFactory.GetFont(FontFactory.HELVETICA, 11);
             iTextSharp.text.Font normalMasPeque = FontFactory.GetFont(FontFactory.HELVETICA, 8);
             iTextSharp.text.Font titulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+            PdfPTable tabCabecera = new PdfPTable(1);
             PdfPTable tablaDatos = new PdfPTable(1);
             PdfPTable tablaDatos1 = new PdfPTable(2);
             PdfPTable tablaDatos2 = new PdfPTable(4);
             PdfPTable tablaDatos3 = new PdfPTable(1);
             PdfPTable tablaDatos4 = new PdfPTable(6);
-            int a, b = 0, r;
-            int pos = 0, pos2 = 0, pos3 = 0;
 
             string ruta = "";
             using (WFARTHAEntities db = new WFARTHAEntities())
             {
-                //HeaderFooter hfClass = new HeaderFooter(RC);
                 DateTime fechaCreacion = DateTime.Now;
                 string nombreArchivo = string.Format("{0}.pdf", RC.NUM_DOC + "-" + fechaCreacion.ToString(@"yyyyMMdd"));
                 string rutaCompleta = HttpContext.Current.Server.MapPath("~/PdfTemp/" + nombreArchivo);
                 FileStream fsDocumento = new FileStream(rutaCompleta, FileMode.Create);
                 //PASO UNO DEMINIMOS EL TIPO DOCUMENTO CON LOS RESPECTIVOS MARGENES (A4,IZQ,DER,TOP,BOT)
-                Document pdfDoc = new Document(PageSize.A4, 30f, 30f, 40f, 100f);
+                Document pdfDoc = new Document(PageSize.A4, 30f, 30f, 60f, 30f);
                 PdfWriter pdfWriter = PdfWriter.GetInstance(pdfDoc, fsDocumento);
-                //pdfWriter.PageEvent = new HeaderFooter();
 
                 try
                 {
                     pdfDoc.Open();
+
+                    iTextSharp.text.Image imagen2 = iTextSharp.text.Image.GetInstance(HttpContext.Current.Server.MapPath("~/images/artha.png"));
+                    PdfPCell celLineaCabecera = new PdfPCell { Image = imagen2, Border = 0, Padding = 3, FixedHeight = 60f, HorizontalAlignment = PdfPCell.ALIGN_RIGHT };
+                    tabCabecera.AddCell(celLineaCabecera);
+                    tabCabecera.TotalWidth = pdfDoc.PageSize.Width;
+                    tabCabecera.WriteSelectedRows(0, -1, 0, pdfDoc.PageSize.Top, pdfWriter.DirectContent);
+
                     Paragraph frase1;
 
                     frase1 = new Paragraph("Solicitud de Cheques", titulo) { Alignment = Element.ALIGN_LEFT }; pdfDoc.Add(frase1);
@@ -80,13 +84,24 @@ namespace WFARTHA.Models
                     PdfPCell Cabecera2 = new PdfPCell(new Paragraph("Descripción", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera2);
                     PdfPCell Cabecera3 = new PdfPCell(new Paragraph("Factura", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera3);
                     PdfPCell Cabecera4 = new PdfPCell(new Paragraph("Importe", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera4);
+                    bool col = true;
+                    BaseColor fondo;
                     foreach (ReportDetalle det in RD)
                     {
-                        PdfPCell Cuerpo1 = new PdfPCell(new Paragraph(det.CONCEPTO + "\n" + (!string.IsNullOrEmpty(det.TEXTO) ? det.TEXTO : null), letraTab)) { Border = 1, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo1);
-                        PdfPCell Cuerpo2 = new PdfPCell(new Paragraph(det.DESCRIPCION, letraTab)) { Border = 1, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo2);
-                        PdfPCell Cuerpo3 = new PdfPCell(new Paragraph(det.FACTURA, letraTab)) { Border = 1, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo3);
-                        PdfPCell Cuerpo4 = new PdfPCell(new Paragraph("$" + det.IMPORTE, letraTab)) { Border = 1, HorizontalAlignment = Element.ALIGN_RIGHT, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo4);
-                        pos++;
+                        if (col == true)
+                        {
+                            fondo = new BaseColor(230, 230, 230);
+                            col = false;
+                        }
+                        else
+                        {
+                            fondo = new BaseColor(255, 255, 255);
+                            col = true;
+                        }
+                        PdfPCell Cuerpo1 = new PdfPCell(new Paragraph(det.CONCEPTO + "\n" + (!string.IsNullOrEmpty(det.TEXTO) ? det.TEXTO : null), letraTab)) { Border = 1, BackgroundColor = fondo, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo1);
+                        PdfPCell Cuerpo2 = new PdfPCell(new Paragraph(det.DESCRIPCION, letraTab)) { Border = 1, BackgroundColor = fondo, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo2);
+                        PdfPCell Cuerpo3 = new PdfPCell(new Paragraph(det.FACTURA, letraTab)) { Border = 1, BackgroundColor = fondo, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo3);
+                        PdfPCell Cuerpo4 = new PdfPCell(new Paragraph("$" + det.IMPORTE, letraTab)) { Border = 1, BackgroundColor = fondo, HorizontalAlignment = Element.ALIGN_RIGHT, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo4);
                     }
                     PdfPCell Total1 = new PdfPCell(new Paragraph("", letraTabNegrita)) { Border = 1, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Total1);
                     PdfPCell Total2 = new PdfPCell(new Paragraph("", letraTabNegrita)) { Border = 1, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Total2);
@@ -149,7 +164,6 @@ namespace WFARTHA.Models
                 catch (Exception ex)
                 {
                     ex.Message.ToString();
-                    //Log.ErrorLogApp(ex, "CartaV", "Generar PDF");
                 }
                 return ruta;
             }

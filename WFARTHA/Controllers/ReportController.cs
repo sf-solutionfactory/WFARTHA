@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
@@ -130,6 +131,26 @@ namespace WFARTHA.Controllers
                 string recibeRuta = re.crearPDF(cab, det, fir);
                 ViewBag.url = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + HostingEnvironment.ApplicationVirtualPath + "/" + recibeRuta;
                 ViewBag.miNum = c.NUM_DOC;
+
+                return View();
+            }
+        }
+        public ActionResult ReportTemplate2(int id)
+        {
+            int pagina = 1101; //ID EN BASE DE DATOS
+            using (WFARTHAEntities db = new WFARTHAEntities())
+            {
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+                List<ReportSols> solicitudes = db.Database.SqlQuery<ReportSols>("SP_REPORTESOLS @NUM_DOC,@BUKRS,@USER,@num",
+                    new SqlParameter("@NUM_DOC", 2),
+                    new SqlParameter("@BUKRS", "2"),
+                    new SqlParameter("@USER", "2"),
+                    new SqlParameter("@num", 2)).ToList();
+
+                ReportEsqueleto2 re = new ReportEsqueleto2();
+                string recibeRuta = re.crearPDF(solicitudes);
+                ViewBag.url = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + HostingEnvironment.ApplicationVirtualPath + "/" + recibeRuta;
+                ViewBag.miNum = id;
 
                 return View();
             }

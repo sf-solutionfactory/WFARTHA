@@ -547,7 +547,9 @@
     <Compile Include="Models\ProyectoSociedadNuevo.cs" />
     <Compile Include="Models\ReportCabecera.cs" />
     <Compile Include="Models\ReportDetalle.cs" />
+    <Compile Include="Models\ReportEsqueleto2.cs" />
     <Compile Include="Models\ReportEsqueleto.cs" />
+    <Compile Include="Models\ReportSols.cs" />
     <Compile Include="Models\ReportFirmas.cs" />
     <Compile Include="Models\ReportInfo.cs" />
     <Compile Include="Models\SociedadesUsuario.cs" />
@@ -727,6 +729,8 @@
     <None Include="Properties\PublishProfiles\FolderProfile3.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile4.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile5.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile6.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile7.pubxml" />
     <None Include="Properties\PublishProfiles\FTP ARTHA.pubxml" />
     <None Include="Properties\PublishProfiles\SERVER.pubxml" />
     <None Include="Scripts\jquery-3.0.0-vsdoc.js" />
@@ -836,6 +840,7 @@
     <Content Include="Views\UsuarioC1\Index.cshtml" />
     <Content Include="Views\UsuarioC1\Edit.cshtml" />
     <Content Include="Views\Usuarios\CambioPass.cshtml" />
+    <Content Include="Views\Report\ReportTemplate2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
