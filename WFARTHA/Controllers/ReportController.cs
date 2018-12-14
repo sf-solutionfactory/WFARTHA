@@ -120,7 +120,7 @@ namespace WFARTHA.Controllers
                             cont2--;
                             break;
                     }
-                    if (cont == 5 || cont2 == 0)
+                    if (cont == 1 || cont2 == 0)
                     {
                         fir.Add(rf);
                     }
