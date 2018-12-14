@@ -28,6 +28,10 @@
 <script src="~/Scripts/details.js"></script>
 <script src="~/Scripts/formatos.js"></script>
 
+
+
+
+
 @if (ViewBag.error != "")
 {
     <script>
@@ -242,34 +246,34 @@
                             var instance = M.FloatingActionButton.init(elem, options);
                         </script>
                         @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                    <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                            <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                         <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                         <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
 
                     }
                     @*else if (ViewBag.accion == "N")
-                {
-                    <div class="fixed-action-btn" id="lbl_wf">
-                        <a class="btn-floating btn-large blue">
-                            <i class="large material-icons">work</i>
-                        </a>
-                        <ul>
-                            <li><a id="lbl_wfn" class="btn-floating yellow darken-1 modal-trigger" href="#modal1" onclick="siguiente()"><i class="material-icons">play_arrow</i></a></li>
-                        </ul>
-                    </div>
-                    <script>
+                        {
+                            <div class="fixed-action-btn" id="lbl_wf">
+                                <a class="btn-floating btn-large blue">
+                                    <i class="large material-icons">work</i>
+                                </a>
+                                <ul>
+                                    <li><a id="lbl_wfn" class="btn-floating yellow darken-1 modal-trigger" href="#modal1" onclick="siguiente()"><i class="material-icons">play_arrow</i></a></li>
+                                </ul>
+                            </div>
+                            <script>
 
-                        var elem = document.querySelector('.fixed-action-btn');
-                        var options = {
-                            direction: 'left',
-                            hoverEnabled: false,
-                            toolbarEnabled: false
-                        };
-                        var instance = M.FloatingActionButton.init(elem, options);
-                    </script>*@
+                                var elem = document.querySelector('.fixed-action-btn');
+                                var options = {
+                                    direction: 'left',
+                                    hoverEnabled: false,
+                                    toolbarEnabled: false
+                                };
+                                var instance = M.FloatingActionButton.init(elem, options);
+                            </script>*@
                     @*esto ya estaba comentado <a id="lbl_wfn" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="N" })">Siguiente</a>*@
                     @*<a id="lbl_wfn" class="btn-small modal-trigger" href="#modal1" onclick="siguiente()">Siguiente</a>
-                }*@
+                        }*@
                     else if (ViewBag.accion == "P")
                     {
 
@@ -303,36 +307,36 @@
 
                         @*//MGC 06-12-2018 Firma del usuario cancelar -------------------------------------------------->*@
                         @*<div id="modal2" class="modal">
-                            <div class="modal-content">
-                                <div class="row">
-                                    <h4 id="txt_can">Eliminar Solicitud</h4>
-                                    <br />
-                                </div>
-                                <div class="row" style="">
-                                    <div class="col s12 m12 l12">
-                                        <div class="row" style="margin-bottom:0">
-                                            ¿Está seguro de eliminar esta solicitud?
+                                <div class="modal-content">
+                                    <div class="row">
+                                        <h4 id="txt_can">Eliminar Solicitud</h4>
+                                        <br />
+                                    </div>
+                                    <div class="row" style="">
+                                        <div class="col s12 m12 l12">
+                                            <div class="row" style="margin-bottom:0">
+                                                ¿Está seguro de eliminar esta solicitud?
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <div>
-                                    <div class="input-field col s2 offset-s1" style="width:auto;margin-top:0px;margin-left:0px">
-                                        <input type="password" name="txtfirma_usc" id="txtfirma_usc" value="" />
-                                        <label for="txtfirma_usc" id="lbl_firma">Firma</label>
+                                <div class="modal-footer">
+                                    <div>
+                                        <div class="input-field col s2 offset-s1" style="width:auto;margin-top:0px;margin-left:0px">
+                                            <input type="password" name="txtfirma_usc" id="txtfirma_usc" value="" />
+                                            <label for="txtfirma_usc" id="lbl_firma">Firma</label>
+                                        </div>
+
+                                        <a href="#!" class="modal-action modal-close btn-flat">No</a>
+                                        <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
                                     </div>
-
-                                    <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                    <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
                                 </div>
-                            </div>
-                        </div>*@
+                            </div>*@
 
 
-                        using (Html.BeginForm("Cancelar", "Solicitudes",new { id = @Model.D.NUM_DOC }, FormMethod.Post, new { id = "form_procesac" }))
+                        using (Html.BeginForm("Cancelar", "Solicitudes", new { id = @Model.D.NUM_DOC }, FormMethod.Post, new { id = "form_procesac" }))
                         {
-                                
+
                             <div id="modal2" class="modal">
                                 @Html.AntiForgeryToken()
                                 <div class="modal-content">
@@ -362,7 +366,7 @@
                                     </div>
                                 </div>
                             </div>
-            
+
                             <script>
                                 //MGC 18-10-2018 Firma del usuario -------------------------------------------------->
                                 //Validar la firma del usuario
@@ -408,6 +412,33 @@
 
                     }
                     @*else if (!Model.D.ESTATUS.Equals("A"))
+                        {
+                            if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
+                            {
+                                <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
+                                <div id="modal2" class="modal">
+                                    <div class="modal-content">
+                                        <div class="row">
+                                            <h4 id="txt_can">Cancelar Solicitud</h4>
+                                            <br />
+                                        </div>
+                                        <div class="row" style="">
+                                            <div class="col s12 m12 l12">
+                                                <div class="row" style="margin-bottom:0">
+                                                    ¿Está seguro de cancelar esta solicitud?
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer right">
+                                        <a href="#!" class="modal-action modal-close btn-flat">No</a>
+                                        <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
+                                    </div>
+                                </div>
+                            }
+                        }*@
+                }
+                @*else if (!Model.D.ESTATUS.Equals("A"))
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
                         {
@@ -433,33 +464,6 @@
                             </div>
                         }
                     }*@
-                }
-                @*else if (!Model.D.ESTATUS.Equals("A"))
-                {
-                    if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
-                    {
-                        <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
-                        <div id="modal2" class="modal">
-                            <div class="modal-content">
-                                <div class="row">
-                                    <h4 id="txt_can">Cancelar Solicitud</h4>
-                                    <br />
-                                </div>
-                                <div class="row" style="">
-                                    <div class="col s12 m12 l12">
-                                        <div class="row" style="margin-bottom:0">
-                                            ¿Está seguro de cancelar esta solicitud?
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer right">
-                                <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
-                            </div>
-                        </div>
-                    }
-                }*@
 
                 if (false)
                 {
@@ -1408,9 +1412,7 @@
                         <h4 id="txt_app" style="display:none">Aprobar Solicitud</h4>
                         <h4 id="txt_rec" style="display:none"> Rechazar Solicitud</h4>
                         <h4 id="txt_nex" style="display:none"> Agregar Comentario</h4>
-                        <h4 id="txt_cont" style="display:none">
-                            Contabilizar
-                        </h4>
+                        <h4 id="txt_cont" style="display:none"> Contabilizar </h4>
                         <br />
                     </div>
                     <div class="row" style="">
@@ -1437,10 +1439,26 @@
                                 </div>
                                 @*//MGC 18-10-2018 Firma del usuario -------------------------------------------------->*@
                                 <div class="input-field col s2 offset-s1">
-                                    <input type="password" name="txtfirma_us" id="txtfirma_us" value="" />
-                                    <label for="txtfirma_us" id="lbl_firma">Firma</label>
+                                    <div class="col-md-10">
+                                        <label for="txtfirma_us" id="lbl_firma">Firma</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <input type="password" name="txtfirma_us" id="txtfirma_us" value="" />
+                                    </div>
                                 </div>
                                 @*//MGC 18-10-2018 Firma del usuario --------------------------------------------------<*@
+                                @*//FRT 13-12-2018 Para mostrar fecha al contabilizar -------------------------------------------------->*@
+                                <div class="input-field col s2 offset-s1">
+                                    <div class="col-md-10">
+                                        <label style="display:none" id="lbl_fechaconta">Fecha de contabilizacion</label>
+                                    </div>
+
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.F.FECHACON, new { htmlAttributes = new { @id = "txt_fechaconta", @style = "display: none", @class = "form-control datepicker", Value = DateTime.Now.ToShortDateString(), @type = "date" } })
+                                    </div>
+                                </div>
+                                
+                                @*//FRT 13-12-2018 Para mostrar fecha al contabilizar --------------------------------------------------<*@
                             </div>
                         </div>
                     </div>
@@ -1530,6 +1548,8 @@
                     document.getElementById("wf_estatus").value = 'A';
                 }
                 function contabilizar() {
+                    var moneda = $("#MONEDA_ID").val();
+
                     document.getElementById("txt_rec").style.display = 'none';
                     document.getElementById("txt_app").style.display = 'none';
                     document.getElementById("txt_nex").style.display = 'none';
@@ -1537,6 +1557,11 @@
                     //document.getElementById("txt_comentario").value = ''; //MGC 18-10-2018 Firma del usuario
                     document.getElementById("wf_estatus").value = 'A';
                     document.getElementById("txtfirma_us").value = '';//MGC 18-10-2018 Firma del usuario
+                    if (moneda != "MXN") {
+                        document.getElementById("txt_fechaconta").style.display = 'inline'; //FRT 13-12-2018 mostrar el calendario solo al contabilizar
+                        document.getElementById("lbl_fechaconta").style.display = 'inline'; //FRT 13-12-2018 mostrar el calendario solo al contabilizar
+                    }
+                    
                     //document.getElementById('cont_send').click();//MGC 18-10-2018 Firma del usuario
 
                 }
