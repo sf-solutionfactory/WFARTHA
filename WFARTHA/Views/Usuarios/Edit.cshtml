@@ -76,37 +76,50 @@
             <div class="card-panel">
                 <div class="row">
                     @*<div class="input-field col s12">
-                        @Html.DropDownList("PUESTO_ID", null, htmlAttributes: new { @class = "select", @id = "txt_puestoid" })
-                        @Html.LabelFor(model => model.PUESTO_ID, "PUESTO_ID", htmlAttributes: new { @id = "lbl_puesto" })
-                        @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
-                    </div>*@
+            @Html.DropDownList("PUESTO_ID", null, htmlAttributes: new { @class = "select", @id = "txt_puestoid" })
+            @Html.LabelFor(model => model.PUESTO_ID, "PUESTO_ID", htmlAttributes: new { @id = "lbl_puesto" })
+            @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
+        </div>*@
 
+                    @*<div class="form-group">
+            <div class=" dropdown col s12">
+                @Html.Label("Tipo de usuario", htmlAttributes: new { @id = "lbl_sociedad" })
+                @Html.DropDownListFor(model => model.PUESTO_ID, Model.usersLista, "Seleccione tipo de usuario", new { @class = "browser-default" })
+                @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class=" dropdown col s12">
+                @Html.Label("Sociedad", htmlAttributes: new { @id = "lbl_sociedad" })
+                @Html.DropDownListFor(model => model.BUNIT, Model.sociedadLista, "Seleccione Sociedad", new { @class = "browser-default" })
+                @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
                     <div class="form-group">
                         <div class=" dropdown col s12">
                             @Html.Label("Tipo de usuario", htmlAttributes: new { @id = "lbl_sociedad" })
-                            @Html.DropDownListFor(model => model.PUESTO_ID, Model.usersLista, "Seleccione tipo de usuario", new { @class = "browser-default" })
-                            @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
+                            @Html.DropDownListFor(model => model.PUE, Model.UsersLista, "Seleccione tipo de usuario", new { @class = "browser-default" })
+                            @Html.ValidationMessageFor(model => model.PUE, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <div class=" dropdown col s12">
                             @Html.Label("Sociedad", htmlAttributes: new { @id = "lbl_sociedad" })
-                            @Html.DropDownListFor(model => model.BUNIT, Model.sociedadLista, "Seleccione Sociedad", new { @class = "browser-default" })
-                            @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+                            @Html.DropDownListFor(model => model.BUKRS, Model.SociedadLista, "Seleccione Sociedad", new { @class = "browser-default" })
+                            @Html.ValidationMessageFor(model => model.BUKRS, "", new { @class = "text-danger" })
                         </div>
-                    </div>
-
-                    @*<div class="input-field col s4">
-                        @Html.EditorFor(model => model.MANAGER, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.LabelFor(model => model.MANAGER, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.ValidationMessageFor(model => model.MANAGER, "", new { @class = "text-danger" })
-                    </div>
-
-                    <div class="input-field col s4">
-                        @Html.EditorFor(model => model.BACKUP_ID, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.LabelFor(model => model.BACKUP_ID, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.ValidationMessageFor(model => model.BACKUP_ID, "", new { @class = "text-danger" })
                     </div>*@
+                    @*<div class="input-field col s4">
+            @Html.EditorFor(model => model.MANAGER, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.LabelFor(model => model.MANAGER, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.ValidationMessageFor(model => model.MANAGER, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="input-field col s4">
+            @Html.EditorFor(model => model.BACKUP_ID, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.LabelFor(model => model.BACKUP_ID, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.ValidationMessageFor(model => model.BACKUP_ID, "", new { @class = "text-danger" })
+        </div>*@
 
 
                 </div>

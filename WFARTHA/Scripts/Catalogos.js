@@ -7,14 +7,21 @@
         var _idnull = true;
         var _nombrenull = true;
         var _usuarionull = true;
-        var _sociedadnull = true;
+        //var _sociedadnull = true;
         var msgerror = "";
         var mail = $("#EMAIL").val();
         var id = $("#ID").val();
         var nombre = $("#NOMBRE").val();
         var vista = $("#vista").val();
-        var usuario = $("#PUESTO_ID").val();
-        var sociedad = $("#BUNIT").val();
+
+        if (vista == "E") {
+            var usuario = $("#PUE").val();
+            //var sociedad = $("#BUKRS").val();
+        } else {
+            var usuario = $("#PUESTO_ID").val();
+            //var sociedad = $("#BUNIT").val();
+        }
+
 
 
         if (mail == null || mail == "") {
@@ -35,35 +42,30 @@
                         _usuarionull = false;
                         msgerror = "Ingrese tipo de Usuario";
                     } else {
-                        if (sociedad.trim() == null || sociedad.trim() == "") {
-                            _sociedadnull = false;
-                            msgerror = "Ingrese una Sociedad";
-                        } else {
-                            if (vista != "E") {
-                                if (id.trim() == null || id.trim() == "") {
-                                    _idnull = false;
-                                    msgerror = "El ID de usuario es obligatorio";
-                                } else {
-                                    $.ajax({
-                                        type: "POST",
-                                        url: 'getUsuario',
-                                        data: { 'id': id },
-                                        dataType: "json",
-                                        success: function (data) {
-                                            if (!data) {
-                                                _idexiste = true;
-                                            } else {
-                                                msgerror = "Ya existe un usuario registrado con ese ID";
-                                                _idexiste = false;
-                                            }
-                                        },
-                                        error: function (xhr, httpStatusMessage, customErrorMessage) {
-                                            M.toast({ html: httpStatusMessage });
-                                        },
-                                        async: false
-                                    });
+                        if (vista != "E") {
+                            if (id.trim() == null || id.trim() == "") {
+                                _idnull = false;
+                                msgerror = "El ID de usuario es obligatorio";
+                            } else {
+                                $.ajax({
+                                    type: "POST",
+                                    url: 'getUsuario',
+                                    data: { 'id': id },
+                                    dataType: "json",
+                                    success: function (data) {
+                                        if (!data) {
+                                            _idexiste = true;
+                                        } else {
+                                            msgerror = "Ya existe un usuario registrado con ese ID";
+                                            _idexiste = false;
+                                        }
+                                    },
+                                    error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                        M.toast({ html: httpStatusMessage });
+                                    },
+                                    async: false
+                                });
 
-                                }
                             }
                         }
                     }
@@ -71,18 +73,14 @@
             }
         }
 
-               
+
         if (_mailnull) {
             if (_mailerror) {
                 if (_idnull) {
                     if (_nombrenull) {
                         if (_usuarionull) {
-                            if (_sociedadnull) {
-                                if (_idexiste) {
-                                    $('#btn_guardar').trigger("click");
-                                } else {
-                                    M.toast({ html: msgerror });
-                                }
+                            if (_idexiste) {
+                                $('#btn_guardar').trigger("click");
                             } else {
                                 M.toast({ html: msgerror });
                             }
@@ -92,14 +90,14 @@
                     } else {
                         M.toast({ html: msgerror });
                     }
-                    
+
                 } else {
                     M.toast({ html: msgerror });
                 }
-            }else {
+            } else {
                 M.toast({ html: msgerror });
             }
-        }else {
+        } else {
             M.toast({ html: msgerror });
         }
         

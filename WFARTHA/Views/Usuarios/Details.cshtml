@@ -83,11 +83,11 @@
                     @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="input-field col s12">
+                @*<div class="input-field col s12">
                     @Html.EditorFor(model => model.BUNIT, null, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.BUNIT, "SOCIEDAD", htmlAttributes: new { @id = "lbl_bukrs" })
                     @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
-                </div>
+                </div>*@
 
                 @*<div class="input-field col s12">
             @Html.EditorFor(model => model.MIEMBROS.FirstOrDefault().ROL.ROLTs.Where(a => a.SPRAS_ID.Equals("ES")).FirstOrDefault().TXT50, null, new { htmlAttributes = new { @disabled = "disabled" } })

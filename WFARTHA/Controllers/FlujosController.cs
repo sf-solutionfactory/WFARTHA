@@ -49,14 +49,72 @@ namespace WFARTHA.Controllers
             return res;
         }
 
+        //FRT 13-12-2018 para realizar la actualización del tipo de cambio  y la fechacon segun la fecha en el modal
+        public string TipoCambio(FLUJO F,string moneda,FLUJO P)
+        {
+            var correcto = "0";
+            var _bol = false;
+            decimal? _tipocambio = 0;
+            var dia = 0;
+            var wf_p = F.WF_POS;
+            DateTime fechacon = P.FECHACON.Value;
+            if (P.FECHACON.HasValue){ //verificar fecha null
+                while (true) // Buscar el tipo de cambio en caso de no encontrarlo buscar el mas cercano hacia abajo 
+                {
+                    DateTime fecha = P.FECHACON.Value.AddDays(-dia);
+
+                    string displayName = null;
+                    var keyValue = db.TCAMBIOs.FirstOrDefault(a => a.TCURR == moneda & a.GDATU == fecha);
+                    if (keyValue != null)
+                    {
+                        var lprov = db.TCAMBIOs.Where(a => a.TCURR == moneda & a.GDATU == fecha).First().UKURS;
+                        _tipocambio = lprov;
+                        break;
+                    }
+                    dia++;
+                }
+               DOCUMENTO dOCUMENTO = db.DOCUMENTOes.Find(F.NUM_DOC);
+                dOCUMENTO.TIPO_CAMBIO = _tipocambio;
+
+                try
+                {
+                    db.Entry(dOCUMENTO).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                }
+
+                try
+                {
+                    FLUJO fLUJO = db.FLUJOes.Find(F.WORKF_ID,F.WF_VERSION, F.WF_POS,F.NUM_DOC, F.POS, F.DETPOS);
+                    fLUJO.FECHACON = P.FECHACON;
+                    db.Entry(fLUJO).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                catch (Exception e) {
+
+                }
+                
+
+            }
+
+            return correcto;
+        }
+
+
+        //ENDFRT 13-12-2018 para realizar la actualización del tipo de cambio segun la fecha en el modal y la fechacon
+
         [HttpPost]
         public ActionResult Procesa(FLUJO f)
         {
-
+           
             ProcesaFlujo pf = new ProcesaFlujo();
             DOCUMENTO d = db.DOCUMENTOes.Find(f.NUM_DOC);
             FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
-                 
+            
+           
+            
             //MGC 12092018
             //List<TS_FORM> tts = db.TS_FORM.Where(a => a.BUKRS_ID.Equals(d.SOCIEDAD_ID) & a.LAND_ID.Equals(d.PAIS_ID)).ToList();
 
@@ -108,6 +166,8 @@ namespace WFARTHA.Controllers
             flujo.VERSIONC2 = actual.VERSIONC2;
             //MGC 11-12-2018 Agregar Contabilizador 0-----------------<
 
+            
+
             //Agregar funcionalidad, para checar si el próximo es contabilización, y si es contabilización 
             //checar que el usuario contabilizador esté asignado a la sociedad
             ContabilizarRes resc = new ContabilizarRes();
@@ -144,10 +204,25 @@ namespace WFARTHA.Controllers
                         string res = pf.procesa(flujo, "", false, "", "");
                         if (res.Equals("0"))//Aprobado
                         {
+                            //FRT 13-12-2018 para realizar la actualización del tipo de cambio segun la fecha en el modal
+                            if (d.MONEDA_ID != "MXN") {
+                                var moneda = d.MONEDA_ID;
+                                var restipo = TipoCambio(actual, moneda, f);
+                            }
+                            
+                            //ENDFRT 13-12-2018 para realizar la actualización del tipo de cambio segun la fecha en el modal
                             return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
                         }
                         else if (res.Equals("1") | res.Equals("2") | res.Equals("3"))//CORREO
                         {
+                            //FRT 13-12-2018 para realizar la actualización del tipo de cambio segun la fecha en el modal
+                            if (d.MONEDA_ID != "MXN") {
+                                var moneda = d.MONEDA_ID;
+                                var restipo = TipoCambio(actual, moneda, f);
+                            }
+                            
+                            //ENDFRT 13-12-2018 para realizar la actualización del tipo de cambio segun la fecha en el modal
+
                             //return RedirectToAction("Enviar", "Mails", new { id = flujo.NUM_DOC, index = false, tipo = "A" });
                             //MGC 12092018
                             //Email em = new Email();

@@ -163,7 +163,7 @@ namespace TAT001.Controllers.Catalogos
         //// más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,NOMBRE,APELLIDO_P,APELLIDO_M,EMAIL,PUESTO_ID,BUNIT")] Usuario uSUARIO)
+        public ActionResult Create([Bind(Include = "ID,NOMBRE,APELLIDO_P,APELLIDO_M,EMAIL,PUESTO_ID")] Usuario uSUARIO)
         {
             int pagina = 602; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
@@ -186,7 +186,7 @@ namespace TAT001.Controllers.Catalogos
                 u.ID = uSUARIO.ID.Trim();
                 u.SPRAS_ID = "ES";
                 u.PUESTO_ID = uSUARIO.PUESTO_ID;
-                u.BUNIT = uSUARIO.BUNIT;
+                u.BUNIT = "";
                 db.USUARIOs.Add(u);
 
                 try
@@ -243,6 +243,8 @@ namespace TAT001.Controllers.Catalogos
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             USUARIO uSUARIO = db.USUARIOs.Find(id);
+            uSUARIO.BUKRS = uSUARIO.BUNIT;
+            uSUARIO.PUE = uSUARIO.PUESTO_ID.ToString();
             if (uSUARIO == null)
             {
                 return HttpNotFound();
@@ -263,7 +265,7 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,PASS,FIRMA,NOMBRE,APELLIDO_P,APELLIDO_M,EMAIL,SPRAS_ID,ACTIVO,PUESTO_ID,MANAGER,BACKUP_ID,BUNIT")] USUARIO uSUARIO)
+        public ActionResult Edit([Bind(Include = "ID, PASS, FIRMA, NOMBRE, APELLIDO_P, APELLIDO_M, EMAIL, SPRAS_ID, ACTIVO, MANAGER, BACKUP_ID, BUKRS, PUE")] USUARIO uSUARIO)
         {
 
             var msgerror = "";
@@ -272,6 +274,8 @@ namespace TAT001.Controllers.Catalogos
 
                 uSUARIO.ACTIVO = true;
                 uSUARIO.SPRAS_ID = "ES";
+                uSUARIO.BUNIT = "";
+                uSUARIO.PUESTO_ID = int.Parse(uSUARIO.PUE);
                 db.Entry(uSUARIO).State = EntityState.Modified;
                 try
                 {
