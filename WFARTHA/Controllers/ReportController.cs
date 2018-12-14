@@ -121,7 +121,7 @@ namespace WFARTHA.Controllers
                             cont2--;
                             break;
                     }
-                    if (cont == 5 || cont2 == 0)
+                    if (cont == 1 || cont2 == 0)
                     {
                         fir.Add(rf);
                     }
@@ -135,17 +135,18 @@ namespace WFARTHA.Controllers
                 return View();
             }
         }
-        public ActionResult ReportTemplate2(int id)
+
+        public ActionResult ReportTemplate2(int id, decimal num_doc, string bukrs, string user, decimal num)
         {
             int pagina = 1101; //ID EN BASE DE DATOS
             using (WFARTHAEntities db = new WFARTHAEntities())
             {
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 List<ReportSols> solicitudes = db.Database.SqlQuery<ReportSols>("SP_REPORTESOLS @NUM_DOC,@BUKRS,@USER,@num",
-                    new SqlParameter("@NUM_DOC", 2),
-                    new SqlParameter("@BUKRS", "2"),
-                    new SqlParameter("@USER", "2"),
-                    new SqlParameter("@num", 2)).ToList();
+                    new SqlParameter("@NUM_DOC", num_doc),
+                    new SqlParameter("@BUKRS", bukrs),
+                    new SqlParameter("@USER", user),
+                    new SqlParameter("@num", num)).ToList();
 
                 ReportEsqueleto2 re = new ReportEsqueleto2();
                 string recibeRuta = re.crearPDF(solicitudes);
