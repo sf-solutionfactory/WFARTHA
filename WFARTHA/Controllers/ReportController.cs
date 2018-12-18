@@ -29,7 +29,59 @@ namespace WFARTHA.Controllers
         // GET: Report
         public ActionResult Reporte()
         {
+            int pagina = 1101;
+            var spras = "ES";
+            REPORT_MOD rm = new REPORT_MOD();
+
+            using (WFARTHAEntities db = new WFARTHAEntities())
+            {
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+                var tsoll = (from ts in db.TSOLs
+                             join tt in db.TSOLTs
+                             on ts.ID equals tt.TSOL_ID
+                             into jj
+                             from tt in jj.DefaultIfEmpty()
+                             where ts.ESTATUS == "X" && tt.SPRAS_ID.Equals(spras)
+                             select new
+                             {
+                                 ID = new { ID = ts.ID.ToString().Replace(" ", ""), RANGO = ts.RANGO_ID.ToString().Replace(" ", ""), EDITDET = ts.EDITDET.ToString().Replace(" ", "") },
+                                 TEXT = ts.ID + " - " + tt.TXT50
+                             }).ToList();
+                var sociedades = (from soc in db.SOCIEDADs select new { soc.BUKRS, TEXT = soc.BUKRS + " - " + soc.BUTXT }).ToList();
+                var fechas = db.DOCUMENTOes.Select(f => new { f.FECHAC_USER, TEXT = f.FECHAC_USER.ToString() }).Distinct().ToList();
+                var prov = db.PROVEEDORs.Where(p => p.ACTIVO == true).Select(p => new { p.LIFNR, TEXT = p.LIFNR + " - " + p.NAME1 }).ToList();
+                var nsap = db.DOCUMENTOes.Select(s => new { s.NUM_PRE, TEXT = s.NUM_PRE }).Distinct().ToList();
+                var user = db.USUARIOs.Where(u => u.ACTIVO == true).Select(u => new { u.ID, TEXT = u.ID + " - " + u.NOMBRE + " " + u.APELLIDO_P }).ToList();
+                var ndoc = db.DOCUMENTOes.Select(s => new { s.NUM_DOC, TEXT = s.NUM_DOC }).Distinct().ToList();
+                var mont = db.DOCUMENTOes.Select(x => new { x.MONTO_DOC_MD, TEXT = x.MONTO_DOC_MD }).Distinct().ToList();
+                var moneda = db.MONEDAs.Where(m => m.ACTIVO == true).Select(m => new { m.WAERS, TEXT = m.WAERS + " - " + m.LTEXT }).ToList();
+                var stat = db.DOCUMENTOes.Select(x => new { x.ESTATUS, TEXT = x.ESTATUS }).Distinct().ToList();
+
+                ViewBag.sol = new SelectList(tsoll, "ID", "TEXT");
+                ViewBag.soc = new SelectList(sociedades, "BUKRS", "TEXT");
+                ViewBag.fec = new SelectList(fechas, "FECHAC_USER", "TEXT");
+                ViewBag.prov = new SelectList(prov, "LIFNR", "TEXT");
+                ViewBag.sap = new SelectList(nsap, "NUM_PRE", "TEXT");
+                ViewBag.usu = new SelectList(user, "ID", "TEXT");
+                ViewBag.portal = new SelectList(ndoc, "NUM_DOC", "TEXT");
+                ViewBag.monto = new SelectList(mont, "MONTO_DOC_MD", "TEXT");
+                ViewBag.moneda = new SelectList(moneda, "WAERS", "TEXT");
+                ViewBag.status = new SelectList(stat, "ESTATUS", "TEXT");
+                //ViewBag.pagado = null;
+                //ViewBag.epagado = null;
+            }
             return View();
+        }
+        [HttpPost]
+        public ActionResult Reporte([Bind(Include = "Tsol,Fecha,Num_doc,Num_pre,Bukrs,Moneda,Monto,Usuario,Estatus,Pagado,Epagado,Payer")] Models.REPORT_MOD rep)
+        {
+            var im = rep.Num_pre;
+            var id = 3;
+            var num_doc = 3;
+            var bukrs = "3";
+            var user = "3";
+            var num = 3;
+            return RedirectToAction("ReportTemplate2", new { id, num_doc, bukrs, user, num });
         }
 
         public ActionResult ReportTemplate(int id)
