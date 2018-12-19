@@ -56,6 +56,11 @@ namespace WFARTHA.Controllers
                 var mont = db.DOCUMENTOes.Select(x => new { x.MONTO_DOC_MD, TEXT = x.MONTO_DOC_MD }).Distinct().ToList();
                 var moneda = db.MONEDAs.Where(m => m.ACTIVO == true).Select(m => new { m.WAERS, TEXT = m.WAERS + " - " + m.LTEXT }).ToList();
                 var stat = db.DOCUMENTOes.Select(x => new { x.ESTATUS, TEXT = x.ESTATUS }).Distinct().ToList();
+                List<SelectListItem> lst = new List<SelectListItem>
+                {
+                    new SelectListItem() { Text = "Pagado", Value = "P" },
+                    new SelectListItem() { Text = "Efectivamente Pagado", Value = "EP" }
+                };
 
                 ViewBag.sol = new SelectList(tsoll, "ID", "TEXT");
                 ViewBag.soc = new SelectList(sociedades, "BUKRS", "TEXT");
@@ -67,8 +72,7 @@ namespace WFARTHA.Controllers
                 ViewBag.monto = new SelectList(mont, "MONTO_DOC_MD", "TEXT");
                 ViewBag.moneda = new SelectList(moneda, "WAERS", "TEXT");
                 ViewBag.status = new SelectList(stat, "ESTATUS", "TEXT");
-                //ViewBag.pagado = null;
-                //ViewBag.epagado = null;
+                ViewBag.pagado = new SelectList(lst, "Value", "Text");
             }
             return View();
         }
@@ -93,7 +97,9 @@ namespace WFARTHA.Controllers
 
                 SP_CABECERA_Result c = db.SP_CABECERA(id).Single();
                 List<SP_DETALLE_Result> d = db.SP_DETALLE(id).ToList();
-                List<SP_FIRMAS_Result> f = db.SP_FIRMAS(id).ToList();
+                //List<SP_FIRMAS_Result> f = db.SP_FIRMAS(id).ToList();
+                List<ReportFirmasResult> f = db.Database.SqlQuery<ReportFirmasResult>("SP_FIRMAS @NUM_DOC",new SqlParameter("@NUM_DOC", id)).ToList();
+
                 ReportCabecera cab = new ReportCabecera
                 {
                     NUM_DOC = c.NUM_DOC.ToString(),
