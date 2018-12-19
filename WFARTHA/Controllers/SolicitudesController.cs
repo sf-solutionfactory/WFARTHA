@@ -393,6 +393,8 @@ namespace WFARTHA.Controllers
             doc.ESTATUS_EXT = doc.ESTATUS_EXT;
             doc.ESTATUS_SAP = doc.ESTATUS_SAP;
             doc.ESTATUS_WF = dOCUMENTO.ESTATUS_WF;
+            doc.ESTATUS_PRE = dOCUMENTO.ESTATUS_PRE;//MGC 17-12-2018 Reprocesar Archivo preliminar
+            doc.USUARIOC_ID = dOCUMENTO.USUARIOC_ID;//MGC 17-12-2018 Reprocesar Archivo preliminar
 
             //FRT07112018 Se agrega el nombre del impueto en la cabecera
             var impcab = dOCUMENTO.IMPUESTO;
@@ -4895,7 +4897,7 @@ namespace WFARTHA.Controllers
                                 //MGC 04-11-2018 Generar Archivos ----------------------------------------------------------------->
 
                                 //Crear el archivo para el preliminar //MGC Preliminar
-                                string corr = pf.procesaPreliminar(_docf, false, "", false);
+                                string corr = pf.procesaPreliminar(_docf, false, "", false, "");//MGC-14-12-2018 Modificación fechacon
 
                                 //Se genero el preliminar
                                 if (corr == "0")
@@ -8276,7 +8278,7 @@ namespace WFARTHA.Controllers
             //Enviar el archivo con parámetro de Borrado
             //Crear el archivo para el preliminar //MGC Preliminar
             ProcesaFlujo pf = new ProcesaFlujo();
-            string corr = pf.procesaPreliminar(d, false, "", true);
+            string corr = pf.procesaPreliminar(d, false, "", true, "");//MGC-14-12-2018 Modificación fechacon
             //Se genero el archivo de cancelación
             if (corr == "0")
             {
@@ -8345,6 +8347,141 @@ namespace WFARTHA.Controllers
             return RedirectToAction("Index", "Home");
         }
         //MGC 10-12-2018 Firma del usuario cancelar-------------------------------------------------------------------------<
+
+        //MGC 17-12-2018 Reprocesar Archivo preliminar-------------------------------------------------------------------------->
+        [HttpPost]
+        public ActionResult Reprocesar(decimal id)
+        {
+
+            DOCUMENTO d = db.DOCUMENTOes.Find(id);
+
+            bool edit = false;
+            ProcesaFlujo pf = new ProcesaFlujo();
+            string fechacon = "";
+            string nuevo = "";
+
+            if (d != null)
+            {
+                //Obtener resultado si hay algún flujo o el estatus del flujo está p, para saber si es edit o solicitud nueva
+                string rech = "";
+                try
+                {
+                    rech = db.FLUJOes.Where(fl => fl.NUM_DOC == d.NUM_DOC && fl.ESTATUS == "R").FirstOrDefault().ESTATUS;
+                }catch(Exception)
+                {
+                    rech = "";
+                }
+
+                if(d.ESTATUS_WF == "P" && rech == "R")
+                {
+                    //Edición
+                    edit = true;
+                }
+                else
+                {
+                    //Nueva
+                    nuevo = "N";
+                }
+
+                //Crear el archivo para el preliminar //MGC Preliminar
+                string corr = pf.procesaPreliminar(d, edit, nuevo, false, fechacon);//MGC 10-12-2018 Firma del usuario cancelar//MGC-14-12-2018 Modificación fechacon
+
+                //Se genero el preliminar
+                if (corr == "0")
+                {
+
+
+                    //MGC 30-10-2018 Agregar mensaje a log de modificación
+                    try
+                    {
+                        DOCUMENTOLOG dl = new DOCUMENTOLOG();
+
+                        dl.NUM_DOC = d.NUM_DOC;
+                        dl.TYPE_LINE = "M";
+                        dl.TYPE = "S";
+                        dl.MESSAGE = "Se generó el Archivo Preliminar";
+                        dl.FECHA = DateTime.Now;
+
+                        db.DOCUMENTOLOGs.Add(dl);
+                        db.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                    //MGC 30-10-2018 Agregar mensaje a log de modificación
+
+                    //Actualizar wf del documento
+                    //d.ESTATUS_WF = "A";//MGC 30-10-2018 Modificaión para validar creación del archivo
+
+                    if (edit)
+                    {
+                        d.ESTATUS = "N"; //MGC 02-11-2018 Regresa a estatus de crear preliminar
+                        d.ESTATUS_WF = "P"; //MGC 02-11-2018 Regresa a estatus de crear preliminar
+                    }
+
+                    //MGC 30-10-2018 Actualizar el estatus de preliminar del doc
+                    d.ESTATUS_PRE = "G";//MGC 30-10-2018 Modificaión para validar creación del archivo
+                    db.Entry(d).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                //No se genero el preliminar
+                else
+                {
+                    string m;
+                    if (corr.Length > 50)
+                    {
+                        m = corr.Substring(0, 50);
+                    }
+                    else
+                    {
+                        m = corr;
+                    }
+
+                    //MGC 30-10-2018 Agregar mensaje a log de modificación
+                    try
+                    {
+                        DOCUMENTOLOG dl = new DOCUMENTOLOG();
+
+                        dl.NUM_DOC = d.NUM_DOC;
+                        dl.TYPE_LINE = "M";
+                        dl.TYPE = "E";
+                        dl.MESSAGE = m;
+                        dl.FECHA = DateTime.Now;
+
+                        db.DOCUMENTOLOGs.Add(dl);
+                        db.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                    //MGC 30-10-2018 Agregar mensaje a log de modificación
+
+                    //MGC 09-11-2018 Modificaión Estatus en la creación del archivo cuando la acción fue borrar-crear
+                    //Si es edit, cambiar a P el flujo
+                    //Y el estaus a N
+                    if (edit)
+                    {
+                        d.ESTATUS = "N"; //MGC 02-11-2018 Regresa a estatus de crear preliminar
+                        d.ESTATUS_WF = "P"; //MGC 02-11-2018 Regresa a estatus de crear preliminar
+                    }
+
+
+
+                    //MGC 30-10-2018 Actualizar el estatus de preliminar del doc
+                    d.ESTATUS_PRE = "E";//MGC 30-10-2018 Modificaión Estatus en la creación del archivo
+                    db.Entry(d).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    //Pendiente en edit, regresar a estatus de P en la creación del flujo
+
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+        //MGC 17-12-2018 Reprocesar Archivo preliminar--------------------------------------------------------------------------<
 
     }
     public class TXTImp

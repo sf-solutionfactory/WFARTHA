@@ -246,34 +246,34 @@
                             var instance = M.FloatingActionButton.init(elem, options);
                         </script>
                         @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                            <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                    <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                         <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                         <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
 
                     }
                     @*else if (ViewBag.accion == "N")
-                        {
-                            <div class="fixed-action-btn" id="lbl_wf">
-                                <a class="btn-floating btn-large blue">
-                                    <i class="large material-icons">work</i>
-                                </a>
-                                <ul>
-                                    <li><a id="lbl_wfn" class="btn-floating yellow darken-1 modal-trigger" href="#modal1" onclick="siguiente()"><i class="material-icons">play_arrow</i></a></li>
-                                </ul>
-                            </div>
-                            <script>
+                {
+                    <div class="fixed-action-btn" id="lbl_wf">
+                        <a class="btn-floating btn-large blue">
+                            <i class="large material-icons">work</i>
+                        </a>
+                        <ul>
+                            <li><a id="lbl_wfn" class="btn-floating yellow darken-1 modal-trigger" href="#modal1" onclick="siguiente()"><i class="material-icons">play_arrow</i></a></li>
+                        </ul>
+                    </div>
+                    <script>
 
-                                var elem = document.querySelector('.fixed-action-btn');
-                                var options = {
-                                    direction: 'left',
-                                    hoverEnabled: false,
-                                    toolbarEnabled: false
-                                };
-                                var instance = M.FloatingActionButton.init(elem, options);
-                            </script>*@
+                        var elem = document.querySelector('.fixed-action-btn');
+                        var options = {
+                            direction: 'left',
+                            hoverEnabled: false,
+                            toolbarEnabled: false
+                        };
+                        var instance = M.FloatingActionButton.init(elem, options);
+                    </script>*@
                     @*esto ya estaba comentado <a id="lbl_wfn" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="N" })">Siguiente</a>*@
                     @*<a id="lbl_wfn" class="btn-small modal-trigger" href="#modal1" onclick="siguiente()">Siguiente</a>
-                        }*@
+                }*@
                     else if (ViewBag.accion == "P")
                     {
 
@@ -307,31 +307,31 @@
 
                         @*//MGC 06-12-2018 Firma del usuario cancelar -------------------------------------------------->*@
                         @*<div id="modal2" class="modal">
-                                <div class="modal-content">
-                                    <div class="row">
-                                        <h4 id="txt_can">Eliminar Solicitud</h4>
-                                        <br />
-                                    </div>
-                                    <div class="row" style="">
-                                        <div class="col s12 m12 l12">
-                                            <div class="row" style="margin-bottom:0">
-                                                ¿Está seguro de eliminar esta solicitud?
-                                            </div>
-                                        </div>
+                        <div class="modal-content">
+                            <div class="row">
+                                <h4 id="txt_can">Eliminar Solicitud</h4>
+                                <br />
+                            </div>
+                            <div class="row" style="">
+                                <div class="col s12 m12 l12">
+                                    <div class="row" style="margin-bottom:0">
+                                        ¿Está seguro de eliminar esta solicitud?
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <div>
-                                        <div class="input-field col s2 offset-s1" style="width:auto;margin-top:0px;margin-left:0px">
-                                            <input type="password" name="txtfirma_usc" id="txtfirma_usc" value="" />
-                                            <label for="txtfirma_usc" id="lbl_firma">Firma</label>
-                                        </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div>
+                                <div class="input-field col s2 offset-s1" style="width:auto;margin-top:0px;margin-left:0px">
+                                    <input type="password" name="txtfirma_usc" id="txtfirma_usc" value="" />
+                                    <label for="txtfirma_usc" id="lbl_firma">Firma</label>
+                                </div>
 
-                                        <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                        <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
-                                    </div>
-                                </div>
-                            </div>*@
+                                <a href="#!" class="modal-action modal-close btn-flat">No</a>
+                                <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
+                            </div>
+                        </div>
+                    </div>*@
 
 
                         using (Html.BeginForm("Cancelar", "Solicitudes", new { id = @Model.D.NUM_DOC }, FormMethod.Post, new { id = "form_procesac" }))
@@ -412,58 +412,114 @@
 
                     }
                     @*else if (!Model.D.ESTATUS.Equals("A"))
-                        {
-                            if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
-                            {
-                                <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
-                                <div id="modal2" class="modal">
-                                    <div class="modal-content">
-                                        <div class="row">
-                                            <h4 id="txt_can">Cancelar Solicitud</h4>
-                                            <br />
+                {
+                    if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
+                    {
+                        <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
+                        <div id="modal2" class="modal">
+                            <div class="modal-content">
+                                <div class="row">
+                                    <h4 id="txt_can">Cancelar Solicitud</h4>
+                                    <br />
+                                </div>
+                                <div class="row" style="">
+                                    <div class="col s12 m12 l12">
+                                        <div class="row" style="margin-bottom:0">
+                                            ¿Está seguro de cancelar esta solicitud?
                                         </div>
-                                        <div class="row" style="">
-                                            <div class="col s12 m12 l12">
-                                                <div class="row" style="margin-bottom:0">
-                                                    ¿Está seguro de cancelar esta solicitud?
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer right">
-                                        <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                        <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
                                     </div>
                                 </div>
-                            }
-                        }*@
+                            </div>
+                            <div class="modal-footer right">
+                                <a href="#!" class="modal-action modal-close btn-flat">No</a>
+                                <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
+                            </div>
+                        </div>
+                    }
+                }*@
                 }
-                @*else if (!Model.D.ESTATUS.Equals("A"))
+                //MGC 17-12-2018 Reprocesar Archivo preliminar------------------------------------------->
+                //Checar si ESTATUS_PRE = "E" y si el usuario creador es el usuario actual **********Creación"
+                else if (Model.D.ESTATUS_PRE != null && Model.D.ESTATUS_PRE.Equals("E"))
+                {
+                    if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
                     {
-                        if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
+                        <a class="btn-small modal-trigger" id="btn_reprocesar" href="#modal4">Reprocesar</a>
+                   
+                        using (Html.BeginForm("Reprocesar", "Solicitudes", new { id = @Model.D.NUM_DOC }, FormMethod.Post, new { id = "form_procesar" }))
                         {
-                            <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
-                            <div id="modal2" class="modal">
+
+                            <div id="modal4" class="modal">
+                                @Html.AntiForgeryToken()
                                 <div class="modal-content">
                                     <div class="row">
-                                        <h4 id="txt_can">Cancelar Solicitud</h4>
+                                        <h4 id="txt_can">Reprocesar Preliminar</h4>
                                         <br />
                                     </div>
                                     <div class="row" style="">
                                         <div class="col s12 m12 l12">
                                             <div class="row" style="margin-bottom:0">
-                                                ¿Está seguro de cancelar esta solicitud?
+                                                ¿Está seguro de reprocesar el preliminar de esta solicitud?
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal-footer right">
-                                    <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                    <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
+                                <div class="modal-footer">
+                                    <div>
+                                        <div class="input-field col s2 offset-s1" style="width:auto;margin-top:0px;margin-left:0px">
+                                            <input type="password" name="txtfirma_usr" id="txtfirma_usr" value="" />
+                                            <label for="txtfirma_usr" id="lbl_firma">Firma</label>
+                                        </div>
+
+                                        <a href="#!" class="modal-action modal-close btn-flat">No</a>
+                                        <a id="cont_sendr" href="#!" class="modal-action modal-close btn-flat">Si</a>
+                                    </div>
                                 </div>
                             </div>
+
+                            <script>
+                                //MGC 17-12-2018 Reprocesar Archivo preliminar------------------------------------------->
+                                var elem4 = document.getElementById('modal4');
+                                var instance4 = M.Modal.init(elem4, []);
+                                //MGC 17-12-2018 Reprocesar Archivo preliminar-------------------------------------------<
+                                //MGC 18-10-2018 Firma del usuario -------------------------------------------------->
+                                //Validar la firma del usuario
+                                //$("#form_procesa").submit(function (e) {
+                                $("#cont_sendr").click(function (e) {
+
+                                    document.getElementById('loader').style.display = 'initial';
+
+                                    var p = $("#txtfirma_usr").val();
+
+                                    var resc = false;
+                                    res = valF(p);
+
+                                    if (res == "true") {
+                                        resc = true;
+                                    }
+
+                                    if (!resc) {
+                                        //Error
+                                        document.getElementById('loader').style.display = 'none';
+                                        M.toast({ html: 'Error con la Firma del Usuario' });
+                                        e.preventDefault();
+
+                                    } else {
+                                        //Hacer el submit
+                                        $("#form_procesar").submit();
+                                    }
+                                    document.getElementById('loader').style.display = 'none';
+                                });
+
+                            </script>
                         }
-                    }*@
+
+                        
+
+                    }
+                }
+
+                //MGC 17-12-2018 Reprocesar Archivo preliminar-------------------------------------------<
 
                 if (false)
                 {

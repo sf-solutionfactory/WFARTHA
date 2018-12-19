@@ -83,6 +83,7 @@ namespace WFARTHA.Models
         public List<WFARTHA.Controllers.Anexo> Anexo { get; set; }
         public List<DOCUMENTOA_TAB> DOCUMENTOA_TAB { get; set; }//Agregado LEJGG02.11.2018
         public string DESC_CONDICION { get; set; }   //aGERGADO frt 06112018
+        public string ESTATUS_PRE { get; set; } //MGC 17-12-2018 Reprocesar Archivo preliminar
 
         public virtual SOCIEDAD SOCIEDAD { get; set; }
         public virtual TSOL TSOL { get; set; }

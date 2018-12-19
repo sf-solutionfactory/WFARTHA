@@ -57,9 +57,9 @@ namespace WFARTHA.Controllers
             decimal? _tipocambio = 0;
             var dia = 0;
             var wf_p = F.WF_POS;
-            DateTime fechacon = P.FECHACON.Value;
+            //DateTime fechacon = P.FECHACON.Value; //MGC 14-12-2018 Fecha contabilización
             if (P.FECHACON.HasValue){ //verificar fecha null
-                while (true) // Buscar el tipo de cambio en caso de no encontrarlo buscar el mas cercano hacia abajo 
+                while (dia < 100) // Buscar el tipo de cambio en caso de no encontrarlo buscar el mas cercano hacia abajo 
                 {
                     DateTime fecha = P.FECHACON.Value.AddDays(-dia);
 
@@ -166,7 +166,9 @@ namespace WFARTHA.Controllers
             flujo.VERSIONC2 = actual.VERSIONC2;
             //MGC 11-12-2018 Agregar Contabilizador 0-----------------<
 
-            
+            flujo.FECHACON = f.FECHACON; //MGC-14-12-2018 Modificación fechacon
+
+
 
             //Agregar funcionalidad, para checar si el próximo es contabilización, y si es contabilización 
             //checar que el usuario contabilizador esté asignado a la sociedad

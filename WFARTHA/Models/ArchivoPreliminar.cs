@@ -14,7 +14,7 @@ namespace WFARTHA.Models
     public class ArchivoPreliminar
     {
         WFARTHAEntities db = new WFARTHAEntities();
-        public string generarArchivo(decimal docum, string accion)
+        public string generarArchivo(decimal docum, string accion, string fechacon)//MGC-14-12-2018 Modificación fechacon
         {
 
             string errorMessage = "";
@@ -65,10 +65,12 @@ namespace WFARTHA.Models
                     if (accion == "P")
                     {
                         variable = "ACCION_CREAR";
+                        fechacon = "";//MGC-14-12-2018 Modificación fechacon
                     }
                     else if (accion == "R")
                     {
                         variable = "ACCION_BC";
+                        fechacon = "";//MGC-14-12-2018 Modificación fechacon
                     }
                     else if (accion == "A")
                     {
@@ -147,7 +149,7 @@ namespace WFARTHA.Models
                                     "" + "|" +
                                     "" + "|" +
                                     doc.TIPO_CAMBIO  //MGC 11-10-2018 Acciones para el encabezado
-                                    +"|" //MGC 13-10-2018 Modificaión fecha
+                                    +"|" + fechacon //MGC-14-12-2018 Modificación fechacon//MGC 13-10-2018 Modificaión fecha
                                     );
                                 //sw.WriteLine("");//MGC 17-10-2018.2 Adaptación a archivo
                                 //for (int i = 0; i < det.Count; i++)

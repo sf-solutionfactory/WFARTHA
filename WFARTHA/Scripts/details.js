@@ -469,11 +469,23 @@ function showHide(tsol) {
     val3 = val3.replace(/\,/g, "\" , \"");
     val3 = val3.replace(/\=/g, "\" : \"");
     val3 = val3.replace(/\ /g, "");
-    var jsval = $.parseJSON(val3);
 
-    $.each(jsval, function (i, dataj) {
-        ocultarCampos(dataj.EDITDET, param1);
-    });
+
+    var jsval = "";
+    try {
+        jsval = $.parseJSON(val3);
+    } catch (err) {
+        jsval = "";
+    }
+
+    try {
+
+        $.each(jsval, function (i, dataj) {
+            ocultarCampos(dataj.EDITDET, param1);
+        });
+    } catch (err) {
+        var jj = "";
+    }
 
 }
 
