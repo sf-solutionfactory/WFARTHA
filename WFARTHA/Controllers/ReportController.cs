@@ -53,12 +53,65 @@ namespace WFARTHA.Controllers
                                   on tp.BUKRS equals soc.BUKRS
                                   where tp.ID_USER == uz
                                   select new { soc.BUKRS, TEXT = soc.BUKRS + " - " + soc.BUTXT }).ToList();
-                var fechas = db.DOCUMENTOes.Select(f => new { f.FECHAC_USER, TEXT = f.FECHAC_USER.ToString() }).Distinct().ToList();
-                var prov = db.PROVEEDORs.Where(p => p.ACTIVO == true).Select(p => new { p.LIFNR, TEXT = p.LIFNR + " - " + p.NAME1 }).ToList();
-                var nsap = db.DOCUMENTOes.Select(s => new { s.NUM_PRE, TEXT = s.NUM_PRE }).Distinct().ToList();
-                var user = db.USUARIOs.Where(u => u.ACTIVO == true).Select(u => new { u.ID, TEXT = u.ID + " - " + u.NOMBRE + " " + u.APELLIDO_P }).ToList();
-                var ndoc = db.DOCUMENTOes.Select(s => new { s.NUM_DOC, TEXT = s.NUM_DOC }).Distinct().ToList();
-                var mont = db.DOCUMENTOes.Select(x => new { x.MONTO_DOC_MD, TEXT = x.MONTO_DOC_MD }).Distinct().ToList();
+                List<DOCUMENTO> docs = new List<DOCUMENTO>();
+                for (int i = 0; i < sociedades.Count(); i++)
+                {
+                    string buk = sociedades[i].BUKRS;
+                    List<DOCUMENTO> doc = db.DOCUMENTOes.Where(x => x.SOCIEDAD_ID == buk).OrderBy(x => x.NUM_DOC).ToList();
+                    foreach (DOCUMENTO d in doc)
+                    {
+                        docs.Add(d);
+                    }
+                }
+                List<string> fechas1 = new List<string>();
+                List<string> prov1 = new List<string>();
+                List<string> nsap1 = new List<string>();
+                List<string> user1 = new List<string>();
+                List<string> ndoc1 = new List<string>();
+                List<string> mont1 = new List<string>();
+                List<SelectListItem> fechas = new List<SelectListItem>();
+                List<SelectListItem> prov = new List<SelectListItem>();
+                List<SelectListItem> nsap = new List<SelectListItem>();
+                List<SelectListItem> user = new List<SelectListItem>();
+                List<SelectListItem> ndoc = new List<SelectListItem>();
+                List<SelectListItem> mont = new List<SelectListItem>();
+                foreach (DOCUMENTO dd in docs)
+                {
+                    var u = db.USUARIOs.Where(x => x.ID == dd.USUARIOD_ID).FirstOrDefault();
+                    var p = db.PROVEEDORs.Where(x => x.LIFNR == (!string.IsNullOrEmpty(dd.PAYER_ID) ? dd.PAYER_ID : "1")).FirstOrDefault();
+
+                    if (dd.FECHAC_USER != null && !fechas1.Contains(dd.FECHAC_USER.ToString()))
+                    {
+                        fechas1.Add(dd.FECHAC_USER.ToString());
+                        string fech = string.Format(DateTime.Parse(dd.FECHAC_USER.ToString()).ToString(@"dd/MM/yyyy"));
+                        fechas.Add(new SelectListItem() { Text = fech, Value = dd.FECHAC_USER.ToString() });
+                    }
+                    if (dd.PAYER_ID != null && !prov1.Contains(dd.PAYER_ID))
+                    {
+                        prov1.Add(dd.PAYER_ID);
+                        prov.Add(new SelectListItem() { Text = p.LIFNR + " - " + p.NAME1, Value = p.LIFNR });
+                    }
+                    if (dd.NUM_PRE != null && !nsap1.Contains(dd.NUM_PRE))
+                    {
+                        nsap1.Add(dd.NUM_PRE);
+                        nsap.Add(new SelectListItem() { Text = dd.NUM_PRE, Value = dd.NUM_PRE });
+                    }
+                    if (dd.USUARIOD_ID != null && !user1.Contains(dd.USUARIOD_ID))
+                    {
+                        user1.Add(dd.USUARIOD_ID);
+                        user.Add(new SelectListItem() { Text = u.ID + " - " + u.NOMBRE + " " + u.APELLIDO_P + " " + u.APELLIDO_M, Value = u.ID });
+                    }
+                    if (dd.NUM_DOC.ToString() != null && !ndoc1.Contains(dd.NUM_DOC.ToString()))
+                    {
+                        ndoc1.Add(dd.NUM_DOC.ToString());
+                        ndoc.Add(new SelectListItem() { Text = dd.NUM_DOC.ToString(), Value = dd.NUM_DOC.ToString() });
+                    }
+                    if (dd.MONTO_DOC_MD != null && !mont1.Contains(dd.MONTO_DOC_MD.ToString()))
+                    {
+                        mont1.Add(dd.MONTO_DOC_MD.ToString());
+                        mont.Add(new SelectListItem() { Text = dd.MONTO_DOC_MD.ToString(), Value = dd.MONTO_DOC_MD.ToString() });
+                    }
+                }
                 var moneda = db.MONEDAs.Where(m => m.ACTIVO == true).Select(m => new { m.WAERS, TEXT = m.WAERS + " - " + m.LTEXT }).ToList();
                 var stat = db.DOCUMENTOes.Select(x => new { x.ESTATUS, TEXT = x.ESTATUS }).Distinct().ToList();
                 List<SelectListItem> lst = new List<SelectListItem>
@@ -69,12 +122,12 @@ namespace WFARTHA.Controllers
 
                 ViewBag.tsol = new SelectList(tsoll, "ID", "TEXT");
                 ViewBag.bukrs = new SelectList(sociedades, "BUKRS", "TEXT");
-                ViewBag.fecha = new SelectList(fechas, "FECHAC_USER", "TEXT");
-                ViewBag.payer = new SelectList(prov, "LIFNR", "TEXT");
-                ViewBag.num_pre = new SelectList(nsap, "NUM_PRE", "TEXT");
-                ViewBag.user = new SelectList(user, "ID", "TEXT");
-                ViewBag.num_doc = new SelectList(ndoc, "NUM_DOC", "TEXT");
-                ViewBag.monto = new SelectList(mont, "MONTO_DOC_MD", "TEXT");
+                ViewBag.fecha = new SelectList(fechas, "Value", "Text");
+                ViewBag.payer = new SelectList(prov, "Value", "Text");
+                ViewBag.num_pre = new SelectList(nsap, "Value", "Text");
+                ViewBag.user = new SelectList(user, "Value", "Text");
+                ViewBag.num_doc = new SelectList(ndoc, "Value", "Text");
+                ViewBag.monto = new SelectList(mont, "Value", "Text");
                 ViewBag.moneda = new SelectList(moneda, "WAERS", "TEXT");
                 ViewBag.estatus = new SelectList(stat, "ESTATUS", "TEXT");
                 ViewBag.pagado = new SelectList(lst, "Value", "Text");
