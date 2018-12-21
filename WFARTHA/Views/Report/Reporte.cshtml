@@ -21,7 +21,7 @@
                 <div class="form-group col s4">
                     @Html.LabelFor(model => model.Tsol, "Tipo de Solicitud", htmlAttributes: new { @class = "control-label col-md-2", @id= "label_sol" })
                     <div class="col-md-4">
-                        @Html.DropDownList("tsol", null, " ", htmlAttributes: new { @class = "form-control dd1", @id = "tsol" })
+                        @Html.ListBox("tsol", null, htmlAttributes: new { @class = "form-control dd1", @id = "tsol" })
                         @Html.EditorFor(model => model.Tsol, new { htmlAttributes = new { @class = "form-control fechaVal", @hidden = "hidden", @id = "tsol2" } })
                     </div>
                 </div>
@@ -77,21 +77,21 @@
                 <div class="form-group col s4">
                     @Html.LabelFor(model => model.Moneda, "Moneda", htmlAttributes: new { @class = "control-label col-md-2", @id= "label_moneda" })
                     <div class="col-md-4">
-                        @Html.DropDownList("moneda", null, " ", htmlAttributes: new { @class = "form-control dd1", @id = "moneda" })
+                        @Html.ListBox("moneda", null, htmlAttributes: new { @class = "form-control dd1", @id = "moneda" })
                         @Html.EditorFor(model => model.Moneda, new { htmlAttributes = new { @class = "form-control fechaVal", @hidden = "hidden", @id = "moneda2" } })
                     </div>
                 </div>
                 <div class="form-group col s4">
                     @Html.LabelFor(model => model.Estatus, "Estatus", htmlAttributes: new { @class = "control-label col-md-2", @id= "label_estatus" })
                     <div class="col-md-4">
-                        @Html.DropDownList("estatus", null, " ", htmlAttributes: new { @class = "form-control dd1", @id = "estatus" })
+                        @Html.ListBox("estatus", null, htmlAttributes: new { @class = "form-control dd1", @id = "estatus" })
                         @Html.EditorFor(model => model.Estatus, new { htmlAttributes = new { @class = "form-control fechaVal", @hidden = "hidden", @id = "estatus" } })
                     </div>
                 </div>
                 <div class="form-group col s4">
                     @Html.LabelFor(model => model.Pagado, "Pagado", htmlAttributes: new { @class = "control-label col-md-2", @id= "label_pagado" })
                     <div class="col-md-4">
-                        @Html.DropDownList("pagado", null, " ", htmlAttributes: new { @class = "form-control dd1", @id = "pagado" })
+                        @Html.ListBox("pagado", null, htmlAttributes: new { @class = "form-control dd1", @id = "pagado" })
                         @Html.EditorFor(model => model.Pagado, new { htmlAttributes = new { @class = "form-control fechaVal", @hidden = "hidden", @id = "pagado2" } })
                     </div>
                 </div>
