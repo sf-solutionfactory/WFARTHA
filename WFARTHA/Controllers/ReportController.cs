@@ -37,7 +37,21 @@ namespace WFARTHA.Controllers
             {
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 string uz = User.Identity.Name;
+                var puesto_user = db.USUARIOs.Where(x => x.ID == uz).Select(x => x.PUESTO_ID).FirstOrDefault();
                 var tsoll = (from ts in db.TSOLs
+                             join tt in db.TSOLTs
+                             on ts.ID equals tt.TSOL_ID
+                             into jj
+                             from tt in jj.DefaultIfEmpty()
+                             where ts.ESTATUS == "X" && tt.SPRAS_ID.Equals(spras) && ts.ID.Equals("SRE")
+                             select new
+                             {
+                                 Value = ts.ID,
+                                 Text = ts.ID + " - " + tt.TXT50
+                             }).ToList();
+                if (puesto_user != 4)
+                {
+                    tsoll = (from ts in db.TSOLs
                              join tt in db.TSOLTs
                              on ts.ID equals tt.TSOL_ID
                              into jj
@@ -45,18 +59,19 @@ namespace WFARTHA.Controllers
                              where ts.ESTATUS == "X" && tt.SPRAS_ID.Equals(spras)
                              select new
                              {
-                                 ts.ID,
-                                 TEXT = ts.ID + " - " + tt.TXT50
+                                 Value = ts.ID,
+                                 Text = ts.ID + " - " + tt.TXT50
                              }).ToList();
+                }
                 var sociedades = (from tp in db.DET_TIPOPRESUPUESTO
                                   join soc in db.SOCIEDADs
                                   on tp.BUKRS equals soc.BUKRS
                                   where tp.ID_USER == uz
-                                  select new { soc.BUKRS, TEXT = soc.BUKRS + " - " + soc.BUTXT }).ToList();
+                                  select new { Value = soc.BUKRS, Text = soc.BUKRS + " - " + soc.BUTXT }).ToList();
                 List<DOCUMENTO> docs = new List<DOCUMENTO>();
                 for (int i = 0; i < sociedades.Count(); i++)
                 {
-                    string buk = sociedades[i].BUKRS;
+                    string buk = sociedades[i].Value;
                     List<DOCUMENTO> doc = db.DOCUMENTOes.Where(x => x.SOCIEDAD_ID == buk).OrderBy(x => x.NUM_DOC).ToList();
                     foreach (DOCUMENTO d in doc)
                     {
@@ -112,24 +127,48 @@ namespace WFARTHA.Controllers
                         mont.Add(new SelectListItem() { Text = dd.MONTO_DOC_MD.ToString(), Value = dd.MONTO_DOC_MD.ToString() });
                     }
                 }
-                var moneda = db.MONEDAs.Where(m => m.ACTIVO == true).Select(m => new { m.WAERS, TEXT = m.WAERS + " - " + m.LTEXT }).ToList();
-                var stat = db.DOCUMENTOes.Select(x => new { x.ESTATUS, TEXT = x.ESTATUS }).Distinct().ToList();
+                var moneda = db.MONEDAs.Where(m => m.ACTIVO == true).Select(m => new { Value = m.WAERS, Text = m.WAERS + " - " + m.LTEXT }).ToList();
+                //var stat = db.DOCUMENTOes.Select(x => new { Value = x.ESTATUS, Text = x.ESTATUS }).Distinct().ToList();
+
+                List<SelectListItem> stat = new List<SelectListItem>
+                {
+                    new SelectListItem() { Text = "Eliminando Solicitud", Value = ",A,,,," },
+                    new SelectListItem() { Text = "Error Eliminar", Value = ",B,,,," },
+                    new SelectListItem() { Text = "Solicitud Eliminada", Value = ",C,,,," },
+                    new SelectListItem() { Text = "Borrador", Value = "B,,,,," },
+                    new SelectListItem() { Text = "Contabilizado SAP", Value = "A,,,,," },
+                    new SelectListItem() { Text = "Procesando Preliminar", Value = "N,,,null/P,G," },
+                    new SelectListItem() { Text = "Error Preliminar Portal", Value = "N,,,null/P,E," },
+                    new SelectListItem() { Text = "Error Preliminar SAP", Value = "N,,E,,E," },
+                    new SelectListItem() { Text = "Se Generó Preliminar SAP", Value = "N,,P,,G," },
+                    new SelectListItem() { Text = "Pendiente Aprobador", Value = "F,,,P/S,G,P" },
+                    new SelectListItem() { Text = "Pendiente Contabilizar", Value = "C,,,P,G,P" },
+                    new SelectListItem() { Text = "Error Contabilizar Portal", Value = "C,,,A,E,P" },
+                    new SelectListItem() { Text = "Procesando Contabilizar SAP", Value = "C,,!E,A,G," },
+                    new SelectListItem() { Text = "Error Contabilizar SAP", Value = "C,,E,A,,P" },
+                    new SelectListItem() { Text = "Por Contabilizar", Value = "C,,,A,," },
+                    new SelectListItem() { Text = "Contabilizar SAP", Value = "P,,,A,," },
+                    new SelectListItem() { Text = "Aprobada", Value = ",,,A,," },
+                    new SelectListItem() { Text = "Pendiente Corrección", Value = "F,,,R,G,P" },
+                    new SelectListItem() { Text = "Pendiente Tax", Value = ",,,T,," },
+                    new SelectListItem() { Text = "Estatus desconocido", Value = ",,,,," }
+                };
                 List<SelectListItem> lst = new List<SelectListItem>
                 {
                     new SelectListItem() { Text = "Pagado", Value = "P" },
                     new SelectListItem() { Text = "Efectivamente Pagado", Value = "EP" }
                 };
 
-                ViewBag.tsol = new SelectList(tsoll, "ID", "TEXT");
-                ViewBag.bukrs = new SelectList(sociedades, "BUKRS", "TEXT");
+                ViewBag.tsol = new SelectList(tsoll, "Value", "Text");
+                ViewBag.bukrs = new SelectList(sociedades, "Value", "Text");
                 ViewBag.fecha = new SelectList(fechas, "Value", "Text");
                 ViewBag.payer = new SelectList(prov, "Value", "Text");
                 ViewBag.num_pre = new SelectList(nsap, "Value", "Text");
                 ViewBag.user = new SelectList(user, "Value", "Text");
                 ViewBag.num_doc = new SelectList(ndoc, "Value", "Text");
                 ViewBag.monto = new SelectList(mont, "Value", "Text");
-                ViewBag.moneda = new SelectList(moneda, "WAERS", "TEXT");
-                ViewBag.estatus = new SelectList(stat, "ESTATUS", "TEXT");
+                ViewBag.moneda = new SelectList(moneda, "Value", "Text");
+                ViewBag.estatus = new SelectList(stat, "Value", "Text");
                 ViewBag.pagado = new SelectList(lst, "Value", "Text");
             }
             return View();
@@ -252,11 +291,21 @@ namespace WFARTHA.Controllers
                                   join soc in db.SOCIEDADs
                                   on tp.BUKRS equals soc.BUKRS
                                   where tp.ID_USER == uz
-                                  select new { soc.BUKRS, TEXT = soc.BUKRS + " - " + soc.BUTXT }).ToList();
+                                  select new { Value = soc.BUKRS, TEXT = soc.BUKRS + " - " + soc.BUTXT }).ToList();
                 List<DOCUMENTO> docs = new List<DOCUMENTO>();
-                
-                List<ReportSols> solicitudes = new List<ReportSols>();
+                for (int i = 0; i < sociedades.Count(); i++)
+                {
+                    string buk = sociedades[i].Value;
+                    List<DOCUMENTO> doc = db.DOCUMENTOes.Where(x => x.SOCIEDAD_ID == buk).OrderBy(x => x.NUM_DOC).ToList();
+                    foreach (DOCUMENTO d in doc)
+                    {
+                        docs.Add(d);
+                    }
+                }
 
+
+                List<ReportSols> solicitudes = new List<ReportSols>();
+                var stats = rep.Estatus.Split(',');
                 ReportEsqueleto2 re = new ReportEsqueleto2();
                 string recibeRuta = re.crearPDF(solicitudes);
                 ViewBag.url = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + HostingEnvironment.ApplicationVirtualPath + "/" + recibeRuta;

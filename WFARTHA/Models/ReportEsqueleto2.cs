@@ -24,7 +24,7 @@ namespace WFARTHA.Models
             PdfPTable tabCabecera = new PdfPTable(1);
             PdfPTable tablaDatos = new PdfPTable(1);
             PdfPTable tablaDatos1 = new PdfPTable(2);
-            PdfPTable tablaDatos2 = new PdfPTable(17);
+            PdfPTable tablaDatos2 = new PdfPTable(15);
             PdfPTable tablaDatos3 = new PdfPTable(1);
             PdfPTable tablaDatos4 = new PdfPTable(6);
 
@@ -50,7 +50,7 @@ namespace WFARTHA.Models
                     tabCabecera.WriteSelectedRows(0, -1, 0, pdfDoc.PageSize.Top, pdfWriter.DirectContent);
 
                     //Tabla
-                    tablaDatos2.SetWidthPercentage(new float[] { 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50 }, PageSize.A4.Rotate());
+                    tablaDatos2.SetWidthPercentage(new float[] { 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55 }, PageSize.A4.Rotate());
                     PdfPCell Cabecera1 = new PdfPCell(new Paragraph("Tipo de Solicitud", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera1);
                     PdfPCell Cabecera2 = new PdfPCell(new Paragraph("Fecha", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera2);
                     PdfPCell Cabecera3 = new PdfPCell(new Paragraph("No. Portal", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera3);
@@ -65,9 +65,7 @@ namespace WFARTHA.Models
                     PdfPCell Cabecera12 = new PdfPCell(new Paragraph("WorkFlow", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera12);
                     PdfPCell Cabecera13 = new PdfPCell(new Paragraph("Estatus Solicitud", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera13);
                     PdfPCell Cabecera14 = new PdfPCell(new Paragraph("Total de Dias", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera14);
-                    PdfPCell Cabecera15 = new PdfPCell(new Paragraph("Pagado", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera15);
-                    PdfPCell Cabecera16 = new PdfPCell(new Paragraph("EPagado", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera16);
-                    PdfPCell Cabecera17 = new PdfPCell(new Paragraph("Via de Pago", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera17);
+                    PdfPCell Cabecera15 = new PdfPCell(new Paragraph("Estatus Pago", letraTabNegrita)) { Border = 1, BackgroundColor = new BaseColor(0, 53, 100), BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cabecera15);
                     bool col = true;
                     BaseColor fondo;
                     foreach (ReportSols sol in RS)
@@ -96,9 +94,7 @@ namespace WFARTHA.Models
                         PdfPCell Cuerpo12 = new PdfPCell(new Paragraph((!string.IsNullOrEmpty(sol.Wf) ? sol.Wf : ""), letraTab)) { Border = 1, BackgroundColor = fondo, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo12);
                         PdfPCell Cuerpo13 = new PdfPCell(new Paragraph((!string.IsNullOrEmpty(sol.Estatus) ? sol.Estatus : ""), letraTab)) { Border = 1, BackgroundColor = fondo, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo13);
                         PdfPCell Cuerpo14 = new PdfPCell(new Paragraph((!string.IsNullOrEmpty(sol.Totald.ToString()) ? sol.Totald.ToString() : ""), letraTab)) { Border = 1, BackgroundColor = fondo, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo14);
-                        PdfPCell Cuerpo15 = new PdfPCell(new Paragraph((!string.IsNullOrEmpty(sol.Pagado) ? sol.Pagado : ""), letraTab)) { Border = 1, BackgroundColor = fondo, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo15);
-                        PdfPCell Cuerpo16 = new PdfPCell(new Paragraph((!string.IsNullOrEmpty(sol.Epagado) ? sol.Epagado : ""), letraTab)) { Border = 1, BackgroundColor = fondo, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo16);
-                        PdfPCell Cuerpo17 = new PdfPCell(new Paragraph((!string.IsNullOrEmpty(sol.Viapago   ) ? sol.Viapago : ""), letraTab)) { Border = 1, BackgroundColor = fondo, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo17);
+                        PdfPCell Cuerpo15 = new PdfPCell(new Paragraph((!string.IsNullOrEmpty(sol.EstPago) ? sol.EstPago : ""), letraTab)) { Border = 1, BackgroundColor = fondo, BorderColor = new BaseColor(240, 240, 240) }; tablaDatos2.AddCell(Cuerpo15);
                     }
                     pdfDoc.Add(tablaDatos2);
                     pdfDoc.Add(new Chunk("\n"));
