@@ -210,6 +210,7 @@
     <Compile Include="Controllers\Catalogos\ConmailController.cs" />
     <Compile Include="Controllers\Catalogos\ProyectoSociedadController.cs" />
     <Compile Include="Controllers\Catalogos\SociedadesUsuarioController.cs" />
+    <Compile Include="Controllers\Catalogos\CadenaAutorizacion.cs" />
     <Compile Include="Controllers\Catalogos\UsuarioC1Controller.cs" />
     <Compile Include="Controllers\Catalogos\UsuarioCController.cs" />
     <Compile Include="Controllers\Catalogos\UsuariosController.cs" />
@@ -268,7 +269,13 @@
     <Compile Include="Entities\DET_AGENTECA.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DET_AGENTECAV.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DET_AGENTECC.cs">
+      <DependentUpon>WFARTHA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DET_AGENTECCV.cs">
       <DependentUpon>WFARTHA.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DET_APROB.cs">
@@ -554,8 +561,10 @@
     <Compile Include="Models\SociedadesUsuarioNuevo.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Models\ProyectoSociedad.cs" />
+    <Compile Include="Models\CadenaAutorizacion.cs" />
     <Compile Include="Models\UsuarioC1.cs" />
     <Compile Include="Models\UsuarioC.cs" />
+    <Compile Include="Models\CadenaAutorizacionNuevo.cs" />
     <Compile Include="Models\UsuariosC1Nuevo.cs" />
     <Compile Include="Models\UsuariosCNuevo.cs" />
     <Compile Include="Models\UsuariosNuevo.cs" />
@@ -836,6 +845,10 @@
     <Content Include="Views\UsuarioC1\Index.cshtml" />
     <Content Include="Views\UsuarioC1\Edit.cshtml" />
     <Content Include="Views\Usuarios\CambioPass.cshtml" />
+    <Content Include="Views\CadenaAutorizacion\Create.cshtml" />
+    <Content Include="Views\CadenaAutorizacion\Index.cshtml" />
+    <Content Include="Views\CadenaAutorizacion\Edit.cshtml" />
+    <Content Include="Views\CadenaAutorizacion\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

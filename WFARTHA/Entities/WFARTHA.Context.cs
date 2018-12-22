@@ -110,6 +110,8 @@ namespace WFARTHA.Entities
         public virtual DbSet<IIMPUESTO> IIMPUESTOes { get; set; }
         public virtual DbSet<ASIGN_PROY_SOC> ASIGN_PROY_SOC { get; set; }
         public virtual DbSet<CARPETAV> CARPETAVs { get; set; }
+        public virtual DbSet<DET_AGENTECAV> DET_AGENTECAV { get; set; }
+        public virtual DbSet<DET_AGENTECCV> DET_AGENTECCV { get; set; }
         public virtual DbSet<DET_APROB0V> DET_APROB0V { get; set; }
         public virtual DbSet<DET_APROBV> DET_APROBV { get; set; }
         public virtual DbSet<DET_PROVEEDORV> DET_PROVEEDORV { get; set; }

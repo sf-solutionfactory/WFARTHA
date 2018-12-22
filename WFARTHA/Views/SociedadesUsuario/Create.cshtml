@@ -2,21 +2,28 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.pagina_r = 883;
+    ViewBag.pagina_r = 884;
     ViewBag.carpeta_r = 500;
 }
 
 
-
-
 <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/Catalogos.js"></script>
+
+
+<div class="row" style="margin-bottom:0">
+    <div class="col s12 right-align">
+        <a id="btn_guardarhps" class="btn btn-small">Enviar</a>
+    </div>
+
+</div>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="row">
         <div class="col s12 right-align">
-            <button type="submit" id="btn_guardar" class="btn btn-default">Guardar</button>
+            <button type="submit" id="btn_guardarps" style="display:none" class="btn btn-default">Guardar</button>
         </div>
     </div>
     <div class="row">
@@ -46,7 +53,6 @@
                             @Html.ValidationMessageFor(model => model.ID_USER, "", new { @class = "text-danger" })
                         </div>
                     </div>
-
                     <div class="form-group">
                         <div class=" dropdown col s12">
 
@@ -62,13 +68,11 @@
     </div>
 
 }
-<div>
-    @Html.ActionLink("Back to List", "Index", null, new { id = "lbl_regresar" })
-</div>
+
 @if (ViewBag.Error != null)
 {
     <script>
-            M.toast({ html: '@ViewBag.Error', classes: 'red' });
+            M.toast({ html: '@ViewBag.Error' });
     </script>
 
 

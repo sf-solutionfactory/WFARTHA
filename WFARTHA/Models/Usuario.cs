@@ -83,6 +83,8 @@ namespace WFARTHA.Models
         public string BACKUP_ID { get; set; }
         public string BUNIT { get; set; }
         public int ROL { get; set; }
+        public string BUKRS { get; set; }
+        public string PUE { get; set; }
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<CARTA> CARTAs { get; set; }

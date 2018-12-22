@@ -1,8 +1,8 @@
-﻿@model WFARTHA.Models.SociedadesUsuarioNuevo
+﻿@model WFARTHA.Models.CadenaAutorizacionNuevo
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.pagina_r = 881;
+    ViewBag.pagina_r = 711;
     ViewBag.carpeta_r = 500;
 }
 
@@ -44,42 +44,44 @@
         <table class="table mdl-data-table striped" id="table" style="width:100%;">
             <thead>
                 <tr>
+                    <th class="lblVersion">
+                        @Html.DisplayNameFor(model => model.C.FirstOrDefault().VERSION)
+                    </th>
                     <th class="lblSociedad">
-                        @Html.DisplayNameFor(model => model.L.FirstOrDefault().BUTXT)
+                        @Html.DisplayNameFor(model => model.C.FirstOrDefault().USUARIOC_ID)
                     </th>
                     <th class="lblUsuario">
-                        @Html.DisplayNameFor(model => model.L.FirstOrDefault().NOMBRE)
+                        @Html.DisplayNameFor(model => model.C.FirstOrDefault().ID_RUTA_AGENTE)
                     </th>
-                    <th class="lblPresupuesto">
-                        @Html.DisplayNameFor(model => model.L.FirstOrDefault().DESC)
+                    <th class="lblUsuario">
+                        @Html.DisplayNameFor(model => model.C.FirstOrDefault().USUARIOA_ID)
                     </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.L)
+                @foreach (var item in Model.C)
                 {
                 <tr style="cursor:pointer">
                     <td>
-                        @Html.DisplayFor(modelItem => item.BUTXT)
+                        @Html.DisplayFor(modelItem => item.VERSION)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.NOMBRE)
+                        @Html.DisplayFor(modelItem => item.USUARIOC)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DESC)
+                        @Html.DisplayFor(modelItem => item.ID_RUTA_AGENTE)
                     </td>
                     <td>
-                        <a href="@Url.Action("Edit", "SociedadesUsuario", new { BUKRS = item.BUKRS , ID_USER = item.ID_USER })">
+                        @Html.DisplayFor(modelItem => item.USUARIOCA)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "CadenaAutorizacion", new { VERSION = item.VERSION ,ID_RUTA_AGENTE = item.ID_RUTA_AGENTE })">
                             <i class='material-icons green-text'>edit</i>
                         </a>&nbsp;
-                        <a href="" onclick="DELETE('@item.BUKRS','@item.ID_USER')">
-                            <span id="borrar" hidden>
-                                @item.BUKRS,
-                                @item.ID_USER
-                            </span>
-                            <i class='material-icons red-text'>delete</i>
-                        </a>
+                        <a href="@Url.Action("Details", new { VERSION = item.VERSION ,ID_RUTA_AGENTE = item.ID_RUTA_AGENTE })">
+                            <i class='material-icons blue-text'>search</i>
+                        </a>&nbsp;
                     </td>
                 </tr>
                 }
@@ -130,31 +132,6 @@
     function filterGlobal() {
         $('#table').DataTable().search(
             $('#global_filter').val()).draw();
-    }
-
-</script>
-
-<script type="text/javascript">
-
-    function DELETE(BUKRS, ID_USER) {
-        //var id = $('#borrar').text();
-        var mensaje = confirm("Confirma borrar el registro " + BUKRS + " - " +  ID_USER );
-        console.log(BUKRS, ID_USER);
-        if (mensaje) {
-            $.ajax({
-                type: "POST",
-                url: 'Delete',
-                data: { 'BUKRS' : BUKRS , 'ID_USER' : ID_USER},
-                dataType: "json",
-                success: function () {
-
-                },
-                error: function (request, status, error) {
-                    //alert(request.responseText);
-                }
-            });
-            M.toast({ html: 'Se elimino el usuario' });
-        }
     }
 
 </script>

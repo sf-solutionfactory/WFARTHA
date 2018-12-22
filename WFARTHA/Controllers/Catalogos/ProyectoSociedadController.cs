@@ -47,6 +47,7 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public ActionResult Create([Bind(Include = "ID_PSPNR,ID_BUKRS")] ProyectoSociedad proyectoSociedad)
         {
+            
             DET_PROYECTOV u = new DET_PROYECTOV();
             u.ID_PSPNR = proyectoSociedad.ID_PSPNR;
             u.ID_BUKRS = proyectoSociedad.ID_BUKRS;

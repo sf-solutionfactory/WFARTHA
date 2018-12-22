@@ -1087,7 +1087,7 @@ advertencia 6013: La tabla o vista 'PAGOS300I.dbo.SPFIRMA' no tiene definida una
           <Property Name="PUESTO_ID" Type="int" />
           <Property Name="MANAGER" Type="nvarchar" MaxLength="16" />
           <Property Name="BACKUP_ID" Type="nvarchar" MaxLength="16" />
-          <Property Name="BUNIT" Type="nchar" MaxLength="4" Nullable="false" />
+          <Property Name="BUNIT" Type="nchar" MaxLength="4" />
           <Property Name="FIRMA" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errores durante la generación:
@@ -1195,6 +1195,48 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.CARPETAV' no tiene definida ni
           <Property Name="URL" Type="nvarchar" MaxLength="50" />
           <Property Name="TXT50" Type="nvarchar" MaxLength="50" />
           <Property Name="ICON" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS300I.dbo.DET_AGENTECAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="DET_AGENTECAV">
+          <Key>
+            <PropertyRef Name="ID_RUTA_AGENTE" />
+            <PropertyRef Name="VERSION" />
+            <PropertyRef Name="STEP_FASE" />
+            <PropertyRef Name="STEP_ACCION" />
+            <PropertyRef Name="LIM_SUP" />
+            <PropertyRef Name="AGENTE_SIG" />
+            <PropertyRef Name="USUARIO" />
+          </Key>
+          <Property Name="ID_RUTA_AGENTE" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="VERSION" Type="int" Nullable="false" />
+          <Property Name="STEP_FASE" Type="int" Nullable="false" />
+          <Property Name="STEP_ACCION" Type="int" Nullable="false" />
+          <Property Name="LIM_SUP" Type="decimal" Precision="18" Scale="5" Nullable="false" />
+          <Property Name="AGENTE_SIG" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="USUARIO" Type="nvarchar" MaxLength="171" Nullable="false" />
+          <Property Name="OVERRIDE" Type="bit" />
+        </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PAGOS300I.dbo.DET_AGENTECCV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="DET_AGENTECCV">
+          <Key>
+            <PropertyRef Name="VERSION" />
+            <PropertyRef Name="USUARIOC_ID" />
+            <PropertyRef Name="USUARIOC" />
+            <PropertyRef Name="ID_RUTA_AGENTE" />
+            <PropertyRef Name="USUARIOA_ID" />
+            <PropertyRef Name="USUARIOCA" />
+            <PropertyRef Name="FECHAC" />
+          </Key>
+          <Property Name="VERSION" Type="int" Nullable="false" />
+          <Property Name="USUARIOC_ID" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="USUARIOC" Type="nvarchar" MaxLength="171" Nullable="false" />
+          <Property Name="ID_RUTA_AGENTE" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="nchar" MaxLength="40" />
+          <Property Name="USUARIOA_ID" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="USUARIOCA" Type="nvarchar" MaxLength="171" Nullable="false" />
+          <Property Name="FECHAC" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errores durante la generación:
 advertencia 6002: La tabla o vista 'PAGOS300I.dbo.DET_APROB0V' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
@@ -2472,6 +2514,30 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
     [CARPETAV].[TXT50] AS [TXT50], 
     [CARPETAV].[ICON] AS [ICON]
     FROM [dbo].[CARPETAV] AS [CARPETAV]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="DET_AGENTECAV" EntityType="Self.DET_AGENTECAV" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [DET_AGENTECAV].[ID_RUTA_AGENTE] AS [ID_RUTA_AGENTE], 
+    [DET_AGENTECAV].[VERSION] AS [VERSION], 
+    [DET_AGENTECAV].[STEP_FASE] AS [STEP_FASE], 
+    [DET_AGENTECAV].[STEP_ACCION] AS [STEP_ACCION], 
+    [DET_AGENTECAV].[LIM_SUP] AS [LIM_SUP], 
+    [DET_AGENTECAV].[AGENTE_SIG] AS [AGENTE_SIG], 
+    [DET_AGENTECAV].[USUARIO] AS [USUARIO], 
+    [DET_AGENTECAV].[OVERRIDE] AS [OVERRIDE]
+    FROM [dbo].[DET_AGENTECAV] AS [DET_AGENTECAV]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="DET_AGENTECCV" EntityType="Self.DET_AGENTECCV" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [DET_AGENTECCV].[VERSION] AS [VERSION], 
+    [DET_AGENTECCV].[USUARIOC_ID] AS [USUARIOC_ID], 
+    [DET_AGENTECCV].[USUARIOC] AS [USUARIOC], 
+    [DET_AGENTECCV].[ID_RUTA_AGENTE] AS [ID_RUTA_AGENTE], 
+    [DET_AGENTECCV].[DESCRIPCION] AS [DESCRIPCION], 
+    [DET_AGENTECCV].[USUARIOA_ID] AS [USUARIOA_ID], 
+    [DET_AGENTECCV].[USUARIOCA] AS [USUARIOCA], 
+    [DET_AGENTECCV].[FECHAC] AS [FECHAC]
+    FROM [dbo].[DET_AGENTECCV] AS [DET_AGENTECCV]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="DET_APROB0V" EntityType="Self.DET_APROB0V" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -4040,7 +4106,7 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
           <Property Name="PUESTO_ID" Type="Int32" />
           <Property Name="MANAGER" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Name="BACKUP_ID" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
-          <Property Name="BUNIT" Type="String" MaxLength="4" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="BUNIT" Type="String" MaxLength="4" FixedLength="true" Unicode="true" />
           <Property Name="FIRMA" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="DELEGARs" Relationship="Self.FK_DELEGAR_USUARIO" FromRole="USUARIO" ToRole="DELEGAR" />
           <NavigationProperty Name="DELEGARs1" Relationship="Self.FK_DELEGAR_USUARIO1" FromRole="USUARIO" ToRole="DELEGAR" />
@@ -4175,6 +4241,44 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
           <Property Name="URL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="TXT50" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ICON" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="DET_AGENTECAV">
+          <Key>
+            <PropertyRef Name="ID_RUTA_AGENTE" />
+            <PropertyRef Name="VERSION" />
+            <PropertyRef Name="STEP_FASE" />
+            <PropertyRef Name="STEP_ACCION" />
+            <PropertyRef Name="LIM_SUP" />
+            <PropertyRef Name="AGENTE_SIG" />
+            <PropertyRef Name="USUARIO" />
+          </Key>
+          <Property Name="ID_RUTA_AGENTE" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="VERSION" Type="Int32" Nullable="false" />
+          <Property Name="STEP_FASE" Type="Int32" Nullable="false" />
+          <Property Name="STEP_ACCION" Type="Int32" Nullable="false" />
+          <Property Name="LIM_SUP" Type="Decimal" Precision="18" Scale="5" Nullable="false" />
+          <Property Name="AGENTE_SIG" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="USUARIO" Type="String" MaxLength="171" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OVERRIDE" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="DET_AGENTECCV">
+          <Key>
+            <PropertyRef Name="VERSION" />
+            <PropertyRef Name="USUARIOC_ID" />
+            <PropertyRef Name="USUARIOC" />
+            <PropertyRef Name="ID_RUTA_AGENTE" />
+            <PropertyRef Name="USUARIOA_ID" />
+            <PropertyRef Name="USUARIOCA" />
+            <PropertyRef Name="FECHAC" />
+          </Key>
+          <Property Name="VERSION" Type="Int32" Nullable="false" />
+          <Property Name="USUARIOC_ID" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="USUARIOC" Type="String" MaxLength="171" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ID_RUTA_AGENTE" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="40" FixedLength="true" Unicode="true" />
+          <Property Name="USUARIOA_ID" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="USUARIOCA" Type="String" MaxLength="171" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FECHAC" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="DET_APROB0V">
           <Key>
@@ -5379,6 +5483,8 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
           <EntitySet Name="IIMPUESTOes" EntityType="Self.IIMPUESTO" />
           <EntitySet Name="ASIGN_PROY_SOC" EntityType="Self.ASIGN_PROY_SOC" />
           <EntitySet Name="CARPETAVs" EntityType="Self.CARPETAV" />
+          <EntitySet Name="DET_AGENTECAV" EntityType="Self.DET_AGENTECAV" />
+          <EntitySet Name="DET_AGENTECCV" EntityType="Self.DET_AGENTECCV" />
           <EntitySet Name="DET_APROB0V" EntityType="Self.DET_APROB0V" />
           <EntitySet Name="DET_APROBV" EntityType="Self.DET_APROBV" />
           <EntitySet Name="DET_PROVEEDORV" EntityType="Self.DET_PROVEEDORV" />
@@ -6858,6 +6964,34 @@ advertencia 6002: La tabla o vista 'PAGOS300I.dbo.WARNINGV' no tiene definida ni
                 <ScalarProperty Name="URL" ColumnName="URL" />
                 <ScalarProperty Name="TXT50" ColumnName="TXT50" />
                 <ScalarProperty Name="ICON" ColumnName="ICON" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DET_AGENTECAV">
+            <EntityTypeMapping TypeName="WFARTHAModel.DET_AGENTECAV">
+              <MappingFragment StoreEntitySet="DET_AGENTECAV">
+                <ScalarProperty Name="ID_RUTA_AGENTE" ColumnName="ID_RUTA_AGENTE" />
+                <ScalarProperty Name="VERSION" ColumnName="VERSION" />
+                <ScalarProperty Name="STEP_FASE" ColumnName="STEP_FASE" />
+                <ScalarProperty Name="STEP_ACCION" ColumnName="STEP_ACCION" />
+                <ScalarProperty Name="LIM_SUP" ColumnName="LIM_SUP" />
+                <ScalarProperty Name="AGENTE_SIG" ColumnName="AGENTE_SIG" />
+                <ScalarProperty Name="USUARIO" ColumnName="USUARIO" />
+                <ScalarProperty Name="OVERRIDE" ColumnName="OVERRIDE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DET_AGENTECCV">
+            <EntityTypeMapping TypeName="WFARTHAModel.DET_AGENTECCV">
+              <MappingFragment StoreEntitySet="DET_AGENTECCV">
+                <ScalarProperty Name="VERSION" ColumnName="VERSION" />
+                <ScalarProperty Name="USUARIOC_ID" ColumnName="USUARIOC_ID" />
+                <ScalarProperty Name="USUARIOC" ColumnName="USUARIOC" />
+                <ScalarProperty Name="ID_RUTA_AGENTE" ColumnName="ID_RUTA_AGENTE" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="USUARIOA_ID" ColumnName="USUARIOA_ID" />
+                <ScalarProperty Name="USUARIOCA" ColumnName="USUARIOCA" />
+                <ScalarProperty Name="FECHAC" ColumnName="FECHAC" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

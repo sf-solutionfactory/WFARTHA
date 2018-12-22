@@ -51,15 +51,16 @@ namespace TAT001.Controllers.Catalogos
         // GET: Usuarios/Create
         public ActionResult Edit(string ID_SOCIEDAD, string ID_USUARIO, int VERSION)
         {
+
             int pagina = 674; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-            var  id_sociedad = db.DET_APROB0V.Where(a=>a.ID_SOCIEDAD == ID_SOCIEDAD && a.ID_USUARIO == ID_USUARIO && a.VERSION == VERSION).FirstOrDefault().ID_SOCIEDAD;
+            var id_sociedad = db.DET_APROB0V.Where(a => a.ID_SOCIEDAD == ID_SOCIEDAD && a.ID_USUARIO == ID_USUARIO && a.VERSION == VERSION).FirstOrDefault().ID_SOCIEDAD;
             var sociedad = db.DET_APROB0V.Where(a => a.ID_SOCIEDAD == ID_SOCIEDAD && a.ID_USUARIO == ID_USUARIO && a.VERSION == VERSION).FirstOrDefault().SOCIEDAD;
             ViewBag.idsociedad = id_sociedad;
             ViewBag.sociedad = sociedad;
             UsuarioC1 obj = new UsuarioC1();
             return View(obj);
-           
+
         }
 
         [HttpPost]
