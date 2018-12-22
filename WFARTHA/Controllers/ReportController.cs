@@ -302,10 +302,158 @@ namespace WFARTHA.Controllers
                         docs.Add(d);
                     }
                 }
-
+                List<DOCUMENTO> docs1 = new List<DOCUMENTO>();
+                if (rep.Tsol != null) // filtrado por Tipo de solicitud
+                {
+                    for (int i = 0; i < rep.Tsol.Count(); i++)
+                    {
+                        string com = rep.Tsol[i];
+                        List<DOCUMENTO> doc = docs.Where(x => x.TSOL_ID == com).ToList();
+                        foreach (DOCUMENTO d in doc)
+                        {
+                            docs1.Add(d);
+                        }
+                    }
+                    docs = docs1;
+                    docs1 = new List<DOCUMENTO>();
+                }
+                if (rep.Bukrs != null) // filtrado por sociedad
+                {
+                    for (int i = 0; i < rep.Bukrs.Count(); i++)
+                    {
+                        string com = rep.Bukrs[i];
+                        List<DOCUMENTO> doc = docs.Where(x => x.SOCIEDAD_ID == com).ToList();
+                        foreach (DOCUMENTO d in doc)
+                        {
+                            docs1.Add(d);
+                        }
+                    }
+                    docs = docs1;
+                    docs1 = new List<DOCUMENTO>();
+                }
+                if (rep.Fecha != null) // filtrado por fecha
+                {
+                    for (int i = 0; i < rep.Fecha.Count(); i++)
+                    {
+                        DateTime com = DateTime.Parse(rep.Fecha[i]);
+                        List<DOCUMENTO> doc = docs.Where(x => x.FECHAC_USER == com).ToList();
+                        foreach (DOCUMENTO d in doc)
+                        {
+                            docs1.Add(d);
+                        }
+                    }
+                    docs = docs1;
+                    docs1 = new List<DOCUMENTO>();
+                }
+                if (rep.Payer != null) // filtrado por proveedor
+                {
+                    for (int i = 0; i < rep.Payer.Count(); i++)
+                    {
+                        string com = rep.Payer[i];
+                        List<DOCUMENTO> doc = docs.Where(x => x.PAYER_ID == com).ToList();
+                        foreach (DOCUMENTO d in doc)
+                        {
+                            docs1.Add(d);
+                        }
+                    }
+                    docs = docs1;
+                    docs1 = new List<DOCUMENTO>();
+                }
+                if (rep.Num_pre != null) // filtrado por numero sap
+                {
+                    for (int i = 0; i < rep.Num_pre.Count(); i++)
+                    {
+                        string com = rep.Num_pre[i];
+                        List<DOCUMENTO> doc = docs.Where(x => x.PAYER_ID == com).ToList();
+                        foreach (DOCUMENTO d in doc)
+                        {
+                            docs1.Add(d);
+                        }
+                    }
+                    docs = docs1;
+                    docs1 = new List<DOCUMENTO>();
+                }
+                if (rep.User != null) // filtrado por solicitante
+                {
+                    for (int i = 0; i < rep.User.Count(); i++)
+                    {
+                        string com = rep.User[i];
+                        List<DOCUMENTO> doc = docs.Where(x => x.USUARIOD_ID == com).ToList();
+                        foreach (DOCUMENTO d in doc)
+                        {
+                            docs1.Add(d);
+                        }
+                    }
+                    docs = docs1;
+                    docs1 = new List<DOCUMENTO>();
+                }
+                if (rep.Num_doc != null) // filtrado por numero de documento
+                {
+                    for (int i = 0; i < rep.Num_doc.Count(); i++)
+                    {
+                        decimal com = decimal.Parse(rep.Num_doc[i]);
+                        List<DOCUMENTO> doc = docs.Where(x => x.NUM_DOC == com).ToList();
+                        foreach (DOCUMENTO d in doc)
+                        {
+                            docs1.Add(d);
+                        }
+                    }
+                    docs = docs1;
+                    docs1 = new List<DOCUMENTO>();
+                }
+                if (rep.Monto != null) // filtrado por monto
+                {
+                    for (int i = 0; i < rep.Monto.Count(); i++)
+                    {
+                        decimal com = decimal.Parse(rep.Monto[i]);
+                        List<DOCUMENTO> doc = docs.Where(x => x.MONTO_DOC_MD == com).ToList();
+                        foreach (DOCUMENTO d in doc)
+                        {
+                            docs1.Add(d);
+                        }
+                    }
+                    docs = docs1;
+                    docs1 = new List<DOCUMENTO>();
+                }
+                if (rep.Moneda != null) // filtrado por moneda
+                {
+                    for (int i = 0; i < rep.Moneda.Count(); i++)
+                    {
+                        string com = rep.Moneda[i];
+                        List<DOCUMENTO> doc = docs.Where(x => x.MONEDA_ID == com).ToList();
+                        foreach (DOCUMENTO d in doc)
+                        {
+                            docs1.Add(d);
+                        }
+                    }
+                    docs = docs1;
+                    docs1 = new List<DOCUMENTO>();
+                }
+                if (rep.Estatus != null) // filtrado por estatus
+                {
+                    for (int i = 0; i < rep.Estatus.Count(); i++)
+                    {
+                        var stats = rep.Estatus[i].Split(',');
+                        var statswf = stats[3].Split('/');
+                        List<DOCUMENTO> doc = new List<DOCUMENTO>();
+                        if (statswf.Length == 1)
+                        {
+                            doc = docs.Where(x => x.ESTATUS == stats[0] && x.ESTATUS_C == stats[1] && x.ESTATUS_SAP == stats[2] && x.ESTATUS_WF == stats[3] && x.ESTATUS_PRE == stats[4]).ToList();
+                        }
+                        else
+                        {
+                            doc = docs.Where(x => x.ESTATUS == stats[0] && x.ESTATUS_C == stats[1] && x.ESTATUS_SAP == stats[2] && (x.ESTATUS_WF == statswf[0]||x.ESTATUS_WF==statswf[1]) && x.ESTATUS_PRE == stats[4]).ToList();
+                        }
+                        foreach (DOCUMENTO d in doc)
+                        {
+                            docs1.Add(d);
+                        }
+                    }
+                    docs = docs1;
+                    docs1 = new List<DOCUMENTO>();
+                }
 
                 List<ReportSols> solicitudes = new List<ReportSols>();
-                var stats = rep.Estatus.Split(',');
                 ReportEsqueleto2 re = new ReportEsqueleto2();
                 string recibeRuta = re.crearPDF(solicitudes);
                 ViewBag.url = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + HostingEnvironment.ApplicationVirtualPath + "/" + recibeRuta;
