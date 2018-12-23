@@ -431,6 +431,7 @@ $(document).ready(function () {
         for (i = 1; i < _num + 1; i++) {
             document.getElementById("table_anexa").rows[i].cells[1].innerHTML = i;
         }
+        $('#TIPO_CAMBIO').val(0);
     });
 
     //MGC 30-10-2018 Tipo de presupuesto---------------------------------->
@@ -486,11 +487,11 @@ $(document).ready(function () {
         var moneda = $('#MONEDA_ID Option:Selected').val();
         var fecha = $('#FECHAD').val();
         //var fecha = "12/08/2018";
-        if (moneda.substring(0, 3) == "USD") {
+        if (moneda.substring(0, 3) != "MXN") {
             tipocambio = getTipoCambio(moneda, fecha);
             $("#TIPO_CAMBIO").val(tipocambio);
         } else {
-            $('#TIPO_CAMBIO').val(0)
+            $('#TIPO_CAMBIO').val(0);
         }
 
     });
@@ -1208,7 +1209,7 @@ $(document).ready(function () {
         val3 = val3.replace(/\=/g, "\" : \"");
         val3 = val3.replace(/\ /g, "");
         var jsval = $.parseJSON(val3);
-        if (jsval[0].ID === "SSO") {
+        if (jsval[0].ID === "SSO" || jsval[0].ID === "SCO" || jsval[0].ID === "NCS") {
             var length = $(this).get(0).files.length;
             var tdata = "";
             var _tab = $('#table_anexa').DataTable();
@@ -1908,6 +1909,7 @@ function ocultarCampos(opc, load) {
 //FRT2011218 Para Validacion individual de RFCs
 function validarRFCEmisor(rfc_pro) {
     var _rfc_pro = $('#rfc_proveedor').val();
+    _rfc_pro = _rfc_pro.trim();
     if (_rfc_pro.trim() === rfc_pro) {
         return true;
     }
