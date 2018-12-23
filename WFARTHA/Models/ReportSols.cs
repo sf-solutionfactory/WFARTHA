@@ -24,7 +24,7 @@ namespace WFARTHA.Models
         public string Usuario { get; set; }
         public string Wf { get; set; }
         public string Estatus { get; set; }
-        public decimal Totald { get; set; }
+        public string Totald { get; set; }
         public string EstPago { get; set; }
     }
 }

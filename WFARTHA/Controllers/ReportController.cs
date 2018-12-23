@@ -150,7 +150,7 @@ namespace WFARTHA.Controllers
                     new SelectListItem() { Text = "Contabilizar SAP", Value = "P,,,A,," },
                     new SelectListItem() { Text = "Aprobada", Value = ",,,A,," },
                     new SelectListItem() { Text = "Pendiente Corrección", Value = "F,,,R,G,P" },
-                    new SelectListItem() { Text = "Pendiente Tax", Value = ",,,T,," },
+                    //new SelectListItem() { Text = "Pendiente Tax", Value = ",,,T,," },
                     new SelectListItem() { Text = "Estatus desconocido", Value = ",,,,," }
                 };
                 List<SelectListItem> lst = new List<SelectListItem>
@@ -303,7 +303,8 @@ namespace WFARTHA.Controllers
                     }
                 }
                 List<DOCUMENTO> docs1 = new List<DOCUMENTO>();
-                if (rep.Tsol != null) // filtrado por Tipo de solicitud
+                // filtrado por Tipo de solicitud
+                if (rep.Tsol != null) 
                 {
                     for (int i = 0; i < rep.Tsol.Count(); i++)
                     {
@@ -317,7 +318,8 @@ namespace WFARTHA.Controllers
                     docs = docs1;
                     docs1 = new List<DOCUMENTO>();
                 }
-                if (rep.Bukrs != null) // filtrado por sociedad
+                // filtrado por sociedad
+                if (rep.Bukrs != null)
                 {
                     for (int i = 0; i < rep.Bukrs.Count(); i++)
                     {
@@ -331,7 +333,8 @@ namespace WFARTHA.Controllers
                     docs = docs1;
                     docs1 = new List<DOCUMENTO>();
                 }
-                if (rep.Fecha != null) // filtrado por fecha
+                // filtrado por fecha
+                if (rep.Fecha != null)
                 {
                     for (int i = 0; i < rep.Fecha.Count(); i++)
                     {
@@ -345,7 +348,8 @@ namespace WFARTHA.Controllers
                     docs = docs1;
                     docs1 = new List<DOCUMENTO>();
                 }
-                if (rep.Payer != null) // filtrado por proveedor
+                // filtrado por proveedor
+                if (rep.Payer != null)
                 {
                     for (int i = 0; i < rep.Payer.Count(); i++)
                     {
@@ -359,7 +363,8 @@ namespace WFARTHA.Controllers
                     docs = docs1;
                     docs1 = new List<DOCUMENTO>();
                 }
-                if (rep.Num_pre != null) // filtrado por numero sap
+                // filtrado por numero sap
+                if (rep.Num_pre != null)
                 {
                     for (int i = 0; i < rep.Num_pre.Count(); i++)
                     {
@@ -373,7 +378,8 @@ namespace WFARTHA.Controllers
                     docs = docs1;
                     docs1 = new List<DOCUMENTO>();
                 }
-                if (rep.User != null) // filtrado por solicitante
+                // filtrado por solicitante
+                if (rep.User != null)
                 {
                     for (int i = 0; i < rep.User.Count(); i++)
                     {
@@ -387,7 +393,8 @@ namespace WFARTHA.Controllers
                     docs = docs1;
                     docs1 = new List<DOCUMENTO>();
                 }
-                if (rep.Num_doc != null) // filtrado por numero de documento
+                // filtrado por numero de documento
+                if (rep.Num_doc != null)
                 {
                     for (int i = 0; i < rep.Num_doc.Count(); i++)
                     {
@@ -401,7 +408,8 @@ namespace WFARTHA.Controllers
                     docs = docs1;
                     docs1 = new List<DOCUMENTO>();
                 }
-                if (rep.Monto != null) // filtrado por monto
+                // filtrado por monto
+                if (rep.Monto != null)
                 {
                     for (int i = 0; i < rep.Monto.Count(); i++)
                     {
@@ -415,7 +423,8 @@ namespace WFARTHA.Controllers
                     docs = docs1;
                     docs1 = new List<DOCUMENTO>();
                 }
-                if (rep.Moneda != null) // filtrado por moneda
+                // filtrado por moneda
+                if (rep.Moneda != null)
                 {
                     for (int i = 0; i < rep.Moneda.Count(); i++)
                     {
@@ -429,7 +438,8 @@ namespace WFARTHA.Controllers
                     docs = docs1;
                     docs1 = new List<DOCUMENTO>();
                 }
-                if (rep.Estatus != null) // filtrado por estatus
+                // filtrado por estatus
+                if (rep.Estatus != null)
                 {
                     for (int i = 0; i < rep.Estatus.Count(); i++)
                     {
@@ -452,8 +462,212 @@ namespace WFARTHA.Controllers
                     docs = docs1;
                     docs1 = new List<DOCUMENTO>();
                 }
+                // filtrado por estatus de pago
+                if (rep.Pagado != null)
+                {
+                    for (int i = 0; i < rep.Pagado.Count(); i++)
+                    {
+                        string com = rep.Pagado[i];
+                        List<string> pago = db.ESTATUS_PAGO.Where(x => x.TIPO == com).Select(x=>x.BELNR_P).ToList();
+                        List<DOCUMENTO> doc = docs.Where(x => x.MONEDA_ID == com).ToList();
+                        foreach (DOCUMENTO d in doc)
+                        {
+                            if (pago.Contains(d.NUM_DOC.ToString()))
+                            {
+                                docs1.Add(d);
+                            }
+                        }
+                    }
+                    docs = docs1;
+                    docs1 = new List<DOCUMENTO>();
+                }
 
                 List<ReportSols> solicitudes = new List<ReportSols>();
+                foreach (DOCUMENTO d in docs)
+                {
+                    string firmas = "";
+                    string pag = "";
+                    List<ReportFirmasResult> f = db.Database.SqlQuery<ReportFirmasResult>("SP_FIRMAS @NUM_DOC", new SqlParameter("@NUM_DOC", d.NUM_DOC)).ToList();
+                    foreach (ReportFirmasResult ff in f)
+                    {
+                        firmas += ff.usuariocadena+"\n"+ff.faseletrero;
+                    }
+                    string flu = db.FLUJOes.Where(x => x.NUM_DOC == d.NUM_DOC).OrderByDescending(x => x.POS).Select(x => x.USUARIOA_ID).FirstOrDefault();
+                    string estatus = "";
+                    if (d.ESTATUS_C != null)
+                    {
+                        if (d.ESTATUS_C.Equals("A") || d.ESTATUS_C.Equals("B") || d.ESTATUS_C.Equals("C"))
+                        {
+                            if (d.ESTATUS_C.Equals("A"))
+                            {
+                                estatus = "Eliminando Solicitud";
+                            }
+                            else if (d.ESTATUS_C.Equals("B"))
+                            {
+                                estatus = "Error Eliminar";
+                            }
+                            else if (d.ESTATUS_C.Equals("C"))
+                            {
+                                estatus = "Solicitud Eliminada";
+                            }
+                        }
+                    }
+                    else if (d.ESTATUS.Equals("B"))
+                    {
+                        estatus = "Borrador";
+                    }
+                    else if (d.ESTATUS.Equals("A"))
+                    {
+                        estatus = "Contabilizado SAP";
+                    }
+                    else if (d.ESTATUS.Equals("N") && d.ESTATUS_C == null && d.ESTATUS_SAP == null && (d.ESTATUS_WF == null | d.ESTATUS_WF == "P"))
+                    {
+                        if (d.ESTATUS_PRE == "G")
+                        {
+                            estatus = "Procesando Preliminar";
+                        }
+                        else if (d.ESTATUS_PRE == "E")
+                        {
+                            estatus = "Error Preliminar Portal";
+                        }
+                    }
+                    else if (d.ESTATUS.Equals("N") && d.ESTATUS_C == null && d.ESTATUS_SAP != null && d.ESTATUS_WF == null)
+                    {
+                        if (d.ESTATUS_PRE == "E" && d.ESTATUS_SAP == "E")
+                        {
+                            estatus = "Error Preliminar SAP";
+                        }
+                        if (d.ESTATUS_PRE == "G" && d.ESTATUS_SAP == "P")
+                        {
+                            estatus = "Se Generó Preliminar SAP";
+                        }
+                    }
+                    else if (d.ESTATUS == "F" && (d.ESTATUS_WF.Equals("P") | d.ESTATUS_WF.Equals("S")))
+                    {
+                        if (d.ESTATUS_PRE == "G")
+                        {
+                            if (d.FLUJOes.Count > 0)
+                            {
+                                if (ViewBag.usuario.ID == flu)
+                                {
+                                    estatus = "Pendiente Aprobador";
+                                }
+                            }
+                        }
+                    }
+                    else if (d.ESTATUS == "C" && (d.ESTATUS_WF.Equals("P") | d.ESTATUS_WF.Equals("A")))
+                    {
+                        if (d.ESTATUS_WF.Equals("P") && d.ESTATUS_PRE == "G")
+                        {
+                            if (d.FLUJOes.Count > 0)
+                            {
+                                if (ViewBag.usuario.ID == flu)
+                                {
+                                    estatus = "Pendiente Contabilizar";
+                                }
+                            }
+                        }
+                        else if (d.ESTATUS_WF.Equals("A") && d.ESTATUS_PRE == "E")
+                        {
+                            if (d.FLUJOes.Count > 0)
+                            {
+                                if (ViewBag.usuario.ID == flu)
+                                {
+                                    estatus = "Error Contabilizar Portal";
+                                }
+                            }
+                        }
+                        else if (d.ESTATUS_WF.Equals("A") && d.ESTATUS_PRE == "G" && d.ESTATUS_SAP != "E")
+                        {
+                            estatus = "Procesando Contabilizar SAP";
+                        }
+                        else if (d.ESTATUS_WF.Equals("A") && d.ESTATUS_SAP == "E")
+                        {
+                            if (d.FLUJOes.Count > 0)
+                            {
+                                if (ViewBag.usuario.ID == flu)
+                                {
+                                    estatus = "Error Contabilizar SAP";
+                                }
+                            }
+                        }
+                        else if (d.ESTATUS_WF != null && d.ESTATUS_WF.Equals("A"))
+                        {
+                            if (d.ESTATUS.Equals("C"))
+                            {
+                                estatus = "Por Contabilizar";
+                            }
+                            else if (d.ESTATUS.Equals("P"))
+                            {
+                                estatus = "Contabilizar SAP";
+                            }
+                            else
+                            {
+                                estatus = "Aprobada";
+                            }
+                        }
+                        else if (d.ESTATUS.Equals("F") && d.ESTATUS_WF != null && d.ESTATUS_WF.Equals("R") && d.ESTATUS_PRE != null && d.ESTATUS_PRE.Equals("G"))
+                        {
+                            estatus = "Pendiente Corrección";
+                        }
+                        else if (d.ESTATUS_WF != null && d.ESTATUS_WF.Equals("T"))
+                        {
+                            estatus = "Pendiente Tax";
+                        }
+                        else
+                        {
+                            estatus = "Estatus desconocido";
+                        }
+                    }
+                    DateTime fecha2 = DateTime.Parse(f.OrderByDescending(x => x.fecham).Select(x=>x.fecham).FirstOrDefault().ToString());
+                    DateTime fecha1 = DateTime.Parse(d.FECHAC.ToString());
+                    int horas = 0;
+                    if (fecha2 > fecha1)
+                    {
+                        horas = Convert.ToInt32((fecha2 - fecha1).TotalDays);
+                    }
+                    List<ESTATUS_PAGO> ep = db.ESTATUS_PAGO.Where(x => x.BELNR_P == d.NUM_DOC.ToString()).ToList();
+                    foreach (ESTATUS_PAGO p in ep)
+                    {
+                        pag += p.TIPO;
+                        if (ep.Count > 1)
+                        {
+                            pag += "/";
+                        }
+                    }
+                    var mon = "";
+                    if (d.MONEDA_ID == "EUR")
+                    {
+                        mon = double.Parse(d.MONTO_DOC_MD.ToString()).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-ie"));
+                    }
+                    else if (d.MONEDA_ID == "USD")
+                    {
+                        mon = double.Parse(d.MONTO_DOC_MD.ToString()).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-us"));
+                    }
+                    else
+                    {
+                        mon = double.Parse(d.MONTO_DOC_MD.ToString()).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-mx"));
+                    }
+                    ReportSols s = new ReportSols
+                    {
+                        Tsol = (from x in db.TSOLTs where x.TSOL_ID == d.TSOL_ID select x.TXT50).FirstOrDefault(),
+                        Fecha = string.Format(DateTime.Parse(d.FECHAC.ToString()).ToString(@"yyyy/MM/dd")),
+                        Num_doc = d.NUM_DOC,
+                        Num_pre = d.NUM_PRE,
+                        Pspnr = (from x in db.PROYECTOes where x.ID_PSPNR == d.ID_PSPNR select x.NOMBRE).FirstOrDefault(),
+                        Bukrsn = (from x in db.SOCIEDADs where x.BUKRS == d.SOCIEDAD_ID select x.BUTXT).FirstOrDefault(),
+                        Moneda = d.MONEDA_ID,    
+                        Montol = mon,
+                        Explicacion = d.CONCEPTO,
+                        Usuarion = (from x in db.USUARIOs where x.ID == d.USUARIOD_ID select x.NOMBRE + " " + x.APELLIDO_P + " " + x.APELLIDO_M).FirstOrDefault(),
+                        Usuario = d.USUARIOD_ID,
+                        Wf = firmas,
+                        Estatus = estatus,
+                        Totald = horas.ToString(),
+                        EstPago = pag
+                    };
+                    solicitudes.Add(s);
+                }
                 ReportEsqueleto2 re = new ReportEsqueleto2();
                 string recibeRuta = re.crearPDF(solicitudes);
                 ViewBag.url = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + HostingEnvironment.ApplicationVirtualPath + "/" + recibeRuta;
