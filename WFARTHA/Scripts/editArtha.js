@@ -232,7 +232,7 @@ $(document).ready(function () {
             val3 = val3.replace(/\=/g, "\" : \"");
             val3 = val3.replace(/\ /g, "");
             var jsval = $.parseJSON(val3);
-            if (jsval[0].ID === "SSO") {
+            if (jsval[0].ID === "SSO" || jsval[0].ID === "SCO" || jsval[0].ID === "NCS") {
                 var res = validarFacs();//Lejgg 23-10-2018
                 if (res) {//si es true signfica que si hay factura
                     //Fechade la factura
@@ -3816,7 +3816,7 @@ function validarUuid(uuid) {
 //FRT2011218 Para Validacion individual de RFCs
 function validarRFCEmisor(rfc_pro) {
     var _rfc_pro = $('#rfc_proveedor').val();
-    if (_rfc_pro.trim() === rfc_pro) {
+    if (_rfc_pro.trim() === rfc_pro.trim()) {
         return true;
     }
     else {

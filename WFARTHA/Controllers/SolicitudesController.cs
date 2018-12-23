@@ -6101,7 +6101,7 @@ namespace WFARTHA.Controllers
                         _TipoCambio = xmlnode[0].Attributes["TipoCambio"].Value;  //FRT14112018.3 para agregar la TIPO CAMBIO al JSON
                     }
 
-
+                _rfc_soc = _rfc_soc.Trim();
                     var _xmlcorrecto = "1";  //FRT20112018 Para poder saber si el XML esta correcto
 
                     List<string> lstvals = new List<string>();
@@ -6638,7 +6638,7 @@ namespace WFARTHA.Controllers
 
             WFARTHAEntities db = new WFARTHAEntities();
 
-            while (true)
+            while (dia < 100)
             {
                 DateTime fecha = gdatu.AddDays(-dia);
 
